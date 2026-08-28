@@ -1,0 +1,51 @@
+import { API_BASE_URL } from "@/lib/config";
+import type {
+  AIExplanation,
+  DigitalTwinState,
+  LiveMetricsSnapshot,
+  MissionMode,
+  SensorHealthSnapshot,
+  SensorName,
+  SensorStatus,
+  SimulationStateResponse,
+} from "@/lib/types";
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...init,
+    headers: { "Content-Type": "application/json", ...init?.headers },
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    const body = await response.text().catch(() => "");
+    throw new Error(`Request to ${path} failed (${response.status}): ${body}`);
+  }
+  return (await response.json()) as T;
+}
+
+export const api = {
+  getLiveMetrics: () => request<LiveMetricsSnapshot>("/metrics/live"),
+
+  getMetricsHistory: (limit = 100) => request<LiveMetricsSnapshot[]>(`/metrics/history?limit=${limit}`),
+
+  getDigitalTwin: (day: number) => request<DigitalTwinState>(`/digital-twin?day=${day}`),
+
+  getSensorHealth: () => request<SensorHealthSnapshot>("/sensor-health"),
+
+  getSimulationState: () => request<SimulationStateResponse>("/simulation/state"),
+
+  setMissionMode: (mode: MissionMode) =>
+    request<SimulationStateResponse>("/simulation/mode", {
+      method: "POST",
+      body: JSON.stringify({ mode }),
+    }),
+
+  setSensorFailure: (sensor: SensorName, status: SensorStatus) =>
+    request<SimulationStateResponse>("/simulation/failure", {
+      method: "POST",
+      body: JSON.stringify({ sensor, status }),
+    }),
+
+  getExplanation: (target: "ai_confidence" | "fatigue_risk") =>
+    request<AIExplanation>(`/ai/explanation?target=${target}`),
+};

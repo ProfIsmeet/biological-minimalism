@@ -1,0 +1,25 @@
+# --- Python / backend ---
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.env
+
+# --- Node / frontend ---
+node_modules/
+.next/
+out/
+frontend/.env*.local
+
+# --- ML checkpoints & datasets (large binaries, not committed) ---
+ml/checkpoints/*
+!ml/checkpoints/.gitkeep
+datasets/*/
+!datasets/README.md
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,36 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: biomin-backend
+    ports:
+      - "8000:8000"
+    environment:
+      BIOMIN_TICK_INTERVAL_SECONDS: "0.5"
+      BIOMIN_ROLLING_HISTORY_LENGTH: "600"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      # NEXT_PUBLIC_* variables are inlined into the client bundle at build
+      # time, so overriding the backend origin (e.g. a non-default port, or
+      # a real host name in a non-local deployment) requires a build arg,
+      # not just a runtime environment variable. The defaults baked into
+      # frontend/src/lib/config.ts already point at http://localhost:8000,
+      # which is correct for this compose file's default port mapping.
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    container_name: biomin-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
