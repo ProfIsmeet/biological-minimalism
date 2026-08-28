@@ -36,6 +36,10 @@ import numpy as np
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "backend"))
 
+from app.ml._torch_bootstrap import ensure_torch_dll_path  # noqa: E402
+
+ensure_torch_dll_path()
+
 import torch  # noqa: E402
 
 from app.ml.models import MODALITIES, BiologicalDigitalTwinNet  # noqa: E402

@@ -15,8 +15,8 @@ frontend/.env*.local
 # --- ML checkpoints & datasets (large binaries, not committed) ---
 ml/checkpoints/*
 !ml/checkpoints/.gitkeep
-datasets/*/
-!datasets/README.md
+datasets/*/*
+!datasets/*/README.md
 
 # --- OS / editor ---
 .DS_Store

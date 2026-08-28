@@ -23,6 +23,10 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "backend"))
 sys.path.insert(0, str(REPO_ROOT))
 
+from app.ml._torch_bootstrap import ensure_torch_dll_path  # noqa: E402
+
+ensure_torch_dll_path()
+
 import torch  # noqa: E402
 from torch import nn, optim  # noqa: E402
 from torch.utils.data import DataLoader, Dataset  # noqa: E402

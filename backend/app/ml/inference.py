@@ -53,6 +53,9 @@ class TorchInferenceEngine:
     name = "torch_v1"
 
     def __init__(self, checkpoint_path: Path) -> None:
+        from app.ml._torch_bootstrap import ensure_torch_dll_path
+
+        ensure_torch_dll_path()
         import torch
 
         from app.ml.models import BiologicalDigitalTwinNet

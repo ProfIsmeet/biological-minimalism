@@ -657,16 +657,34 @@ where Vaswani et al., 2017 is a clear, singular foundational source) and decline
 name one rather than guess, since 1D-CNN-for-biosignals is a broad pattern with many
 candidate papers rather than one originating source.
 
-### 10.2 Why untrained
+### 10.2 Training status: one modality trained on real data, three still untrained
 
-No training run is in scope for this deliverable — this project's real datasets
-(Section 7) are not bundled or downloaded in this repository, and training against
-them is explicitly future work, scaffolded but not executed in `ml/train.py` (see
-Section 16 and `ml/README.md`). The dashboard's default AI path is the transparent
-rule-based physiology engine (Section 9), not this untrained network; this
-architecture exists in working, importable, trainable form precisely so that
-transition can happen later without any change to the API or frontend contract
-(Section 17).
+The full 4-modality fusion network ships untrained with this deliverable — no
+real PPG or bio-impedance dataset was accessible in this task's timeframe
+(Section 7), and training against WESAD/PulseDB/NASA OSDR remains future
+work, scaffolded but not executed in `ml/train.py` (see Section 16 and
+`ml/README.md`).
+
+The EEG pathway is the exception: `Conv1DEncoder` (imported unmodified from
+this file) was actually trained on real data as a first validation pass. Its
+official planned dataset, WESAD, has two dead official distribution links
+(independently re-verified, not assumed, while writing this document); this
+project substituted PhysioNet Sleep-EDF (already discussed in Section 7 for
+respiration/circadian structure) and trained a 5-class sleep-stage classifier
+on real, downloaded, byte-verified EEG recordings from 3 subjects, with a
+subject-level held-out split (2 subjects trained on, 1 fully unseen subject
+tested on): **72.6% held-out accuracy**, against a 66.2% majority-class
+baseline on that same held-out subject. This is a real, reproducible result
+(`ml/train_sleep_edf.py`), not a projection — and its own limitation is
+stated with equal weight: 3 subjects is a small sample, held-out accuracy
+varied 41.8%–78.9% across training epochs, and this validates the
+architecture's ability to learn real signal from one modality, not the full
+4-modality fusion model's real-world accuracy, which remains unmeasured. See
+`ml/README.md`'s "Next steps toward the full 4-modality checkpoint" for what
+would close that gap. The dashboard's default AI path remains the transparent
+rule-based physiology engine (Section 9); this checkpoint does not yet load
+into `TorchInferenceEngine` (Section 17), which expects the full-network state
+dict `train.py` (not `train_sleep_edf.py`) would eventually produce.
 
 ---
 
@@ -1208,6 +1226,12 @@ Fei, D. Y., Zhao, X., Boanca, C., Hughes, E., Bai, O., Merrell, R., & Rafiq, A. 
 A biomedical sensor system for real-time monitoring of astronauts' physiological
 parameters during extra-vehicular activities. *Computers in Biology and Medicine*,
 40(7), 635–642.
+
+Kemp, B., Zwinderman, A. H., Tuk, B., Kamphuisen, H. A. C., & Oberye, J. J. L.
+(2000). Analysis of a sleep-dependent neuronal feedback loop: the slow-wave
+microcontinuity of the EEG. *IEEE Transactions on Biomedical Engineering*,
+47(9), 1185–1194. (Sleep-EDF; source of the real EEG data this project's first
+training run was actually conducted on — see Section 10.2.)
 
 Grigoriev, A. I., & Egorov, A. D. (1997). Medical monitoring in long-term space
 missions. *Advances in Space Biology and Medicine*, 6, 167–191.

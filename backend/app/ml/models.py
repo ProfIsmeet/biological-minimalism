@@ -18,8 +18,12 @@ trained `.pt` file and `create_inference_engine()` loads
 
 from __future__ import annotations
 
-import torch
-from torch import nn
+from app.ml._torch_bootstrap import ensure_torch_dll_path
+
+ensure_torch_dll_path()
+
+import torch  # noqa: E402
+from torch import nn  # noqa: E402
 
 MODALITIES = ("eeg", "ppg", "temperature", "bioimpedance")
 
