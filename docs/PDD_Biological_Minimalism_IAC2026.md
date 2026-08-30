@@ -657,34 +657,61 @@ where Vaswani et al., 2017 is a clear, singular foundational source) and decline
 name one rather than guess, since 1D-CNN-for-biosignals is a broad pattern with many
 candidate papers rather than one originating source.
 
-### 10.2 Training status: one modality trained on real data, three still untrained
+### 10.2 Training status: three modalities trained on real data, one untrained, fusion not yet jointly trained
 
-The full 4-modality fusion network ships untrained with this deliverable — no
-real PPG or bio-impedance dataset was accessible in this task's timeframe
-(Section 7), and training against WESAD/PulseDB/NASA OSDR remains future
-work, scaffolded but not executed in `ml/train.py` (see Section 16 and
-`ml/README.md`).
+The full 4-modality fusion network ships untrained with this deliverable —
+`Conv1DEncoder` and `ModalityFusionTransformer` were never jointly trained
+end to end, and training against a real spaceflight-analog dataset remains
+future work, scaffolded but not executed in `ml/train.py` (see Section 16
+and `ml/README.md`). Three of the four *per-modality* encoders, however,
+were each independently trained and validated on real, downloaded data —
+this section reports all three results with equal weight to what worked and
+what did not, per this document's own transparency commitment (Section 20).
 
-The EEG pathway is the exception: `Conv1DEncoder` (imported unmodified from
-this file) was actually trained on real data as a first validation pass. Its
-official planned dataset, WESAD, has two dead official distribution links
-(independently re-verified, not assumed, while writing this document); this
-project substituted PhysioNet Sleep-EDF (already discussed in Section 7 for
-respiration/circadian structure) and trained a 5-class sleep-stage classifier
-on real, downloaded, byte-verified EEG recordings from 3 subjects, with a
-subject-level held-out split (2 subjects trained on, 1 fully unseen subject
-tested on): **72.6% held-out accuracy**, against a 66.2% majority-class
-baseline on that same held-out subject. This is a real, reproducible result
-(`ml/train_sleep_edf.py`), not a projection — and its own limitation is
-stated with equal weight: 3 subjects is a small sample, held-out accuracy
-varied 41.8%–78.9% across training epochs, and this validates the
-architecture's ability to learn real signal from one modality, not the full
-4-modality fusion model's real-world accuracy, which remains unmeasured. See
-`ml/README.md`'s "Next steps toward the full 4-modality checkpoint" for what
-would close that gap. The dashboard's default AI path remains the transparent
-rule-based physiology engine (Section 9); this checkpoint does not yet load
-into `TorchInferenceEngine` (Section 17), which expects the full-network state
-dict `train.py` (not `train_sleep_edf.py`) would eventually produce.
+**EEG** (`ml/train_sleep_edf.py`): WESAD, this project's original planned
+dataset, has two dead official distribution links (independently
+re-verified, not assumed). Substituted with PhysioNet Sleep-EDF (Section 7):
+real 30-second EEG epochs from 3 subjects, subject-level held-out split (2
+trained on, 1 unseen tested on) — **72.6% held-out accuracy** on 5-class
+sleep staging, against a 66.2% majority-class baseline. Held-out accuracy
+varied 41.8%–78.9% across training epochs (small-sample variance, reported
+as-is).
+
+**PPG** (`ml/train_ppg.py`): also originally scoped for WESAD; substituted
+with the real, open PhysioNet BIDMC PPG and Respiration Dataset (Pimentel et
+al., 2017), which happens to be a better fit — it carries real per-second
+clinical heart-rate and respiration-rate ground truth, directly matching
+this project's actual `heart_rate_bpm`/`respiration_rate_bpm` output
+targets. 53 subjects, subject-level held-out split (37 trained on, 16
+unseen tested on): **heart rate held-out MAE 8.72 bpm, beating a 12.15 bpm
+naive baseline** — a real, meaningful result; **respiration rate held-out
+MAE 3.43 breaths/min, worse than a 2.29 breaths/min naive baseline** — a
+real negative result, reported rather than omitted.
+
+**Bio-impedance/temperature** (`ml/train_bioimpedance.py`): this project's
+originally planned dataset, NASA OSDR, was queried directly via its public
+search API for bio-impedance-related terms; every result was a molecular-
+biology ('omics) study — OSDR does not host raw physiological sensor time
+series in a form this project could use. Substituted with PhysioNet's
+Quantitative Dehydration Estimation dataset: real segmental bio-impedance
+and real skin temperature from 10 subjects during exercise-induced
+dehydration (not spaceflight-induced fluid shift, stated plainly — see
+Section 8). Leave-one-subject-out cross-validation, reframed to predict each
+subject's fluid change from their own baseline (this project's actual
+fluid-*shift* framing): **mean held-out MAE 0.454 L, against a 0.414 L naive
+baseline — a null-to-slightly-negative result at n = 10 subjects.**
+
+**What these three runs do and do not prove.** They prove the project's
+real architecture pieces train on real physiological data from three
+independent, verified sources, and that at least two pathways (EEG, PPG-for-
+heart-rate) learn a real, subject-general, better-than-baseline signal. They
+do not prove the full 4-modality fusion model's real-world accuracy — the
+three encoders were trained independently, never jointly with
+`ModalityFusionTransformer`, and this checkpoint set does not load into
+`TorchInferenceEngine` (Section 17), which expects the full-network state
+dict `train.py` would eventually produce. The dashboard's default AI path
+remains the transparent rule-based physiology engine (Section 9). See
+`ml/README.md`'s "Next steps toward the full 4-modality checkpoint."
 
 ---
 
@@ -1286,6 +1313,13 @@ PubMed ID 10124463. Bioelectrical impedance analysis for measurement of body flu
 volumes: a review. Cited by identifier (see Section 8) because this document could
 not independently confirm the full author list through an accessible, non-paywalled
 source.
+
+Pimentel, M. A. F., Johnson, A. E. W., Charlton, P. H., Birrenkott, D.,
+Watkinson, P. J., Tarassenko, L., & Clifton, D. A. (2017). Toward a Robust
+Estimation of Respiratory Rate From Pulse Oximeters. *IEEE Transactions on
+Biomedical Engineering*, 64(8), 1914–1929. (BIDMC PPG and Respiration
+Dataset; source of the real PPG data this project's second training run was
+conducted on — see Section 10.2.)
 
 Pool, S. L. (1975). Physiological Measurement Systems for Advanced Manned Space
 Missions. In *Advances in Biomedical Engineering* (pp. 151–215). Academic Press.
