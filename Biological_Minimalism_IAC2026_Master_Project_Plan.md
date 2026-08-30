@@ -230,6 +230,39 @@ Include:
 - Sensor Failure
 - Digital Twin
 
+### Phase 13 — Technical Handoff v2: Research-Grade Integration
+
+Added after the team's Technical Handoff v2 review of the pushed repository
+(`ProfIsmeet/biological-minimalism`). Full detail: `docs/TECHNICAL_HANDOFF_V2.md`.
+Team ownership for this phase: **Emir** (dataset scouting, data-source architecture,
+replay, fault injection, experiment orchestration, model↔backend integration,
+digital-twin logic, dashboard research mode, Pareto visualization) — see handoff §19.
+
+Executed in the handoff's own priority order (§18):
+
+| Sub-phase | Name | Exit Criterion |
+|---|---|---|
+| 13.0 | Freeze terminology/taxonomy | Physiological modality vs. context/artifact-reference channel vs. contact region vs. wearable module formally defined and used consistently before any code touches `MODALITIES` |
+| 13.1 | Target-first dataset research | `datasets/DATASET_MATRIX.md` filled per-candidate (PPG-DaLiA, PulseDB, WESAD re-check, others) using the handoff §9 record template, each entry backed by an actually-attempted access check, not assumed |
+| 13.2 | First real ablation result | A single narrow, measurable question answered with real data: how much does synchronized IMU improve PPG-derived heart-rate estimation under motion? |
+| 13.3 | Research-grade ablation framework | Beyond present/absent: target-specific metrics, missing modality, noise, motion artifact, delay, clock drift, uncertainty delta |
+| 13.4 | `DataSource` refactor | `SyntheticSource` / `DatasetReplaySource` / (future) `RealSensorSource` behind one interface; replay of the three real datasets already on disk (Sleep-EDF, BIDMC, QDE) with preserved timing |
+| 13.5 | Fix model masking/pooling | `ModalityFusionTransformer` pools only over present-modality positions, not `fused.mean(dim=1)` over everything |
+| 13.6 | Real inference adapter | `TorchInferenceEngine.confidence_and_contribution()` actually calls `self.model(...)` on real buffered windows once they exist, instead of silently returning the rule-based snapshot |
+| 13.7 | Pareto analysis | Only after 13.2–13.6 produce real target-specific results; report a frontier, not a single pre-announced sensor count |
+
+**Immediate fixes done alongside 13.0** (found during the handoff review, no new
+research needed): the PDD's Section 20 Limitations bullet contradicting its own
+Section 10.2 (handoff §16.5), and the masking/pooling bug (handoff §16.7 — tracked
+formally as 13.5 above, but the code-level fix itself was small enough to do
+immediately rather than wait).
+
+**Standing rule reinforced by this phase** (handoff §8, already this project's own
+practice): never splice unrelated subjects/datasets into a fake simultaneous
+multi-sensor reading. A dataset may pretrain/validate one sub-task; a real fusion
+claim requires genuinely synchronized multi-modality data from the same
+subject/session.
+
 ## Folder structure
 
 ```

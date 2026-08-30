@@ -109,7 +109,21 @@ class ModalityFusionTransformer(nn.Module):
         tokens = modality_tokens + self.modality_embedding.unsqueeze(0)
         key_padding_mask = ~modality_mask if modality_mask is not None else None
         fused = self.encoder(tokens, src_key_padding_mask=key_padding_mask)
-        return fused.mean(dim=1)
+
+        if modality_mask is None:
+            return fused.mean(dim=1)
+
+        # `src_key_padding_mask` only stops *other* tokens from attending to a
+        # masked position - the masked position itself still runs as a query
+        # against the valid tokens and produces a real (non-zero) output. A
+        # plain `fused.mean(dim=1)` would silently mix that leftover value
+        # back into the pooled representation, undermining the whole point of
+        # masking a missing modality out (see docs/TECHNICAL_HANDOFF_V2.md
+        # §16.7). Pool only over the positions that were actually present.
+        mask = modality_mask.unsqueeze(-1).to(fused.dtype)  # (batch, n_modalities, 1)
+        summed = (fused * mask).sum(dim=1)
+        counts = mask.sum(dim=1).clamp(min=1.0)
+        return summed / counts
 
 
 class BiologicalDigitalTwinNet(nn.Module):
