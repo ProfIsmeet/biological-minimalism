@@ -240,16 +240,16 @@ digital-twin logic, dashboard research mode, Pareto visualization) — see hando
 
 Executed in the handoff's own priority order (§18):
 
-| Sub-phase | Name | Exit Criterion |
-|---|---|---|
-| 13.0 | Freeze terminology/taxonomy | Physiological modality vs. context/artifact-reference channel vs. contact region vs. wearable module formally defined and used consistently before any code touches `MODALITIES` |
-| 13.1 | Target-first dataset research | `datasets/DATASET_MATRIX.md` filled per-candidate (PPG-DaLiA, PulseDB, WESAD re-check, others) using the handoff §9 record template, each entry backed by an actually-attempted access check, not assumed |
-| 13.2 | First real ablation result | A single narrow, measurable question answered with real data: how much does synchronized IMU improve PPG-derived heart-rate estimation under motion? |
-| 13.3 | Research-grade ablation framework | Beyond present/absent: target-specific metrics, missing modality, noise, motion artifact, delay, clock drift, uncertainty delta |
-| 13.4 | `DataSource` refactor | `SyntheticSource` / `DatasetReplaySource` / (future) `RealSensorSource` behind one interface; replay of the three real datasets already on disk (Sleep-EDF, BIDMC, QDE) with preserved timing |
-| 13.5 | Fix model masking/pooling | `ModalityFusionTransformer` pools only over present-modality positions, not `fused.mean(dim=1)` over everything |
-| 13.6 | Real inference adapter | `TorchInferenceEngine.confidence_and_contribution()` actually calls `self.model(...)` on real buffered windows once they exist, instead of silently returning the rule-based snapshot |
-| 13.7 | Pareto analysis | Only after 13.2–13.6 produce real target-specific results; report a frontier, not a single pre-announced sensor count |
+| Sub-phase | Name | Exit Criterion | Status |
+|---|---|---|---|
+| 13.0 | Freeze terminology/taxonomy | Physiological modality vs. context/artifact-reference channel vs. contact region vs. wearable module formally defined and used consistently before any code touches `MODALITIES` | ✅ Done — `docs/TAXONOMY.md` |
+| 13.1 | Target-first dataset research | `datasets/DATASET_MATRIX.md` filled per-candidate (PPG-DaLiA, PulseDB, WESAD re-check, others) using the handoff §9 record template, each entry backed by an actually-attempted access check, not assumed | ✅ Done — PPG-DaLiA accessible & used, PulseDB/WESAD verified blocked |
+| 13.2 | First real ablation result | A single narrow, measurable question answered with real data: how much does synchronized IMU improve PPG-derived heart-rate estimation under motion? | ✅ Done — IMU cut held-out HR MAE 9.090→7.032 bpm (≈23%); see `ml/README.md` |
+| 13.3 | Research-grade ablation framework | Beyond present/absent: target-specific metrics, missing modality, noise, motion artifact, delay, clock drift, uncertainty delta | Not started |
+| 13.4 | `DataSource` refactor | `SyntheticSource` / `DatasetReplaySource` / (future) `RealSensorSource` behind one interface; replay of the four real datasets already on disk (Sleep-EDF, BIDMC, QDE, PPG-DaLiA) with preserved timing | Not started |
+| 13.5 | Fix model masking/pooling | `ModalityFusionTransformer` pools only over present-modality positions, not `fused.mean(dim=1)` over everything | ✅ Done, regression-tested, and exercised for real by 13.2's Model B/C |
+| 13.6 | Real inference adapter | `TorchInferenceEngine.confidence_and_contribution()` actually calls `self.model(...)` on real buffered windows once they exist, instead of silently returning the rule-based snapshot | Not started |
+| 13.7 | Pareto analysis | Only after 13.2–13.6 produce real target-specific results; report a frontier, not a single pre-announced sensor count | Not started |
 
 **Immediate fixes done alongside 13.0** (found during the handoff review, no new
 research needed): the PDD's Section 20 Limitations bullet contradicting its own

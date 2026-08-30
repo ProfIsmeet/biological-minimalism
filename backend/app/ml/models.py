@@ -85,10 +85,24 @@ class ModalityFusionTransformer(nn.Module):
     failure (Demo 1).
     """
 
-    def __init__(self, embedding_dim: int = 64, n_heads: int = 4, n_layers: int = 2, dropout: float = 0.1) -> None:
+    def __init__(
+        self,
+        embedding_dim: int = 64,
+        n_heads: int = 4,
+        n_layers: int = 2,
+        dropout: float = 0.1,
+        n_modalities: int | None = None,
+    ) -> None:
         super().__init__()
         self.embedding_dim = embedding_dim
-        self.modality_embedding = nn.Parameter(torch.randn(len(MODALITIES), embedding_dim) * 0.02)
+        # Defaults to the dashboard's own 4-modality set (EEG/PPG/temperature/
+        # bioimpedance) for backward compatibility, but is not hard-coupled to
+        # it: other real experiments (e.g. ml/train_ppg_dalia_imu_ablation.py's
+        # 2-modality PPG+IMU fusion) reuse this exact class with a different
+        # token count via `n_modalities`.
+        self.modality_embedding = nn.Parameter(
+            torch.randn(n_modalities if n_modalities is not None else len(MODALITIES), embedding_dim) * 0.02
+        )
         layer = nn.TransformerEncoderLayer(
             d_model=embedding_dim,
             nhead=n_heads,

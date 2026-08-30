@@ -1,0 +1,4 @@
+model,mae_bpm,rmse_bpm,n_windows
+model_a_ppg_only,9.0901,12.5226,12852
+model_b_ppg_plus_imu,7.0317,10.7172,12852
+model_c_ppg_plus_shuffled_imu,7.9570,11.9595,12852

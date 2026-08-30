@@ -10,7 +10,7 @@ Template fields follow the handoff's own record format (§9).
 
 ---
 
-## PPG-DaLiA — ✅ verified accessible, not yet downloaded
+## PPG-DaLiA — ✅ downloaded, preprocessed, used in a real experiment (Priority 2 complete)
 
 ```
 Dataset name: PPG-DaLiA
@@ -49,16 +49,26 @@ Zenodo API (`curl -s https://zenodo.org/api/records/3902728`):
 | `PPGDalia_TEST.ts` | 212,538,529 bytes (~213 MB) |
 
 Note: this Zenodo copy is the Monash/UEA/UCR time-series-regression-repository
-reformatting (`.ts` files, windowed PPG+ACC with HR as target already extracted) —
-convenient for a windowed-regression loader, but a different file format than the
-original per-subject `.pkl` files the UCI page describes. If the original raw
-per-modality `.pkl` format is needed later (e.g. to separate PPG from ACC channels
-more flexibly), re-check `archive.ics.uci.edu/static/public/495/...zip` the same way
-`WESAD`'s was checked below, before assuming it works.
+reformatting (`.ts` files, windowed PPG+ACC with HR as target already extracted).
+**Inspected its header directly and found it has no subject/group field at all** —
+impossible to verify its TRAIN/TEST split is subject-disjoint, which this
+project's own standing rule (and the task's explicit requirement) does not allow
+assuming. Not used for the actual experiment.
 
-**Not yet downloaded** — ~636 MB combined; deferred to Priority 2 (first real
-ablation experiment), which is this dataset's actual use, not Priority 1's research
-pass.
+**Used the original raw per-subject distribution instead**
+(`archive.ics.uci.edu/static/public/495/ppg+dalia.zip`, ~2.87 GB, downloaded
+successfully — unlike WESAD's equivalent UCI static-zip check below, this one is
+the real dataset, not a dead pointer). Verified real per-subject `.pkl` structure
+by loading `S1.pkl` directly before writing the loader (`data['subject']`,
+`data['signal']['wrist']['BVP']` @ 64 Hz, `data['signal']['wrist']['ACC']` @ 32 Hz,
+`data['label']` = real ECG-derived HR per 8s/2s-step window). Full download,
+preprocessing, and loader details: `datasets/ppg-dalia/README.md`.
+
+**Priority 2 (first real ablation experiment) — complete.** Real result: adding
+synchronized IMU reduced held-out heart-rate MAE from 9.090 to 7.032 bpm (≈23%),
+subject-wise held out, stratified by motion severity, with a negative-control
+(shuffled IMU) check. Full results: `ml/README.md` §"Priority 2" and
+`ml/experiments/ppg_dalia_imu_ablation/results.json`.
 
 ---
 
@@ -175,11 +185,13 @@ multimodal result.
   (Priority 0/`docs/TAXONOMY.md` keeps light as a context channel, not yet resolved
   whether the paper keeps a dedicated circadian target requiring dataset validation).
 
-## What this unblocks
+## What this unblocked
 
 **Priority 2** (first real ablation result — "how much does synchronized IMU improve
-PPG-derived heart-rate estimation under motion?") can proceed with PPG-DaLiA, which is
-real, accessible, and exactly fits that question. PulseDB and WESAD stay blocked
+PPG-derived heart-rate estimation under motion?") is complete, using PPG-DaLiA — real,
+accessible, exactly fit for that question. Result: synchronized IMU reduced held-out
+HR MAE by ≈23% (9.090 → 7.032 bpm), consistent across all 3 held-out test subjects and
+all motion-severity quartiles (see `ml/README.md`). PulseDB and WESAD stay blocked
 pending team action (an account holder downloading them) — not silently substituted
 again the way Sleep-EDF/BIDMC/QDE substituted for WESAD earlier, per the handoff's
 own caution against over-substituting away from the datasets a target actually needs.

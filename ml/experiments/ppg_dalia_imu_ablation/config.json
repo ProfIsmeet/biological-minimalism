@@ -1,0 +1,13 @@
+{
+  "cache_dir": "C:\\Users\\Administrator\\Desktop\\biological-minimalism\\datasets\\ppg-dalia\\processed",
+  "seed": 42,
+  "n_train_subjects": 10,
+  "n_val_subjects": 2,
+  "embedding_dim": 32,
+  "epochs": 20,
+  "batch_size": 64,
+  "lr": 0.001,
+  "save_checkpoints": true,
+  "negative_control": false,
+  "only_negative_control": true
+}

@@ -1,0 +1,685 @@
+{
+  "config": {
+    "cache_dir": "C:\\Users\\Administrator\\Desktop\\biological-minimalism\\datasets\\ppg-dalia\\processed",
+    "seed": 42,
+    "n_train_subjects": 10,
+    "n_val_subjects": 2,
+    "embedding_dim": 32,
+    "epochs": 20,
+    "batch_size": 64,
+    "lr": 0.001,
+    "save_checkpoints": true
+  },
+  "subject_split": {
+    "train": [
+      "S1",
+      "S10",
+      "S11",
+      "S12",
+      "S15",
+      "S3",
+      "S4",
+      "S6",
+      "S7",
+      "S8"
+    ],
+    "val": [
+      "S13",
+      "S5"
+    ],
+    "test": [
+      "S14",
+      "S2",
+      "S9"
+    ]
+  },
+  "hr_normalization": {
+    "mean": 86.34466552734375,
+    "std": 21.048254013061523
+  },
+  "model_a_ppg_only": {
+    "overall": {
+      "mae": 9.090062141418457,
+      "rmse": 12.522624015808105,
+      "n_windows": 12852
+    },
+    "per_subject": {
+      "S14": {
+        "mae": 5.526973724365234,
+        "rmse": 7.7756242752075195,
+        "n_windows": 4476
+      },
+      "S2": {
+        "mae": 9.175435066223145,
+        "rmse": 11.81202220916748,
+        "n_windows": 4099
+      },
+      "S9": {
+        "mae": 12.737114906311035,
+        "rmse": 16.55982208251953,
+        "n_windows": 4277
+      }
+    },
+    "per_activity": {
+      "transient/unlabeled": {
+        "mae": 8.112546920776367,
+        "rmse": 11.067663192749023,
+        "n_windows": 3543
+      },
+      "sitting": {
+        "mae": 10.257964134216309,
+        "rmse": 13.642952919006348,
+        "n_windows": 903
+      },
+      "stairs": {
+        "mae": 14.536277770996094,
+        "rmse": 19.939584732055664,
+        "n_windows": 601
+      },
+      "table_soccer": {
+        "mae": 6.517525672912598,
+        "rmse": 8.421048164367676,
+        "n_windows": 456
+      },
+      "cycling": {
+        "mae": 13.682497024536133,
+        "rmse": 19.868043899536133,
+        "n_windows": 721
+      },
+      "driving": {
+        "mae": 8.7861967086792,
+        "rmse": 11.404929161071777,
+        "n_windows": 1415
+      },
+      "lunch_break": {
+        "mae": 7.465733528137207,
+        "rmse": 9.689566612243652,
+        "n_windows": 2397
+      },
+      "walking": {
+        "mae": 11.49482536315918,
+        "rmse": 14.522597312927246,
+        "n_windows": 947
+      },
+      "working": {
+        "mae": 8.578376770019531,
+        "rmse": 11.533306121826172,
+        "n_windows": 1869
+      }
+    },
+    "per_motion_quartile": {
+      "q1_lowest_motion": {
+        "mae": 8.075081825256348,
+        "rmse": 11.297268867492676,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.0,
+          0.024358669761568308
+        ]
+      },
+      "q2": {
+        "mae": 8.295798301696777,
+        "rmse": 10.884270668029785,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.024358669761568308,
+          0.09095916524529457
+        ]
+      },
+      "q3": {
+        "mae": 8.301412582397461,
+        "rmse": 10.877630233764648,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.09095916524529457,
+          0.2258138358592987
+        ]
+      },
+      "q4_highest_motion": {
+        "mae": 11.687958717346191,
+        "rmse": 16.2125244140625,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.2258138358592987,
+          0.7733448147773743
+        ]
+      }
+    },
+    "train_seconds": 622.5307447910309,
+    "train_history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.3500068225044298,
+        "val_mae": 12.526928397613982
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.28833443655158963,
+        "val_mae": 13.169113132682984
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.27099349368839426,
+        "val_mae": 12.799382542021652
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.2610638251540858,
+        "val_mae": 11.101934735625433
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.25286453349900245,
+        "val_mae": 11.554438226466742
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.2465061796918892,
+        "val_mae": 11.264941292314175
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.2392096138033205,
+        "val_mae": 11.23679722263675
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.23804171113642295,
+        "val_mae": 10.87451553510331
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.2325831716827553,
+        "val_mae": 11.101191382204242
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.2270658061630813,
+        "val_mae": 12.09824099829483
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.22463373799902983,
+        "val_mae": 10.707615255559114
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.22116561252147113,
+        "val_mae": 11.322261425272513
+      },
+      {
+        "epoch": 13,
+        "train_loss": 0.21809524661932994,
+        "val_mae": 11.06801085475212
+      },
+      {
+        "epoch": 14,
+        "train_loss": 0.21497062792113836,
+        "val_mae": 10.842276365968651
+      },
+      {
+        "epoch": 15,
+        "train_loss": 0.2149365861490077,
+        "val_mae": 10.845273209363384
+      },
+      {
+        "epoch": 16,
+        "train_loss": 0.21108046835235755,
+        "val_mae": 11.516963452818803
+      },
+      {
+        "epoch": 17,
+        "train_loss": 0.20690214027492948,
+        "val_mae": 10.28345310566403
+      },
+      {
+        "epoch": 18,
+        "train_loss": 0.20436877863937483,
+        "val_mae": 11.130268041446355
+      },
+      {
+        "epoch": 19,
+        "train_loss": 0.20323515049123134,
+        "val_mae": 11.018651505626151
+      },
+      {
+        "epoch": 20,
+        "train_loss": 0.20199637671012025,
+        "val_mae": 10.173344541118697
+      }
+    ]
+  },
+  "model_b_ppg_plus_imu": {
+    "overall": {
+      "mae": 7.031700611114502,
+      "rmse": 10.717168807983398,
+      "n_windows": 12852
+    },
+    "per_subject": {
+      "S14": {
+        "mae": 5.0838541984558105,
+        "rmse": 7.492855072021484,
+        "n_windows": 4476
+      },
+      "S2": {
+        "mae": 6.261062145233154,
+        "rmse": 9.692630767822266,
+        "n_windows": 4099
+      },
+      "S9": {
+        "mae": 9.808743476867676,
+        "rmse": 14.012308120727539,
+        "n_windows": 4277
+      }
+    },
+    "per_activity": {
+      "transient/unlabeled": {
+        "mae": 6.749187469482422,
+        "rmse": 10.029511451721191,
+        "n_windows": 3543
+      },
+      "sitting": {
+        "mae": 5.348302364349365,
+        "rmse": 8.673081398010254,
+        "n_windows": 903
+      },
+      "stairs": {
+        "mae": 14.413515090942383,
+        "rmse": 22.026391983032227,
+        "n_windows": 601
+      },
+      "table_soccer": {
+        "mae": 8.953840255737305,
+        "rmse": 11.995302200317383,
+        "n_windows": 456
+      },
+      "cycling": {
+        "mae": 8.896951675415039,
+        "rmse": 14.018742561340332,
+        "n_windows": 721
+      },
+      "driving": {
+        "mae": 6.206242561340332,
+        "rmse": 8.82939338684082,
+        "n_windows": 1415
+      },
+      "lunch_break": {
+        "mae": 5.736633777618408,
+        "rmse": 7.812176704406738,
+        "n_windows": 2397
+      },
+      "walking": {
+        "mae": 9.760661125183105,
+        "rmse": 13.046344757080078,
+        "n_windows": 947
+      },
+      "working": {
+        "mae": 5.721490859985352,
+        "rmse": 8.503785133361816,
+        "n_windows": 1869
+      }
+    },
+    "per_motion_quartile": {
+      "q1_lowest_motion": {
+        "mae": 5.110041618347168,
+        "rmse": 7.990535259246826,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.0,
+          0.024358669761568308
+        ]
+      },
+      "q2": {
+        "mae": 5.928314208984375,
+        "rmse": 8.422852516174316,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.024358669761568308,
+          0.09095916524529457
+        ]
+      },
+      "q3": {
+        "mae": 7.312983989715576,
+        "rmse": 10.492208480834961,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.09095916524529457,
+          0.2258138358592987
+        ]
+      },
+      "q4_highest_motion": {
+        "mae": 9.775463104248047,
+        "rmse": 14.647568702697754,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.2258138358592987,
+          0.7733448147773743
+        ]
+      }
+    },
+    "train_seconds": 2472.455266237259,
+    "train_history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.26936272374403214,
+        "val_mae": 14.685481443047031
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.172566927117806,
+        "val_mae": 12.458314247702683
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.14472693165923733,
+        "val_mae": 12.69869445641801
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.1247256741608247,
+        "val_mae": 13.372647581272279
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.11453442006729296,
+        "val_mae": 14.696218211143167
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.10752070656939822,
+        "val_mae": 13.222075868693096
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.10085327470436245,
+        "val_mae": 12.939688484451894
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.09177223710179265,
+        "val_mae": 13.334605843585614
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.0882890467434742,
+        "val_mae": 11.796547175333508
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.08487044909043963,
+        "val_mae": 11.172957574982226
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.07791888096062931,
+        "val_mae": 11.401505014242773
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.07410459334385049,
+        "val_mae": 13.173518767707748
+      },
+      {
+        "epoch": 13,
+        "train_loss": 0.07414244090072283,
+        "val_mae": 13.519934018107953
+      },
+      {
+        "epoch": 14,
+        "train_loss": 0.06781822523192477,
+        "val_mae": 10.62127230383192
+      },
+      {
+        "epoch": 15,
+        "train_loss": 0.07138876170140177,
+        "val_mae": 16.101714945470846
+      },
+      {
+        "epoch": 16,
+        "train_loss": 0.07302918262140583,
+        "val_mae": 11.477610115066174
+      },
+      {
+        "epoch": 17,
+        "train_loss": 0.06468149614426105,
+        "val_mae": 11.229680143521513
+      },
+      {
+        "epoch": 18,
+        "train_loss": 0.06173349724715196,
+        "val_mae": 10.748395618813815
+      },
+      {
+        "epoch": 19,
+        "train_loss": 0.06343370747695971,
+        "val_mae": 10.606711978634966
+      },
+      {
+        "epoch": 20,
+        "train_loss": 0.05821854923341135,
+        "val_mae": 11.678074160444003
+      }
+    ]
+  },
+  "summary": {
+    "model_a_mae": 9.090062141418457,
+    "model_b_mae": 7.031700611114502,
+    "mae_improvement_from_imu": 2.058361530303955,
+    "imu_helped": true,
+    "note": "Positive mae_improvement_from_imu means Model B (PPG+IMU) had LOWER error than Model A (PPG-only), i.e. IMU helped. A negative or near-zero value means IMU did not help (or hurt) under these conditions - reported as-is, not adjusted.",
+    "model_c_shuffled_imu_mae": 7.956958293914795,
+    "negative_control_note": "Model C uses the same architecture as Model B but with each subject's own ACC windows randomly permuted among themselves, breaking true PPG<->IMU temporal correspondence while preserving per-subject motion statistics. If Model C's MAE is close to Model B's, Model B's gain over Model A may come from IMU carrying generic extra dimensions/population regularities rather than genuine synchronization. If Model C's MAE falls back toward Model A's, that supports synchronization itself mattering. Reported as observed, not adjusted toward either interpretation."
+  },
+  "model_c_ppg_plus_shuffled_imu": {
+    "overall": {
+      "mae": 7.956958293914795,
+      "rmse": 11.959531784057617,
+      "n_windows": 12852
+    },
+    "per_subject": {
+      "S14": {
+        "mae": 5.226001262664795,
+        "rmse": 8.636041641235352,
+        "n_windows": 4476
+      },
+      "S2": {
+        "mae": 6.838325500488281,
+        "rmse": 10.100987434387207,
+        "n_windows": 4099
+      },
+      "S9": {
+        "mae": 11.887060165405273,
+        "rmse": 15.936075210571289,
+        "n_windows": 4277
+      }
+    },
+    "per_activity": {
+      "transient/unlabeled": {
+        "mae": 7.334167003631592,
+        "rmse": 10.911558151245117,
+        "n_windows": 3543
+      },
+      "sitting": {
+        "mae": 6.213090896606445,
+        "rmse": 10.422189712524414,
+        "n_windows": 903
+      },
+      "stairs": {
+        "mae": 12.789202690124512,
+        "rmse": 19.11336898803711,
+        "n_windows": 601
+      },
+      "table_soccer": {
+        "mae": 7.345625877380371,
+        "rmse": 9.671745300292969,
+        "n_windows": 456
+      },
+      "cycling": {
+        "mae": 8.970486640930176,
+        "rmse": 13.680502891540527,
+        "n_windows": 721
+      },
+      "driving": {
+        "mae": 7.517767429351807,
+        "rmse": 10.950159072875977,
+        "n_windows": 1415
+      },
+      "lunch_break": {
+        "mae": 6.8252716064453125,
+        "rmse": 9.67859172821045,
+        "n_windows": 2397
+      },
+      "walking": {
+        "mae": 12.636858940124512,
+        "rmse": 17.105504989624023,
+        "n_windows": 947
+      },
+      "working": {
+        "mae": 7.597058296203613,
+        "rmse": 11.562152862548828,
+        "n_windows": 1869
+      }
+    },
+    "per_motion_quartile": {
+      "q1_lowest_motion": {
+        "mae": 5.839390277862549,
+        "rmse": 9.974061965942383,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.0,
+          0.024358669761568308
+        ]
+      },
+      "q2": {
+        "mae": 7.329653739929199,
+        "rmse": 10.51400375366211,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.024358669761568308,
+          0.09095916524529457
+        ]
+      },
+      "q3": {
+        "mae": 8.022505760192871,
+        "rmse": 11.58127498626709,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.09095916524529457,
+          0.2258138358592987
+        ]
+      },
+      "q4_highest_motion": {
+        "mae": 10.636286735534668,
+        "rmse": 15.098658561706543,
+        "n_windows": 3213,
+        "motion_energy_range": [
+          0.2258138358592987,
+          0.7733448147773743
+        ]
+      }
+    },
+    "train_seconds": 1517.768726825714,
+    "train_history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.33399465460018196,
+        "val_mae": 12.652961711084505
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.2439413179972302,
+        "val_mae": 11.151802933239383
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.21498412846790482,
+        "val_mae": 10.64159617456097
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.18874763876821202,
+        "val_mae": 10.63194380309542
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.18113332491833203,
+        "val_mae": 10.3179220088216
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.16924751134865143,
+        "val_mae": 8.42481565216707
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.16483610221738482,
+        "val_mae": 9.06861376156899
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.15210786356959954,
+        "val_mae": 10.440309830490255
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.14772913679199173,
+        "val_mae": 8.320332174630286
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.14148238184636278,
+        "val_mae": 8.705313309739255
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.13250540197917998,
+        "val_mae": 9.05917369907943
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.13098437913079022,
+        "val_mae": 9.681694393435347
+      },
+      {
+        "epoch": 13,
+        "train_loss": 0.12723835862824168,
+        "val_mae": 7.2128797572115015
+      },
+      {
+        "epoch": 14,
+        "train_loss": 0.12196379106457113,
+        "val_mae": 8.010217299398228
+      },
+      {
+        "epoch": 15,
+        "train_loss": 0.11976158509521559,
+        "val_mae": 8.521795989480173
+      },
+      {
+        "epoch": 16,
+        "train_loss": 0.11603702292021394,
+        "val_mae": 9.209499354162727
+      },
+      {
+        "epoch": 17,
+        "train_loss": 0.11114121922447032,
+        "val_mae": 7.396496988258834
+      },
+      {
+        "epoch": 18,
+        "train_loss": 0.10779788469551556,
+        "val_mae": 7.1825778307872294
+      },
+      {
+        "epoch": 19,
+        "train_loss": 0.10599569237685769,
+        "val_mae": 7.9852125591379925
+      },
+      {
+        "epoch": 20,
+        "train_loss": 0.10418790934191392,
+        "val_mae": 7.8736082060051915
+      }
+    ]
+  }
+}
