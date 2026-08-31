@@ -157,6 +157,45 @@ project's abstract still names.
 
 ---
 
+## HeartCycle — ⚠️ accessible, but audited and found PARTIALLY suitable only (Day 1, 2026-08-31)
+
+```
+Dataset name: HeartCycle
+Subjects: 17 total, but only 4 (CH07-CH10) have any PPG data
+Population: 17 healthy volunteers, age 19-40
+Signals: ECG, ICG (thoracic, cardiac-timing-oriented - not the same as this
+         project's fluid-shift bio-impedance concept), phonocardiography,
+         echocardiography (reference standard), + PPG in 4 subjects only
+Which signals are simultaneous: same file/session, but verified NOT full-duration
+         aligned - Niccomo (ECG/ICG) channel was 2.44s shorter than the other
+         three devices' channels in the one file directly inspected
+Sampling rates: Niccomo ~198.5 Hz, stethoscope ~43,761 Hz, echo 136.0 Hz,
+         PPG ~123.9 Hz (all measured directly from a real downloaded file)
+Ground-truth labels: real, but inconsistently populated per-record - the one
+         file inspected had several ground-truth fields (Niccomo PEP/LVET,
+         all three Niccomo BP fields, PPG-derived PEP/LVET) as placeholder/
+         missing-value sentinels, not real measurements
+Target(s) we can honestly evaluate: none at Priority-2 rigor (see below);
+         possibly a small-N PAT/PEP-vs-echocardiography correlation study
+Subject-level split possible: only with 4 subjects (PPG) or up to 17 (non-PPG,
+         no PPG-related question) - far thinner than Priority 2's 15
+Which ablation can this dataset support: none cleanly - see full audit
+```
+
+**Full audit:** `datasets/HEARTCYCLE_AUDIT.md` (real file downloaded and
+opened with `h5py`, not assumed from the dataset description).
+
+**Verdict: PARTIALLY suitable.** Real, open access (verified: real directory
+listing + real 14.2 MB file downloaded and parsed). Fails the gates for a
+Priority-2-style trained ablation: only 4/17 subjects have PPG, records are
+short (~5-8s snippets, not continuous recordings), and ground-truth fields
+are inconsistently populated per-record. Not pursued further today — see the
+audit's §10 for the recommended next step (re-flag PulseDB access to the
+team, or scope a much smaller correlation study if HeartCycle is chosen
+deliberately).
+
+---
+
 ## Already downloaded and used (background — see PDD Section 10.2 / `ml/README.md`)
 
 | Dataset | Role | Status |
