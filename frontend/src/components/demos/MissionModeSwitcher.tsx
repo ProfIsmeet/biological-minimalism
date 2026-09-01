@@ -13,6 +13,7 @@ import { useMissionStore } from "@/store/missionStore";
  * context; the effect (noise, risk, charts) shows up on the next WS frame. */
 export function MissionModeSwitcher() {
   const currentMode = useMissionStore((state) => state.latest?.mission_mode);
+  const isReplay = useMissionStore((state) => state.latest?.source.source_type === "dataset_replay");
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +39,7 @@ export function MissionModeSwitcher() {
               key={mode.value}
               type="button"
               onClick={() => handleSelect(mode.value)}
-              disabled={pending !== null}
+              disabled={pending !== null || isReplay}
               aria-pressed={isActive}
               className={clsx(
                 "rounded-lg border px-3 py-2.5 text-left text-xs font-medium transition-colors disabled:opacity-60",
@@ -55,6 +56,7 @@ export function MissionModeSwitcher() {
         })}
       </div>
       {error ? <p className="mt-2 text-xs text-signal-critical">{error}</p> : null}
+      {isReplay ? <p className="mt-2 text-xs text-slate-500">Mission-mode simulation is unavailable during real dataset replay.</p> : null}
     </Panel>
   );
 }

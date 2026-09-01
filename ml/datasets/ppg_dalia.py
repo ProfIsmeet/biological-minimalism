@@ -35,13 +35,16 @@ into this exact shape is skipped with a warning, not padded or guessed.
 
 from __future__ import annotations
 
-import pickle
-import re
-import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+
+from backend.app.data.ppg_dalia import (
+    ALL_SUBJECTS,
+    load_subject_payload,
+    list_available_subjects,
+)
 
 PPG_FS = 64.0
 ACC_FS = 32.0
@@ -63,9 +66,6 @@ ACTIVITY_NAMES = {
     8: "working",
 }
 
-ALL_SUBJECTS = tuple(f"S{i}" for i in range(1, 16))
-
-
 @dataclass
 class SubjectWindows:
     subject_id: str
@@ -81,12 +81,7 @@ def _extract_subject_pickle(zip_path: Path, subject_id: str) -> dict:
     (`ppg_dalia_uci.zip` -> `data.zip` -> `PPG_FieldStudy/<subject>/<subject>.pkl`)
     without ever writing the ~1.2-1.7 GB raw file to disk."""
 
-    with zipfile.ZipFile(zip_path) as outer:
-        with outer.open("data.zip") as data_zip_bytes:
-            with zipfile.ZipFile(data_zip_bytes) as inner:
-                entry = f"PPG_FieldStudy/{subject_id}/{subject_id}.pkl"
-                with inner.open(entry) as f:
-                    return pickle.load(f, encoding="latin1")
+    return load_subject_payload(zip_path, subject_id)
 
 
 def _windowize(raw: dict, subject_id: str) -> SubjectWindows:
@@ -214,13 +209,4 @@ def list_available_raw_subjects(zip_path: str | Path) -> list[str]:
     the preprocessing script and tests instead of assuming all of S1-S15
     are present."""
 
-    zip_path = Path(zip_path)
-    with zipfile.ZipFile(zip_path) as outer:
-        with outer.open("data.zip") as data_zip_bytes:
-            with zipfile.ZipFile(data_zip_bytes) as inner:
-                names = inner.namelist()
-    subjects = sorted(
-        {m.group(1) for n in names if (m := re.match(r"PPG_FieldStudy/(S\d+)/\1\.pkl$", n))},
-        key=lambda s: int(s[1:]),
-    )
-    return subjects
+    return list_available_subjects(zip_path)

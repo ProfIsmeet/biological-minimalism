@@ -19,8 +19,9 @@ Türkiye — IAF/IAA Space Life Sciences Symposium, Interactive Presentation for
 
 ## What this is (and isn't)
 
-- The dashboard runs on a **synthetic mock data engine**, not real sensors or a
-  real astronaut — see [Sensor & Data Honesty](#sensor--data-honesty) below.
+- The dashboard defaults to a **synthetic mock data engine** and can also replay
+  one real, synchronized PPG-DaLiA subject with explicit provenance. Neither mode
+  is live sensor hardware — see [Sensor & Data Honesty](#sensor--data-honesty).
 - The AI layer is a **transparent, documented rule-based physiology estimator**
   by default, with a **real, structurally complete PyTorch CNN+Transformer
   architecture** (`backend/app/ml/models.py`) ready to be trained and swapped in
@@ -68,6 +69,10 @@ elsewhere.
 
 Both run entirely offline once dependencies are installed — no internet
 connection, API key, or account is required to see the full demo.
+
+To enable real recorded-data replay, set `BIOMIN_PPG_DALIA_PATH` for the backend
+to the official archive or extracted `PPG_FieldStudy` directory, then use the
+Settings page. See [`docs/DATASET_REPLAY.md`](docs/DATASET_REPLAY.md).
 
 ## Pages
 
@@ -144,7 +149,7 @@ Framer Motion · FastAPI · WebSockets · NumPy · scikit-learn · SHAP · PyTor
 
 ## Sensor & Data Honesty
 
-No real sensor hardware is connected. All telemetry comes from
+No real sensor hardware is connected. Synthetic mode comes from
 `backend/app/engine/mock_data_engine.py`, a set of smooth (Ornstein-Uhlenbeck)
 random-walk processes shaped by the physiology formulas in
 `backend/app/engine/physiology.py`. Those formulas are literature-*inspired*
@@ -153,6 +158,12 @@ against real subject data — this distinction is called out explicitly, feature
 by feature, in the PDD. Every number the dashboard displays and every SHAP
 explanation it generates is computed live from this same transparent pipeline;
 nothing shown is scripted or hand-written per scenario.
+
+Dataset replay mode instead transports previously recorded PPG-DaLiA channels
+from exactly one subject/session at their native sampling rates. Frames are marked
+`dataset_replay` and do not contain synthetic cognitive, digital-twin, confidence,
+or missing-modality values. Replay does not run the trained HR model yet and does
+not validate hardware timing, microgravity behavior, or clinical accuracy.
 
 ## Testing
 

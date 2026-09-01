@@ -21,13 +21,13 @@ export type TrendMetric =
   | "circadian_stability"
   | "ai_confidence";
 
-const SELECTORS: Record<TrendMetric, (snapshot: LiveMetricsSnapshot) => number> = {
-  heart_rate_bpm: (s) => s.vitals.heart_rate_bpm,
-  hrv_rmssd_ms: (s) => s.vitals.hrv_rmssd_ms,
-  cognitive_load: (s) => s.cognitive.cognitive_load,
-  fatigue: (s) => s.cognitive.fatigue,
-  circadian_stability: (s) => s.cognitive.circadian_stability,
-  ai_confidence: (s) => s.ai_confidence.overall_confidence,
+const SELECTORS: Record<TrendMetric, (snapshot: LiveMetricsSnapshot) => number | null> = {
+  heart_rate_bpm: (s) => s.vitals?.heart_rate_bpm ?? null,
+  hrv_rmssd_ms: (s) => s.vitals?.hrv_rmssd_ms ?? null,
+  cognitive_load: (s) => s.cognitive?.cognitive_load ?? null,
+  fatigue: (s) => s.cognitive?.fatigue ?? null,
+  circadian_stability: (s) => s.cognitive?.circadian_stability ?? null,
+  ai_confidence: (s) => s.ai_confidence?.overall_confidence ?? null,
 };
 
 interface TrendPanelProps {
@@ -43,7 +43,7 @@ interface TrendPanelProps {
 export function TrendPanel({ title, subtitle, icon, color, unit, domain, metric }: TrendPanelProps) {
   const history = useMissionStore((state) => state.history);
   const selector = SELECTORS[metric];
-  const latest = history.length > 0 ? selector(history[history.length - 1]!) : null;
+  const latest = history.reduce<number | null>((value, snapshot) => selector(snapshot) ?? value, null);
 
   return (
     <Panel

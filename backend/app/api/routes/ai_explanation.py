@@ -6,6 +6,7 @@ from typing import Literal
 
 from fastapi import APIRouter, Query
 
+from app.api.routes._source_guard import require_synthetic_source
 from app.engine.mock_data_engine import engine
 from app.ml.explainability import explainer
 from app.schemas.explanation import AIExplanation
@@ -17,6 +18,7 @@ router = APIRouter()
 def get_ai_explanation(
     target: Literal["ai_confidence", "fatigue_risk"] = Query("ai_confidence"),
 ) -> AIExplanation:
+    require_synthetic_source("SHAP explanation")
     snapshot = engine.last_snapshot or engine.tick(0.5)
 
     if target == "ai_confidence":

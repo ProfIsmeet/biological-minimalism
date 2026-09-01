@@ -10,14 +10,59 @@ export type SensorName = "eeg" | "ppg" | "temperature" | "bioimpedance";
 
 export type SensorStatus = "nominal" | "degraded" | "offline";
 
+export type DataSourceType = "synthetic" | "dataset_replay";
+
+export type ReplayPlaybackState = "unloaded" | "paused" | "playing" | "ended";
+
+export interface ChannelMetadata {
+  name: string;
+  sample_rate_hz: number;
+  device: string;
+  role: string;
+  axes: string[];
+  units: string;
+}
+
+export interface TelemetrySourceMetadata {
+  source_type: DataSourceType;
+  display_label: string;
+  dataset_name: string | null;
+  subject_id: string | null;
+  replay_position_seconds: number | null;
+  duration_seconds: number | null;
+  playback_state: ReplayPlaybackState | null;
+  playback_speed: number | null;
+  end_behavior: string | null;
+  license: string | null;
+  source_url: string | null;
+  available_channels: string[];
+  unavailable_channels: string[];
+}
+
+export interface RawChannelBatch {
+  dataset_name: string;
+  subject_id: string;
+  channel_name: string;
+  device: string;
+  role: string;
+  axes: string[];
+  units: string;
+  sample_rate_hz: number;
+  sample_start_index: number;
+  start_timestamp_seconds: number;
+  end_timestamp_seconds: number;
+  samples: number[] | number[][];
+}
+
 export interface VitalsSnapshot {
-  heart_rate_bpm: number;
-  hrv_rmssd_ms: number;
-  respiration_rate_bpm: number;
-  blood_pressure_systolic_mmhg: number;
-  blood_pressure_diastolic_mmhg: number;
+  heart_rate_bpm: number | null;
+  hrv_rmssd_ms: number | null;
+  respiration_rate_bpm: number | null;
+  blood_pressure_systolic_mmhg: number | null;
+  blood_pressure_diastolic_mmhg: number | null;
   ppg_waveform: number[];
   ecg_like_waveform: number[];
+  ecg_waveform: number[];
 }
 
 export interface CognitiveSnapshot {
@@ -51,13 +96,15 @@ export interface AIConfidenceSnapshot {
 
 export interface LiveMetricsSnapshot {
   timestamp: number;
-  mission_mode: MissionMode;
-  mission_day: number;
-  vitals: VitalsSnapshot;
-  cognitive: CognitiveSnapshot;
-  space_adaptation: SpaceAdaptationSnapshot;
-  sensor_health: SensorHealthSnapshot;
-  ai_confidence: AIConfidenceSnapshot;
+  source: TelemetrySourceMetadata;
+  channels: RawChannelBatch[];
+  mission_mode: MissionMode | null;
+  mission_day: number | null;
+  vitals: VitalsSnapshot | null;
+  cognitive: CognitiveSnapshot | null;
+  space_adaptation: SpaceAdaptationSnapshot | null;
+  sensor_health: SensorHealthSnapshot | null;
+  ai_confidence: AIConfidenceSnapshot | null;
 }
 
 export interface DigitalTwinSystemScore {
@@ -94,6 +141,24 @@ export interface AIExplanation {
 export interface SimulationStateResponse {
   mission_mode: MissionMode;
   sensor_status: Record<SensorName, SensorStatus>;
+}
+
+export interface DataSourceStatus {
+  source_type: DataSourceType;
+  dataset_configured: boolean;
+  dataset_name: string | null;
+  subject_id: string | null;
+  replay_position_seconds: number | null;
+  duration_seconds: number | null;
+  playback_state: ReplayPlaybackState | null;
+  playback_speed: number | null;
+  end_behavior: string | null;
+  channels: ChannelMetadata[];
+}
+
+export interface AvailableSubjectsResponse {
+  dataset_name: string;
+  subjects: string[];
 }
 
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [

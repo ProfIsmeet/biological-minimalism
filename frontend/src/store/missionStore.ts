@@ -19,9 +19,15 @@ export const useMissionStore = create<MissionState>((set) => ({
   history: [],
   connectionStatus: "connecting",
   ingest: (snapshot) =>
-    set((state) => ({
-      latest: snapshot,
-      history: [...state.history, snapshot].slice(-MAX_HISTORY),
-    })),
+    set((state) => {
+      const previousIdentity = state.latest
+        ? `${state.latest.source.source_type}:${state.latest.source.subject_id ?? ""}`
+        : null;
+      const nextIdentity = `${snapshot.source.source_type}:${snapshot.source.subject_id ?? ""}`;
+      return {
+        latest: snapshot,
+        history: previousIdentity === nextIdentity ? [...state.history, snapshot].slice(-MAX_HISTORY) : [snapshot],
+      };
+    }),
   setConnectionStatus: (status) => set({ connectionStatus: status }),
 }));

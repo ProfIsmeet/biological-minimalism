@@ -39,6 +39,9 @@ class Settings(BaseSettings):
     ppg_sample_rate_hz: float = 128.0
     """Synthetic sampling rate used when generating the PPG/ECG-like waveforms."""
 
+    ppg_dalia_path: Path | None = None
+    """Official PPG-DaLiA zip or extracted PPG_FieldStudy path for replay."""
+
     # ML
     model_checkpoint_path: Path | None = None
     """Optional path to a trained BiologicalDigitalTwinNet checkpoint (.pt).

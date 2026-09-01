@@ -17,6 +17,13 @@ ml/checkpoints/*
 !ml/checkpoints/.gitkeep
 datasets/*/*
 !datasets/*/README.md
+datasets/**/*.pkl
+datasets/**/*.h5
+datasets/**/*.npz
+datasets/**/*.zip
+datasets/**/raw/
+datasets/**/raw_uci/
+datasets/**/processed/
 
 # --- OS / editor ---
 .DS_Store

@@ -11,6 +11,17 @@ from app.schemas.telemetry import (
 from app.schemas.digital_twin import DigitalTwinSystemScore, DigitalTwinState
 from app.schemas.explanation import AIExplanation, FeatureContribution
 from app.schemas.simulation import SetFailureRequest, SetModeRequest, SimulationStateResponse
+from app.schemas.data_source import (
+    AvailableSubjectsResponse,
+    ChannelMetadata,
+    DataSourceStatus,
+    DataSourceType,
+    LoadReplayRequest,
+    RawChannelBatch,
+    ReplayPlaybackState,
+    SetPlaybackSpeedRequest,
+    TelemetrySourceMetadata,
+)
 
 __all__ = [
     "MissionMode",
@@ -30,4 +41,13 @@ __all__ = [
     "SetFailureRequest",
     "SetModeRequest",
     "SimulationStateResponse",
+    "AvailableSubjectsResponse",
+    "ChannelMetadata",
+    "DataSourceStatus",
+    "DataSourceType",
+    "LoadReplayRequest",
+    "RawChannelBatch",
+    "ReplayPlaybackState",
+    "SetPlaybackSpeedRequest",
+    "TelemetrySourceMetadata",
 ]

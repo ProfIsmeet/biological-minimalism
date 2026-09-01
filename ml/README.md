@@ -1,9 +1,10 @@
 # `ml/` — Research-Grade Training Scaffolding
 
-This folder is **not** used by the dashboard at runtime. The dashboard
-(`backend/`) runs entirely on the synthetic `MockDataEngine` and a
-transparent rule-based physiology model — no real dataset or trained
-checkpoint is required to run the demo (see the root `README.md`).
+This folder is **not** imported by the dashboard's inference path at runtime.
+The dashboard defaults to the synthetic `MockDataEngine`; its optional
+PPG-DaLiA replay mode reuses the raw subject/archive adapter but intentionally
+does not run the trained heart-rate model yet. No real dataset or trained
+checkpoint is required to run the synthetic demo (see the root `README.md`).
 
 `ml/` is the training pipeline that a follow-on research phase would use to
 turn `backend/app/ml/models.py`'s `BiologicalDigitalTwinNet` (a real,

@@ -1,6 +1,8 @@
 import { API_BASE_URL } from "@/lib/config";
 import type {
   AIExplanation,
+  AvailableSubjectsResponse,
+  DataSourceStatus,
   DigitalTwinState,
   LiveMetricsSnapshot,
   MissionMode,
@@ -48,4 +50,28 @@ export const api = {
 
   getExplanation: (target: "ai_confidence" | "fatigue_risk") =>
     request<AIExplanation>(`/ai/explanation?target=${target}`),
+
+  getDataSourceState: () => request<DataSourceStatus>("/data-source/state"),
+
+  getReplaySubjects: () => request<AvailableSubjectsResponse>("/data-source/subjects"),
+
+  useSyntheticSource: () => request<DataSourceStatus>("/data-source/synthetic", { method: "POST" }),
+
+  loadReplaySubject: (subjectId: string) =>
+    request<DataSourceStatus>("/data-source/replay/load", {
+      method: "POST",
+      body: JSON.stringify({ subject_id: subjectId }),
+    }),
+
+  playReplay: () => request<DataSourceStatus>("/data-source/replay/play", { method: "POST" }),
+
+  pauseReplay: () => request<DataSourceStatus>("/data-source/replay/pause", { method: "POST" }),
+
+  resetReplay: () => request<DataSourceStatus>("/data-source/replay/reset", { method: "POST" }),
+
+  setReplaySpeed: (speed: 1 | 5 | 10) =>
+    request<DataSourceStatus>("/data-source/replay/speed", {
+      method: "POST",
+      body: JSON.stringify({ speed }),
+    }),
 };

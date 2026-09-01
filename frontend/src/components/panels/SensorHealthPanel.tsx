@@ -22,7 +22,8 @@ function statusToLevel(status: SensorStatus): StatusLevel {
 }
 
 export function SensorHealthPanel() {
-  const sensors = useMissionStore((state) => state.latest?.sensor_health.sensors);
+  const sensors = useMissionStore((state) => state.latest?.sensor_health?.sensors);
+  const isReplay = useMissionStore((state) => state.latest?.source.source_type === "dataset_replay");
 
   return (
     <Panel title="Sensor Health" subtitle="Four-sensor minimal architecture" icon={<Radio size={16} />}>
@@ -37,7 +38,7 @@ export function SensorHealthPanel() {
                 <Icon size={15} className="text-cyan-400" />
                 <span className="text-xs font-medium">{label}</span>
               </div>
-              <StatusBadge level={level} label={reading ? `${reading.status[0]!.toUpperCase()}${reading.status.slice(1)}` : "Nominal"} />
+              <StatusBadge level={level} label={reading ? `${reading.status[0]!.toUpperCase()}${reading.status.slice(1)}` : isReplay ? "Unavailable" : "Nominal"} />
               <span className="tabular-nums-mono text-[11px] text-slate-500">
                 Signal quality {reading ? `${(reading.signal_quality * 100).toFixed(0)}%` : "—"}
               </span>

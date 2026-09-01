@@ -15,8 +15,7 @@ export default function AIInsightsPage() {
       <div>
         <h1 className="text-lg font-semibold text-slate-100">AI Insights</h1>
         <p className="text-sm text-slate-500">
-          Explainable AI — every number below is a real SHAP (Shapley value) attribution computed on the live physiology model, not
-          scripted text.
+          Synthetic-demo explainability via SHAP. Dataset replay does not run the trained heart-rate model in this phase.
         </p>
       </div>
 

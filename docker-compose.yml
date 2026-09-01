@@ -8,6 +8,9 @@ services:
     environment:
       BIOMIN_TICK_INTERVAL_SECONDS: "0.5"
       BIOMIN_ROLLING_HISTORY_LENGTH: "600"
+      BIOMIN_PPG_DALIA_PATH: "/data/ppg-dalia"
+    volumes:
+      - ./datasets/ppg-dalia:/data/ppg-dalia:ro
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s
