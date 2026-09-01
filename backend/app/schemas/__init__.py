@@ -22,6 +22,11 @@ from app.schemas.data_source import (
     SetPlaybackSpeedRequest,
     TelemetrySourceMetadata,
 )
+from app.schemas.model_prediction import (
+    EvidenceLevel,
+    HeartRateModelPrediction,
+    HeartRateModelProvenance,
+)
 
 __all__ = [
     "MissionMode",
@@ -50,4 +55,7 @@ __all__ = [
     "ReplayPlaybackState",
     "SetPlaybackSpeedRequest",
     "TelemetrySourceMetadata",
+    "EvidenceLevel",
+    "HeartRateModelPrediction",
+    "HeartRateModelProvenance",
 ]
