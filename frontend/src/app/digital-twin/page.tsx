@@ -10,13 +10,20 @@ import { confidenceLevel } from "@/lib/format";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { api } from "@/lib/api";
 import type { DigitalTwinState } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
 export default function DigitalTwinPage() {
   const [day, setDay] = useState(1);
   const [state, setState] = useState<DigitalTwinState | null>(null);
   const [loading, setLoading] = useState(false);
+  const isReplay = useDatasetReplayMode();
 
   useEffect(() => {
+    if (isReplay) {
+      setState(null);
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     api
@@ -24,14 +31,32 @@ export default function DigitalTwinPage() {
       .then((result) => {
         if (!cancelled) setState(result);
       })
-      .catch(() => undefined)
+      .catch(() => {
+        if (!cancelled) setState(null);
+      })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
     return () => {
       cancelled = true;
     };
-  }, [day]);
+  }, [day, isReplay]);
+
+  if (isReplay) {
+    return (
+      <div className="flex flex-col gap-5">
+        <div>
+          <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
+          <p className="text-sm text-slate-500">REAL RECORDED DATA — REPLAY MODE</p>
+        </div>
+        <Panel title="Adaptation State" subtitle="Unavailable during recorded-data replay" icon={<Orbit size={16} />}>
+          <p className="text-sm leading-relaxed text-slate-500">
+            Digital Twin unavailable during recorded-data replay until real personalized inference is implemented.
+          </p>
+        </Panel>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5">

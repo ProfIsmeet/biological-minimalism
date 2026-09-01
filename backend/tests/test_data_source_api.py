@@ -80,6 +80,9 @@ def test_replay_controls_and_websocket_use_same_subject(tmp_path: Path) -> None:
             assert client.get("/sensor-health").status_code == 409
             assert client.get("/simulation/state").status_code == 409
             assert client.get("/ai/explanation").status_code == 409
+            digital_twin = client.get("/digital-twin")
+            assert digital_twin.status_code == 409
+            assert "synthetic-demo-only" in digital_twin.json()["detail"]
     finally:
         data_source_manager.use_synthetic()
         data_source_manager.configure_dataset_path(None)

@@ -33,7 +33,14 @@ class ManualClock:
         self.value += seconds
 
 
-def _write_subject(root: Path, subject_id: str, duration_seconds: float = 20.0, offset: float = 0.0) -> None:
+def _write_subject(
+    root: Path,
+    subject_id: str,
+    duration_seconds: float = 20.0,
+    offset: float = 0.0,
+    *,
+    embedded_subject_id: str | None = None,
+) -> None:
     subject_dir = root / "PPG_FieldStudy" / subject_id
     subject_dir.mkdir(parents=True)
 
@@ -47,7 +54,7 @@ def _write_subject(root: Path, subject_id: str, duration_seconds: float = 20.0, 
         return np.column_stack((base, base + 0.1, base + 0.2))
 
     raw = {
-        "subject": subject_id,
+        "subject": embedded_subject_id or subject_id,
         "signal": {
             "wrist": {
                 "BVP": scalar(64.0),
@@ -104,6 +111,17 @@ def test_no_subject_mixing(dataset_root: Path) -> None:
     assert {batch.subject_id for batch in frame.channels} == {"S1"}
 
 
+def test_embedded_subject_mismatch_is_rejected(tmp_path: Path) -> None:
+    _write_subject(tmp_path, "S1", embedded_subject_id="S2")
+    source = DatasetReplaySource(tmp_path)
+
+    with pytest.raises(
+        PpgDaliaSubjectError,
+        match=r"Requested S1, but the recording identifies itself as 'S2'; refusing to mix or relabel subjects",
+    ):
+        source.load_subject("S1")
+
+
 def test_reset_replays_identical_first_values_and_indexes(dataset_root: Path) -> None:
     clock = ManualClock()
     source = _source(dataset_root, clock)
@@ -142,6 +160,27 @@ def test_pause_freezes_position_and_indexes(dataset_root: Path) -> None:
     assert source.status().replay_position_seconds == position
 
 
+def test_pause_resume_preserves_sample_continuity(dataset_root: Path) -> None:
+    clock = ManualClock()
+    source = _source(dataset_root, clock)
+    source.play()
+    clock.advance(1.0)
+    before_pause = source.tick(0.5)
+    assert before_pause is not None
+    source.pause()
+
+    clock.advance(30.0)
+    source.play()
+    clock.advance(0.5)
+    after_resume = source.tick(0.5)
+    assert after_resume is not None
+
+    first_batch = _batch(before_pause, "wrist_bvp")
+    resumed_batch = _batch(after_resume, "wrist_bvp")
+    assert resumed_batch.sample_start_index == first_batch.sample_start_index + len(first_batch.samples)
+    assert resumed_batch.samples[0] == first_batch.samples[-1] + 1.0
+
+
 @pytest.mark.parametrize(("speed", "expected_ppg_samples"), [(1.0, 64), (5.0, 320), (10.0, 640)])
 def test_playback_speed_changes_scheduling_not_values(
     dataset_root: Path,
@@ -158,6 +197,25 @@ def test_playback_speed_changes_scheduling_not_values(
     samples = _batch(frame, "wrist_bvp").samples
     assert len(samples) == expected_ppg_samples
     assert samples == list(np.arange(expected_ppg_samples, dtype=float) + 1000.0)
+
+
+def test_mid_play_speed_change_preserves_sample_continuity(dataset_root: Path) -> None:
+    clock = ManualClock()
+    source = _source(dataset_root, clock)
+    source.play()
+    clock.advance(1.0)
+    at_one_x = source.tick(0.5)
+    assert at_one_x is not None
+
+    source.set_speed(5.0)
+    clock.advance(0.2)
+    at_five_x = source.tick(0.5)
+    assert at_five_x is not None
+
+    first_batch = _batch(at_one_x, "wrist_bvp")
+    faster_batch = _batch(at_five_x, "wrist_bvp")
+    assert faster_batch.sample_start_index == first_batch.sample_start_index + len(first_batch.samples)
+    assert faster_batch.samples[0] == first_batch.samples[-1] + 1.0
 
 
 def test_channel_timestamps_are_monotonic_across_frames(dataset_root: Path) -> None:
@@ -201,6 +259,45 @@ def test_synthetic_source_regression(dataset_root: Path) -> None:
     assert frame.vitals is not None
     assert frame.cognitive is not None
     assert frame.ai_confidence is not None
+
+
+def test_subject_switch_clears_prior_replay_history_and_state(dataset_root: Path) -> None:
+    manager = DataSourceManager(MockDataEngine(seed=123), dataset_root)
+    manager.load_replay("S1")
+    manager.play_replay()
+    first_source = manager.replay_source
+    first_frame = manager.tick(0.5, now=first_source._anchor_monotonic + 0.5)
+    assert first_frame is not None
+    assert manager.history(10)
+
+    status = manager.load_replay("S2")
+
+    assert status.subject_id == "S2"
+    assert status.replay_position_seconds == 0.0
+    assert status.playback_state == ReplayPlaybackState.PAUSED
+    assert manager.replay_source is not first_source
+    assert all(index == 0 for index in manager.replay_source.channel_indexes.values())
+    assert manager.history(10) == []
+    assert manager.latest_snapshot is None
+
+
+def test_synthetic_and_replay_histories_do_not_contaminate(dataset_root: Path) -> None:
+    manager = DataSourceManager(MockDataEngine(seed=123), dataset_root)
+    synthetic_frame = manager.tick(0.5)
+    assert synthetic_frame is not None
+    synthetic_history = manager.history(10)
+
+    manager.load_replay("S1")
+    manager.play_replay()
+    replay_source = manager.replay_source
+    replay_frame = manager.tick(0.5, now=replay_source._anchor_monotonic + 0.5)
+    assert replay_frame is not None
+    assert {frame.source.source_type for frame in manager.history(10)} == {DataSourceType.DATASET_REPLAY}
+
+    manager.use_synthetic()
+    assert manager.history(10) == synthetic_history
+    assert manager.latest_snapshot is synthetic_frame
+    assert {frame.source.source_type for frame in manager.history(10)} == {DataSourceType.SYNTHETIC}
 
 
 def test_invalid_subject_and_channel_fail_cleanly(dataset_root: Path) -> None:

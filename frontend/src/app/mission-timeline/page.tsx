@@ -10,21 +10,31 @@ import { TrendPanel } from "@/components/panels/TrendPanel";
 import { confidenceLevel } from "@/lib/format";
 import { api } from "@/lib/api";
 import type { DigitalTwinState } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
 const MILESTONE_DAYS = [1, 5, 12, 30];
 
 export default function MissionTimelinePage() {
   const [milestones, setMilestones] = useState<DigitalTwinState[]>([]);
+  const isReplay = useDatasetReplayMode();
 
   useEffect(() => {
+    if (isReplay) {
+      setMilestones([]);
+      return;
+    }
     let cancelled = false;
-    Promise.all(MILESTONE_DAYS.map((day) => api.getDigitalTwin(day))).then((results) => {
-      if (!cancelled) setMilestones(results);
-    });
+    Promise.all(MILESTONE_DAYS.map((day) => api.getDigitalTwin(day)))
+      .then((results) => {
+        if (!cancelled) setMilestones(results);
+      })
+      .catch(() => {
+        if (!cancelled) setMilestones([]);
+      });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isReplay]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -44,6 +54,11 @@ export default function MissionTimelinePage() {
       />
 
       <Panel title="Adaptation Milestones" subtitle="Day 1 · 5 · 12 · 30" icon={<CalendarClock size={16} />}>
+        {isReplay ? (
+          <p className="text-sm leading-relaxed text-slate-500">
+            Digital Twin unavailable during recorded-data replay until real personalized inference is implemented.
+          </p>
+        ) : (
         <div className="relative">
           <div className="absolute left-0 right-0 top-5 hidden h-px bg-white/10 sm:block" />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
@@ -71,6 +86,7 @@ export default function MissionTimelinePage() {
             ))}
           </div>
         </div>
+        )}
       </Panel>
     </div>
   );
