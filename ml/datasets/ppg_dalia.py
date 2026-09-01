@@ -51,6 +51,53 @@ STEP_SECONDS = 2.0
 PPG_WINDOW_SAMPLES = int(WINDOW_SECONDS * PPG_FS)  # 512
 ACC_WINDOW_SAMPLES = int(WINDOW_SECONDS * ACC_FS)  # 256
 
+FLAT_STD_THRESHOLD = 1e-8
+
+
+class FlatSignalError(ValueError):
+    """Raised when a window's signal is flat/dead (std below FLAT_STD_THRESHOLD)
+    and cannot be meaningfully z-scored. Both the offline preprocessing path
+    (_windowize, below) and any live/replay inference path must treat this
+    the same way: refuse the window rather than normalizing noise - see
+    ml/inference/ppg_dalia_hr.py, which reuses these exact functions so the
+    two paths can never silently diverge."""
+
+
+def zscore_ppg_window(window: np.ndarray) -> np.ndarray:
+    """Per-window z-score for one raw PPG segment.
+
+    `window`: 1D array, shape (PPG_WINDOW_SAMPLES,). This is the exact
+    normalization applied during training/preprocessing - reused as-is by
+    the inference adapter so the two paths cannot drift apart.
+    """
+
+    window = np.asarray(window)
+    if window.shape != (PPG_WINDOW_SAMPLES,):
+        raise ValueError(f"expected PPG window shape ({PPG_WINDOW_SAMPLES},), got {window.shape}")
+    std = float(window.std())
+    if std < FLAT_STD_THRESHOLD:
+        raise FlatSignalError("PPG window is flat/dead (std < 1e-8) - refusing to normalize noise as signal")
+    return ((window - window.mean()) / std).astype(np.float32)
+
+
+def zscore_imu_window(window: np.ndarray) -> np.ndarray:
+    """Per-axis, per-window z-score for one raw IMU (accelerometer) segment.
+
+    `window`: 2D array, shape (3, ACC_WINDOW_SAMPLES). Each of the 3 axes is
+    normalized independently within this window - the exact normalization
+    applied during training/preprocessing, reused as-is by the inference
+    adapter.
+    """
+
+    window = np.asarray(window)
+    if window.shape != (3, ACC_WINDOW_SAMPLES):
+        raise ValueError(f"expected IMU window shape (3, {ACC_WINDOW_SAMPLES}), got {window.shape}")
+    mean = window.mean(axis=1, keepdims=True)
+    std = window.std(axis=1, keepdims=True)
+    std_safe = np.where(std < FLAT_STD_THRESHOLD, 1.0, std)
+    return ((window - mean) / std_safe).astype(np.float32)
+
+
 ACTIVITY_NAMES = {
     0: "transient/unlabeled",
     1: "sitting",
@@ -119,15 +166,12 @@ def _windowize(raw: dict, subject_id: str) -> SubjectWindows:
         ppg_seg = bvp[ppg_start:ppg_end]
         acc_seg = acc[acc_start:acc_end].T  # (3, ACC_WINDOW_SAMPLES)
 
-        ppg_std = ppg_seg.std()
-        if ppg_std < 1e-8:
+        try:
+            ppg_out[i] = zscore_ppg_window(ppg_seg)
+        except FlatSignalError:
             keep[i] = False  # flat/dropped real sensor segment - excluded, not fabricated
             continue
-
-        ppg_out[i] = ((ppg_seg - ppg_seg.mean()) / ppg_std).astype(np.float32)
-        acc_axis_std = acc_seg.std(axis=1, keepdims=True)
-        acc_axis_std[acc_axis_std < 1e-8] = 1.0
-        acc_out[i] = ((acc_seg - acc_seg.mean(axis=1, keepdims=True)) / acc_axis_std).astype(np.float32)
+        acc_out[i] = zscore_imu_window(acc_seg)
 
         act_window = activity_raw[act_start:act_end]
         values, counts = np.unique(act_window, return_counts=True)
