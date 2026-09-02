@@ -10,6 +10,8 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="BIOMIN_", env_file=".env", extra="ignore")
@@ -41,6 +43,11 @@ class Settings(BaseSettings):
 
     ppg_dalia_path: Path | None = None
     """Official PPG-DaLiA zip or extracted PPG_FieldStudy path for replay."""
+
+    ppg_dalia_hr_checkpoint_path: Path = (
+        REPOSITORY_ROOT / "ml" / "checkpoints" / "model_b_ppg_plus_imu_ppg_dalia.pt"
+    )
+    """Validated Model B checkpoint used only for PPG-DaLiA replay HR inference."""
 
     # ML
     model_checkpoint_path: Path | None = None

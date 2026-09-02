@@ -1,0 +1,11 @@
+.git
+.codex_tmp
+.work
+outputs
+**/__pycache__
+**/.pytest_cache
+**/.venv
+**/node_modules
+**/.next
+datasets
+ml/checkpoints

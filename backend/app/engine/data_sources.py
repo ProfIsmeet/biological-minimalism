@@ -18,7 +18,9 @@ from app.data.ppg_dalia import (
     load_raw_subject,
     list_available_subjects,
 )
+from app.engine.fault_injection import ReplayFaultInjector
 from app.engine.mock_data_engine import MockDataEngine, engine
+from app.ml.replay_hr import ReplayHeartRateInferenceService
 from app.schemas.data_source import (
     ChannelMetadata,
     DataSourceStatus,
@@ -27,6 +29,7 @@ from app.schemas.data_source import (
     ReplayPlaybackState,
     TelemetrySourceMetadata,
 )
+from app.schemas.fault_injection import ReplayFaultConfig
 from app.schemas.telemetry import LiveMetricsSnapshot, VitalsSnapshot
 
 SUPPORTED_PLAYBACK_SPEEDS = (1.0, 5.0, 10.0)
@@ -297,6 +300,8 @@ class DataSourceManager:
         self,
         mock_engine: MockDataEngine,
         ppg_dalia_path: str | Path | None,
+        replay_inference: ReplayHeartRateInferenceService | None = None,
+        replay_fault_injector: ReplayFaultInjector | None = None,
     ) -> None:
         self.synthetic_source = SyntheticSource(mock_engine)
         self._ppg_dalia_path = Path(ppg_dalia_path).expanduser() if ppg_dalia_path else None
@@ -304,6 +309,8 @@ class DataSourceManager:
         self._active: TelemetrySource = self.synthetic_source
         self._replay_history: deque[LiveMetricsSnapshot] = deque(maxlen=settings.rolling_history_length)
         self._last_replay_snapshot: LiveMetricsSnapshot | None = None
+        self._replay_inference = replay_inference
+        self._replay_fault_injector = replay_fault_injector or ReplayFaultInjector()
         self._lock = threading.RLock()
 
     @property
@@ -331,6 +338,7 @@ class DataSourceManager:
         """Replace the configured path; primarily useful for isolated tests."""
         with self._lock:
             self._ppg_dalia_path = Path(path).expanduser() if path else None
+            self._replay_fault_injector.clear()
 
     def available_subjects(self) -> list[str]:
         if self._ppg_dalia_path is None:
@@ -343,6 +351,9 @@ class DataSourceManager:
     def use_synthetic(self) -> DataSourceStatus:
         with self._lock:
             self._active = self.synthetic_source
+            self._replay_fault_injector.clear()
+            if self._replay_inference is not None:
+                self._replay_inference.reset()
             return self.status()
 
     def load_replay(self, subject_id: str, channel_names: list[str] | None = None) -> DataSourceStatus:
@@ -359,35 +370,66 @@ class DataSourceManager:
         with self._lock:
             self._replay_source = candidate
             self._active = candidate
+            self._replay_fault_injector.clear()
+            if self._replay_inference is not None:
+                self._replay_inference.reset()
             self._replay_history.clear()
             self._last_replay_snapshot = None
-            return candidate.status()
+            return self.status()
 
     def play_replay(self) -> DataSourceStatus:
         with self._lock:
             self.replay_source.play()
-            return self.replay_source.status()
+            return self.status()
 
     def pause_replay(self) -> DataSourceStatus:
         with self._lock:
             self.replay_source.pause()
-            return self.replay_source.status()
+            return self.status()
 
     def reset_replay(self) -> DataSourceStatus:
         with self._lock:
             self.replay_source.reset()
+            self._replay_fault_injector.clear()
+            if self._replay_inference is not None:
+                self._replay_inference.reset()
             self._replay_history.clear()
             self._last_replay_snapshot = None
-            return self.replay_source.status()
+            return self.status()
 
     def set_replay_speed(self, speed: float) -> DataSourceStatus:
         with self._lock:
             self.replay_source.set_speed(speed)
-            return self.replay_source.status()
+            return self.status()
+
+    def configure_replay_fault(self, config: ReplayFaultConfig) -> DataSourceStatus:
+        with self._lock:
+            if self.source_type != DataSourceType.DATASET_REPLAY:
+                raise ReplayStateError("Replay fault injection requires an active dataset replay.")
+            self.replay_source.recording
+            self._replay_fault_injector.configure(config)
+            if self._replay_inference is not None:
+                self._replay_inference.reset()
+            self._replay_history.clear()
+            self._last_replay_snapshot = None
+            return self.status()
+
+    def clear_replay_fault(self) -> DataSourceStatus:
+        with self._lock:
+            self._replay_fault_injector.clear()
+            if self._replay_inference is not None:
+                self._replay_inference.reset()
+            self._replay_history.clear()
+            self._last_replay_snapshot = None
+            return self.status()
 
     def tick(self, dt: float, now: float | None = None) -> LiveMetricsSnapshot | None:
         with self._lock:
             snapshot = self._active.tick(dt, now)
+            if snapshot is not None and snapshot.source.source_type == DataSourceType.DATASET_REPLAY:
+                snapshot = self._replay_fault_injector.apply(snapshot)
+            if snapshot is not None and self._replay_inference is not None:
+                snapshot = self._replay_inference.process(snapshot)
             if snapshot is not None and self.source_type == DataSourceType.DATASET_REPLAY:
                 self._last_replay_snapshot = snapshot
                 self._replay_history.append(snapshot)
@@ -400,7 +442,13 @@ class DataSourceManager:
                     source_type=DataSourceType.SYNTHETIC,
                     dataset_configured=self._ppg_dalia_path is not None and self._ppg_dalia_path.exists(),
                 )
-            return self.replay_source.status()
+            return self.replay_source.status().model_copy(
+                update={"fault_injection": self._replay_fault_injector.status()}
+            )
 
 
-data_source_manager = DataSourceManager(engine, settings.ppg_dalia_path)
+data_source_manager = DataSourceManager(
+    engine,
+    settings.ppg_dalia_path,
+    replay_inference=ReplayHeartRateInferenceService(settings.ppg_dalia_hr_checkpoint_path),
+)

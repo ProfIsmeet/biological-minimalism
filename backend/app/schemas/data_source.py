@@ -6,6 +6,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
+from app.schemas.fault_injection import ReplayFaultState
+
 
 class DataSourceType(StrEnum):
     SYNTHETIC = "synthetic"
@@ -70,6 +72,7 @@ class DataSourceStatus(BaseModel):
     playback_speed: float | None = Field(default=None, gt=0)
     end_behavior: str | None = None
     channels: list[ChannelMetadata] = Field(default_factory=list)
+    fault_injection: ReplayFaultState = Field(default_factory=ReplayFaultState)
 
 
 class AvailableSubjectsResponse(BaseModel):

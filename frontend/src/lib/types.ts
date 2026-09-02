@@ -14,6 +14,34 @@ export type DataSourceType = "synthetic" | "dataset_replay";
 
 export type ReplayPlaybackState = "unloaded" | "paused" | "playing" | "ended";
 
+export type ReplayFaultType =
+  | "modality_dropout"
+  | "packet_loss"
+  | "frozen_sensor"
+  | "additive_noise"
+  | "saturation";
+
+export type ReplayFaultTarget = "ppg" | "imu" | "both";
+
+export interface ReplayFaultConfig {
+  fault_type: ReplayFaultType;
+  target: ReplayFaultTarget;
+  severity: number;
+  seed: number;
+}
+
+export interface ReplayFaultState {
+  active: boolean;
+  fault_type: ReplayFaultType | null;
+  target: ReplayFaultTarget | null;
+  target_channels: string[];
+  affected_channels: string[];
+  severity: number | null;
+  seed: number | null;
+  dropped_samples: Record<string, number>;
+  parameters: Record<string, number | string | number[] | string[]>;
+}
+
 export interface ChannelMetadata {
   name: string;
   sample_rate_hz: number;
@@ -52,6 +80,43 @@ export interface RawChannelBatch {
   start_timestamp_seconds: number;
   end_timestamp_seconds: number;
   samples: number[] | number[][];
+}
+
+export type ModelInferenceStatus =
+  | "warming_up"
+  | "available"
+  | "input_unavailable"
+  | "model_unavailable"
+  | "error";
+
+export interface HeartRateInferenceState {
+  status: ModelInferenceStatus;
+  message: string;
+  required_window_seconds: 8;
+  required_channels: ["wrist_bvp", "wrist_acc"];
+}
+
+export interface HeartRateModelProvenance {
+  dataset_name: "PPG-DaLiA";
+  subject_id: string;
+  window_index: number;
+  window_start_seconds: number;
+  window_duration_seconds: number;
+  input_channels: ["wrist_bvp", "wrist_acc"];
+  model_id: string;
+  checkpoint_path: string;
+  checkpoint_sha256: string;
+  fault_injection: ReplayFaultState | null;
+}
+
+export interface HeartRateModelPrediction {
+  prediction_type: "heart_rate";
+  value: number;
+  unit: "bpm";
+  normalized_model_output: number;
+  evidence_level: "AI_ESTIMATED";
+  uncertainty: null;
+  provenance: HeartRateModelProvenance;
 }
 
 export interface VitalsSnapshot {
@@ -98,6 +163,9 @@ export interface LiveMetricsSnapshot {
   timestamp: number;
   source: TelemetrySourceMetadata;
   channels: RawChannelBatch[];
+  heart_rate_prediction: HeartRateModelPrediction | null;
+  heart_rate_inference: HeartRateInferenceState | null;
+  fault_injection: ReplayFaultState | null;
   mission_mode: MissionMode | null;
   mission_day: number | null;
   vitals: VitalsSnapshot | null;
@@ -154,6 +222,7 @@ export interface DataSourceStatus {
   playback_speed: number | null;
   end_behavior: string | null;
   channels: ChannelMetadata[];
+  fault_injection: ReplayFaultState;
 }
 
 export interface AvailableSubjectsResponse {

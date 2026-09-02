@@ -111,8 +111,8 @@ export default function SettingsPage() {
           </p>
           <p>
             Synthetic demo mode uses the mock engine. PPG-DaLiA replay mode streams previously recorded, synchronized real human channels
-            with explicit dataset/subject provenance; it is not live hardware and does not run the trained heart-rate model yet. SHAP views
-            apply only to the synthetic physiology scoring functions.
+            with explicit dataset/subject provenance; it is not live hardware. Replay heart rate is an AI estimate from the validated PPG + IMU
+            model, while unsupported physiology remains unavailable. SHAP views apply only to the synthetic physiology scoring functions.
           </p>
           <p>See <span className="tabular-nums-mono">docs/PDD_Biological_Minimalism_IAC2026.md</span> for the full project design document.</p>
         </div>

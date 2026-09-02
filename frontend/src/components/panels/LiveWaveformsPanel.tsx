@@ -4,12 +4,15 @@ import { Activity } from "lucide-react";
 
 import { WaveformChart } from "@/components/charts/WaveformChart";
 import { Panel } from "@/components/ui/Panel";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
 
 export function LiveWaveformsPanel() {
   const latest = useMissionStore((state) => state.latest);
   const vitals = latest?.vitals;
-  const isReplay = latest?.source.source_type === "dataset_replay";
+  const isReplay = useDatasetReplayMode();
+  const fault = latest?.fault_injection;
+  const ppgIsFaulted = fault?.active && fault.target_channels.includes("wrist_bvp");
   const ppgSensor = latest?.sensor_health?.sensors.find((s) => s.sensor === "ppg");
   const isOffline = ppgSensor?.status === "offline";
   const scalarBatch = (name: string): number[] => {
@@ -27,8 +30,17 @@ export function LiveWaveformsPanel() {
       icon={<Activity size={16} />}
     >
       <div className="flex flex-col gap-4">
+        {isReplay ? (
+          <p className="text-xs text-slate-500">
+            {fault?.active
+              ? `Fault-injected replay: ${fault.fault_type?.replaceAll("_", " ")} targets ${fault.target}. Unaffected channels remain recorded measurements.`
+              : "Recorded/measured channels: wrist PPG, wrist IMU, chest ECG, and wrist temperature when loaded."}
+          </p>
+        ) : null}
         <div>
-          <p className="mb-1 text-[11px] uppercase tracking-wider text-slate-500">PPG Waveform</p>
+          <p className="mb-1 text-[11px] uppercase tracking-wider text-slate-500">
+            {ppgIsFaulted ? "Fault-injected PPG waveform" : "PPG Waveform"}
+          </p>
           <WaveformChart data={ppg} color="#4fd8e8" flatline={isOffline} />
         </div>
         <div>

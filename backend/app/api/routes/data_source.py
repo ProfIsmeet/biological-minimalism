@@ -23,6 +23,7 @@ from app.schemas.data_source import (
     LoadReplayRequest,
     SetPlaybackSpeedRequest,
 )
+from app.schemas.fault_injection import ReplayFaultConfig
 
 router = APIRouter()
 
@@ -86,3 +87,21 @@ def reset_replay() -> DataSourceStatus:
 @router.post("/replay/speed", response_model=DataSourceStatus, summary="Set dataset replay speed")
 def set_replay_speed(request: SetPlaybackSpeedRequest) -> DataSourceStatus:
     return _controlled(lambda: data_source_manager.set_replay_speed(request.speed))
+
+
+@router.post(
+    "/replay/fault",
+    response_model=DataSourceStatus,
+    summary="Enable one deterministic replay signal fault",
+)
+def configure_replay_fault(request: ReplayFaultConfig) -> DataSourceStatus:
+    return _controlled(lambda: data_source_manager.configure_replay_fault(request))
+
+
+@router.delete(
+    "/replay/fault",
+    response_model=DataSourceStatus,
+    summary="Disable replay fault injection and clear its state",
+)
+def clear_replay_fault() -> DataSourceStatus:
+    return _controlled(data_source_manager.clear_replay_fault)

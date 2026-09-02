@@ -6,10 +6,17 @@ import { Database } from "lucide-react";
 
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
-import type { DataSourceStatus } from "@/lib/types";
+import type { DataSourceStatus, ReplayFaultTarget, ReplayFaultType } from "@/lib/types";
 import { useMissionStore } from "@/store/missionStore";
 
 const SPEEDS = [1, 5, 10] as const;
+const FAULT_TYPES: { value: ReplayFaultType; label: string }[] = [
+  { value: "modality_dropout", label: "Modality dropout" },
+  { value: "packet_loss", label: "Packet/sample loss" },
+  { value: "frozen_sensor", label: "Frozen sensor" },
+  { value: "additive_noise", label: "Additive noise" },
+  { value: "saturation", label: "Saturation/clipping" },
+];
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Data-source request failed.";
@@ -21,12 +28,21 @@ export function DataSourceControl() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [faultType, setFaultType] = useState<ReplayFaultType>("modality_dropout");
+  const [faultTarget, setFaultTarget] = useState<ReplayFaultTarget>("ppg");
+  const [faultSeverity, setFaultSeverity] = useState(1);
+  const [faultSeed, setFaultSeed] = useState(0);
   const latestSource = useMissionStore((state) => state.latest?.source);
+  const latestFault = useMissionStore((state) => state.latest?.fault_injection);
+  const setDataSourceStatus = useMissionStore((state) => state.setDataSourceStatus);
 
   useEffect(() => {
     let cancelled = false;
     api.getDataSourceState().then((result) => {
-      if (!cancelled) setStatus(result);
+      if (!cancelled) {
+        setStatus(result);
+        setDataSourceStatus(result);
+      }
     }).catch((reason: unknown) => {
       if (!cancelled) setError(errorMessage(reason));
     });
@@ -38,13 +54,15 @@ export function DataSourceControl() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [setDataSourceStatus]);
 
   async function run(key: string, operation: () => Promise<DataSourceStatus>) {
     setPending(key);
     setError(null);
     try {
-      setStatus(await operation());
+      const result = await operation();
+      setStatus(result);
+      setDataSourceStatus(result);
     } catch (reason) {
       setError(errorMessage(reason));
     } finally {
@@ -63,6 +81,8 @@ export function DataSourceControl() {
     : (status?.replay_position_seconds ?? latestSource?.replay_position_seconds ?? 0);
   const duration = status?.duration_seconds ?? latestSource?.duration_seconds ?? 0;
   const activeSubject = status?.subject_id ?? latestSource?.subject_id;
+  const activeFault = latestFault?.active ? latestFault : status?.fault_injection;
+  const severityIsConfigurable = faultType === "packet_loss" || faultType === "additive_noise" || faultType === "saturation";
 
   return (
     <Panel title="Data Source" subtitle="Synthetic demo or real PPG-DaLiA recording" icon={<Database size={16} />}>
@@ -131,7 +151,92 @@ export function DataSourceControl() {
           <div className="rounded-lg border border-cyan-400/15 bg-cyan-500/5 p-3 text-xs text-slate-400">
             <p className="font-semibold uppercase tracking-wider text-cyan-300">Real Recorded Data — Replay Mode</p>
             <p className="mt-1">PPG-DaLiA · {activeSubject} · {playbackState} · {position.toFixed(1)} / {duration.toFixed(1)} s · {speed}x</p>
-            <p className="mt-1 text-slate-500">Previously recorded synchronized human data; not live hardware or trained-model inference.</p>
+            <p className="mt-1 text-slate-500">Recorded/measured: wrist PPG, wrist IMU, chest ECG, and temperature when loaded.</p>
+            <p className="mt-1 text-slate-500">AI estimated: Heart Rate from the validated PPG + IMU model. Not live astronaut monitoring.</p>
+          </div>
+        ) : null}
+        {isReplay ? (
+          <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-300">Replay fault injection</p>
+            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <select
+                value={faultType}
+                onChange={(event) => {
+                  const value = event.target.value as ReplayFaultType;
+                  setFaultType(value);
+                  setFaultSeverity(value === "modality_dropout" || value === "frozen_sensor" ? 1 : 0.25);
+                }}
+                disabled={pending !== null}
+                className="rounded-lg border border-white/10 bg-space-900 px-3 py-2 text-xs text-slate-200 disabled:opacity-50"
+              >
+                {FAULT_TYPES.map((fault) => <option key={fault.value} value={fault.value}>{fault.label}</option>)}
+              </select>
+              <select
+                value={faultTarget}
+                onChange={(event) => setFaultTarget(event.target.value as ReplayFaultTarget)}
+                disabled={pending !== null}
+                className="rounded-lg border border-white/10 bg-space-900 px-3 py-2 text-xs text-slate-200 disabled:opacity-50"
+              >
+                <option value="ppg">PPG</option>
+                <option value="imu">IMU</option>
+                <option value="both">PPG + IMU</option>
+              </select>
+              <label className="flex items-center gap-2 text-xs text-slate-400">
+                Severity
+                <input
+                  type="number"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={faultSeverity}
+                  disabled={!severityIsConfigurable || pending !== null}
+                  onChange={(event) => setFaultSeverity(Number(event.target.value))}
+                  className="w-20 rounded-md border border-white/10 bg-space-900 px-2 py-1.5 text-slate-200 disabled:opacity-40"
+                />
+              </label>
+              <label className="flex items-center gap-2 text-xs text-slate-400">
+                Seed
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={faultSeed}
+                  disabled={pending !== null}
+                  onChange={(event) => setFaultSeed(Number(event.target.value))}
+                  className="w-24 rounded-md border border-white/10 bg-space-900 px-2 py-1.5 text-slate-200 disabled:opacity-40"
+                />
+              </label>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={pending !== null}
+                onClick={() => run("fault-enable", () => api.configureReplayFault({
+                  fault_type: faultType,
+                  target: faultTarget,
+                  severity: severityIsConfigurable ? faultSeverity : 1,
+                  seed: faultSeed,
+                }))}
+                className="rounded-md border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-medium text-amber-300 disabled:opacity-40"
+              >
+                Enable fault
+              </button>
+              <button
+                type="button"
+                disabled={!activeFault?.active || pending !== null}
+                onClick={() => run("fault-disable", api.clearReplayFault)}
+                className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-slate-400 disabled:opacity-40"
+              >
+                Disable / clear
+              </button>
+            </div>
+            {activeFault?.active ? (
+              <p className="mt-2 text-xs text-amber-200">
+                FAULT-INJECTED REPLAY · {activeFault.fault_type?.replaceAll("_", " ")} · {activeFault.target} · severity {activeFault.severity} · seed {activeFault.seed}
+              </p>
+            ) : (
+              <p className="mt-2 text-xs text-slate-500">Disabled — clean replay samples pass through unchanged.</p>
+            )}
           </div>
         ) : null}
         {!status?.dataset_configured && !subjects.length ? (

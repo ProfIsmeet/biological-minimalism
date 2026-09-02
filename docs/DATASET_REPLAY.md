@@ -4,7 +4,7 @@
 
 Dataset replay feeds previously recorded, synchronized real human sensor data
 through the same FastAPI/WebSocket transport used by the synthetic demo. It is a
-software-integration and future model-integration tool. It is **not** live sensor
+software and model-integration tool. It is **not** live sensor
 streaming, hardware timing validation, microgravity validation, or clinical
 accuracy evidence.
 
@@ -16,6 +16,13 @@ TelemetrySource
 └── DatasetReplaySource -> one PPG-DaLiA subject/session
                               |
                        DataSourceManager
+                              |
+                  replay fault injection layer
+                    (disabled by default)
+                              |
+                   synchronized window assembler
+                              |
+                  validated PPG+IMU HR model
                               |
                   /metrics + /ws/live-feed
 ```
@@ -35,13 +42,14 @@ Download the official original per-subject distribution as described in
 `datasets/ppg-dalia/README.md`. Do not use the subject-less Zenodo `.ts`
 reformatting.
 
-Set one backend environment variable to either the official outer zip or an
-extracted field-study directory:
+Set the replay data path to either the official outer zip or an extracted
+field-study directory, and point the model path at the validated checkpoint:
 
 ```bash
 BIOMIN_PPG_DALIA_PATH=/absolute/path/to/ppg_dalia_uci.zip
 # or
 BIOMIN_PPG_DALIA_PATH=/absolute/path/to/PPG_FieldStudy
+BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH=/absolute/path/to/model_b_ppg_plus_imu_ppg_dalia.pt
 ```
 
 The default replay channel set is:
@@ -79,6 +87,8 @@ controls. The equivalent REST surface is:
 | `POST /data-source/replay/pause` | freeze position and all channel indexes |
 | `POST /data-source/replay/reset` | return position and indexes to zero; remain paused |
 | `POST /data-source/replay/speed` | set 1, 5, or 10 |
+| `POST /data-source/replay/fault` | enable or replace one typed replay fault |
+| `DELETE /data-source/replay/fault` | disable the fault and clear all fault state |
 
 End-of-recording behavior is deterministic: replay stops in `ended` state and
 does not wrap. Reset is required before replaying the subject again.
@@ -108,6 +118,57 @@ Transport `timestamp` is Unix wall-clock time. Recorded timestamps are relative
 seconds within the PPG-DaLiA session. This distinction avoids claiming hardware
 clock precision.
 
+## Replay fault injection
+
+Fault injection is an infrastructure and robustness tool for the real replay
+pipeline. It is disabled by default and is applied only after an official
+recorded replay frame leaves `DatasetReplaySource`, before the synchronized
+PPG+IMU window assembler. Synthetic telemetry never passes through this layer.
+Only one fault specification is active at a time; enabling a new specification
+clears the old fault's random/reference state and all buffered inference and
+replay-history state.
+
+The request schema is:
+
+```json
+{
+  "fault_type": "packet_loss",
+  "target": "ppg",
+  "severity": 0.25,
+  "seed": 2026
+}
+```
+
+Targets are `ppg`, `imu`, or `both`. Configuration and per-frame provenance
+report the fault type, exact target channels, affected channels, severity,
+seed, dropped sample counts, and applied parameters. A valid model prediction
+also retains that fault state inside its prediction provenance alongside the
+dataset, subject, window, model identifier, checkpoint path/hash, and evidence
+level. This identifies signal corruption; it is not a model-confidence or
+uncertainty estimate. Model uncertainty remains unavailable (`null`).
+
+| Fault | Exact signal semantics | Model-input policy |
+|---|---|---|
+| `modality_dropout` | Removes every batch for the selected modality. Severity is ignored and recorded as `1`. | PPG and IMU are both required; either dropout yields explicit `input_unavailable` and no HR. |
+| `packet_loss` | Independently drops each native-rate sample with probability `severity`, using the configured seed. Remaining contiguous runs retain original sample indexes and timestamps; gaps are not compressed, interpolated, padded, or reconstructed. | A gap reaches the existing continuity check and prevents a prediction until a later complete contiguous window exists. |
+| `frozen_sensor` | Holds the selected channel at its first observed sample value for the fault session. Severity is ignored and recorded as `1`. | Frozen PPG reaches the canonical flat/dead-signal rejection. Frozen IMU is passed as explicitly corrupted IMU; if the canonical model returns HR, fault provenance remains attached. |
+| `additive_noise` | Adds seeded zero-mean Gaussian noise. Per-axis sigma is `severity` times the first affected batch's per-axis standard deviation; the exact captured reference and resulting sigma are reported. | Corrupted samples go through the unchanged canonical preprocessing/model contract. No extra confidence is inferred. |
+| `saturation` | Captures the first affected batch's per-axis range and symmetrically removes a `severity` fraction around its midpoint; exact fixed clip bounds are reported. Severity `1` collapses the channel to its midpoint. | Corrupted samples go through the unchanged contract; fully clipped PPG reaches flat/dead rejection. |
+
+Random streams are derived from the configured seed plus dataset, subject, and
+channel identity. Replaying the same subject from the same activation point
+with the same batching, configuration, and seed produces identical corruption.
+Replay reset, source switch, subject load/switch, explicit disable, or replacing
+the configuration clears captured values, random generators, buffered model
+windows, held predictions, and replay history. This prevents a clean session or
+another subject from inheriting faulted state.
+
+The dashboard's Settings control can enable/disable a fault, select its type
+and target, and configure severity and seed. Active frames carry a visible
+`FAULT-INJECTED REPLAY` label. Faulted channel batches retain the original
+dataset and subject but use a `fault_injected_*` role; replacement modalities
+are never introduced or presented as recorded measurements.
+
 ## Provenance and unavailable data
 
 Every replay frame and every raw channel batch includes the dataset and subject
@@ -123,14 +184,21 @@ Synthetic-derived vitals, cognitive state, space-adaptation state, sensor
 confidence, and AI confidence are absent (`null`) in replay frames. They are not
 filled with zeros or synthetic values. The dashboard shows recorded PPG and real
 same-session chest ECG while marking unrelated product modalities unavailable.
+The only model-derived replay value is heart rate. It is carried separately as
+`heart_rate_prediction`, labeled `AI_ESTIMATED`, and includes dataset, subject,
+window, model, and checkpoint provenance. `heart_rate_inference` distinguishes
+warming-up, available, missing-input, model-unavailable, and inference-error
+states. No confidence or uncertainty value is invented.
 Synthetic sensor-health scoring, mission/fault simulation controls, and SHAP
 explanations return `409` while replay is active, preventing inactive mock-engine
 state from being mistaken for properties of the recorded subject.
 
 ## Limitations and next boundaries
 
-- The trained PPG/IMU heart-rate model is intentionally not connected yet.
-- Fault injection is intentionally not implemented.
+- The heart-rate model is terrestrial PPG-DaLiA research output, not a clinical
+  device or an astronaut-health validation.
+- Fault injection validates software robustness only; no robustness or medical
+  conclusion is claimed without a controlled sweep and analysis phase.
 - The digital-twin baseline is not built from replay data.
 - PPG-DaLiA is terrestrial healthy-adult data, not astronaut or microgravity data.
 - Replay validates software flow, not device acquisition, network hardware, or

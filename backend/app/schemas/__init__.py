@@ -24,8 +24,16 @@ from app.schemas.data_source import (
 )
 from app.schemas.model_prediction import (
     EvidenceLevel,
+    HeartRateInferenceState,
     HeartRateModelPrediction,
     HeartRateModelProvenance,
+    ModelInferenceStatus,
+)
+from app.schemas.fault_injection import (
+    ReplayFaultConfig,
+    ReplayFaultState,
+    ReplayFaultTarget,
+    ReplayFaultType,
 )
 
 __all__ = [
@@ -56,6 +64,12 @@ __all__ = [
     "SetPlaybackSpeedRequest",
     "TelemetrySourceMetadata",
     "EvidenceLevel",
+    "HeartRateInferenceState",
     "HeartRateModelPrediction",
     "HeartRateModelProvenance",
+    "ModelInferenceStatus",
+    "ReplayFaultConfig",
+    "ReplayFaultState",
+    "ReplayFaultTarget",
+    "ReplayFaultType",
 ]

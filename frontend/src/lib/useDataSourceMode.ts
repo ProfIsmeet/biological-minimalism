@@ -1,9 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import { api } from "@/lib/api";
-import type { DataSourceType } from "@/lib/types";
 import { useMissionStore } from "@/store/missionStore";
 
 /**
@@ -13,17 +9,7 @@ import { useMissionStore } from "@/store/missionStore";
  */
 export function useDatasetReplayMode(): boolean {
   const liveSourceType = useMissionStore((state) => state.latest?.source.source_type);
-  const [restSourceType, setRestSourceType] = useState<DataSourceType | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    api.getDataSourceState().then((status) => {
-      if (!cancelled) setRestSourceType(status.source_type);
-    }).catch(() => undefined);
-    return () => {
-      cancelled = true;
-    };
-  }, [liveSourceType]);
+  const restSourceType = useMissionStore((state) => state.dataSourceStatus?.source_type);
 
   // When either view still says replay, hide synthetic-only values. This is
   // intentionally conservative during source-transition races.

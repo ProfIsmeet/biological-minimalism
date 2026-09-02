@@ -22,7 +22,7 @@ export type TrendMetric =
   | "ai_confidence";
 
 const SELECTORS: Record<TrendMetric, (snapshot: LiveMetricsSnapshot) => number | null> = {
-  heart_rate_bpm: (s) => s.vitals?.heart_rate_bpm ?? null,
+  heart_rate_bpm: (s) => s.heart_rate_prediction?.value ?? s.vitals?.heart_rate_bpm ?? null,
   hrv_rmssd_ms: (s) => s.vitals?.hrv_rmssd_ms ?? null,
   cognitive_load: (s) => s.cognitive?.cognitive_load ?? null,
   fatigue: (s) => s.cognitive?.fatigue ?? null,

@@ -7,9 +7,29 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.schemas.fault_injection import ReplayFaultState
+
 
 class EvidenceLevel(StrEnum):
     AI_ESTIMATED = "AI_ESTIMATED"
+
+
+class ModelInferenceStatus(StrEnum):
+    WARMING_UP = "warming_up"
+    AVAILABLE = "available"
+    INPUT_UNAVAILABLE = "input_unavailable"
+    MODEL_UNAVAILABLE = "model_unavailable"
+    ERROR = "error"
+
+
+class HeartRateInferenceState(BaseModel):
+    status: ModelInferenceStatus
+    message: str
+    required_window_seconds: Literal[8.0] = 8.0
+    required_channels: tuple[Literal["wrist_bvp"], Literal["wrist_acc"]] = (
+        "wrist_bvp",
+        "wrist_acc",
+    )
 
 
 class HeartRateModelProvenance(BaseModel):
@@ -25,6 +45,7 @@ class HeartRateModelProvenance(BaseModel):
     model_id: str
     checkpoint_path: str
     checkpoint_sha256: str
+    fault_injection: ReplayFaultState | None = None
 
 
 class HeartRateModelPrediction(BaseModel):

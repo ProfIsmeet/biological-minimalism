@@ -6,6 +6,7 @@ import type {
   DigitalTwinState,
   LiveMetricsSnapshot,
   MissionMode,
+  ReplayFaultConfig,
   SensorHealthSnapshot,
   SensorName,
   SensorStatus,
@@ -74,4 +75,13 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ speed }),
     }),
+
+  configureReplayFault: (config: ReplayFaultConfig) =>
+    request<DataSourceStatus>("/data-source/replay/fault", {
+      method: "POST",
+      body: JSON.stringify(config),
+    }),
+
+  clearReplayFault: () =>
+    request<DataSourceStatus>("/data-source/replay/fault", { method: "DELETE" }),
 };

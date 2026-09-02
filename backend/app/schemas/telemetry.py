@@ -9,7 +9,9 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from app.schemas.data_source import DataSourceType, RawChannelBatch, TelemetrySourceMetadata
+from app.schemas.fault_injection import ReplayFaultState
 from app.schemas.mission import MissionMode, SensorName, SensorStatus
+from app.schemas.model_prediction import HeartRateInferenceState, HeartRateModelPrediction
 
 
 class VitalsSnapshot(BaseModel):
@@ -63,6 +65,9 @@ class LiveMetricsSnapshot(BaseModel):
         )
     )
     channels: list[RawChannelBatch] = Field(default_factory=list)
+    heart_rate_prediction: HeartRateModelPrediction | None = None
+    heart_rate_inference: HeartRateInferenceState | None = None
+    fault_injection: ReplayFaultState | None = None
     mission_mode: MissionMode | None = None
     mission_day: float | None = Field(default=None, ge=0, description="Simulated elapsed mission day, used by the Digital Twin")
     vitals: VitalsSnapshot | None = None

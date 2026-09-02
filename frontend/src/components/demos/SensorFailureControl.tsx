@@ -7,6 +7,7 @@ import { AlertTriangle } from "lucide-react";
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import { SENSOR_NAMES, type SensorStatus } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
 
 const STATUS_OPTIONS: { value: SensorStatus; label: string }[] = [
@@ -19,7 +20,7 @@ const STATUS_OPTIONS: { value: SensorStatus; label: string }[] = [
  * engine recomputes AI confidence and the explanation on the next tick. */
 export function SensorFailureControl() {
   const sensors = useMissionStore((state) => state.latest?.sensor_health?.sensors);
-  const isReplay = useMissionStore((state) => state.latest?.source.source_type === "dataset_replay");
+  const isReplay = useDatasetReplayMode();
   const [pendingKey, setPendingKey] = useState<string | null>(null);
 
   async function handleSet(sensor: (typeof SENSOR_NAMES)[number]["value"], status: SensorStatus) {
@@ -68,7 +69,7 @@ export function SensorFailureControl() {
           );
         })}
       </div>
-      {isReplay ? <p className="mt-3 text-xs text-slate-500">Fault injection is intentionally not enabled for dataset replay in this phase.</p> : null}
+      {isReplay ? <p className="mt-3 text-xs text-slate-500">The synthetic sensor-failure demo is disabled during replay. Configure replay signal faults in Settings.</p> : null}
     </Panel>
   );
 }

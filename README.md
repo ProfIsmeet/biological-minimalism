@@ -22,10 +22,9 @@ Türkiye — IAF/IAA Space Life Sciences Symposium, Interactive Presentation for
 - The dashboard defaults to a **synthetic mock data engine** and can also replay
   one real, synchronized PPG-DaLiA subject with explicit provenance. Neither mode
   is live sensor hardware — see [Sensor & Data Honesty](#sensor--data-honesty).
-- The AI layer is a **transparent, documented rule-based physiology estimator**
-  by default, with a **real, structurally complete PyTorch CNN+Transformer
-  architecture** (`backend/app/ml/models.py`) ready to be trained and swapped in
-  — see [`ml/README.md`](ml/README.md).
+- Synthetic mode uses a **transparent, documented rule-based physiology
+  estimator**. Dataset replay uses the validated PPG-DaLiA PPG+IMU PyTorch model
+  for heart rate only; every other unsupported replay inference remains absent.
 - Explanations shown in the **AI Insights** page are **real SHAP (Shapley
   value) computations** over the live estimator, not scripted text.
 - This is a research demonstrator / proof-of-concept, not a certified or
@@ -71,8 +70,9 @@ Both run entirely offline once dependencies are installed — no internet
 connection, API key, or account is required to see the full demo.
 
 To enable real recorded-data replay, set `BIOMIN_PPG_DALIA_PATH` for the backend
-to the official archive or extracted `PPG_FieldStudy` directory, then use the
-Settings page. See [`docs/DATASET_REPLAY.md`](docs/DATASET_REPLAY.md).
+to the official archive or extracted `PPG_FieldStudy` directory and set
+`BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH` to the validated Model B checkpoint, then
+use the Settings page. See [`docs/DATASET_REPLAY.md`](docs/DATASET_REPLAY.md).
 
 ## Pages
 
@@ -105,7 +105,11 @@ Settings page. See [`docs/DATASET_REPLAY.md`](docs/DATASET_REPLAY.md).
 ```mermaid
 flowchart LR
     subgraph Backend["backend/ — FastAPI"]
-        ME["MockDataEngine\n(engine/mock_data_engine.py)"] --> PHY["Physiology engine\n(engine/physiology.py)"]
+        ME["MockDataEngine\n(engine/mock_data_engine.py)"] --> PHY["Synthetic physiology\n(engine/physiology.py)"]
+        REPLAY["DatasetReplaySource\nrecorded PPG + IMU"] --> FAULT["Replay fault injector\ndisabled by default"]
+        FAULT --> WIN["8 s / 2 s window assembler"]
+        WIN --> HR["Validated PPG+IMU HR model"]
+        HR --> WS
         PHY --> API["REST routes\n/metrics /digital-twin\n/sensor-health /simulation/*"]
         PHY --> WS["/ws/live-feed\nWebSocket broadcast"]
         PHY --> SHAP["ml/explainability.py\nreal SHAP over physiology.py"]
@@ -162,8 +166,11 @@ nothing shown is scripted or hand-written per scenario.
 Dataset replay mode instead transports previously recorded PPG-DaLiA channels
 from exactly one subject/session at their native sampling rates. Frames are marked
 `dataset_replay` and do not contain synthetic cognitive, digital-twin, confidence,
-or missing-modality values. Replay does not run the trained HR model yet and does
-not validate hardware timing, microgravity behavior, or clinical accuracy.
+or missing-modality values. Synchronized 8-second PPG+IMU windows feed the
+validated heart-rate model at a 2-second stride; its output is separately marked
+`AI_ESTIMATED`, includes dataset/subject/window/checkpoint provenance, and has no
+fabricated confidence or uncertainty. This does not validate hardware timing,
+microgravity behavior, or clinical accuracy.
 
 ## Testing
 
@@ -172,12 +179,10 @@ cd backend && .venv/Scripts/pytest -q   # or .venv/bin/pytest -q on macOS/Linux
 cd frontend && npm run build            # strict TypeScript + Next.js build
 ```
 
-Both were run and passed against this exact codebase during development
-(9/9 backend tests; a clean strict-TypeScript Next.js production build).
-The running dashboard never imports `torch` by default — `/health` reports
-`"inference_engine": "rule_based_v1"` to confirm this — so this is true
-regardless of whether PyTorch itself is installable/importable on a given
-machine.
+Synthetic mode does not load the replay model. PyTorch and the validated Model B
+checkpoint are loaded lazily only when replay produces its first complete
+synchronized 8-second PPG+IMU window. A missing or invalid checkpoint yields an
+explicit `model_unavailable` state; it never falls back to synthetic heart rate.
 
 **A note on the PyTorch path specifically:** the latest PyPI `torch` wheel
 (2.13.0 at the time of building this) failed to import on the machine this
