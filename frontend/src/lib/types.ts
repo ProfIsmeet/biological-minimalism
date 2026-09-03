@@ -230,6 +230,156 @@ export interface AvailableSubjectsResponse {
   subjects: string[];
 }
 
+export type ResearchAvailability = "available" | "unavailable";
+export type ResearchResultClass =
+  | "positive_marginal_value"
+  | "negative_marginal_result"
+  | "robustness_characterization";
+export type MarginalDirection = "improved" | "worsened" | "mixed" | "not_applicable";
+
+export interface ResearchMetricEstimate {
+  mean: number | null;
+  sd: number | null;
+  n: number | null;
+  unit: string;
+}
+
+export interface ResearchConfiguration {
+  configuration_id: string;
+  label: string;
+  description: string;
+  sensing: string[];
+  metrics: Record<string, ResearchMetricEstimate>;
+}
+
+export interface ResearchScope {
+  subjects: string[];
+  held_out_subjects: string[];
+  evaluation_windows: number;
+  activities: string[];
+  evidence_level: "experimental_evaluation";
+  environment_scope:
+    | "terrestrial_free_living"
+    | "terrestrial_controlled"
+    | "analog"
+    | "simulation"
+    | "spaceflight";
+  cohort_note: string;
+}
+
+export interface ResearchMarginalResult {
+  baseline_configuration_id: string;
+  candidate_configuration_id: string;
+  added_sensing: string;
+  metric: string;
+  delta: ResearchMetricEstimate;
+  direction: MarginalDirection;
+  paired_replicates: number | null;
+  candidate_improved_count: number | null;
+  candidate_worsened_count: number | null;
+  notes: string[];
+}
+
+export interface ResearchBreakdownEntry {
+  entry_id: string;
+  label: string;
+  dimensions: Record<string, string | number | boolean | null>;
+  configuration_metrics: Record<string, Record<string, ResearchMetricEstimate>>;
+  delta: ResearchMetricEstimate | null;
+}
+
+export interface ResearchBreakdown {
+  breakdown_id: string;
+  kind: string;
+  title: string;
+  entries: ResearchBreakdownEntry[];
+}
+
+export interface ResearchCheckpointIdentity {
+  run_id: string;
+  model_id: string;
+  sha256: string;
+  size_bytes: number;
+}
+
+export interface ResearchProvenance {
+  source_artifact: string;
+  supporting_artifacts: string[];
+  dataset_version: string | null;
+  split_identity: string | null;
+  model_identity: string[];
+  checkpoints: ResearchCheckpointIdentity[];
+  experiment_version: string | null;
+}
+
+export interface ResearchClaimBoundaries {
+  supported: string[];
+  unsupported: string[];
+  limitations: string[];
+}
+
+export interface ResearchOperationalCosts {
+  sensor_contact_regions: number | null;
+  additional_module_count: number | null;
+  power_estimate: number | null;
+  mass_estimate: number | null;
+  compute_estimate: number | null;
+  comfort_burden: number | null;
+}
+
+export interface ResearchExperiment {
+  experiment_id: string;
+  title: string;
+  research_question: string;
+  dataset: string;
+  target: string;
+  status: "complete";
+  result_class: ResearchResultClass;
+  outcome_summary: string;
+  scope: ResearchScope;
+  configurations: ResearchConfiguration[];
+  marginal_result: ResearchMarginalResult | null;
+  breakdowns: ResearchBreakdown[];
+  provenance: ResearchProvenance;
+  claim_boundaries: ResearchClaimBoundaries;
+  operational_costs: ResearchOperationalCosts;
+}
+
+export interface ResearchExperimentSummary {
+  experiment_id: string;
+  title: string;
+  research_question: string;
+  dataset: string;
+  target: string;
+  status: "complete";
+  result_class: ResearchResultClass;
+  outcome_summary: string;
+  held_out_subject_count: number;
+  source_artifact: string;
+}
+
+export interface ResearchExperimentEnvelope {
+  experiment_id: string;
+  availability: ResearchAvailability;
+  experiment: ResearchExperiment | null;
+  error: string | null;
+}
+
+export interface ResearchExperimentSummaryEnvelope {
+  experiment_id: string;
+  availability: ResearchAvailability;
+  summary: ResearchExperimentSummary | null;
+  error: string | null;
+}
+
+export interface ResearchProjectSummary {
+  experiment_count: number;
+  available_count: number;
+  unavailable_count: number;
+  experiments: ResearchExperimentSummaryEnvelope[];
+  statement: string;
+}
+
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [
   { value: "earth_orbit", label: "Earth Orbit" },
   { value: "lunar_surface", label: "Lunar Surface" },

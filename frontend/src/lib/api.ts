@@ -7,6 +7,9 @@ import type {
   LiveMetricsSnapshot,
   MissionMode,
   ReplayFaultConfig,
+  ResearchExperimentEnvelope,
+  ResearchExperimentSummaryEnvelope,
+  ResearchProjectSummary,
   SensorHealthSnapshot,
   SensorName,
   SensorStatus,
@@ -84,4 +87,12 @@ export const api = {
 
   clearReplayFault: () =>
     request<DataSourceStatus>("/data-source/replay/fault", { method: "DELETE" }),
+
+  getResearchExperiments: () =>
+    request<ResearchExperimentSummaryEnvelope[]>("/research/experiments"),
+
+  getResearchExperiment: (experimentId: string) =>
+    request<ResearchExperimentEnvelope>(`/research/experiments/${encodeURIComponent(experimentId)}`),
+
+  getResearchSummary: () => request<ResearchProjectSummary>("/research/summary"),
 };

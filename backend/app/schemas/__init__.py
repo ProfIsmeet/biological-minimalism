@@ -29,6 +29,12 @@ from app.schemas.model_prediction import (
     HeartRateModelProvenance,
     ModelInferenceStatus,
 )
+from app.schemas.research import (
+    ResearchExperiment,
+    ResearchExperimentEnvelope,
+    ResearchExperimentSummary,
+    ResearchProjectSummary,
+)
 from app.schemas.fault_injection import (
     ReplayFaultConfig,
     ReplayFaultState,
@@ -67,6 +73,10 @@ __all__ = [
     "HeartRateInferenceState",
     "HeartRateModelPrediction",
     "HeartRateModelProvenance",
+    "ResearchExperiment",
+    "ResearchExperimentEnvelope",
+    "ResearchExperimentSummary",
+    "ResearchProjectSummary",
     "ModelInferenceStatus",
     "ReplayFaultConfig",
     "ReplayFaultState",

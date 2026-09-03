@@ -15,7 +15,7 @@ from collections.abc import AsyncIterator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import ai_explanation, data_source, digital_twin, metrics, sensor_health, simulation
+from app.api.routes import ai_explanation, data_source, digital_twin, metrics, research, sensor_health, simulation
 from app.api.websocket import manager
 from app.api.websocket import router as ws_router
 from app.core.config import settings
@@ -73,6 +73,7 @@ app.include_router(sensor_health.router, tags=["sensor-health"])
 app.include_router(simulation.router, prefix="/simulation", tags=["simulation"])
 app.include_router(data_source.router, prefix="/data-source", tags=["data-source"])
 app.include_router(ai_explanation.router, prefix="/ai", tags=["ai"])
+app.include_router(research.router, prefix="/research", tags=["research"])
 app.include_router(ws_router, tags=["websocket"])
 
 

@@ -2,6 +2,8 @@
 
 This is a controlled single-subject result for official held-out S14, not a population-level robustness claim.
 
+Post-hoc interpretation note: see `docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md` for the first-batch IMU calibration caveat, IMU-dependence diagnostic, packet-loss availability interpretation, and reproducibility limits. The addendum does not change this frozen experiment or its numerical results.
+
 ## Clean baseline
 
 - Eligible/valid windows: 4476/4476
