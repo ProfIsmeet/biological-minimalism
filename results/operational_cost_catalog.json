@@ -1,0 +1,851 @@
+{
+  "catalog_id": "biological-minimalism-operational-cost-v1",
+  "components": [
+    {
+      "architecture_role": "Motion input colocated with an existing wrist PPG module in the reference marginal-cost context.",
+      "assumptions": [
+        "Marginal counts use an existing wrist PPG module as the baseline.",
+        "No final IMU component, PCB, battery, enclosure, or duty cycle is frozen."
+      ],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [
+        "accelerometer_x",
+        "accelerometer_y",
+        "accelerometer_z"
+      ],
+      "component_id": "wrist_imu",
+      "dimensions": {
+        "additional_module_count": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "architectural_count",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Zero only in the explicit colocated wrist-module reference context; it is not a universal BOM claim."
+          ],
+          "provenance_ids": [
+            "wrist_colocation_reference"
+          ],
+          "typical": null,
+          "unit": "modules",
+          "value": 0,
+          "value_kind": "exact"
+        },
+        "candidate_model_parameters": {
+          "availability": "known",
+          "basis": "total",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Desktop/server research model parameter count; not an embedded-runtime power measurement."
+          ],
+          "provenance_ids": [
+            "ppg_dalia_model_parameter_count"
+          ],
+          "typical": null,
+          "unit": "parameters",
+          "value": 29089,
+          "value_kind": "exact"
+        },
+        "contact_regions_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "architectural_count",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Uses the existing wrist contact region in the reference integration context."
+          ],
+          "provenance_ids": [
+            "wrist_colocation_reference"
+          ],
+          "typical": null,
+          "unit": "contact_regions",
+          "value": 0,
+          "value_kind": "exact"
+        },
+        "electrodes_or_contacts_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "architectural_count",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "A colocated MEMS accelerometer requires no additional skin electrode or optical contact."
+          ],
+          "provenance_ids": [
+            "wrist_colocation_reference"
+          ],
+          "typical": null,
+          "unit": "contacts",
+          "value": 0,
+          "value_kind": "exact"
+        },
+        "incremental_inference_latency_ms": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "No controlled latency benchmark was frozen for this comparison."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "ms",
+          "value": null,
+          "value_kind": "exact"
+        },
+        "incremental_mass_g": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Final component, PCB, interconnect, and enclosure are not selected."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "g",
+          "value": null,
+          "value_kind": "range"
+        },
+        "incremental_model_parameters": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Model B minus Model A for embedding dimension 32."
+          ],
+          "provenance_ids": [
+            "ppg_dalia_model_parameter_count"
+          ],
+          "typical": null,
+          "unit": "parameters",
+          "value": 21024,
+          "value_kind": "exact"
+        },
+        "incremental_power_mw": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "No final IMU or operating mode is selected; no representative datasheet is treated as a final design value."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "mW",
+          "value": null,
+          "value_kind": "range"
+        },
+        "model_input_values_per_window_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Three axes × 256 samples per 8-second window."
+          ],
+          "provenance_ids": [
+            "ppg_dalia_window_parameters"
+          ],
+          "typical": null,
+          "unit": "scalar_values_per_window",
+          "value": 768,
+          "value_kind": "exact"
+        },
+        "physical_sensing_sites_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "architectural_count",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "The accelerometer is colocated at the already-present wrist site."
+          ],
+          "provenance_ids": [
+            "wrist_colocation_reference"
+          ],
+          "typical": null,
+          "unit": "physical_sites",
+          "value": 0,
+          "value_kind": "exact"
+        },
+        "raw_bit_rate_added": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Acquisition bit depth and protocol overhead are not frozen."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "bit_per_second",
+          "value": null,
+          "value_kind": "exact"
+        },
+        "raw_sample_throughput_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Three accelerometer axes × 32 Hz; excludes bit depth, framing, compression, and protocol overhead."
+          ],
+          "provenance_ids": [
+            "ppg_dalia_window_parameters"
+          ],
+          "typical": null,
+          "unit": "scalar_samples_per_second",
+          "value": 96,
+          "value_kind": "exact"
+        },
+        "baseline_model_parameters": {
+          "availability": "known",
+          "basis": "total",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "PPG-only Model A at embedding dimension 32."
+          ],
+          "provenance_ids": [
+            "ppg_dalia_model_parameter_count"
+          ],
+          "typical": null,
+          "unit": "parameters",
+          "value": 8065,
+          "value_kind": "exact"
+        }
+      },
+      "duty_cycle": {
+        "availability": "unknown",
+        "basis": "total",
+        "evidence_level": "unknown",
+        "maximum": null,
+        "minimum": null,
+        "notes": [
+          "The research dataset is continuous, but final wearable duty cycle is not frozen."
+        ],
+        "provenance_ids": [],
+        "typical": null,
+        "unit": "percent",
+        "value": null,
+        "value_kind": "range"
+      },
+      "experimental_sensor_identity": "PPG-DaLiA Empatica E4 wrist accelerometer, 3 axes at 32 Hz",
+      "label": "Wrist IMU",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": [
+        "uses existing wrist contact region",
+        "no additional electrodes or optical contacts in the reference context",
+        "no additional wearable module in the colocated reference context"
+      ],
+      "physical_site": "wrist, colocated with wrist PPG",
+      "reliability_exposure": [
+        "additional sensing component and data path",
+        "no additional wireless link assumed in the shared-module context"
+      ],
+      "scientific_experiment_ids": [
+        "ppg-dalia-imu-ablation"
+      ],
+      "sensing_modality": "inertial sensing",
+      "shared_hardware": {
+        "allocation_status": "Incremental PCB, power, and compute allocation unresolved.",
+        "double_counting_risk": "Do not add a standalone enclosure, battery, radio, or MCU when evaluating the colocated reference context.",
+        "incremental_vs_standalone": "Marginal colocated cost is expected to differ from a standalone IMU wearable cost.",
+        "integration_context": "Shares the physical wrist module, enclosure, power source, communications path, and potentially MCU with wrist PPG.",
+        "naive_addition_allowed": false,
+        "shared_module_id": "wrist_module"
+      },
+      "status": "scientifically_mapped",
+      "unknowns": [
+        "final IMU component",
+        "incremental acquisition/interface power",
+        "incremental finished-module mass",
+        "final duty cycle",
+        "embedded inference latency and memory"
+      ]
+    },
+    {
+      "architecture_role": "A second physical optical PPG sensing site beyond the baseline distal three-wavelength site.",
+      "assumptions": [
+        "The scientific comparison adds one proximal physical PPG site with red, infrared, and green channels.",
+        "No final mechanical integration or module boundary is frozen."
+      ],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [
+        "red_ppg_site_2",
+        "infrared_ppg_site_2",
+        "green_ppg_site_2"
+      ],
+      "component_id": "second_ppg_site",
+      "dimensions": {
+        "additional_module_count": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "A second site may share electronics or require another module; mechanics are not frozen."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "modules",
+          "value": null,
+          "value_kind": "range"
+        },
+        "baseline_model_parameters": {
+          "availability": "known",
+          "basis": "total",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Model A, three input channels."
+          ],
+          "provenance_ids": [
+            "ptt_checkpoint_manifest"
+          ],
+          "typical": null,
+          "unit": "parameters",
+          "value": 8289,
+          "value_kind": "exact"
+        },
+        "candidate_model_parameters": {
+          "availability": "known",
+          "basis": "total",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Model B, six input channels."
+          ],
+          "provenance_ids": [
+            "ptt_checkpoint_manifest"
+          ],
+          "typical": null,
+          "unit": "parameters",
+          "value": 8625,
+          "value_kind": "exact"
+        },
+        "contact_regions_added": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "The experiment adds a physical optical site, but final body-region grouping and wearable mechanics are not frozen."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "contact_regions",
+          "value": null,
+          "value_kind": "exact"
+        },
+        "incremental_inference_latency_ms": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "No controlled latency benchmark was frozen for the paired PTT models."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "ms",
+          "value": null,
+          "value_kind": "exact"
+        },
+        "incremental_mass_g": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Emitters, detector, AFE allocation, wiring, PCB, enclosure, and attachment are not selected."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "g",
+          "value": null,
+          "value_kind": "range"
+        },
+        "incremental_model_parameters": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Model B minus Model A; both otherwise share the frozen architecture."
+          ],
+          "provenance_ids": [
+            "ptt_checkpoint_manifest"
+          ],
+          "typical": null,
+          "unit": "parameters",
+          "value": 336,
+          "value_kind": "exact"
+        },
+        "incremental_power_mw": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "No final emitters, currents, duty cycle, photodiode, AFE, or interface are selected."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "mW",
+          "value": null,
+          "value_kind": "range"
+        },
+        "model_input_values_per_window_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Three added channels × 4000 samples per 8-second window."
+          ],
+          "provenance_ids": [
+            "ptt_window_parameters"
+          ],
+          "typical": null,
+          "unit": "scalar_values_per_window",
+          "value": 12000,
+          "value_kind": "exact"
+        },
+        "optical_contact_sites_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "architectural_count",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "One proximal phalanx site is added to the distal baseline site."
+          ],
+          "provenance_ids": [
+            "second_ppg_site_structure"
+          ],
+          "typical": null,
+          "unit": "optical_contact_sites",
+          "value": 1,
+          "value_kind": "exact"
+        },
+        "physical_sensing_sites_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "architectural_count",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "The source experiment explicitly compares one versus two physical PPG sites."
+          ],
+          "provenance_ids": [
+            "second_ppg_site_structure"
+          ],
+          "typical": null,
+          "unit": "physical_sites",
+          "value": 1,
+          "value_kind": "exact"
+        },
+        "raw_bit_rate_added": {
+          "availability": "unknown",
+          "basis": "marginal",
+          "evidence_level": "unknown",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Dataset storage representation is not a frozen future ADC bit depth; protocol overhead is also unknown."
+          ],
+          "provenance_ids": [],
+          "typical": null,
+          "unit": "bit_per_second",
+          "value": null,
+          "value_kind": "exact"
+        },
+        "raw_sample_throughput_added": {
+          "availability": "known",
+          "basis": "marginal",
+          "evidence_level": "derived",
+          "maximum": null,
+          "minimum": null,
+          "notes": [
+            "Three added PPG channels × 500 Hz; excludes bit depth, framing, compression, and protocol overhead."
+          ],
+          "provenance_ids": [
+            "ptt_window_parameters"
+          ],
+          "typical": null,
+          "unit": "scalar_samples_per_second",
+          "value": 1500,
+          "value_kind": "exact"
+        }
+      },
+      "duty_cycle": {
+        "availability": "unknown",
+        "basis": "total",
+        "evidence_level": "unknown",
+        "maximum": null,
+        "minimum": null,
+        "notes": [
+          "The research recordings are continuous, but a final wearable operating schedule is not frozen."
+        ],
+        "provenance_ids": [],
+        "typical": null,
+        "unit": "percent",
+        "value": null,
+        "value_kind": "range"
+      },
+      "experimental_sensor_identity": "PhysioNet PTT dataset proximal phalanx red/infrared/green PPG channels at 500 Hz",
+      "label": "Second physical PPG site",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": [
+        "one additional physical optical sensing site",
+        "one additional optical contact site",
+        "three additional optical signal channels",
+        "potential extra wiring or module boundary remains unresolved"
+      ],
+      "physical_site": "second finger/phalanx optical site relative to baseline site",
+      "reliability_exposure": [
+        "additional optical contact and signal path",
+        "additional emitters/detector or multiplexed hardware likely, exact implementation unresolved"
+      ],
+      "scientific_experiment_ids": [
+        "ptt-ppg-site-ablation"
+      ],
+      "sensing_modality": "photoplethysmography",
+      "shared_hardware": {
+        "allocation_status": "Optical AFE, MCU, battery, enclosure, and communications sharing unresolved.",
+        "double_counting_risk": "Do not assume a complete second wearable module or duplicate shared electronics without a frozen mechanical/electrical design.",
+        "incremental_vs_standalone": "One extra physical site is known; standalone-versus-shared implementation cost is unknown.",
+        "integration_context": "May share AFE, processor, battery, or communications with the baseline PPG system, but a final topology is not selected.",
+        "naive_addition_allowed": false,
+        "shared_module_id": null
+      },
+      "status": "scientifically_mapped",
+      "unknowns": [
+        "final optical component set and currents",
+        "incremental power and finished mass",
+        "whether a new body region or wearable module is required",
+        "final duty cycle",
+        "embedded inference latency and memory"
+      ]
+    },
+    {
+      "architecture_role": "Candidate baseline optical pulse sensing; no Day 5 scientific-value or final hardware decision is implied.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "wrist_ppg",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Final architecture unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Baseline context unresolved."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware or duty cycle."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Operating schedule unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Wrist PPG",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": [],
+      "physical_site": "wrist / finger region, final site unresolved",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "photoplethysmography",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "Future shared wrist-module costs must be allocated once.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential shared wrist module", "naive_addition_allowed": false, "shared_module_id": "wrist_module"},
+      "status": "architecture_placeholder",
+      "unknowns": ["all final hardware costs"]
+    },
+    {
+      "architecture_role": "Candidate chest cardiac electrical sensing; placeholder only.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "ecg_chest",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Final chest integration unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Electrode layout not frozen."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final AFE or duty cycle."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Operating schedule unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Chest ECG",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": ["electrode requirement unresolved", "chest contact region candidate"],
+      "physical_site": "chest",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "electrocardiography",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "ECG and thoracic BioZ may share electrodes/electronics; do not count twice.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential shared chest module", "naive_addition_allowed": false, "shared_module_id": "chest_module"},
+      "status": "architecture_placeholder",
+      "unknowns": ["electrode topology", "all final hardware costs"]
+    },
+    {
+      "architecture_role": "Candidate thoracic impedance sensing; placeholder only.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "thoracic_bioz",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Shared chest electronics unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Electrode sharing unresolved."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final AFE or duty cycle."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Operating schedule unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Thoracic BioZ / ICG",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": ["electrode requirement unresolved", "chest contact region candidate"],
+      "physical_site": "chest",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "bioimpedance / impedance cardiography",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "Potential shared electrodes/module with chest ECG must not be counted twice.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential shared chest module", "naive_addition_allowed": false, "shared_module_id": "chest_module"},
+      "status": "architecture_placeholder",
+      "unknowns": ["electrode topology", "all final hardware costs"]
+    },
+    {
+      "architecture_role": "Candidate peripheral temperature channel; placeholder only.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "skin_temperature",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Potential wrist-module sharing unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Final placement unresolved."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final component or duty cycle."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Operating schedule unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Skin temperature",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": [],
+      "physical_site": "wrist / peripheral site unresolved",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "temperature",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "Potential wrist-module overhead must not be duplicated.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential shared wrist module", "naive_addition_allowed": false, "shared_module_id": "wrist_module"},
+      "status": "architecture_placeholder",
+      "unknowns": ["final site", "all final hardware costs"]
+    },
+    {
+      "architecture_role": "Candidate wearable light exposure channel; placeholder only.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "light_sensor",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Potential shared module unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Final placement unresolved."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final component or duty cycle."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Operating schedule unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Wearable light sensor",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": [],
+      "physical_site": "wearable exterior, final module unresolved",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "ambient light",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "Potential module overhead must not be duplicated.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential shared wrist or cabin context", "naive_addition_allowed": false, "shared_module_id": null},
+      "status": "architecture_placeholder",
+      "unknowns": ["wearable versus cabin placement", "all final hardware costs"]
+    },
+    {
+      "architecture_role": "Candidate frontal neural sensing; placeholder only.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "frontal_eeg",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Head-worn topology unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Electrode/contact layout unresolved."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final AFE or operating mode."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Continuous versus intermittent use unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Frontal EEG",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": ["head-worn requirement candidate", "electrode requirement unresolved", "continuous versus intermittent wear unresolved"],
+      "physical_site": "frontal head region",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "electroencephalography",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "Head-module shared costs must be allocated once.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential head-worn module", "naive_addition_allowed": false, "shared_module_id": "head_module"},
+      "status": "architecture_placeholder",
+      "unknowns": ["electrode count and type", "wear schedule", "all final hardware costs"]
+    },
+    {
+      "architecture_role": "Candidate segmental impedance sensing; placeholder only.",
+      "assumptions": [],
+      "candidate_hardware_identity": null,
+      "category": "wearable",
+      "channels": [],
+      "component_id": "leg_bioz",
+      "dimensions": {
+        "additional_module_count": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Leg-module topology unresolved."], "provenance_ids": [], "typical": null, "unit": "modules", "value": null, "value_kind": "exact"},
+        "contact_regions_added": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Electrode/contact layout unresolved."], "provenance_ids": [], "typical": null, "unit": "contact_regions", "value": null, "value_kind": "exact"},
+        "incremental_mass_g": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final hardware."], "provenance_ids": [], "typical": null, "unit": "g", "value": null, "value_kind": "range"},
+        "incremental_power_mw": {"availability": "unknown", "basis": "marginal", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["No final AFE or operating mode."], "provenance_ids": [], "typical": null, "unit": "mW", "value": null, "value_kind": "range"}
+      },
+      "duty_cycle": {"availability": "unknown", "basis": "total", "evidence_level": "unknown", "maximum": null, "minimum": null, "notes": ["Continuous versus intermittent use unresolved."], "provenance_ids": [], "typical": null, "unit": "percent", "value": null, "value_kind": "range"},
+      "experimental_sensor_identity": null,
+      "label": "Leg BioZ",
+      "operation_mode": "unresolved",
+      "operational_burden_proxies": ["leg contact region candidate", "electrode requirement unresolved"],
+      "physical_site": "leg segment",
+      "reliability_exposure": [],
+      "scientific_experiment_ids": [],
+      "sensing_modality": "bioimpedance",
+      "shared_hardware": {"allocation_status": "Unknown", "double_counting_risk": "Leg-module shared costs must be allocated once.", "incremental_vs_standalone": "Unresolved", "integration_context": "Potential leg module", "naive_addition_allowed": false, "shared_module_id": "leg_module"},
+      "status": "architecture_placeholder",
+      "unknowns": ["electrode count and type", "wear schedule", "all final hardware costs"]
+    }
+  ],
+  "evidence": [
+    {
+      "assumptions": [
+        "Raw sample throughput counts scalar samples and excludes bit depth, compression, framing, and protocol overhead."
+      ],
+      "component_or_artifact_identity": "PPG-DaLiA frozen IMU ablation result",
+      "evidence_id": "ppg_dalia_window_parameters",
+      "evidence_level": "derived",
+      "operating_condition": "8-second windows; wrist PPG 64 Hz × 1 channel; wrist accelerometer 32 Hz × 3 axes",
+      "source_reference": "results/ppg_dalia_imu_ablation.json",
+      "title": "PPG-DaLiA frozen window parameters",
+      "value_characterization": "Exact software/data-contract quantities",
+      "version_or_date": "d257f196f736e281a671fcc117781331034db1eb"
+    },
+    {
+      "assumptions": [
+        "Counts instantiate the committed model classes with embedding_dim=32; they are not latency, memory, or power measurements."
+      ],
+      "component_or_artifact_identity": "PPGOnlyHRModel and PPGPlusIMUHRModel",
+      "evidence_id": "ppg_dalia_model_parameter_count",
+      "evidence_level": "derived",
+      "operating_condition": "Committed PyTorch architecture, embedding dimension 32",
+      "source_reference": "ml/train_ppg_dalia_imu_ablation.py",
+      "title": "PPG-DaLiA model parameter counts",
+      "value_characterization": "Deterministic parameter count from committed architecture",
+      "version_or_date": "1b7bbc1d0341c529b1d5ced955ab303d63526f97"
+    },
+    {
+      "assumptions": [
+        "The experimental source has one existing wrist device; the reference marginal architecture colocates the candidate IMU with wrist PPG.",
+        "This is a structural integration context, not a frozen final BOM."
+      ],
+      "component_or_artifact_identity": "Reference shared wrist module",
+      "evidence_id": "wrist_colocation_reference",
+      "evidence_level": "architectural_count",
+      "operating_condition": "Marginal IMU addition to a baseline wrist PPG module",
+      "source_reference": "docs/MODEL_CONTRACT_PPG_DALIA_HR.md",
+      "title": "Wrist IMU colocated integration context",
+      "value_characterization": "Architectural count",
+      "version_or_date": "2026-09-04"
+    },
+    {
+      "assumptions": [
+        "Raw sample throughput counts scalar samples and excludes bit depth, compression, framing, and protocol overhead."
+      ],
+      "component_or_artifact_identity": "PTT PPG-site ablation frozen configuration",
+      "evidence_id": "ptt_window_parameters",
+      "evidence_level": "derived",
+      "operating_condition": "8-second windows; 500 Hz; three baseline and three added PPG channels",
+      "source_reference": "results/ptt_ppg_site_ablation.json",
+      "title": "PTT frozen input and sampling parameters",
+      "value_characterization": "Exact software/data-contract quantities",
+      "version_or_date": "a18068440319786c6921e8b8914420eeb731b350"
+    },
+    {
+      "assumptions": [
+        "Parameter counts are identical across seeds within each model and are not runtime power measurements."
+      ],
+      "component_or_artifact_identity": "PTT Model A and Model B checkpoint manifest",
+      "evidence_id": "ptt_checkpoint_manifest",
+      "evidence_level": "derived",
+      "operating_condition": "Frozen Model A 3-channel and Model B 6-channel architectures",
+      "source_reference": "results/ptt_ppg_site_ablation.json",
+      "title": "PTT model parameter counts",
+      "value_characterization": "Manifested deterministic parameter count",
+      "version_or_date": "a18068440319786c6921e8b8914420eeb731b350"
+    },
+    {
+      "assumptions": [
+        "A physical sensing site is counted separately from a body contact region and a hardware module."
+      ],
+      "component_or_artifact_identity": "PTT distal versus proximal phalanx PPG comparison",
+      "evidence_id": "second_ppg_site_structure",
+      "evidence_level": "architectural_count",
+      "operating_condition": "Model B adds proximal red/infrared/green PPG to the distal baseline site",
+      "source_reference": "docs/MODEL_CONTRACT_PTT_HR.md",
+      "title": "Second physical PPG site structure",
+      "value_characterization": "Architectural count",
+      "version_or_date": "a18068440319786c6921e8b8914420eeb731b350"
+    }
+  ],
+  "generated_from_commit": "1b7bbc1d0341c529b1d5ced955ab303d63526f97",
+  "methodology_path": "docs/OPERATIONAL_COST_METHODOLOGY.md",
+  "schema_version": "1.0.0",
+  "scientific_join_contract": {
+    "allowed_future_outputs": [
+      "multi-objective inputs with preserved units and provenance",
+      "non-dominance analysis after both contracts are reviewed and frozen"
+    ],
+    "cost_contract_status": "operational_cost_v1_ready",
+    "expected_scientific_fields": [
+      "component_id",
+      "target",
+      "experiment_id",
+      "benefit_metrics",
+      "direction",
+      "provenance",
+      "claim_boundaries"
+    ],
+    "join_key": "component_id",
+    "prohibited_current_outputs": [
+      "weighted cost score",
+      "Pareto dominance",
+      "sensor ranking",
+      "keep/remove recommendation",
+      "final architecture selection"
+    ],
+    "scientific_benefit": null,
+    "scientific_contract_status": "awaiting_reviewed_ismet_day5_contract"
+  },
+  "title": "Biological Minimalism operational-cost catalog"
+}

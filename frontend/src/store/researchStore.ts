@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 import { api } from "@/lib/api";
 import type {
+  OperationalCostCatalog,
   ResearchExperiment,
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
@@ -10,6 +11,8 @@ import type {
 interface ResearchState {
   summaries: ResearchExperimentSummaryEnvelope[];
   projectSummary: ResearchProjectSummary | null;
+  operationalCostCatalog: OperationalCostCatalog | null;
+  operationalCostError: string | null;
   experiments: Record<string, ResearchExperiment>;
   selectedExperimentId: string | null;
   loading: boolean;
@@ -21,6 +24,8 @@ interface ResearchState {
 export const useResearchStore = create<ResearchState>((set) => ({
   summaries: [],
   projectSummary: null,
+  operationalCostCatalog: null,
+  operationalCostError: null,
   experiments: {},
   selectedExperimentId: null,
   loading: false,
@@ -28,9 +33,10 @@ export const useResearchStore = create<ResearchState>((set) => ({
   load: async () => {
     set({ loading: true, error: null });
     try {
-      const [summaries, projectSummary] = await Promise.all([
+      const [summaries, projectSummary, operationalCosts] = await Promise.all([
         api.getResearchExperiments(),
         api.getResearchSummary(),
+        api.getOperationalCosts(),
       ]);
       const availableIds = summaries
         .filter((item) => item.availability === "available")
@@ -49,6 +55,11 @@ export const useResearchStore = create<ResearchState>((set) => ({
       set((state) => ({
         summaries,
         projectSummary,
+        operationalCostCatalog: operationalCosts.catalog,
+        operationalCostError:
+          operationalCosts.availability === "unavailable"
+            ? operationalCosts.error ?? "Operational-cost catalog unavailable."
+            : null,
         experiments,
         selectedExperimentId:
           state.selectedExperimentId && experiments[state.selectedExperimentId]
@@ -63,6 +74,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
       set({
         loading: false,
         error: error instanceof Error ? error.message : "Research artifacts could not be loaded.",
+        operationalCostCatalog: null,
+        operationalCostError: error instanceof Error ? error.message : "Operational-cost catalog could not be loaded.",
       });
     }
   },

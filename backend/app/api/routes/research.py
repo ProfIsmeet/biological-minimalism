@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
+from app.research.operational_costs import ResearchArtifactError, operational_cost_catalog
 from app.research.catalog import research_catalog
+from app.schemas.operational_cost import (
+    OperationalCostCatalogEnvelope,
+    OperationalCostComponentEnvelope,
+    ParetoReadyInput,
+)
 from app.schemas.research import (
     ResearchExperimentEnvelope,
     ResearchExperimentSummaryEnvelope,
@@ -42,3 +48,36 @@ def get_research_experiment(experiment_id: str) -> ResearchExperimentEnvelope:
 )
 def get_research_summary() -> ResearchProjectSummary:
     return research_catalog.summary()
+
+
+@router.get(
+    "/operational-costs",
+    response_model=OperationalCostCatalogEnvelope,
+    summary="Read the provenance-bearing operational-cost catalog",
+)
+def get_operational_cost_catalog() -> OperationalCostCatalogEnvelope:
+    return operational_cost_catalog.catalog()
+
+
+@router.get(
+    "/operational-costs/{component_id}",
+    response_model=OperationalCostComponentEnvelope,
+    summary="Read one operational-cost component",
+)
+def get_operational_cost_component(component_id: str) -> OperationalCostComponentEnvelope:
+    try:
+        return operational_cost_catalog.get(component_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown operational-cost component {component_id!r}.") from exc
+
+
+@router.get(
+    "/decision-inputs",
+    response_model=list[ParetoReadyInput],
+    summary="Read unresolved future scientific/cost join rows",
+)
+def get_decision_inputs() -> list[ParetoReadyInput]:
+    try:
+        return operational_cost_catalog.pareto_ready_inputs()
+    except ResearchArtifactError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc

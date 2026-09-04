@@ -6,6 +6,9 @@ import type {
   DigitalTwinState,
   LiveMetricsSnapshot,
   MissionMode,
+  OperationalCostCatalogEnvelope,
+  OperationalCostComponentEnvelope,
+  ParetoReadyInput,
   ReplayFaultConfig,
   ResearchExperimentEnvelope,
   ResearchExperimentSummaryEnvelope,
@@ -95,4 +98,12 @@ export const api = {
     request<ResearchExperimentEnvelope>(`/research/experiments/${encodeURIComponent(experimentId)}`),
 
   getResearchSummary: () => request<ResearchProjectSummary>("/research/summary"),
+
+  getOperationalCosts: () =>
+    request<OperationalCostCatalogEnvelope>("/research/operational-costs"),
+
+  getOperationalCostComponent: (componentId: string) =>
+    request<OperationalCostComponentEnvelope>(`/research/operational-costs/${encodeURIComponent(componentId)}`),
+
+  getDecisionInputs: () => request<ParetoReadyInput[]>("/research/decision-inputs"),
 };

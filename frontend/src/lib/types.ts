@@ -380,6 +380,118 @@ export interface ResearchProjectSummary {
   statement: string;
 }
 
+export type CostEvidenceLevel =
+  | "measured"
+  | "manufacturer_spec"
+  | "literature_estimate"
+  | "derived"
+  | "architectural_count"
+  | "unknown";
+export type CostAvailability = "known" | "unknown";
+export type CostValueKind = "exact" | "range";
+export type CostBasis = "marginal" | "total";
+export type OperationMode = "continuous" | "periodic" | "intermittent" | "event_driven" | "unresolved";
+
+export interface OperationalQuantity {
+  availability: CostAvailability;
+  value_kind: CostValueKind;
+  value: number | null;
+  minimum: number | null;
+  typical: number | null;
+  maximum: number | null;
+  unit: string;
+  basis: CostBasis;
+  evidence_level: CostEvidenceLevel;
+  provenance_ids: string[];
+  notes: string[];
+}
+
+export interface CostEvidenceRecord {
+  evidence_id: string;
+  evidence_level: CostEvidenceLevel;
+  title: string;
+  source_reference: string;
+  component_or_artifact_identity: string;
+  operating_condition: string;
+  value_characterization: string;
+  version_or_date: string | null;
+  assumptions: string[];
+}
+
+export interface SharedHardwareContext {
+  shared_module_id: string | null;
+  integration_context: string;
+  incremental_vs_standalone: string;
+  allocation_status: string;
+  double_counting_risk: string;
+  naive_addition_allowed: false;
+}
+
+export interface OperationalCostComponent {
+  component_id: string;
+  label: string;
+  status: "scientifically_mapped" | "architecture_placeholder";
+  category: "wearable" | "cabin_context";
+  sensing_modality: string;
+  channels: string[];
+  physical_site: string;
+  architecture_role: string;
+  operation_mode: OperationMode;
+  duty_cycle: OperationalQuantity;
+  experimental_sensor_identity: string | null;
+  candidate_hardware_identity: string | null;
+  scientific_experiment_ids: string[];
+  dimensions: Record<string, OperationalQuantity>;
+  operational_burden_proxies: string[];
+  reliability_exposure: string[];
+  shared_hardware: SharedHardwareContext;
+  assumptions: string[];
+  unknowns: string[];
+}
+
+export interface ScientificJoinContract {
+  join_key: "component_id";
+  expected_scientific_fields: string[];
+  cost_contract_status: string;
+  scientific_contract_status: string;
+  scientific_benefit: null;
+  allowed_future_outputs: string[];
+  prohibited_current_outputs: string[];
+}
+
+export interface OperationalCostCatalog {
+  schema_version: string;
+  catalog_id: string;
+  title: string;
+  methodology_path: string;
+  generated_from_commit: string;
+  evidence: CostEvidenceRecord[];
+  components: OperationalCostComponent[];
+  scientific_join_contract: ScientificJoinContract;
+}
+
+export interface OperationalCostCatalogEnvelope {
+  availability: ResearchAvailability;
+  catalog: OperationalCostCatalog | null;
+  error: string | null;
+}
+
+export interface OperationalCostComponentEnvelope {
+  component_id: string;
+  availability: ResearchAvailability;
+  component: OperationalCostComponent | null;
+  error: string | null;
+}
+
+export interface ParetoReadyInput {
+  component_id: string;
+  operational_cost_component_id: string;
+  scientific_experiment_ids: string[];
+  target: string | null;
+  scientific_benefit: null;
+  join_status: string;
+}
+
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [
   { value: "earth_orbit", label: "Earth Orbit" },
   { value: "lunar_surface", label: "Lunar Surface" },
