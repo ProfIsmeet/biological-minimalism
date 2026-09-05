@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
-from app.research.operational_costs import ResearchArtifactError, operational_cost_catalog
 from app.research.catalog import research_catalog
+from app.research.decision_inputs import decision_inputs
+from app.research.operational_costs import operational_cost_catalog
+from app.schemas.decision_inputs import ParetoDecisionInputsEnvelope
 from app.schemas.operational_cost import (
     OperationalCostCatalogEnvelope,
     OperationalCostComponentEnvelope,
-    ParetoReadyInput,
 )
 from app.schemas.research import (
     ResearchExperimentEnvelope,
@@ -73,11 +74,8 @@ def get_operational_cost_component(component_id: str) -> OperationalCostComponen
 
 @router.get(
     "/decision-inputs",
-    response_model=list[ParetoReadyInput],
-    summary="Read unresolved future scientific/cost join rows",
+    response_model=ParetoDecisionInputsEnvelope,
+    summary="Read reviewed scientific and operational decision inputs",
 )
-def get_decision_inputs() -> list[ParetoReadyInput]:
-    try:
-        return operational_cost_catalog.pareto_ready_inputs()
-    except ResearchArtifactError as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
+def get_decision_inputs() -> ParetoDecisionInputsEnvelope:
+    return decision_inputs.artifact()

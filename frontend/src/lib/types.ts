@@ -492,6 +492,149 @@ export interface ParetoReadyInput {
   join_status: string;
 }
 
+export type ReadinessAvailability = "AVAILABLE" | "PARTIAL" | "MISSING";
+
+export interface DecisionSourceArtifact {
+  path: string;
+  sha256: string;
+  role: string;
+}
+
+export interface DecisionMetricEstimate {
+  mean: number;
+  sd: number | null;
+  unit: string;
+}
+
+export interface DecisionAccuracyMetrics {
+  mae: DecisionMetricEstimate;
+  rmse: DecisionMetricEstimate;
+  n_windows: number | null;
+}
+
+export interface DecisionConfiguration {
+  description: string;
+  channels: string[];
+}
+
+export interface DecisionClaimBoundaries {
+  supported: string[];
+  unsupported: string[];
+  limitations: string[];
+}
+
+export interface DecisionScientificMarginalValue {
+  scientific_component_id: string;
+  target_id: string;
+  experiment_id: string;
+  dataset_id: string;
+  baseline_configuration: DecisionConfiguration;
+  candidate_configuration: DecisionConfiguration;
+  primary_metric: "mae";
+  baseline_metrics: DecisionAccuracyMetrics;
+  candidate_metrics: DecisionAccuracyMetrics;
+  absolute_benefit: {
+    mae_bpm: number;
+    rmse_bpm: number;
+  };
+  relative_improvement: {
+    mae_fraction: number;
+    rmse_fraction: number;
+  };
+  direction: "POSITIVE" | "NEGATIVE";
+  variability: Record<string, unknown>;
+  heterogeneity: Record<string, string>;
+  evidence_strength: string;
+  evidence_scope: Record<string, unknown>;
+  provenance: {
+    source_artifact: string;
+    source_reproducibility_artifact: string | null;
+    methodology_path: string;
+    contract_path: string;
+  };
+  claim_boundaries: DecisionClaimBoundaries;
+}
+
+export interface DecisionOperationalCost {
+  source_component_id: string;
+  candidate_hardware_identity: string | null;
+  duty_cycle: OperationalQuantity;
+  dimensions: Record<string, OperationalQuantity>;
+  shared_hardware: SharedHardwareContext;
+  known_dimensions: string[];
+  unknown_dimensions: string[];
+  unknowns: string[];
+  evidence: CostEvidenceRecord[];
+}
+
+export interface DecisionRobustnessEvidence {
+  status: "RESOLVED_FROM_INTEGRATION_SOURCE";
+  experiment_id: string;
+  source_artifact: string;
+  audit_addendum: string;
+  subject_id: string;
+  scope: string;
+  condition_count: number;
+  eligible_windows_per_condition: number;
+  total_condition_windows: number;
+  clean_mae_bpm: number;
+  clean_rmse_bpm: number;
+  clean_prediction_availability: number;
+  imu_calibration_caveat: string;
+  packet_loss_interpretation: string;
+  supported_claim: string;
+  unsupported_claims: string[];
+}
+
+export interface DecisionInputComponent {
+  component_id: string;
+  label: string;
+  target: string;
+  experiment_id: string;
+  scientific_marginal_value: DecisionScientificMarginalValue;
+  operational_cost: DecisionOperationalCost;
+  robustness_evidence: DecisionRobustnessEvidence | null;
+}
+
+export interface DecisionComponentReadiness {
+  component_id: string;
+  scientific_benefit: ReadinessAvailability;
+  power: ReadinessAvailability;
+  mass: ReadinessAvailability;
+  contact_burden: ReadinessAvailability;
+  module_burden: ReadinessAvailability;
+  compute_data_burden: ReadinessAvailability;
+  robustness_evidence: ReadinessAvailability;
+  evidence_provenance: ReadinessAvailability;
+}
+
+export interface ParetoDecisionInputs {
+  schema_version: string;
+  artifact_id: string;
+  source_artifacts: DecisionSourceArtifact[];
+  join_mappings: {
+    component_id: string;
+    scientific_component_id: string;
+    scientific_experiment_id: string;
+    operational_experiment_id: string;
+  }[];
+  components: DecisionInputComponent[];
+  readiness: {
+    pareto_status: "NOT_READY";
+    formal_pareto_calculated: false;
+    missing_requirements: string[];
+    cross_dataset_restriction: string;
+    limited_structural_observation: string;
+    component_matrix: DecisionComponentReadiness[];
+  };
+}
+
+export interface ParetoDecisionInputsEnvelope {
+  availability: ResearchAvailability;
+  decision_inputs: ParetoDecisionInputs | null;
+  error: string | null;
+}
+
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [
   { value: "earth_orbit", label: "Earth Orbit" },
   { value: "lunar_surface", label: "Lunar Surface" },

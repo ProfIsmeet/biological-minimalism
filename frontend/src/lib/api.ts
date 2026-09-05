@@ -8,7 +8,7 @@ import type {
   MissionMode,
   OperationalCostCatalogEnvelope,
   OperationalCostComponentEnvelope,
-  ParetoReadyInput,
+  ParetoDecisionInputsEnvelope,
   ReplayFaultConfig,
   ResearchExperimentEnvelope,
   ResearchExperimentSummaryEnvelope,
@@ -105,5 +105,5 @@ export const api = {
   getOperationalCostComponent: (componentId: string) =>
     request<OperationalCostComponentEnvelope>(`/research/operational-costs/${encodeURIComponent(componentId)}`),
 
-  getDecisionInputs: () => request<ParetoReadyInput[]>("/research/decision-inputs"),
+  getDecisionInputs: () => request<ParetoDecisionInputsEnvelope>("/research/decision-inputs"),
 };

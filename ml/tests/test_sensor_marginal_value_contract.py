@@ -8,7 +8,6 @@ artifacts - they never retrain anything and never modify a source artifact.
 from __future__ import annotations
 
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -181,14 +180,13 @@ def test_fault_robustness_record_not_fabricated(contract):
     assert contract["robustness_relationship"]["sensor_marginal_value_and_robustness_are_separate_axes"] is True
 
 
-def test_fault_robustness_source_genuinely_absent_repo_wide():
-    """Guards against silently 'fixing' this by inventing the file - if it
-    ever appears, this test should be revisited (not just made to pass)."""
-    result = subprocess.run(
-        ["git", "log", "--all", "--oneline", "--", "results/ppg_dalia_fault_robustness.json"],
-        cwd=REPO_ROOT, capture_output=True, text=True,
-    )
-    assert result.stdout.strip() == "", "results/ppg_dalia_fault_robustness.json now exists in history - re-run the contract builder to populate it from source"
+def test_fault_robustness_source_now_exists_but_frozen_contract_is_unchanged():
+    """The integration line supplies the independently frozen robustness
+    result. The Ismet contract remains historical; the reviewed integration
+    adapter resolves it without rewriting this source contract."""
+    assert (REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json").is_file()
+    frozen = json.loads(CONTRACT_PATH.read_text())
+    assert frozen["experiments"]["ppg_dalia_fault_robustness"]["status"] == "SOURCE_ARTIFACT_NOT_FOUND"
 
 
 # 13. no fake confidence/evidence percentages ----------------------------------

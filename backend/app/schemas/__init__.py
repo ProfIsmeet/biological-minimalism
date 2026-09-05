@@ -54,6 +54,17 @@ from app.schemas.operational_cost import (
     OperationalQuantity,
     ParetoReadyInput,
 )
+from app.schemas.decision_inputs import (
+    ComponentReadiness,
+    DecisionInputComponent,
+    ParetoDecisionInputs,
+    ParetoDecisionInputsEnvelope,
+    ParetoReadiness,
+    ParetoStatus,
+    ReadinessAvailability,
+    RobustnessEvidence,
+    ScientificMarginalValue,
+)
 
 __all__ = [
     "MissionMode",
@@ -106,4 +117,13 @@ __all__ = [
     "OperationalCostComponentEnvelope",
     "OperationalQuantity",
     "ParetoReadyInput",
+    "ComponentReadiness",
+    "DecisionInputComponent",
+    "ParetoDecisionInputs",
+    "ParetoDecisionInputsEnvelope",
+    "ParetoReadiness",
+    "ParetoStatus",
+    "ReadinessAvailability",
+    "RobustnessEvidence",
+    "ScientificMarginalValue",
 ]

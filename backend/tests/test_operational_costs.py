@@ -190,7 +190,9 @@ def test_operational_cost_api_is_read_only() -> None:
 
     decision_response = client.get("/research/decision-inputs")
     assert decision_response.status_code == 200
-    assert all(item["scientific_benefit"] is None for item in decision_response.json())
+    decision_payload = decision_response.json()
+    assert decision_payload["availability"] == "available"
+    assert decision_payload["decision_inputs"]["readiness"]["pareto_status"] == "NOT_READY"
 
     assert client.get("/research/operational-costs/not-real").status_code == 404
     assert client.post("/research/operational-costs", json={}).status_code == 405

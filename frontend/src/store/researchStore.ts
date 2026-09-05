@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { api } from "@/lib/api";
 import type {
   OperationalCostCatalog,
+  ParetoDecisionInputs,
   ResearchExperiment,
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
@@ -13,6 +14,8 @@ interface ResearchState {
   projectSummary: ResearchProjectSummary | null;
   operationalCostCatalog: OperationalCostCatalog | null;
   operationalCostError: string | null;
+  decisionInputs: ParetoDecisionInputs | null;
+  decisionInputsError: string | null;
   experiments: Record<string, ResearchExperiment>;
   selectedExperimentId: string | null;
   loading: boolean;
@@ -26,6 +29,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
   projectSummary: null,
   operationalCostCatalog: null,
   operationalCostError: null,
+  decisionInputs: null,
+  decisionInputsError: null,
   experiments: {},
   selectedExperimentId: null,
   loading: false,
@@ -33,10 +38,11 @@ export const useResearchStore = create<ResearchState>((set) => ({
   load: async () => {
     set({ loading: true, error: null });
     try {
-      const [summaries, projectSummary, operationalCosts] = await Promise.all([
+      const [summaries, projectSummary, operationalCosts, decisionInputEnvelope] = await Promise.all([
         api.getResearchExperiments(),
         api.getResearchSummary(),
         api.getOperationalCosts(),
+        api.getDecisionInputs(),
       ]);
       const availableIds = summaries
         .filter((item) => item.availability === "available")
@@ -60,6 +66,11 @@ export const useResearchStore = create<ResearchState>((set) => ({
           operationalCosts.availability === "unavailable"
             ? operationalCosts.error ?? "Operational-cost catalog unavailable."
             : null,
+        decisionInputs: decisionInputEnvelope.decision_inputs,
+        decisionInputsError:
+          decisionInputEnvelope.availability === "unavailable"
+            ? decisionInputEnvelope.error ?? "Decision inputs unavailable."
+            : null,
         experiments,
         selectedExperimentId:
           state.selectedExperimentId && experiments[state.selectedExperimentId]
@@ -76,6 +87,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
         error: error instanceof Error ? error.message : "Research artifacts could not be loaded.",
         operationalCostCatalog: null,
         operationalCostError: error instanceof Error ? error.message : "Operational-cost catalog could not be loaded.",
+        decisionInputs: null,
+        decisionInputsError: error instanceof Error ? error.message : "Decision inputs could not be loaded.",
       });
     }
   },

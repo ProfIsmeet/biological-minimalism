@@ -213,9 +213,9 @@ export function OperationalCostView({
       </details>
 
       <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.05] p-4">
-        <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-200"><LockKeyhole size={13} /> Future Pareto integration — disabled</p>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">Pareto analysis will combine target-specific scientific benefit with independently sourced operational costs once both contracts are reviewed and frozen. Scientific benefit is currently unresolved; no provisional points, dominance, score, keep/remove recommendation, or architecture ranking is calculated.</p>
-        <p className="mt-2 font-mono text-[10px] text-slate-600">Join key: {catalog.scientific_join_contract.join_key} · {humanize(catalog.scientific_join_contract.scientific_contract_status)}</p>
+        <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-200"><LockKeyhole size={13} /> Final Pareto analysis — disabled</p>
+        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">The reviewed scientific contract is joined in the Day 5 integrated view above. This source catalog remains frozen and independent; unresolved power, mass, duty cycle, and embedded measurements still prevent final multi-objective analysis.</p>
+        <p className="mt-2 font-mono text-[10px] text-slate-600">Source-contract join key: {catalog.scientific_join_contract.join_key}</p>
       </div>
     </Panel>
   );
