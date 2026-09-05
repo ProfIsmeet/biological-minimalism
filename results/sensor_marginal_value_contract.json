@@ -1,0 +1,286 @@
+{
+  "methodology_version": "1.0.0",
+  "methodology_doc": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
+  "generated_by": "ml/build_sensor_marginal_value_contract.py",
+  "sign_convention": {
+    "absolute_benefit": "baseline_metric - candidate_metric (positive = candidate improves / lower error; negative = candidate worsens)",
+    "relative_improvement": "(baseline_metric - candidate_metric) / baseline_metric, as a fraction (positive = candidate improves)",
+    "note": "Applied identically to every experiment record in this file - never inverted per-experiment."
+  },
+  "metric_policy": {
+    "primary_accuracy_metric": "mae",
+    "secondary_severity_metric": "rmse",
+    "combined_mae_rmse_score": null,
+    "combined_score_rationale": "No defensible weighting between MAE and RMSE has been frozen; they are reported separately, never combined into one number."
+  },
+  "availability_policy": {
+    "definition": "availability = valid_predictions / eligible_windows",
+    "folded_into_accuracy_metric": false,
+    "unavailable_prediction_treated_as_zero_or_infinite_error": false,
+    "note": "Kept as a separate dimension from MAE/RMSE. No availability data is populated in this contract's sensor-value experiment records (Experiments A and B both had full availability); robustness/availability evidence lives in a separate robustness record structure, not the sensor-value records, per the methodology doc's SS13 boundary."
+  },
+  "comparability_rules": {
+    "cross_dataset_raw_metric_comparison": "PROHIBITED",
+    "cross_dataset_relative_improvement_comparison": "DESCRIPTIVE_ONLY_NOT_A_RANKING",
+    "allowed_cross_experiment_fields": [
+      "marginal_status.overall_direction",
+      "evidence_scope.*",
+      "variability.*_direction_consistency",
+      "marginal_status.evidence_strength"
+    ],
+    "prohibited_cross_experiment_fields": [
+      "baseline_metrics.mae_bpm(_mean)",
+      "candidate_metrics.mae_bpm(_mean)",
+      "baseline_metrics.rmse_bpm(_mean)",
+      "candidate_metrics.rmse_bpm(_mean)",
+      "any absolute ranking of one experiment's raw error against another's"
+    ]
+  },
+  "interaction_effects": {
+    "additive_assumption_supported": false,
+    "note": "Value(component_A + component_B) is not assumed equal to Value(A) + Value(B). No experiment in this project has measured a genuine interaction effect between two candidate components.",
+    "interaction_evidence": "unavailable"
+  },
+  "robustness_relationship": {
+    "sensor_marginal_value_and_robustness_are_separate_axes": true,
+    "note": "Sensor marginal-value experiments (this contract) ask whether ADDING a component improves a target under clean conditions. Robustness experiments ask what happens when an EXISTING input is degraded or unavailable. These are related but distinct questions and must not be folded into one scalar. See docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md SS13."
+  },
+  "experiments": {
+    "ppg_dalia_imu_hr": {
+      "experiment_id": "ppg_dalia_imu_hr",
+      "target_id": "heart_rate_bpm",
+      "dataset_id": "ppg_dalia",
+      "population": "15 free-living terrestrial adult subjects (PPG-DaLiA)",
+      "baseline_configuration": {
+        "candidate_component": null,
+        "description": "wrist PPG only",
+        "channels": [
+          "PPG (wrist, 1 channel)"
+        ]
+      },
+      "candidate_component_id": "wrist_imu_accelerometer",
+      "candidate_configuration": {
+        "description": "wrist PPG + synchronized wrist IMU (3-axis accelerometer)",
+        "channels": [
+          "PPG (wrist, 1 channel)",
+          "IMU (wrist, 3-axis accelerometer)"
+        ]
+      },
+      "negative_control": {
+        "description": "Model C: same architecture as candidate, but each subject's own IMU windows are randomly time-shuffled within-subject (seed 42), breaking true temporal correspondence while preserving per-subject motion statistics.",
+        "shuffled_imu_mae": 7.956958293914795,
+        "shuffled_imu_rmse": 11.959531784057617
+      },
+      "baseline_metrics": {
+        "mae_bpm": 9.090062141418457,
+        "rmse_bpm": 12.522624015808105,
+        "n_windows": 12852
+      },
+      "candidate_metrics": {
+        "mae_bpm": 7.031700611114502,
+        "rmse_bpm": 10.717168807983398,
+        "n_windows": 12852
+      },
+      "absolute_benefit": {
+        "mae_bpm": 2.058361530303955,
+        "rmse_bpm": 1.805455207824707
+      },
+      "relative_improvement": {
+        "mae_fraction": 0.2264408645706748,
+        "rmse_fraction": 0.1441754703763018
+      },
+      "synchronization_decomposition": {
+        "total_imu_benefit_mae_bpm": 2.058361530303955,
+        "context_only_like_benefit_mae_bpm": 1.133103847503662,
+        "synchronization_increment_mae_bpm": 0.925257682800293,
+        "total_imu_benefit_rmse_bpm": 1.805455207824707,
+        "context_only_like_benefit_rmse_bpm": 0.5630922317504883,
+        "synchronization_increment_rmse_bpm": 1.2423629760742188,
+        "interpretation_note": "Temporally shuffled same-subject IMU retained some predictive value (candidate-vs-shuffled and shuffled-vs-baseline are both non-zero), so the synchronized-IMU benefit is not attributable to synchronization alone. This decomposition is descriptive, not a proven causal split."
+      },
+      "variability": {
+        "training_seed_replication": "1/1 (single seed=42, no multi-seed replication performed for this experiment)",
+        "subject_direction_consistency": "3/3 held-out subjects favor candidate",
+        "motion_quartile_direction_consistency": "4/4 motion quartiles favor candidate",
+        "activity_direction_consistency": "8/9 activities favor candidate",
+        "activities_where_candidate_did_not_improve": [
+          "table_soccer"
+        ],
+        "benefit_monotonic_with_motion": false
+      },
+      "evidence_scope": {
+        "n_held_out_subjects": 3,
+        "n_total_subjects": 15,
+        "n_datasets": 1,
+        "n_training_seeds": 1,
+        "independent_ground_truth": "real chest-ECG-derived HR label shipped with PPG-DaLiA (not computed by this project)",
+        "negative_control_present": true,
+        "subject_disjoint_split": true
+      },
+      "marginal_status": {
+        "overall_direction": "POSITIVE",
+        "heterogeneity": {
+          "subject_level": "CONSISTENT",
+          "activity_level": "MOSTLY_CONSISTENT"
+        },
+        "evidence_strength": "preliminary",
+        "evidence_strength_rationale": "Direction is consistent across all held-out subjects and all motion quartiles, and a negative control was run - methodologically strong within its scope. Classified 'preliminary' (not 'replicated-within-dataset') because there is no multi-seed training replication and only one dataset/population."
+      },
+      "limitations": [
+        "Trained and evaluated on PPG-DaLiA (terrestrial, free-living daily activities), not astronaut or spaceflight data - no microgravity validation.",
+        "Not clinically validated.",
+        "Held-out test set is 3 subjects (out of 15 total) in this specific seeded split - a different split could shift exact numbers, though the direction of the effect (IMU helps) was consistent across all 3 test subjects individually.",
+        "IMU benefit did NOT monotonically increase with motion-quartile severity in this run (largest absolute gain was in the lowest-motion quartile) - reported as observed, not smoothed into a monotonic story.",
+        "Per-activity breakdown shows one activity (table_soccer) where Model B performed WORSE than Model A - a real negative result within an overall-positive experiment.",
+        "CURRENT MODEL DOES NOT PROVIDE VALIDATED PREDICTIVE UNCERTAINTY. Model output is a single point estimate; no variance/confidence head exists or has been calibrated.",
+        "This experiment establishes heart-rate estimation performance only - it does not establish anything about stress, fatigue, cognitive load, or other targets.",
+        "ModalityFusionTransformer was generalized during this experiment to accept an explicit n_modalities parameter (previously hard-coupled to the dashboard's global 4-modality tuple) - default behavior for existing dashboard callers is unchanged and covered by backend/tests/test_models.py."
+      ],
+      "source_artifact": "results/ppg_dalia_imu_ablation.json",
+      "source_commit_hash_recorded_in_artifact": "d257f196f736e281a671fcc117781331034db1eb",
+      "comparable_to_other_experiments": {
+        "raw_mae_rmse": false,
+        "direction_and_evidence_scope": true,
+        "rule": "See methodology doc SS10 - cross-dataset raw-metric comparison is prohibited."
+      }
+    },
+    "ptt_second_ppg_site_hr": {
+      "experiment_id": "ptt_second_ppg_site_hr",
+      "target_id": "heart_rate_bpm",
+      "dataset_id": "pulse_transit_time_ppg",
+      "population": "22 healthy terrestrial adult subjects, sit/walk/run (PhysioNet Pulse Transit Time PPG Dataset v1.1.0)",
+      "baseline_configuration": {
+        "candidate_component": null,
+        "description": "one physical PPG sensing site (distal phalanx), 3 wavelengths",
+        "channels": [
+          "pleth_1",
+          "pleth_2",
+          "pleth_3"
+        ]
+      },
+      "candidate_component_id": "second_physical_ppg_site_proximal_phalanx",
+      "candidate_configuration": {
+        "description": "two physical PPG sensing sites (distal + proximal phalanx), 3 wavelengths each",
+        "channels": [
+          "pleth_1",
+          "pleth_2",
+          "pleth_3",
+          "pleth_4",
+          "pleth_5",
+          "pleth_6"
+        ]
+      },
+      "negative_control": null,
+      "baseline_metrics": {
+        "mae_bpm_mean": 17.540314865112304,
+        "mae_bpm_sd": 1.0384105383437507,
+        "rmse_bpm_mean": 21.189903259277344,
+        "rmse_bpm_sd": 1.1099569886140703
+      },
+      "candidate_metrics": {
+        "mae_bpm_mean": 19.002723693847656,
+        "mae_bpm_sd": 0.41136207265180985,
+        "rmse_bpm_mean": 24.01768379211426,
+        "rmse_bpm_sd": 0.7808258121590937
+      },
+      "absolute_benefit": {
+        "mae_bpm": -1.4624088287353523,
+        "rmse_bpm": -2.8277805328369148
+      },
+      "relative_improvement": {
+        "mae_fraction": -0.08337414920892237,
+        "rmse_fraction": -0.13344943099723017
+      },
+      "synchronization_decomposition": null,
+      "variability": {
+        "training_seed_replication": "5/5 seeds trained (seeds [42, 43, 44, 45, 46])",
+        "seed_direction_consistency": "5/5 seeds favor baseline (candidate worse in all of these)",
+        "subject_direction_consistency": "2/4 held-out subjects favor candidate",
+        "activity_direction_consistency": "1/3 activities favor candidate",
+        "per_subject_favors_candidate": {
+          "s14": false,
+          "s2": false,
+          "s20": true,
+          "s9": true
+        },
+        "per_activity_favors_candidate": {
+          "run": false,
+          "sit": false,
+          "walk": true
+        },
+        "benefit_monotonic_with_motion": false
+      },
+      "evidence_scope": {
+        "n_held_out_subjects": 4,
+        "n_total_subjects": 22,
+        "n_datasets": 1,
+        "n_training_seeds": 5,
+        "independent_ground_truth": "real ECG R-peak-derived HR (manually-verified .atr annotations)",
+        "negative_control_present": false,
+        "subject_disjoint_split": true
+      },
+      "marginal_status": {
+        "overall_direction": "NEGATIVE",
+        "heterogeneity": {
+          "seed_level": "CONSISTENT (5/5 favor baseline)",
+          "subject_level": "MIXED",
+          "activity_level": "MIXED"
+        },
+        "evidence_strength": "replicated-within-dataset",
+        "evidence_strength_rationale": "5 independent training seeds all show the candidate configuration performing worse - a consistent, replicated-within-dataset training-level signal. However subject-level (2/4) and activity-level (1/3) effects are heterogeneous, and this is a single dataset/population - the overall negative direction should not be read as uniform across all subjects/activities."
+      },
+      "known_caveats": [
+        "Held-out subject s2 has a real HR distribution far outside the training population's range (verified from raw R-peak data: sit ~121bpm, run ~140bpm mean, vs. a train-set mean of ~85bpm) - a genuine out-of-distribution subject that dominates the small (N=4) held-out aggregate for both models. Not excluded from the frozen result per pre-registered protocol; disclosed here as context, not as grounds to recompute the headline metric.",
+        "Candidate configuration has strictly more input channels (6 vs 3) than baseline by construction - channel-count and site-value effects are not perfectly separable."
+      ],
+      "source_artifact": "results/ptt_ppg_site_ablation.json",
+      "source_reproducibility_artifact": "results/ptt_ppg_site_ablation_reproducibility.json",
+      "comparable_to_other_experiments": {
+        "raw_mae_rmse": false,
+        "direction_and_evidence_scope": true,
+        "rule": "See methodology doc SS10 - cross-dataset raw-metric comparison is prohibited."
+      }
+    },
+    "ppg_dalia_fault_robustness": {
+      "experiment_id": "ppg_dalia_fault_robustness",
+      "status": "SOURCE_ARTIFACT_NOT_FOUND",
+      "expected_source_artifact": "results/ppg_dalia_fault_robustness.json",
+      "note": "This experiment was cited in the Day 5 master prompt as an accepted, frozen result ('Experiment C'), with specific MAE/RMSE/availability figures. That source file does not exist in this repository - not in the working tree, not in `git log --all -- results/ppg_dalia_fault_robustness.json`, and not on any local or remote branch (day2-ml, day3-ml, day5-ml, main, or their origin counterparts) as of this contract's build time. Per this project's standing verification rule, the numbers cited in the prompt are NOT reproduced here - doing so would mean recording unverified figures as if they were sourced from a real file. This is reported as a discrepancy requiring team review, not silently resolved. No robustness fields in this contract depend on this record.",
+      "action_required": "Locate or re-generate results/ppg_dalia_fault_robustness.json, then re-run ml/build_sensor_marginal_value_contract.py to populate this record from verified source."
+    }
+  },
+  "evidence_matrix": {
+    "heart_rate_bpm": {
+      "wrist_imu_accelerometer": {
+        "status": "POSITIVE",
+        "experiment_id": "ppg_dalia_imu_hr"
+      },
+      "second_physical_ppg_site_proximal_phalanx": {
+        "status": "NEGATIVE",
+        "experiment_id": "ptt_second_ppg_site_hr"
+      }
+    },
+    "workload": {
+      "status": "UNVALIDATED"
+    },
+    "fatigue": {
+      "status": "UNVALIDATED"
+    },
+    "blood_pressure": {
+      "status": "UNVALIDATED"
+    },
+    "fluid_shift": {
+      "status": "UNVALIDATED"
+    },
+    "circadian_stability": {
+      "status": "UNVALIDATED"
+    }
+  },
+  "positive_result_interpretation_rule": "positive_for_target != automatic_inclusion_in_final_architecture (see methodology doc SS11)",
+  "negative_result_interpretation_rule": "negative_for_target != global_removal_of_component (see methodology doc SS12)",
+  "universal_sensor_score": {
+    "defined": false,
+    "recommendation": "AGAINST",
+    "rationale": "A bounded 0-1 (or similar) universal sensor score would require arbitrary cross-target/cross-dataset weighting that no current evidence supports. See methodology doc SS9."
+  }
+}
