@@ -47,9 +47,56 @@ def _validate_catalog(catalog: OperationalCostCatalog) -> OperationalCostCatalog
     for evidence in catalog.evidence:
         if Path(evidence.source_reference).is_absolute():
             raise ResearchArtifactError(f"Machine-local evidence path is prohibited: {evidence.source_reference}")
+        if evidence.source_url is not None:
+            if not evidence.source_url.startswith("https://"):
+                raise ResearchArtifactError(f"External evidence URL must use HTTPS: {evidence.evidence_id}")
+            required_external = (
+                evidence.manufacturer,
+                evidence.retrieval_date,
+                evidence.page_or_section,
+                evidence.exact_parameters,
+            )
+            if not all(required_external):
+                raise ResearchArtifactError(
+                    f"External evidence lacks manufacturer/date/location/parameters: {evidence.evidence_id}"
+                )
 
     for component in catalog.components:
-        for quantity in [component.duty_cycle, *component.dimensions.values()]:
+        quantities = [component.duty_cycle, *component.dimensions.values()]
+        hardware = component.hardware_characterization
+        if hardware is not None:
+            quantities.extend(
+                [
+                    hardware.power_energy.supply_voltage,
+                    hardware.power_energy.active_current,
+                    hardware.power_energy.active_power,
+                    hardware.power_energy.active_fraction,
+                    hardware.power_energy.average_power,
+                    hardware.power_energy.daily_energy,
+                    hardware.mass.component_mass,
+                    hardware.mass.pcb_or_module_incremental_mass,
+                    hardware.mass.finished_wearable_mass,
+                    hardware.data_rate.channel_count,
+                    hardware.data_rate.sample_rate,
+                    hardware.data_rate.bits_per_sample,
+                    hardware.data_rate.scalar_sample_throughput,
+                    hardware.data_rate.raw_payload_bit_rate,
+                    hardware.data_rate.protocol_overhead_bit_rate,
+                    hardware.compute_memory.baseline_model_weight_memory,
+                    hardware.compute_memory.candidate_model_weight_memory,
+                    hardware.compute_memory.incremental_model_weight_memory,
+                    hardware.compute_memory.baseline_input_buffer_memory,
+                    hardware.compute_memory.candidate_input_buffer_memory,
+                    hardware.compute_memory.incremental_input_buffer_memory,
+                    hardware.compute_memory.embedded_inference_latency,
+                ]
+            )
+            missing_identity = set(hardware.identity.evidence_ids) - evidence_ids
+            if missing_identity:
+                raise ResearchArtifactError(
+                    f"{component.component_id} identity references unknown evidence IDs: {sorted(missing_identity)}"
+                )
+        for quantity in quantities:
             if quantity.availability == CostAvailability.KNOWN:
                 missing = set(quantity.provenance_ids) - evidence_ids
                 if missing:

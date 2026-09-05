@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict
 
 from app.schemas.operational_cost import (
     CostEvidenceRecord,
+    HardwareCharacterization,
     OperationalQuantity,
     SharedHardwareContext,
 )
@@ -108,6 +109,7 @@ class OperationalCostInput(StrictModel):
     unknown_dimensions: list[str]
     unknowns: list[str]
     evidence: list[CostEvidenceRecord]
+    hardware_characterization: HardwareCharacterization | None = None
 
 
 class RobustnessEvidence(StrictModel):

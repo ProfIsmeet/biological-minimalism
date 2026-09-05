@@ -167,7 +167,7 @@ def test_readiness_reports_missing_dimensions_honestly(artifact) -> None:
     assert artifact.readiness.pareto_status == "NOT_READY"
     assert len(artifact.readiness.missing_requirements) == 7
     matrix = {item.component_id: item for item in artifact.readiness.component_matrix}
-    assert matrix["wrist_imu"].power == "MISSING"
+    assert matrix["wrist_imu"].power == "PARTIAL"
     assert matrix["wrist_imu"].mass == "MISSING"
     assert matrix["second_ppg_site"].contact_burden == "PARTIAL"
     assert matrix["second_ppg_site"].module_burden == "MISSING"

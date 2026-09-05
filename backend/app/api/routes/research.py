@@ -6,8 +6,10 @@ from fastapi import APIRouter, HTTPException
 
 from app.research.catalog import research_catalog
 from app.research.decision_inputs import decision_inputs
+from app.research.day6 import day6_research
 from app.research.operational_costs import operational_cost_catalog
 from app.schemas.decision_inputs import ParetoDecisionInputsEnvelope
+from app.schemas.hardware_topology import HardwareTopologyEnvelope, ParetoReadinessDay6Envelope
 from app.schemas.operational_cost import (
     OperationalCostCatalogEnvelope,
     OperationalCostComponentEnvelope,
@@ -79,3 +81,21 @@ def get_operational_cost_component(component_id: str) -> OperationalCostComponen
 )
 def get_decision_inputs() -> ParetoDecisionInputsEnvelope:
     return decision_inputs.artifact()
+
+
+@router.get(
+    "/hardware-topology",
+    response_model=HardwareTopologyEnvelope,
+    summary="Read the frozen Day 6 hardware reference topology",
+)
+def get_hardware_topology() -> HardwareTopologyEnvelope:
+    return day6_research.topology()
+
+
+@router.get(
+    "/pareto-readiness",
+    response_model=ParetoReadinessDay6Envelope,
+    summary="Read the Day 6 Pareto-readiness audit",
+)
+def get_pareto_readiness() -> ParetoReadinessDay6Envelope:
+    return day6_research.readiness()

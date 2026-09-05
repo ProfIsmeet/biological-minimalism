@@ -416,6 +416,72 @@ export interface CostEvidenceRecord {
   value_characterization: string;
   version_or_date: string | null;
   assumptions: string[];
+  manufacturer: string | null;
+  source_url: string | null;
+  retrieval_date: string | null;
+  page_or_section: string | null;
+  exact_parameters: string[];
+}
+
+export interface HardwareIdentity {
+  manufacturer: string | null;
+  part_number_or_class: string | null;
+  device_class: string;
+  status: "representative_candidate" | "representative_component_class" | "open";
+  rationale: string;
+  evidence_ids: string[];
+  exclusions: string[];
+}
+
+export interface HardwareCharacterization {
+  topology_component_id: string;
+  identity: HardwareIdentity;
+  required_afe: string;
+  host_interface: string;
+  host_mcu_status: string;
+  power_energy: {
+    boundary: "incremental_sensor_ic" | "incremental_afe" | "incremental_component_class" | "unquantified";
+    operating_condition: string;
+    duty_cycle_status: "frozen" | "open";
+    duty_cycle_assumption: string;
+    supply_voltage: OperationalQuantity;
+    active_current: OperationalQuantity;
+    active_power: OperationalQuantity;
+    active_fraction: OperationalQuantity;
+    average_power: OperationalQuantity;
+    daily_energy: OperationalQuantity;
+    equations: string[];
+    excluded_subsystems: string[];
+  };
+  mass: {
+    component_mass: OperationalQuantity;
+    pcb_or_module_incremental_mass: OperationalQuantity;
+    finished_wearable_mass: OperationalQuantity;
+  };
+  data_rate: {
+    channel_count: OperationalQuantity;
+    sample_rate: OperationalQuantity;
+    bits_per_sample: OperationalQuantity;
+    scalar_sample_throughput: OperationalQuantity;
+    raw_payload_bit_rate: OperationalQuantity;
+    protocol_overhead_bit_rate: OperationalQuantity;
+    equation: string | null;
+    notes: string[];
+  };
+  compute_memory: {
+    dtype: string | null;
+    bytes_per_value: number | null;
+    input_tensor_shapes: string[];
+    baseline_model_weight_memory: OperationalQuantity;
+    candidate_model_weight_memory: OperationalQuantity;
+    incremental_model_weight_memory: OperationalQuantity;
+    baseline_input_buffer_memory: OperationalQuantity;
+    candidate_input_buffer_memory: OperationalQuantity;
+    incremental_input_buffer_memory: OperationalQuantity;
+    embedded_inference_latency: OperationalQuantity;
+    notes: string[];
+  };
+  unresolved_dependencies: string[];
 }
 
 export interface SharedHardwareContext {
@@ -447,6 +513,7 @@ export interface OperationalCostComponent {
   shared_hardware: SharedHardwareContext;
   assumptions: string[];
   unknowns: string[];
+  hardware_characterization: HardwareCharacterization | null;
 }
 
 export interface ScientificJoinContract {
@@ -468,6 +535,8 @@ export interface OperationalCostCatalog {
   evidence: CostEvidenceRecord[];
   components: OperationalCostComponent[];
   scientific_join_contract: ScientificJoinContract;
+  hardware_topology_path: string | null;
+  revision_history: { schema_version: string; source_commit: string; source_sha256: string; change_summary: string }[];
 }
 
 export interface OperationalCostCatalogEnvelope {
@@ -565,6 +634,95 @@ export interface DecisionOperationalCost {
   unknown_dimensions: string[];
   unknowns: string[];
   evidence: CostEvidenceRecord[];
+  hardware_characterization: HardwareCharacterization | null;
+}
+
+export interface TopologyModule {
+  module_id: string;
+  label: string;
+  body_location: string;
+  worn_body: boolean;
+  topology_status: "FROZEN_REFERENCE" | "OPEN_BOUNDARY";
+  component_ids: string[];
+  shared_resources: string[];
+  notes: string[];
+}
+
+export interface TopologyComponent {
+  component_id: string;
+  label: string;
+  modality: string;
+  module_id: string;
+  target_body_region: string;
+  physical_sensing_site: string;
+  operation_mode: OperationMode;
+  operating_schedule: string;
+  optionality: string;
+  contact_burden: {
+    body_regions: string[];
+    contact_type: string;
+    new_contact_region_required: boolean | null;
+    new_physical_sensing_site_required: boolean | null;
+    physical_sensing_sites: number | null;
+    optical_interfaces: number | null;
+    dry_electrodes: number | null;
+    adhesive_or_wet_electrodes: number | null;
+    straps: number | null;
+    head_worn_hardware: boolean;
+    external_cable_required: boolean | null;
+  };
+  required_afe: string;
+  required_mcu_or_interface: string;
+  shared_resources: string[];
+  new_module_required: boolean | null;
+  hardware_identity: HardwareIdentity;
+  evidence_confidence: "HIGH" | "MEDIUM" | "LOW" | "OPEN";
+  unresolved_dependencies: string[];
+}
+
+export type TargetEvidenceStatus = "VALIDATED_POSITIVE" | "VALIDATED_NEGATIVE" | "PARTIAL_EVIDENCE" | "CANDIDATE" | "UNVALIDATED" | "NOT_APPLICABLE";
+
+export interface HardwareTopologyContract {
+  schema_version: string;
+  topology_id: string;
+  title: string;
+  methodology_path: string;
+  reference_architecture_not_final_bom: true;
+  stable_component_ids: string[];
+  modules: TopologyModule[];
+  components: TopologyComponent[];
+  target_coverage: Record<string, Record<string, { status: TargetEvidenceStatus; evidence_ids: string[]; note: string }>>;
+  global_unresolved_dependencies: string[];
+}
+
+export interface HardwareTopologyEnvelope {
+  availability: ResearchAvailability;
+  topology: HardwareTopologyContract | null;
+  system_architecture: { schema_version: string; architecture_id: string; source_topology_path: string; modules: TopologyModule[]; resources: unknown[]; signals: unknown[] } | null;
+  error: string | null;
+}
+
+export interface ParetoReadinessDay6 {
+  schema_version: string;
+  readiness_id: string;
+  topology_path: string;
+  operational_catalog_path: string;
+  decision_inputs_path: string;
+  global_pareto_ready: false;
+  target_specific_pareto_ready: false;
+  structural_assessment_available: boolean;
+  formal_pareto_authorized: false;
+  classification: string;
+  component_matrix: { component_id: string; scientific_benefit: string; target_coverage: string; component_power: string; average_power_and_energy: string; component_mass: string; finished_mass: string; physical_burden: string; compute_and_data: string; robustness_evidence: string; provenance: string; unresolved_dependencies: string[] }[];
+  blockers: string[];
+  limited_structural_conclusion: string;
+  prohibited_inferences: string[];
+}
+
+export interface ParetoReadinessDay6Envelope {
+  availability: ResearchAvailability;
+  readiness: ParetoReadinessDay6 | null;
+  error: string | null;
 }
 
 export interface DecisionRobustnessEvidence {

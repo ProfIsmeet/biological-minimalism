@@ -206,7 +206,7 @@ export function OperationalCostView({
           <table className="w-full min-w-[780px] text-left text-xs">
             <thead className="text-[10px] uppercase tracking-wide text-slate-600"><tr><th className="px-3 py-2 font-medium">Evidence</th><th className="px-3 py-2 font-medium">Level</th><th className="px-3 py-2 font-medium">Source</th><th className="px-3 py-2 font-medium">Operating condition</th></tr></thead>
             <tbody className="divide-y divide-white/5">
-              {catalog.evidence.map((record) => <tr key={record.evidence_id}><td className="px-3 py-2.5 text-slate-300">{record.title}</td><td className="px-3 py-2.5"><span className={clsx("rounded-full border px-2 py-1 text-[10px]", evidenceClass(record.evidence_level))}>{EVIDENCE_LABELS[record.evidence_level]}</span></td><td className="px-3 py-2.5 font-mono text-[10px] text-cyan-300">{record.source_reference}</td><td className="px-3 py-2.5 text-[11px] leading-relaxed text-slate-500">{record.operating_condition}</td></tr>)}
+              {catalog.evidence.map((record) => <tr key={record.evidence_id}><td className="px-3 py-2.5 text-slate-300">{record.title}</td><td className="px-3 py-2.5"><span className={clsx("rounded-full border px-2 py-1 text-[10px]", evidenceClass(record.evidence_level))}>{EVIDENCE_LABELS[record.evidence_level]}</span></td><td className="px-3 py-2.5 font-mono text-[10px] text-cyan-300">{record.source_url ? <a className="underline decoration-cyan-400/30 underline-offset-2" href={record.source_url} target="_blank" rel="noreferrer">{record.manufacturer ?? record.source_reference}</a> : record.source_reference}<p className="mt-1 font-sans text-[9px] text-slate-600">{record.page_or_section}</p></td><td className="px-3 py-2.5 text-[11px] leading-relaxed text-slate-500">{record.operating_condition}</td></tr>)}
             </tbody>
           </table>
         </div>
@@ -214,7 +214,7 @@ export function OperationalCostView({
 
       <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.05] p-4">
         <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-200"><LockKeyhole size={13} /> Final Pareto analysis — disabled</p>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">The reviewed scientific contract is joined in the Day 5 integrated view above. This source catalog remains frozen and independent; unresolved power, mass, duty cycle, and embedded measurements still prevent final multi-objective analysis.</p>
+        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">The reviewed scientific contract remains a separate evidence dimension in the integrated view above. Day 6 adds component-boundary hardware characterization, but unresolved deployable power, mass, duty cycles, and embedded measurements still prevent final multi-objective analysis.</p>
         <p className="mt-2 font-mono text-[10px] text-slate-600">Source-contract join key: {catalog.scientific_join_contract.join_key}</p>
       </div>
     </Panel>

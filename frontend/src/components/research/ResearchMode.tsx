@@ -18,6 +18,7 @@ import {
 import { Panel } from "@/components/ui/Panel";
 import { OperationalCostView } from "@/components/research/OperationalCostView";
 import { DecisionInputsView } from "@/components/research/DecisionInputsView";
+import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
 import type {
   ResearchBreakdown,
   ResearchBreakdownEntry,
@@ -424,6 +425,10 @@ export function ResearchMode() {
     operationalCostError,
     decisionInputs,
     decisionInputsError,
+    hardwareTopology,
+    hardwareTopologyError,
+    paretoReadiness,
+    paretoReadinessError,
     experiments,
     selectedExperimentId,
     loading,
@@ -472,6 +477,8 @@ export function ResearchMode() {
       )}
 
       {experimentList.length ? <MarginalValueTable experiments={experimentList} /> : null}
+      {hardwareTopologyError || paretoReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Hardware architecture unavailable: {hardwareTopologyError ?? paretoReadinessError}</p> : null}
+      {hardwareTopology && paretoReadiness && operationalCostCatalog ? <HardwareArchitectureView topology={hardwareTopology} catalog={operationalCostCatalog} readiness={paretoReadiness} /> : null}
       {decisionInputsError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Integrated decision inputs unavailable: {decisionInputsError}</p> : null}
       {decisionInputs ? <DecisionInputsView artifact={decisionInputs} /> : null}
       {operationalCostError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Operational-cost catalog unavailable: {operationalCostError}</p> : null}

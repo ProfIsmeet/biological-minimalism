@@ -41,8 +41,8 @@ def _component(component_id: str):
 def test_catalog_parses_and_component_ids_are_stable() -> None:
     catalog = _catalog()
     assert tuple(item.component_id for item in catalog.components) == STABLE_COMPONENT_IDS
-    assert catalog.catalog_id == "biological-minimalism-operational-cost-v1"
-    assert catalog.schema_version == "1.0.0"
+    assert catalog.catalog_id == "biological-minimalism-operational-cost-v2"
+    assert catalog.schema_version == "2.0.0"
 
 
 def test_unknown_numeric_values_remain_null_never_zero() -> None:

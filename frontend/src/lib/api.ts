@@ -9,6 +9,8 @@ import type {
   OperationalCostCatalogEnvelope,
   OperationalCostComponentEnvelope,
   ParetoDecisionInputsEnvelope,
+  HardwareTopologyEnvelope,
+  ParetoReadinessDay6Envelope,
   ReplayFaultConfig,
   ResearchExperimentEnvelope,
   ResearchExperimentSummaryEnvelope,
@@ -106,4 +108,8 @@ export const api = {
     request<OperationalCostComponentEnvelope>(`/research/operational-costs/${encodeURIComponent(componentId)}`),
 
   getDecisionInputs: () => request<ParetoDecisionInputsEnvelope>("/research/decision-inputs"),
+
+  getHardwareTopology: () => request<HardwareTopologyEnvelope>("/research/hardware-topology"),
+
+  getParetoReadiness: () => request<ParetoReadinessDay6Envelope>("/research/pareto-readiness"),
 };

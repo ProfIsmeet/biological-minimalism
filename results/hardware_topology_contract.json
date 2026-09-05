@@ -1,0 +1,1017 @@
+{
+  "schema_version": "1.0.0",
+  "topology_id": "biological-minimalism-day6-reference-topology-v1",
+  "title": "Day 6 engineering reference topology — not a final BOM or selected architecture",
+  "methodology_path": "docs/HARDWARE_TOPOLOGY_METHODOLOGY.md",
+  "reference_architecture_not_final_bom": true,
+  "stable_component_ids": [
+    "wrist_imu",
+    "second_ppg_site",
+    "wrist_ppg",
+    "ecg_chest",
+    "thoracic_bioz",
+    "skin_temperature",
+    "light_sensor",
+    "frontal_eeg",
+    "leg_bioz"
+  ],
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "label": "Shared wrist module",
+      "body_location": "wrist",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "shared_resources": [
+        "enclosure",
+        "attachment strap",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock"
+      ],
+      "notes": [
+        "Shared resource identities and allocation remain open; each must be counted once."
+      ]
+    },
+    {
+      "module_id": "chest_module",
+      "label": "Shared chest module",
+      "body_location": "thorax",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "shared_resources": [
+        "enclosure",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock"
+      ],
+      "notes": [
+        "ECG/BioZ electrode sharing is not assumed until a montage is validated."
+      ]
+    },
+    {
+      "module_id": "head_module",
+      "label": "Intermittent frontal EEG module",
+      "body_location": "forehead/head",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "frontal_eeg"
+      ],
+      "shared_resources": [
+        "head attachment",
+        "battery",
+        "host MCU",
+        "wireless radio"
+      ],
+      "notes": [
+        "Electrode count, montage, and session schedule remain open."
+      ]
+    },
+    {
+      "module_id": "leg_module",
+      "label": "Experimental leg BioZ module",
+      "body_location": "lower leg",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "leg_bioz"
+      ],
+      "shared_resources": [
+        "attachment",
+        "battery",
+        "host MCU",
+        "wireless radio"
+      ],
+      "notes": [
+        "Electrode topology and operating schedule remain open."
+      ]
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "label": "Second PPG-site evaluation branch",
+      "body_location": "finger/phalanx",
+      "worn_body": true,
+      "topology_status": "OPEN_BOUNDARY",
+      "component_ids": [
+        "second_ppg_site"
+      ],
+      "shared_resources": [],
+      "notes": [
+        "One additional optical site is fixed; shared, tethered, or standalone electronics remain unresolved."
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_id": "wrist_imu",
+      "label": "Wrist IMU",
+      "modality": "three-axis acceleration",
+      "module_id": "wrist_module",
+      "target_body_region": "wrist",
+      "physical_sensing_site": "inside shared wrist enclosure",
+      "operation_mode": "continuous",
+      "operating_schedule": "Continuous and synchronized with PPG during HR inference.",
+      "optionality": "reference candidate",
+      "contact_burden": {
+        "body_regions": [
+          "wrist"
+        ],
+        "contact_type": "no additional body interface",
+        "new_contact_region_required": false,
+        "new_physical_sensing_site_required": false,
+        "physical_sensing_sites": 0,
+        "optical_interfaces": 0,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": 0,
+        "straps": 0,
+        "head_worn_hardware": false,
+        "external_cable_required": false
+      },
+      "required_afe": "integrated BMI270 digital MEMS",
+      "required_mcu_or_interface": "SPI/I2C to shared wrist MCU",
+      "shared_resources": [
+        "enclosure",
+        "strap",
+        "battery",
+        "MCU",
+        "radio",
+        "clock"
+      ],
+      "new_module_required": false,
+      "hardware_identity": {
+        "manufacturer": "Bosch Sensortec",
+        "part_number_or_class": "BMI270",
+        "device_class": "wearable six-axis IMU used in accelerometer-only mode",
+        "status": "representative_candidate",
+        "rationale": "Wearable-focused digital IMU with 16-bit accelerometer and SPI/I2C; representative identity is independent of the positive HR result.",
+        "evidence_ids": [
+          "day6_bmi270_datasheet"
+        ],
+        "exclusions": [
+          "The PPG-DaLiA checkpoint was trained on Empatica E4 32 Hz acceleration, not BMI270 output."
+        ]
+      },
+      "evidence_confidence": "HIGH",
+      "unresolved_dependencies": [
+        "32 Hz-compatible acquisition/resampling validation",
+        "selected range/filter settings",
+        "shared MCU/radio identity",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "second_ppg_site",
+      "label": "Second physical PPG site",
+      "modality": "photoplethysmography",
+      "module_id": "optical_site_evaluation_branch",
+      "target_body_region": "finger/phalanx",
+      "physical_sensing_site": "one added proximal phalanx optical site",
+      "operation_mode": "continuous",
+      "operating_schedule": "Continuous in the frozen experiment; deployable schedule open.",
+      "optionality": "optional evidence-required",
+      "contact_burden": {
+        "body_regions": [
+          "finger/phalanx"
+        ],
+        "contact_type": "reflective optical interface",
+        "new_contact_region_required": true,
+        "new_physical_sensing_site_required": true,
+        "physical_sensing_sites": 1,
+        "optical_interfaces": 1,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": 0,
+        "straps": null,
+        "head_worn_hardware": false,
+        "external_cable_required": null
+      },
+      "required_afe": "MAX86141-class capacity plus optical stack",
+      "required_mcu_or_interface": "SPI; shared/tethered host open",
+      "shared_resources": [],
+      "new_module_required": null,
+      "hardware_identity": {
+        "manufacturer": "Analog Devices",
+        "part_number_or_class": "MAX86141-class extension",
+        "device_class": "additional wearable optical interface and dual-channel-capable AFE class",
+        "status": "representative_component_class",
+        "rationale": "The class can support multiple LED drivers and two optical receivers, but the experiment's exact six-channel hardware is not a final device design.",
+        "evidence_ids": [
+          "day6_max86141_datasheet"
+        ],
+        "exclusions": [
+          "Does not establish whether electronics are shared, tethered, or a standalone module."
+        ]
+      },
+      "evidence_confidence": "MEDIUM",
+      "unresolved_dependencies": [
+        "shared versus standalone module boundary",
+        "emitters/photodiode and LED currents",
+        "AFE sequencing at 500 Hz",
+        "attachment/cabling",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "wrist_ppg",
+      "label": "Wrist PPG",
+      "modality": "photoplethysmography",
+      "module_id": "wrist_module",
+      "target_body_region": "wrist",
+      "physical_sensing_site": "ventral/dorsal wrist optical window",
+      "operation_mode": "continuous",
+      "operating_schedule": "Continuous while HR inference is active.",
+      "optionality": "reference baseline candidate",
+      "contact_burden": {
+        "body_regions": [
+          "wrist"
+        ],
+        "contact_type": "reflective optical interface",
+        "new_contact_region_required": true,
+        "new_physical_sensing_site_required": true,
+        "physical_sensing_sites": 1,
+        "optical_interfaces": 1,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": 0,
+        "straps": 1,
+        "head_worn_hardware": false,
+        "external_cable_required": false
+      },
+      "required_afe": "MAX86141-class AFE plus optical stack",
+      "required_mcu_or_interface": "SPI to shared wrist MCU",
+      "shared_resources": [
+        "enclosure",
+        "strap",
+        "battery",
+        "MCU",
+        "radio",
+        "clock"
+      ],
+      "new_module_required": true,
+      "hardware_identity": {
+        "manufacturer": "Analog Devices",
+        "part_number_or_class": "MAX86141",
+        "device_class": "dual-channel wearable optical AFE",
+        "status": "representative_component_class",
+        "rationale": "Provides wearable PPG readout, 19-bit conversion, LED drivers, FIFO, and SPI; final emitters, detectors, and optical stack remain open.",
+        "evidence_ids": [
+          "day6_max86141_datasheet"
+        ],
+        "exclusions": [
+          "Not a complete optical module or final PPG hardware identity."
+        ]
+      },
+      "evidence_confidence": "MEDIUM",
+      "unresolved_dependencies": [
+        "LED wavelengths and currents",
+        "photodiode and optical geometry",
+        "64 Hz operating-point power",
+        "shared MCU/radio identity",
+        "finished module mass"
+      ]
+    },
+    {
+      "component_id": "ecg_chest",
+      "label": "Chest ECG",
+      "modality": "electrocardiography",
+      "module_id": "chest_module",
+      "target_body_region": "thorax",
+      "physical_sensing_site": "chest electrode montage (open)",
+      "operation_mode": "continuous",
+      "operating_schedule": "Continuous reference acquisition; target sufficiency unvalidated.",
+      "optionality": "reference candidate",
+      "contact_burden": {
+        "body_regions": [
+          "thorax"
+        ],
+        "contact_type": "electrode interface, type and count open",
+        "new_contact_region_required": true,
+        "new_physical_sensing_site_required": true,
+        "physical_sensing_sites": null,
+        "optical_interfaces": 0,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": null,
+        "straps": null,
+        "head_worn_hardware": false,
+        "external_cable_required": null
+      },
+      "required_afe": "ADS1292R-class biopotential AFE",
+      "required_mcu_or_interface": "SPI to shared chest MCU",
+      "shared_resources": [
+        "enclosure",
+        "battery",
+        "MCU",
+        "radio",
+        "clock"
+      ],
+      "new_module_required": true,
+      "hardware_identity": {
+        "manufacturer": "Texas Instruments",
+        "part_number_or_class": "ADS1292R",
+        "device_class": "two-channel 24-bit ECG/respiration AFE",
+        "status": "representative_candidate",
+        "rationale": "Portable biopotential AFE with two channels, respiration capability, and a published per-channel power point.",
+        "evidence_ids": [
+          "day6_ads1292r_datasheet"
+        ],
+        "exclusions": [
+          "Electrode topology and diagnostic/clinical performance are not frozen."
+        ]
+      },
+      "evidence_confidence": "MEDIUM",
+      "unresolved_dependencies": [
+        "electrode count/type/layout",
+        "input protection",
+        "shared chest MCU/radio identity",
+        "finished chest-module mass",
+        "scientific target validation"
+      ]
+    },
+    {
+      "component_id": "thoracic_bioz",
+      "label": "Thoracic BioZ / ICG",
+      "modality": "thoracic bioimpedance",
+      "module_id": "chest_module",
+      "target_body_region": "thorax",
+      "physical_sensing_site": "thoracic electrode montage (open)",
+      "operation_mode": "intermittent",
+      "operating_schedule": "Intermittent candidate; cadence and duration open.",
+      "optionality": "optional evidence-required",
+      "contact_burden": {
+        "body_regions": [
+          "thorax"
+        ],
+        "contact_type": "electrode interface; sharing with ECG unresolved",
+        "new_contact_region_required": false,
+        "new_physical_sensing_site_required": null,
+        "physical_sensing_sites": null,
+        "optical_interfaces": 0,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": null,
+        "straps": 0,
+        "head_worn_hardware": false,
+        "external_cable_required": null
+      },
+      "required_afe": "AD5940-class impedance AFE",
+      "required_mcu_or_interface": "SPI to shared chest MCU",
+      "shared_resources": [
+        "enclosure",
+        "battery",
+        "MCU",
+        "radio",
+        "clock"
+      ],
+      "new_module_required": false,
+      "hardware_identity": {
+        "manufacturer": "Analog Devices",
+        "part_number_or_class": "AD5940 class",
+        "device_class": "16-bit impedance AFE",
+        "status": "representative_component_class",
+        "rationale": "Manufacturer explicitly supports body/skin impedance and sequenced duty cycling; measurement settings remain open.",
+        "evidence_ids": [
+          "day6_ad5940_datasheet"
+        ],
+        "exclusions": [
+          "The low-power potentiostat current is not used as active BioZ measurement power."
+        ]
+      },
+      "evidence_confidence": "LOW",
+      "unresolved_dependencies": [
+        "electrode count/type/layout",
+        "excitation frequencies and amplitude",
+        "measurement schedule",
+        "MCU/radio identity",
+        "finished-module mass",
+        "scientific target validation"
+      ]
+    },
+    {
+      "component_id": "skin_temperature",
+      "label": "Skin temperature",
+      "modality": "contact temperature",
+      "module_id": "wrist_module",
+      "target_body_region": "wrist",
+      "physical_sensing_site": "shared wrist skin-facing surface",
+      "operation_mode": "periodic",
+      "operating_schedule": "One conversion per second reference schedule.",
+      "optionality": "reference candidate",
+      "contact_burden": {
+        "body_regions": [
+          "wrist"
+        ],
+        "contact_type": "thermal path within existing wrist interface",
+        "new_contact_region_required": false,
+        "new_physical_sensing_site_required": false,
+        "physical_sensing_sites": 0,
+        "optical_interfaces": 0,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": 0,
+        "straps": 0,
+        "head_worn_hardware": false,
+        "external_cable_required": false
+      },
+      "required_afe": "integrated TMP117 conversion",
+      "required_mcu_or_interface": "I2C to shared wrist MCU",
+      "shared_resources": [
+        "enclosure",
+        "strap",
+        "battery",
+        "MCU",
+        "radio"
+      ],
+      "new_module_required": false,
+      "hardware_identity": {
+        "manufacturer": "Texas Instruments",
+        "part_number_or_class": "TMP117",
+        "device_class": "high-accuracy digital contact temperature sensor",
+        "status": "representative_candidate",
+        "rationale": "Low-power I2C device with a documented 1 Hz current point; thermal coupling and physiological validity remain separate design questions.",
+        "evidence_ids": [
+          "day6_tmp117_datasheet"
+        ],
+        "exclusions": [
+          "Component accuracy is not evidence of validated skin-temperature target performance."
+        ]
+      },
+      "evidence_confidence": "MEDIUM",
+      "unresolved_dependencies": [
+        "thermal coupling to skin",
+        "placement bias and calibration",
+        "shared MCU/radio identity",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "light_sensor",
+      "label": "Ambient light sensor",
+      "modality": "ambient light",
+      "module_id": "wrist_module",
+      "target_body_region": "wrist module outward surface",
+      "physical_sensing_site": "outward optical aperture",
+      "operation_mode": "continuous",
+      "operating_schedule": "Continuous-conversion reference; report cadence open.",
+      "optionality": "reference candidate",
+      "contact_burden": {
+        "body_regions": [],
+        "contact_type": "no body contact",
+        "new_contact_region_required": false,
+        "new_physical_sensing_site_required": false,
+        "physical_sensing_sites": 0,
+        "optical_interfaces": 0,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": 0,
+        "straps": 0,
+        "head_worn_hardware": false,
+        "external_cable_required": false
+      },
+      "required_afe": "integrated OPT3001-Q1-class conversion",
+      "required_mcu_or_interface": "I2C to shared wrist MCU",
+      "shared_resources": [
+        "enclosure",
+        "battery",
+        "MCU",
+        "radio"
+      ],
+      "new_module_required": false,
+      "hardware_identity": {
+        "manufacturer": "Texas Instruments",
+        "part_number_or_class": "OPT3001-Q1 class",
+        "device_class": "digital ambient light sensor",
+        "status": "representative_component_class",
+        "rationale": "Documented low-current, continuous/single-shot I2C light sensing; final sample interval and optical window remain open.",
+        "evidence_ids": [
+          "day6_opt3001_datasheet"
+        ],
+        "exclusions": [
+          "Automotive qualification is not required or claimed for the final system."
+        ]
+      },
+      "evidence_confidence": "MEDIUM",
+      "unresolved_dependencies": [
+        "reporting interval",
+        "optical window",
+        "shared MCU/radio identity",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "frontal_eeg",
+      "label": "Frontal EEG",
+      "modality": "electroencephalography",
+      "module_id": "head_module",
+      "target_body_region": "forehead/head",
+      "physical_sensing_site": "frontal montage (open)",
+      "operation_mode": "intermittent",
+      "operating_schedule": "Session-based candidate; duration/frequency open.",
+      "optionality": "optional evidence-required",
+      "contact_burden": {
+        "body_regions": [
+          "head/forehead"
+        ],
+        "contact_type": "dry or wet electrode montage open",
+        "new_contact_region_required": true,
+        "new_physical_sensing_site_required": true,
+        "physical_sensing_sites": null,
+        "optical_interfaces": 0,
+        "dry_electrodes": null,
+        "adhesive_or_wet_electrodes": null,
+        "straps": null,
+        "head_worn_hardware": true,
+        "external_cable_required": false
+      },
+      "required_afe": "ADS1299-4-class EEG AFE",
+      "required_mcu_or_interface": "SPI to head-module MCU",
+      "shared_resources": [
+        "head attachment",
+        "battery",
+        "MCU",
+        "radio"
+      ],
+      "new_module_required": true,
+      "hardware_identity": {
+        "manufacturer": "Texas Instruments",
+        "part_number_or_class": "ADS1299-4 class",
+        "device_class": "four-channel 24-bit EEG AFE",
+        "status": "representative_component_class",
+        "rationale": "EEG-specific four-channel AFE class with 250 samples/s support; montage, power state, and session schedule remain open.",
+        "evidence_ids": [
+          "day6_ads1299_datasheet"
+        ],
+        "exclusions": [
+          "No final headband, electrode, or channel montage is selected."
+        ]
+      },
+      "evidence_confidence": "LOW",
+      "unresolved_dependencies": [
+        "montage and electrode count/type",
+        "session schedule",
+        "power state",
+        "MCU/radio identity",
+        "headband mass",
+        "scientific target validation"
+      ]
+    },
+    {
+      "component_id": "leg_bioz",
+      "label": "Leg BioZ",
+      "modality": "segmental bioimpedance",
+      "module_id": "leg_module",
+      "target_body_region": "lower leg",
+      "physical_sensing_site": "segmental electrode montage (open)",
+      "operation_mode": "intermittent",
+      "operating_schedule": "Experimental sessions only; cadence open.",
+      "optionality": "optional evidence-required",
+      "contact_burden": {
+        "body_regions": [
+          "lower leg"
+        ],
+        "contact_type": "electrode montage open",
+        "new_contact_region_required": true,
+        "new_physical_sensing_site_required": true,
+        "physical_sensing_sites": null,
+        "optical_interfaces": 0,
+        "dry_electrodes": 0,
+        "adhesive_or_wet_electrodes": null,
+        "straps": null,
+        "head_worn_hardware": false,
+        "external_cable_required": null
+      },
+      "required_afe": "AD5940-class impedance AFE",
+      "required_mcu_or_interface": "SPI to leg-module MCU",
+      "shared_resources": [
+        "attachment",
+        "battery",
+        "MCU",
+        "radio"
+      ],
+      "new_module_required": true,
+      "hardware_identity": {
+        "manufacturer": "Analog Devices",
+        "part_number_or_class": "AD5940 class",
+        "device_class": "16-bit impedance AFE",
+        "status": "representative_component_class",
+        "rationale": "Manufacturer explicitly supports body/skin impedance and sequenced duty cycling; measurement settings remain open.",
+        "evidence_ids": [
+          "day6_ad5940_datasheet"
+        ],
+        "exclusions": [
+          "The low-power potentiostat current is not used as active BioZ measurement power."
+        ]
+      },
+      "evidence_confidence": "LOW",
+      "unresolved_dependencies": [
+        "electrode count/type/layout",
+        "excitation frequencies and amplitude",
+        "measurement schedule",
+        "MCU/radio identity",
+        "finished-module mass",
+        "scientific target validation"
+      ]
+    }
+  ],
+  "target_coverage": {
+    "wrist_imu": {
+      "heart_rate": {
+        "status": "VALIDATED_POSITIVE",
+        "evidence_ids": [
+          "ppg_dalia_imu_hr"
+        ],
+        "note": "Positive marginal value within the frozen PPG-DaLiA PPG-plus-IMU experiment only."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "workload": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "fatigue": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "sleep_or_circadian": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "second_ppg_site": {
+      "heart_rate": {
+        "status": "VALIDATED_NEGATIVE",
+        "evidence_ids": [
+          "ptt_second_ppg_site_hr"
+        ],
+        "note": "Negative aggregate marginal value within the frozen PTT one-site versus two-site experiment, with heterogeneity."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "sleep_or_circadian": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "wrist_ppg": {
+      "heart_rate": {
+        "status": "PARTIAL_EVIDENCE",
+        "evidence_ids": [
+          "ppg_dalia_imu_hr"
+        ],
+        "note": "PPG-only baseline has held-out HR metrics, but no experiment establishes universal wrist-PPG sufficiency."
+      },
+      "heart_rate_variability": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "sleep_or_circadian": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "ecg_chest": {
+      "heart_rate": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "heart_rate_variability": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "respiration": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "blood_pressure_or_pat": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "sleep_or_circadian": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "thoracic_bioz": {
+      "heart_rate": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "blood_pressure_or_pat": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "sleep_or_circadian": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fluid_status": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      }
+    },
+    "skin_temperature": {
+      "heart_rate": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "sleep_or_circadian": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "light_sensor": {
+      "heart_rate": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "sleep_or_circadian": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "frontal_eeg": {
+      "heart_rate": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "workload": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "fatigue": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "sleep_or_circadian": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      },
+      "fluid_status": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      }
+    },
+    "leg_bioz": {
+      "heart_rate": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "heart_rate_variability": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "respiration": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "blood_pressure_or_pat": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "workload": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fatigue": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "sleep_or_circadian": {
+        "status": "UNVALIDATED",
+        "evidence_ids": [],
+        "note": "No frozen target-specific validation artifact supports this component/target pair."
+      },
+      "fluid_status": {
+        "status": "CANDIDATE",
+        "evidence_ids": [],
+        "note": "Engineering target hypothesis only; no frozen project validation currently supports it."
+      }
+    }
+  },
+  "global_unresolved_dependencies": [
+    "Final MCU/radio/battery/regulator identities and allocation",
+    "Validated electrode montages and materials",
+    "Optical emitter/detector stacks and drive schedules",
+    "Component, PCB/module, and finished wearable mass",
+    "Embedded inference latency and activation/workspace memory",
+    "Scientific validation beyond the two frozen HR ablations"
+  ]
+}

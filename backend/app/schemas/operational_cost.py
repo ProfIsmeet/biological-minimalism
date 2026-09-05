@@ -45,6 +45,24 @@ class OperationMode(StrEnum):
     UNRESOLVED = "unresolved"
 
 
+class HardwareIdentityStatus(StrEnum):
+    REPRESENTATIVE_CANDIDATE = "representative_candidate"
+    REPRESENTATIVE_COMPONENT_CLASS = "representative_component_class"
+    OPEN = "open"
+
+
+class DutyCycleStatus(StrEnum):
+    FROZEN = "frozen"
+    OPEN = "open"
+
+
+class PowerBoundary(StrEnum):
+    INCREMENTAL_SENSOR_IC = "incremental_sensor_ic"
+    INCREMENTAL_AFE = "incremental_afe"
+    INCREMENTAL_COMPONENT_CLASS = "incremental_component_class"
+    UNQUANTIFIED = "unquantified"
+
+
 class ComponentStatus(StrEnum):
     SCIENTIFICALLY_MAPPED = "scientifically_mapped"
     ARCHITECTURE_PLACEHOLDER = "architecture_placeholder"
@@ -106,6 +124,11 @@ class CostEvidenceRecord(StrictModel):
     value_characterization: str
     version_or_date: str | None = None
     assumptions: list[str] = Field(default_factory=list)
+    manufacturer: str | None = None
+    source_url: str | None = None
+    retrieval_date: str | None = None
+    page_or_section: str | None = None
+    exact_parameters: list[str] = Field(default_factory=list)
 
 
 class SharedHardwareContext(StrictModel):
@@ -115,6 +138,75 @@ class SharedHardwareContext(StrictModel):
     allocation_status: str
     double_counting_risk: str
     naive_addition_allowed: bool = False
+
+
+class HardwareIdentity(StrictModel):
+    manufacturer: str | None
+    part_number_or_class: str | None
+    device_class: str
+    status: HardwareIdentityStatus
+    rationale: str
+    evidence_ids: list[str] = Field(default_factory=list)
+    exclusions: list[str] = Field(default_factory=list)
+
+
+class PowerEnergyCharacterization(StrictModel):
+    boundary: PowerBoundary
+    operating_condition: str
+    duty_cycle_status: DutyCycleStatus
+    duty_cycle_assumption: str
+    supply_voltage: OperationalQuantity
+    active_current: OperationalQuantity
+    active_power: OperationalQuantity
+    active_fraction: OperationalQuantity
+    average_power: OperationalQuantity
+    daily_energy: OperationalQuantity
+    equations: list[str]
+    excluded_subsystems: list[str]
+
+
+class MassCharacterization(StrictModel):
+    component_mass: OperationalQuantity
+    pcb_or_module_incremental_mass: OperationalQuantity
+    finished_wearable_mass: OperationalQuantity
+
+
+class DataRateCharacterization(StrictModel):
+    channel_count: OperationalQuantity
+    sample_rate: OperationalQuantity
+    bits_per_sample: OperationalQuantity
+    scalar_sample_throughput: OperationalQuantity
+    raw_payload_bit_rate: OperationalQuantity
+    protocol_overhead_bit_rate: OperationalQuantity
+    equation: str | None
+    notes: list[str] = Field(default_factory=list)
+
+
+class ComputeMemoryCharacterization(StrictModel):
+    dtype: str | None
+    bytes_per_value: int | None
+    input_tensor_shapes: list[str] = Field(default_factory=list)
+    baseline_model_weight_memory: OperationalQuantity
+    candidate_model_weight_memory: OperationalQuantity
+    incremental_model_weight_memory: OperationalQuantity
+    baseline_input_buffer_memory: OperationalQuantity
+    candidate_input_buffer_memory: OperationalQuantity
+    incremental_input_buffer_memory: OperationalQuantity
+    embedded_inference_latency: OperationalQuantity
+    notes: list[str] = Field(default_factory=list)
+
+
+class HardwareCharacterization(StrictModel):
+    topology_component_id: str
+    identity: HardwareIdentity
+    required_afe: str
+    host_interface: str
+    host_mcu_status: str
+    power_energy: PowerEnergyCharacterization
+    mass: MassCharacterization
+    data_rate: DataRateCharacterization
+    compute_memory: ComputeMemoryCharacterization
+    unresolved_dependencies: list[str] = Field(default_factory=list)
 
 
 class OperationalCostComponent(StrictModel):
@@ -137,6 +229,14 @@ class OperationalCostComponent(StrictModel):
     shared_hardware: SharedHardwareContext
     assumptions: list[str] = Field(default_factory=list)
     unknowns: list[str] = Field(default_factory=list)
+    hardware_characterization: HardwareCharacterization | None = None
+
+
+class CatalogRevision(StrictModel):
+    schema_version: str
+    source_commit: str
+    source_sha256: str
+    change_summary: str
 
 
 class ScientificJoinContract(StrictModel):
@@ -158,6 +258,8 @@ class OperationalCostCatalog(StrictModel):
     evidence: list[CostEvidenceRecord]
     components: list[OperationalCostComponent]
     scientific_join_contract: ScientificJoinContract
+    hardware_topology_path: str | None = None
+    revision_history: list[CatalogRevision] = Field(default_factory=list)
 
 
 class OperationalCostCatalogEnvelope(StrictModel):

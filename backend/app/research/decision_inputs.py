@@ -139,6 +139,8 @@ def _operational_value(catalog: OperationalCostCatalog, component_id: str) -> Op
         for quantity in [component.duty_cycle, *component.dimensions.values()]
         for provenance_id in quantity.provenance_ids
     }
+    if component.hardware_characterization is not None:
+        evidence_ids.update(component.hardware_characterization.identity.evidence_ids)
     return OperationalCostInput(
         source_component_id=component.component_id,
         candidate_hardware_identity=component.candidate_hardware_identity,
@@ -153,6 +155,7 @@ def _operational_value(catalog: OperationalCostCatalog, component_id: str) -> Op
         ],
         unknowns=component.unknowns,
         evidence=[item for item in catalog.evidence if item.evidence_id in evidence_ids],
+        hardware_characterization=component.hardware_characterization,
     )
 
 
@@ -192,7 +195,7 @@ def _readiness(component_id: str) -> ComponentReadiness:
         return ComponentReadiness(
             component_id=component_id,
             scientific_benefit=ReadinessAvailability.AVAILABLE,
-            power=ReadinessAvailability.MISSING,
+            power=ReadinessAvailability.PARTIAL,
             mass=ReadinessAvailability.MISSING,
             contact_burden=ReadinessAvailability.AVAILABLE,
             module_burden=ReadinessAvailability.AVAILABLE,
@@ -203,7 +206,7 @@ def _readiness(component_id: str) -> ComponentReadiness:
     return ComponentReadiness(
         component_id=component_id,
         scientific_benefit=ReadinessAvailability.AVAILABLE,
-        power=ReadinessAvailability.MISSING,
+        power=ReadinessAvailability.PARTIAL,
         mass=ReadinessAvailability.MISSING,
         contact_burden=ReadinessAvailability.PARTIAL,
         module_burden=ReadinessAvailability.MISSING,
@@ -272,8 +275,8 @@ def build_decision_inputs(repository_root: str | Path = REPOSITORY_ROOT) -> Pare
         (ROBUSTNESS_AUDIT_PATH, "post-hoc robustness interpretation boundary"),
     ]
     return ParetoDecisionInputs(
-        schema_version="1.0.0",
-        artifact_id="biological-minimalism-day5-decision-inputs-v1",
+        schema_version="2.0.0",
+        artifact_id="biological-minimalism-day6-decision-inputs-v2",
         source_artifacts=[
             SourceArtifactReference(path=path, sha256=_sha256(root / path), role=role) for path, role in sources
         ],
@@ -283,10 +286,10 @@ def build_decision_inputs(repository_root: str | Path = REPOSITORY_ROOT) -> Pare
             pareto_status=ParetoStatus.NOT_READY,
             formal_pareto_calculated=False,
             missing_requirements=[
-                "Incremental power is unquantified for both candidate components.",
+                "Deployable average power and daily energy remain unquantified for both candidate components.",
                 "Incremental finished mass is unquantified for both candidate components.",
-                "Final duty cycle, raw bit rate, and embedded inference latency are unquantified.",
-                "Final hardware component identities and physical integration topology are not selected.",
+                "Embedded inference latency and protocol/storage/transport overhead are unquantified.",
+                "Reference component identities and topology are frozen, but the final BOM, MCU, radio, battery, regulator, enclosure, and attachment are not selected.",
                 "The second PPG site's module boundary and contact-region allocation are unresolved.",
                 "Only heart rate has marginal-value evidence; other mission-relevant targets are unvalidated.",
                 "Only two candidate additions have scientific evidence, from different datasets and model families.",

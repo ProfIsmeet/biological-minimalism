@@ -3,7 +3,9 @@ import { create } from "zustand";
 import { api } from "@/lib/api";
 import type {
   OperationalCostCatalog,
+  HardwareTopologyContract,
   ParetoDecisionInputs,
+  ParetoReadinessDay6,
   ResearchExperiment,
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
@@ -16,6 +18,10 @@ interface ResearchState {
   operationalCostError: string | null;
   decisionInputs: ParetoDecisionInputs | null;
   decisionInputsError: string | null;
+  hardwareTopology: HardwareTopologyContract | null;
+  hardwareTopologyError: string | null;
+  paretoReadiness: ParetoReadinessDay6 | null;
+  paretoReadinessError: string | null;
   experiments: Record<string, ResearchExperiment>;
   selectedExperimentId: string | null;
   loading: boolean;
@@ -31,6 +37,10 @@ export const useResearchStore = create<ResearchState>((set) => ({
   operationalCostError: null,
   decisionInputs: null,
   decisionInputsError: null,
+  hardwareTopology: null,
+  hardwareTopologyError: null,
+  paretoReadiness: null,
+  paretoReadinessError: null,
   experiments: {},
   selectedExperimentId: null,
   loading: false,
@@ -38,11 +48,13 @@ export const useResearchStore = create<ResearchState>((set) => ({
   load: async () => {
     set({ loading: true, error: null });
     try {
-      const [summaries, projectSummary, operationalCosts, decisionInputEnvelope] = await Promise.all([
+      const [summaries, projectSummary, operationalCosts, decisionInputEnvelope, topologyEnvelope, readinessEnvelope] = await Promise.all([
         api.getResearchExperiments(),
         api.getResearchSummary(),
         api.getOperationalCosts(),
         api.getDecisionInputs(),
+        api.getHardwareTopology(),
+        api.getParetoReadiness(),
       ]);
       const availableIds = summaries
         .filter((item) => item.availability === "available")
@@ -71,6 +83,10 @@ export const useResearchStore = create<ResearchState>((set) => ({
           decisionInputEnvelope.availability === "unavailable"
             ? decisionInputEnvelope.error ?? "Decision inputs unavailable."
             : null,
+        hardwareTopology: topologyEnvelope.topology,
+        hardwareTopologyError: topologyEnvelope.availability === "unavailable" ? topologyEnvelope.error ?? "Hardware topology unavailable." : null,
+        paretoReadiness: readinessEnvelope.readiness,
+        paretoReadinessError: readinessEnvelope.availability === "unavailable" ? readinessEnvelope.error ?? "Pareto readiness unavailable." : null,
         experiments,
         selectedExperimentId:
           state.selectedExperimentId && experiments[state.selectedExperimentId]
@@ -89,6 +105,10 @@ export const useResearchStore = create<ResearchState>((set) => ({
         operationalCostError: error instanceof Error ? error.message : "Operational-cost catalog could not be loaded.",
         decisionInputs: null,
         decisionInputsError: error instanceof Error ? error.message : "Decision inputs could not be loaded.",
+        hardwareTopology: null,
+        hardwareTopologyError: error instanceof Error ? error.message : "Hardware topology could not be loaded.",
+        paretoReadiness: null,
+        paretoReadinessError: error instanceof Error ? error.message : "Pareto readiness could not be loaded.",
       });
     }
   },
