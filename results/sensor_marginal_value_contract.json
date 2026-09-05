@@ -1,5 +1,5 @@
 {
-  "methodology_version": "1.0.0",
+  "methodology_version": "1.1.0",
   "methodology_doc": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
   "generated_by": "ml/build_sensor_marginal_value_contract.py",
   "sign_convention": {
@@ -99,7 +99,7 @@
         "interpretation_note": "Temporally shuffled same-subject IMU retained some predictive value (candidate-vs-shuffled and shuffled-vs-baseline are both non-zero), so the synchronized-IMU benefit is not attributable to synchronization alone. This decomposition is descriptive, not a proven causal split."
       },
       "variability": {
-        "training_seed_replication": "1/1 (single seed=42, no multi-seed replication performed for this experiment)",
+        "training_seed_replication": "5/5 training seeds favor candidate (seeds [42, 43, 44, 45, 46], see results/ppg_dalia_imu_multiseed_replication.json)",
         "subject_direction_consistency": "3/3 held-out subjects favor candidate",
         "motion_quartile_direction_consistency": "4/4 motion quartiles favor candidate",
         "activity_direction_consistency": "8/9 activities favor candidate",
@@ -112,10 +112,18 @@
         "n_held_out_subjects": 3,
         "n_total_subjects": 15,
         "n_datasets": 1,
-        "n_training_seeds": 1,
+        "n_training_seeds": 5,
         "independent_ground_truth": "real chest-ECG-derived HR label shipped with PPG-DaLiA (not computed by this project)",
         "negative_control_present": true,
         "subject_disjoint_split": true
+      },
+      "multiseed_replication": {
+        "source_artifact": "results/ppg_dalia_imu_multiseed_replication.json",
+        "replication_status": "STRONGLY_REPLICATED_POSITIVE",
+        "mean_absolute_benefit_mae_bpm": 1.8785922050476074,
+        "sd_absolute_benefit_mae_bpm": 0.2633888136300174,
+        "n_seeds_favor_candidate": 5,
+        "n_seeds_total": 5
       },
       "marginal_status": {
         "overall_direction": "POSITIVE",
@@ -123,8 +131,8 @@
           "subject_level": "CONSISTENT",
           "activity_level": "MOSTLY_CONSISTENT"
         },
-        "evidence_strength": "preliminary",
-        "evidence_strength_rationale": "Direction is consistent across all held-out subjects and all motion quartiles, and a negative control was run - methodologically strong within its scope. Classified 'preliminary' (not 'replicated-within-dataset') because there is no multi-seed training replication and only one dataset/population."
+        "evidence_strength": "replicated-within-dataset",
+        "evidence_strength_rationale": "5/5 independent training seeds favor the candidate - a consistent, replicated-within-dataset direction across independent model initializations."
       },
       "limitations": [
         "Trained and evaluated on PPG-DaLiA (terrestrial, free-living daily activities), not astronaut or spaceflight data - no microgravity validation.",

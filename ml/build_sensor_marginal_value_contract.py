@@ -22,11 +22,39 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 PPG_DALIA_SOURCE = REPO_ROOT / "results" / "ppg_dalia_imu_ablation.json"
+PPG_DALIA_MULTISEED_SOURCE = REPO_ROOT / "results" / "ppg_dalia_imu_multiseed_replication.json"
 PTT_SOURCE = REPO_ROOT / "results" / "ptt_ppg_site_ablation.json"
 FAULT_ROBUSTNESS_SOURCE = REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json"
 OUT_PATH = REPO_ROOT / "results" / "sensor_marginal_value_contract.json"
 
-METHODOLOGY_VERSION = "1.0.0"
+METHODOLOGY_VERSION = "1.1.0"
+
+
+def evidence_strength_from_seed_consistency(n_favor: int, n_seeds: int) -> tuple[str, str]:
+    """Frozen evidence-strength upgrade rule (Day 6): derived ONLY from the
+    actual seed-direction count, never assumed. Returns (evidence_strength,
+    rationale). Categories stay within the fixed vocabulary defined in
+    docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md SS8 - no new category is
+    invented here."""
+
+    if n_seeds < 3:
+        return "insufficient", f"Only {n_seeds} training seed(s) available - too few for a replication claim."
+    if n_favor >= n_seeds - 1:  # 5/5 or 4/5 for n_seeds=5
+        return (
+            "replicated-within-dataset",
+            f"{n_favor}/{n_seeds} independent training seeds favor the candidate - a consistent, "
+            "replicated-within-dataset direction across independent model initializations.",
+        )
+    if n_favor >= n_seeds - 2:  # 3/5 for n_seeds=5
+        return (
+            "mixed",
+            f"Only {n_favor}/{n_seeds} training seeds favor the candidate - direction is not "
+            "consistently replicated across independent initializations.",
+        )
+    return (
+        "mixed",
+        f"{n_favor}/{n_seeds} training seeds favor the candidate - direction is unstable across seeds.",
+    )
 
 
 def absolute_benefit(baseline: float, candidate: float) -> float:
@@ -39,7 +67,7 @@ def relative_improvement(baseline: float, candidate: float) -> float:
     return (baseline - candidate) / baseline
 
 
-def build_ppg_dalia_experiment(ppg: dict) -> dict:
+def build_ppg_dalia_experiment(ppg: dict, multiseed: dict | None = None) -> dict:
     a = ppg["overall_metrics"]["model_a_ppg_only"]
     b = ppg["overall_metrics"]["model_b_ppg_plus_imu"]
     c = ppg["overall_metrics"]["model_c_ppg_plus_shuffled_imu"]
@@ -59,6 +87,32 @@ def build_ppg_dalia_experiment(ppg: dict) -> dict:
     activities = sorted(per_activity_a.keys())
     activity_favors_candidate = [per_activity_b[act]["mae"] < per_activity_a[act]["mae"] for act in activities]
     activities_worse = [act for act in activities if per_activity_b[act]["mae"] >= per_activity_a[act]["mae"]]
+
+    if multiseed is not None:
+        n_seeds_total = multiseed["aggregate"]["total_sync_imu_benefit_mae_A_minus_B"]["n_seeds_total"]
+        n_seeds_favor = multiseed["aggregate"]["total_sync_imu_benefit_mae_A_minus_B"]["n_seeds_favor_B"]
+        training_seed_replication = f"{n_seeds_favor}/{n_seeds_total} training seeds favor candidate (seeds {multiseed['frozen_protocol']['training_seeds']}, see results/ppg_dalia_imu_multiseed_replication.json)"
+        n_training_seeds = n_seeds_total
+        evidence_strength, evidence_strength_rationale = evidence_strength_from_seed_consistency(n_seeds_favor, n_seeds_total)
+        multiseed_replication_block = {
+            "source_artifact": "results/ppg_dalia_imu_multiseed_replication.json",
+            "replication_status": multiseed["replication_status"],
+            "mean_absolute_benefit_mae_bpm": multiseed["aggregate"]["total_sync_imu_benefit_mae_A_minus_B"]["mean"],
+            "sd_absolute_benefit_mae_bpm": multiseed["aggregate"]["total_sync_imu_benefit_mae_A_minus_B"]["sd"],
+            "n_seeds_favor_candidate": n_seeds_favor,
+            "n_seeds_total": n_seeds_total,
+        }
+    else:
+        training_seed_replication = "1/1 (single seed=42, no multi-seed replication performed for this experiment)"
+        n_training_seeds = 1
+        evidence_strength = "preliminary"
+        evidence_strength_rationale = (
+            "Direction is consistent across all held-out subjects and all motion "
+            "quartiles, and a negative control was run - methodologically strong "
+            "within its scope. Classified 'preliminary' (not 'replicated-within-dataset') "
+            "because there is no multi-seed training replication and only one dataset/population."
+        )
+        multiseed_replication_block = None
 
     return {
         "experiment_id": "ppg_dalia_imu_hr",
@@ -105,7 +159,7 @@ def build_ppg_dalia_experiment(ppg: dict) -> dict:
             ),
         },
         "variability": {
-            "training_seed_replication": "1/1 (single seed=42, no multi-seed replication performed for this experiment)",
+            "training_seed_replication": training_seed_replication,
             "subject_direction_consistency": f"{sum(subject_favors_candidate)}/{len(subjects)} held-out subjects favor candidate",
             "motion_quartile_direction_consistency": f"{sum(quartile_favors_candidate)}/{len(quartiles)} motion quartiles favor candidate",
             "activity_direction_consistency": f"{sum(activity_favors_candidate)}/{len(activities)} activities favor candidate",
@@ -116,24 +170,20 @@ def build_ppg_dalia_experiment(ppg: dict) -> dict:
             "n_held_out_subjects": len(subjects),
             "n_total_subjects": 15,
             "n_datasets": 1,
-            "n_training_seeds": 1,
+            "n_training_seeds": n_training_seeds,
             "independent_ground_truth": "real chest-ECG-derived HR label shipped with PPG-DaLiA (not computed by this project)",
             "negative_control_present": True,
             "subject_disjoint_split": True,
         },
+        "multiseed_replication": multiseed_replication_block,
         "marginal_status": {
             "overall_direction": "POSITIVE",
             "heterogeneity": {
                 "subject_level": "CONSISTENT" if all(subject_favors_candidate) else "MIXED",
                 "activity_level": "MOSTLY_CONSISTENT" if 0 < len(activities_worse) < len(activities) else ("CONSISTENT" if not activities_worse else "MIXED"),
             },
-            "evidence_strength": "preliminary",
-            "evidence_strength_rationale": (
-                "Direction is consistent across all held-out subjects and all motion "
-                "quartiles, and a negative control was run - methodologically strong "
-                "within its scope. Classified 'preliminary' (not 'replicated-within-dataset') "
-                "because there is no multi-seed training replication and only one dataset/population."
-            ),
+            "evidence_strength": evidence_strength,
+            "evidence_strength_rationale": evidence_strength_rationale,
         },
         "limitations": ppg["limitations"],
         "source_artifact": "results/ppg_dalia_imu_ablation.json",
@@ -286,6 +336,7 @@ def build_fault_robustness_placeholder() -> dict:
 def main() -> None:
     ppg = json.loads(PPG_DALIA_SOURCE.read_text())
     ptt = json.loads(PTT_SOURCE.read_text())
+    multiseed = json.loads(PPG_DALIA_MULTISEED_SOURCE.read_text()) if PPG_DALIA_MULTISEED_SOURCE.exists() else None
 
     contract = {
         "methodology_version": METHODOLOGY_VERSION,
@@ -341,7 +392,7 @@ def main() -> None:
             ),
         },
         "experiments": {
-            "ppg_dalia_imu_hr": build_ppg_dalia_experiment(ppg),
+            "ppg_dalia_imu_hr": build_ppg_dalia_experiment(ppg, multiseed),
             "ptt_second_ppg_site_hr": build_ptt_experiment(ptt),
             "ppg_dalia_fault_robustness": build_fault_robustness_placeholder(),
         },
