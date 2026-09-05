@@ -4,7 +4,7 @@
   "source_artifacts": [
     {
       "path": "results/sensor_marginal_value_contract.json",
-      "sha256": "a85e72c224b2db64088e39b20cec7562feb4167037a3260a24ae690fced551a5",
+      "sha256": "89d34ecffb6defa57a4fe6b15ec28315f792445d1055f890413b0e8c0557e363",
       "role": "scientific marginal-value contract"
     },
     {
@@ -943,7 +943,10 @@
           "fault tolerance or fault detection",
           "calibrated predictive uncertainty",
           "microgravity performance or astronaut readiness",
-          "generalization to missing PPG-DaLiA subjects"
+          "generalization to missing PPG-DaLiA subjects",
+          "robustness to universally severe IMU corruption",
+          "automatic neural-network fault detection",
+          "fault tolerance"
         ]
       }
     },

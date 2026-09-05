@@ -161,10 +161,10 @@ the target under clean conditions?* Robustness/fault experiments ask:
 degraded or unavailable?* These are related but distinct questions and
 are kept as separate evidence structures — a robustness result must never
 be silently folded into a sensor marginal-value score, and vice versa.
-(This methodology anticipates a future `robustness_records` structure
-alongside `experiments` in the contract once
-`results/ppg_dalia_fault_robustness.json` is located/verified — see
-Appendix A below for the current gap.)
+The integrated contract now exposes the verified Phase 5 source under the
+top-level `robustness_records` structure, alongside but never inside the
+clean-condition marginal-value `experiments` structure. The mandatory
+interpretive boundary is `docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md`.
 
 ## 14. Interaction effects
 
@@ -184,8 +184,8 @@ full machine-readable records. Summary:
 - `ptt_second_ppg_site_hr`: second PPG site → heart rate, PTT dataset.
   **NEGATIVE**, evidence strength `replicated-within-dataset`, with
   subject/activity-level heterogeneity disclosed.
-- `ppg_dalia_fault_robustness`: **not populated** — source artifact not
-  found in this repository (see Appendix A).
+- `ppg_dalia_fault_robustness`: **resolved after integration** from the
+  frozen Phase 5 source as a separate robustness/availability record.
 
 ## 16. Limitations of this methodology itself
 
@@ -221,17 +221,19 @@ weighted — see SS9 on why no such weighting is frozen yet.
 
 ---
 
-## Appendix A — Fault robustness artifact discrepancy
+## Appendix A — Historical fault-source resolution
 
-The Day 5 master prompt describes `results/ppg_dalia_fault_robustness.json`
-as an already-complete, frozen "Experiment C" with specific figures. That
-file was searched for and **not found**: not in the working tree, not via
-`git log --all -- results/ppg_dalia_fault_robustness.json`, and not on any
-local or remote branch (`day2-ml`, `day3-ml`, `day5-ml`, `main`, and their
-`origin` counterparts) as of this document's writing. Per this project's
-standing rule against citing unverified numbers, none of the prompt's
-cited fault-robustness figures were copied into this methodology or into
-`results/sensor_marginal_value_contract.json`. The contract's
-`ppg_dalia_fault_robustness` record instead carries a
-`SOURCE_ARTIFACT_NOT_FOUND` status and an explicit `action_required` note.
-This is reported for team review, not silently resolved.
+The isolated Ismet Day 5 working context could not locate
+`results/ppg_dalia_fault_robustness.json`; its historical commit therefore
+recorded an unavailable source without copying prompt figures. That observation
+was correct for that clone and is preserved as historical provenance rather
+than erased or rewritten.
+
+After the accepted Phase 5 work was integrated, the frozen source became
+available in the current repository. The current deterministic builder reads
+that file, verifies its expected SHA256, and emits
+`RESOLVED_FROM_INTEGRATION_SOURCE`. It parses scope, execution, clean-baseline,
+availability, and claim-boundary fields from the source. The audit addendum is
+required to preserve the first-batch IMU calibration and fail-closed packet-loss
+interpretation. Robustness remains a separate evidence axis and is not converted
+to marginal value, a universal score, or a sensor ranking.

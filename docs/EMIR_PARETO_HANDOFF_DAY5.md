@@ -45,10 +45,10 @@ cost, weighting, or ranking — those remain a separate, later track.
   experiment** — not zero, not "no effect."
 - `"UNVALIDATED"` in `evidence_matrix` means **no experiment exists for
   this target/component pair** — not "neutral" or "assumed negative."
-- `"SOURCE_ARTIFACT_NOT_FOUND"` (currently `ppg_dalia_fault_robustness`)
-  means the cited source file could not be located in this repository —
-  **do not treat this record's absence as a robustness finding of any
-  kind** (positive or negative) until it is resolved.
+- The historical Ismet Day 5 context could not resolve
+  `ppg_dalia_fault_robustness`. In the current integrated contract its status is
+  `"RESOLVED_FROM_INTEGRATION_SOURCE"`, sourced from the frozen Phase 5 artifact.
+  This integration resolution does not rewrite the historical observation.
 
 ## Cross-dataset comparison — hard prohibition
 
@@ -62,10 +62,11 @@ ranking.
 
 ## Robustness is a separate axis
 
-`ppg_dalia_fault_robustness` in this contract is currently unpopulated
-(see above). Once resolved, robustness evidence (accuracy-under-corruption,
-availability-under-corruption) must remain in its own record structure,
-never merged into a `marginal_status` field. Methodology doc SS13.
+`ppg_dalia_fault_robustness` is now populated under the separate top-level
+`robustness_records` structure from the verified frozen source and mandatory
+Phase 5 audit addendum. Accuracy-under-corruption and
+availability-under-corruption remain separate from `marginal_status` and are
+never converted into marginal sensor value. Methodology doc SS13.
 
 ## What may be combined with operational cost (later track, not built here)
 

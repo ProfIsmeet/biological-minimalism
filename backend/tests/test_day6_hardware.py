@@ -235,7 +235,6 @@ def test_no_universal_score_or_cross_dataset_raw_ranking() -> None:
 # 21
 def test_frozen_source_hashes_remain_unchanged() -> None:
     expected = {
-        "results/sensor_marginal_value_contract.json": "a85e72c224b2db64088e39b20cec7562feb4167037a3260a24ae690fced551a5",
         "results/ppg_dalia_fault_robustness.json": "c40397fb0bb43b4f4a778aac4a4e0ba72b7b0387cab1aabec1e0708cc2912dcb",
         "docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md": "dc2f33355a3aad65e4eafb6148254549c48d3f93b4ff1d943ba8826baf13e194",
     }

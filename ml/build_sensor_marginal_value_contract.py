@@ -14,6 +14,7 @@ this contract implements.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -24,9 +25,12 @@ sys.path.insert(0, str(REPO_ROOT))
 PPG_DALIA_SOURCE = REPO_ROOT / "results" / "ppg_dalia_imu_ablation.json"
 PTT_SOURCE = REPO_ROOT / "results" / "ptt_ppg_site_ablation.json"
 FAULT_ROBUSTNESS_SOURCE = REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json"
+FAULT_ROBUSTNESS_AUDIT = REPO_ROOT / "docs" / "PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md"
 OUT_PATH = REPO_ROOT / "results" / "sensor_marginal_value_contract.json"
 
-METHODOLOGY_VERSION = "1.0.0"
+FROZEN_FAULT_ROBUSTNESS_SHA256 = "c40397fb0bb43b4f4a778aac4a4e0ba72b7b0387cab1aabec1e0708cc2912dcb"
+
+METHODOLOGY_VERSION = "1.0.1"
 
 
 def absolute_benefit(baseline: float, candidate: float) -> float:
@@ -253,39 +257,122 @@ def build_ptt_experiment(ptt: dict) -> dict:
     }
 
 
-def build_fault_robustness_placeholder() -> dict:
-    """The Day 5 master prompt cites results/ppg_dalia_fault_robustness.json
-    with specific numbers as 'accepted scientific state', but this file does
-    not exist anywhere in this repository (checked: working tree, git log
-    --all, every local and remote branch). Per this project's standing rule
-    (never fabricate/never transcribe unverified numbers) and the Day 5
-    prompt's own SS32/SS36 (stop rather than edit/invent on a frozen-artifact
-    mismatch), this record intentionally contains NO copied numbers from the
-    prompt - only a flag that the source could not be located."""
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def build_fault_robustness_unavailable() -> dict:
+    """Represent a current missing dependency without rewriting its history."""
+    return {
+        "record_id": "ppg_dalia_fault_robustness",
+        "evidence_axis": "robustness_and_pipeline_availability",
+        "status": "CURRENT_INTEGRATION_SOURCE_UNAVAILABLE",
+        "source_artifact": "results/ppg_dalia_fault_robustness.json",
+        "note": (
+            "The isolated Ismet Day 5 working context could not resolve this source. The "
+            "current builder also cannot read it, so no robustness numbers are emitted."
+        ),
+        "action_required": "Restore the accepted frozen source and rerun this builder.",
+    }
+
+
+def build_fault_robustness_record(robustness: dict, audit_text: str, source_sha256: str) -> dict:
+    """Build a separate robustness axis solely from the frozen source and audit."""
+    required_audit_statements = (
+        "first affected S14 replay batch",
+        "fail-closed pipeline availability",
+        "must not be described as robustness to universally severe IMU noise",
+        "automatic neural-network fault detection",
+        "fault tolerance",
+    )
+    missing = [statement for statement in required_audit_statements if statement not in audit_text]
+    if missing:
+        raise ValueError(f"Mandatory robustness audit semantics are missing: {missing}")
+
+    execution = robustness["execution"]
+    dataset = robustness["dataset"]
+    clean = robustness["clean_baseline"]
+    boundary = robustness["interpretation_boundary"]
+    condition_ids = [condition["condition_id"] for condition in robustness["conditions"]]
+    if len(condition_ids) != execution["condition_count"]:
+        raise ValueError("Robustness source condition_count does not match the condition records")
 
     return {
-        "experiment_id": "ppg_dalia_fault_robustness",
-        "status": "SOURCE_ARTIFACT_NOT_FOUND",
-        "expected_source_artifact": "results/ppg_dalia_fault_robustness.json",
-        "note": (
-            "This experiment was cited in the Day 5 master prompt as an accepted, frozen "
-            "result ('Experiment C'), with specific MAE/RMSE/availability figures. That "
-            "source file does not exist in this repository - not in the working tree, not "
-            "in `git log --all -- results/ppg_dalia_fault_robustness.json`, and not on any "
-            "local or remote branch (day2-ml, day3-ml, day5-ml, main, or their origin "
-            "counterparts) as of this contract's build time. Per this project's standing "
-            "verification rule, the numbers cited in the prompt are NOT reproduced here - "
-            "doing so would mean recording unverified figures as if they were sourced from "
-            "a real file. This is reported as a discrepancy requiring team review, not "
-            "silently resolved. No robustness fields in this contract depend on this record."
-        ),
-        "action_required": "Locate or re-generate results/ppg_dalia_fault_robustness.json, then re-run ml/build_sensor_marginal_value_contract.py to populate this record from verified source.",
+        "record_id": "ppg_dalia_fault_robustness",
+        "evidence_axis": "robustness_and_pipeline_availability",
+        "status": "RESOLVED_FROM_INTEGRATION_SOURCE",
+        "source_artifact": "results/ppg_dalia_fault_robustness.json",
+        "source_sha256": source_sha256,
+        "source_experiment_id": robustness["experiment_id"],
+        "audit_addendum": "docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md",
+        "historical_provenance": {
+            "isolated_day5_context": "Source was unavailable in the isolated Ismet Day 5 working context, so that historical branch emitted an unavailable placeholder.",
+            "integrated_resolution": "The accepted Phase 5 artifact became resolvable after integration; current values are parsed from that frozen source without rewriting the historical commit.",
+        },
+        "scope": {
+            "characterization": robustness["scope"],
+            "dataset": dataset["name"],
+            "subject_id": dataset["subject_id"],
+            "subject_role": dataset["subject_role"],
+            "single_subject": len(dataset["available_verified_subjects_used"]) == 1,
+        },
+        "execution": {
+            "condition_count": execution["condition_count"],
+            "eligible_windows_per_condition": execution["eligible_windows_per_condition"],
+            "total_condition_windows": execution["total_condition_windows"],
+            "no_fallback_prediction": execution["no_fallback_prediction"],
+            "condition_ids": condition_ids,
+        },
+        "metric_semantics": {
+            "accuracy_population": "valid_predictions_only",
+            "accuracy_fields": ["mae_bpm_valid_only", "rmse_bpm_valid_only"],
+            "prediction_availability_field": "prediction_availability_rate",
+            "availability_is_separate_from_accuracy": True,
+            "zero_survivor_accuracy": None,
+        },
+        "clean_baseline": {
+            "eligible_window_count": clean["eligible_window_count"],
+            "valid_prediction_count": clean["valid_prediction_count"],
+            "prediction_availability_rate": clean["prediction_availability_rate"],
+            "mae_bpm_valid_only": clean["mae_bpm_valid_only"],
+            "rmse_bpm_valid_only": clean["rmse_bpm_valid_only"],
+        },
+        "interpretive_context": {
+            "packet_loss": "Independent loss of a required native-rate sample primarily triggered fail-closed input rejection, so packet-loss results characterize prediction availability rather than continuous error degradation.",
+            "imu_fault_calibration": "IMU noise and saturation scales came from the first affected S14 batch, whose motion variance was much lower than typical later windows; the tested grid is not proof of robustness to severe corruption.",
+            "fault_detection": "Continued or rejected output is not evidence of automatic fault detection or fault tolerance.",
+        },
+        "claim_boundaries": {
+            "supported": boundary["supported"],
+            "not_supported": list(dict.fromkeys([
+                *boundary["not_supported"],
+                "robustness to universally severe IMU corruption",
+                "automatic neural-network fault detection",
+                "fault tolerance",
+            ])),
+        },
+        "separation_rule": "This record is not marginal sensor value and is never folded into MAE benefit, a robustness-adjusted score, or a sensor ranking.",
     }
 
 
 def main() -> None:
     ppg = json.loads(PPG_DALIA_SOURCE.read_text())
     ptt = json.loads(PTT_SOURCE.read_text())
+    if FAULT_ROBUSTNESS_SOURCE.is_file():
+        source_sha256 = _sha256(FAULT_ROBUSTNESS_SOURCE)
+        if source_sha256 != FROZEN_FAULT_ROBUSTNESS_SHA256:
+            raise ValueError(
+                "Frozen robustness source SHA256 changed; investigate instead of regenerating the contract"
+            )
+        robustness = json.loads(FAULT_ROBUSTNESS_SOURCE.read_text())
+        audit_text = FAULT_ROBUSTNESS_AUDIT.read_text()
+        robustness_record = build_fault_robustness_record(robustness, audit_text, source_sha256)
+    else:
+        robustness_record = build_fault_robustness_unavailable()
 
     contract = {
         "methodology_version": METHODOLOGY_VERSION,
@@ -343,8 +430,8 @@ def main() -> None:
         "experiments": {
             "ppg_dalia_imu_hr": build_ppg_dalia_experiment(ppg),
             "ptt_second_ppg_site_hr": build_ptt_experiment(ptt),
-            "ppg_dalia_fault_robustness": build_fault_robustness_placeholder(),
         },
+        "robustness_records": {"ppg_dalia_fault_robustness": robustness_record},
         "evidence_matrix": {
             "heart_rate_bpm": {
                 "wrist_imu_accelerometer": {"status": "POSITIVE", "experiment_id": "ppg_dalia_imu_hr"},

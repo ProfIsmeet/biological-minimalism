@@ -108,14 +108,26 @@ def test_unknown_physical_costs_remain_null(artifact) -> None:
 
 
 # 7
-def test_missing_ismet_robustness_status_is_resolved_from_real_source(artifact) -> None:
+def test_scientific_contract_and_decision_input_resolve_same_robustness_source(artifact) -> None:
     scientific = json.loads((REPOSITORY_ROOT / "results/sensor_marginal_value_contract.json").read_text())
-    assert scientific["experiments"]["ppg_dalia_fault_robustness"]["status"] == "SOURCE_ARTIFACT_NOT_FOUND"
+    linked = scientific["robustness_records"]["ppg_dalia_fault_robustness"]
+    assert linked["status"] == "RESOLVED_FROM_INTEGRATION_SOURCE"
+    assert linked["source_artifact"] == "results/ppg_dalia_fault_robustness.json"
     robustness = _component(artifact, "wrist_imu").robustness_evidence
     assert robustness is not None
-    assert robustness.status == "RESOLVED_FROM_INTEGRATION_SOURCE"
-    assert robustness.condition_count == 114
-    assert robustness.total_condition_windows == 510264
+    assert robustness.status == linked["status"]
+    assert robustness.source_artifact == linked["source_artifact"]
+    assert robustness.condition_count == linked["execution"]["condition_count"] == 114
+    assert robustness.total_condition_windows == linked["execution"]["total_condition_windows"] == 510264
+
+
+def test_api_exposes_resolved_source_without_contradictory_missing_status() -> None:
+    response = client.get("/research/decision-inputs")
+    assert response.status_code == 200
+    payload = response.json()
+    assert "SOURCE_ARTIFACT_NOT_FOUND" not in json.dumps(payload)
+    wrist = next(item for item in payload["decision_inputs"]["components"] if item["component_id"] == "wrist_imu")
+    assert wrist["robustness_evidence"]["status"] == "RESOLVED_FROM_INTEGRATION_SOURCE"
 
 
 # 8

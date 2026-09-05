@@ -7,6 +7,8 @@ artifacts - they never retrain anything and never modify a source artifact.
 
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -19,6 +21,9 @@ sys.path.insert(0, str(REPO_ROOT))
 PPG_DALIA_SOURCE = REPO_ROOT / "results" / "ppg_dalia_imu_ablation.json"
 PTT_SOURCE = REPO_ROOT / "results" / "ptt_ppg_site_ablation.json"
 CONTRACT_PATH = REPO_ROOT / "results" / "sensor_marginal_value_contract.json"
+ROBUSTNESS_SOURCE = REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json"
+ROBUSTNESS_AUDIT = REPO_ROOT / "docs" / "PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md"
+EXPECTED_ROBUSTNESS_SHA256 = "c40397fb0bb43b4f4a778aac4a4e0ba72b7b0387cab1aabec1e0708cc2912dcb"
 
 requires_sources = pytest.mark.skipif(
     not (PPG_DALIA_SOURCE.exists() and PTT_SOURCE.exists()),
@@ -172,21 +177,68 @@ def test_unvalidated_targets_not_estimated(contract):
 # 12. robustness remains separate from sensor marginal-value score -----------
 
 
-def test_fault_robustness_record_not_fabricated(contract):
-    robustness = contract["experiments"]["ppg_dalia_fault_robustness"]
-    assert robustness["status"] == "SOURCE_ARTIFACT_NOT_FOUND"
-    assert "mae" not in robustness  # must not contain fabricated metric fields
-    assert "availability" not in robustness
+def test_existing_fault_source_resolves_without_false_missing_status(contract):
+    robustness = contract["robustness_records"]["ppg_dalia_fault_robustness"]
+    assert robustness["status"] == "RESOLVED_FROM_INTEGRATION_SOURCE"
+    assert robustness["source_artifact"] == "results/ppg_dalia_fault_robustness.json"
+    assert "SOURCE_ARTIFACT_NOT_FOUND" not in json.dumps(contract)
     assert contract["robustness_relationship"]["sensor_marginal_value_and_robustness_are_separate_axes"] is True
 
 
-def test_fault_robustness_source_now_exists_but_frozen_contract_is_unchanged():
-    """The integration line supplies the independently frozen robustness
-    result. The Ismet contract remains historical; the reviewed integration
-    adapter resolves it without rewriting this source contract."""
-    assert (REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json").is_file()
-    frozen = json.loads(CONTRACT_PATH.read_text())
-    assert frozen["experiments"]["ppg_dalia_fault_robustness"]["status"] == "SOURCE_ARTIFACT_NOT_FOUND"
+def test_fault_source_is_parsed_not_hardcoded(contract):
+    sys.path.insert(0, str(REPO_ROOT / "ml"))
+    import build_sensor_marginal_value_contract as builder
+
+    source = json.loads(ROBUSTNESS_SOURCE.read_text())
+    altered = copy.deepcopy(source)
+    altered["execution"]["eligible_windows_per_condition"] = 1234
+    altered["execution"]["total_condition_windows"] = 140676
+    altered["clean_baseline"]["mae_bpm_valid_only"] = 12.345
+    record = builder.build_fault_robustness_record(
+        altered,
+        ROBUSTNESS_AUDIT.read_text(),
+        EXPECTED_ROBUSTNESS_SHA256,
+    )
+    assert record["execution"]["eligible_windows_per_condition"] == 1234
+    assert record["execution"]["total_condition_windows"] == 140676
+    assert record["clean_baseline"]["mae_bpm_valid_only"] == 12.345
+    assert contract["robustness_records"]["ppg_dalia_fault_robustness"]["execution"]["eligible_windows_per_condition"] == source["execution"]["eligible_windows_per_condition"]
+
+
+def test_fault_robustness_source_sha_and_required_semantics(contract):
+    assert hashlib.sha256(ROBUSTNESS_SOURCE.read_bytes()).hexdigest() == EXPECTED_ROBUSTNESS_SHA256
+    source = json.loads(ROBUSTNESS_SOURCE.read_text())
+    record = contract["robustness_records"]["ppg_dalia_fault_robustness"]
+    assert record["source_sha256"] == EXPECTED_ROBUSTNESS_SHA256
+    assert record["scope"]["subject_id"] == "S14"
+    assert record["scope"]["single_subject"] is True
+    assert record["execution"]["condition_count"] == source["execution"]["condition_count"] == 114
+    assert record["execution"]["eligible_windows_per_condition"] == source["execution"]["eligible_windows_per_condition"] == 4476
+    assert record["execution"]["total_condition_windows"] == source["execution"]["total_condition_windows"] == 510264
+    assert record["execution"]["no_fallback_prediction"] is True
+    assert record["metric_semantics"]["accuracy_population"] == "valid_predictions_only"
+    assert record["metric_semantics"]["availability_is_separate_from_accuracy"] is True
+    assert record["metric_semantics"]["zero_survivor_accuracy"] is None
+    assert "fail-closed" in record["interpretive_context"]["packet_loss"]
+    assert "not proof of robustness to severe corruption" in record["interpretive_context"]["imu_fault_calibration"]
+    unsupported = record["claim_boundaries"]["not_supported"]
+    assert "automatic neural-network fault detection" in unsupported
+    assert "fault tolerance" in unsupported
+
+
+def test_robustness_is_not_a_marginal_experiment_or_score(contract):
+    assert "ppg_dalia_fault_robustness" not in contract["experiments"]
+    record = contract["robustness_records"]["ppg_dalia_fault_robustness"]
+    assert record["evidence_axis"] == "robustness_and_pipeline_availability"
+    assert "marginal_status" not in record
+    assert "absolute_benefit" not in record
+    assert "ranking" in record["separation_rule"]
+
+
+def test_historical_missing_context_is_preserved_without_current_falsehood(contract):
+    history = contract["robustness_records"]["ppg_dalia_fault_robustness"]["historical_provenance"]
+    assert "isolated Ismet Day 5" in history["isolated_day5_context"]
+    assert "after integration" in history["integrated_resolution"]
 
 
 # 13. no fake confidence/evidence percentages ----------------------------------

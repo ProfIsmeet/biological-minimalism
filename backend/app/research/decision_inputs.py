@@ -159,13 +159,14 @@ def _operational_value(catalog: OperationalCostCatalog, component_id: str) -> Op
     )
 
 
-def _robustness_value(robustness: dict[str, Any]) -> RobustnessEvidence:
+def _robustness_value(robustness: dict[str, Any], linked_record: dict[str, Any]) -> RobustnessEvidence:
     execution = robustness["execution"]
     clean = robustness["clean_baseline"]
     dataset = robustness["dataset"]
-    boundary = robustness["interpretation_boundary"]
+    linked_context = linked_record["interpretive_context"]
+    linked_boundary = linked_record["claim_boundaries"]
     return RobustnessEvidence(
-        status="RESOLVED_FROM_INTEGRATION_SOURCE",
+        status=linked_record["status"],
         experiment_id=robustness["experiment_id"],
         source_artifact=ROBUSTNESS_PATH,
         audit_addendum=ROBUSTNESS_AUDIT_PATH,
@@ -177,16 +178,10 @@ def _robustness_value(robustness: dict[str, Any]) -> RobustnessEvidence:
         clean_mae_bpm=clean["mae_bpm_valid_only"],
         clean_rmse_bpm=clean["rmse_bpm_valid_only"],
         clean_prediction_availability=clean["prediction_availability_rate"],
-        imu_calibration_caveat=(
-            "IMU noise and saturation scales came from the first affected S14 batch, whose motion variance was much "
-            "lower than typical later windows; the tested grid is not proof of robustness to severe corruption."
-        ),
-        packet_loss_interpretation=(
-            "Independent loss of a required native-rate sample primarily triggered fail-closed input rejection, so "
-            "packet-loss results characterize prediction availability rather than continuous error degradation."
-        ),
-        supported_claim=boundary["supported"],
-        unsupported_claims=boundary["not_supported"],
+        imu_calibration_caveat=linked_context["imu_fault_calibration"],
+        packet_loss_interpretation=linked_context["packet_loss"],
+        supported_claim=linked_boundary["supported"],
+        unsupported_claims=linked_boundary["not_supported"],
     )
 
 
@@ -235,6 +230,27 @@ def build_decision_inputs(repository_root: str | Path = REPOSITORY_ROOT) -> Pare
     if _sha256(root / ROBUSTNESS_PATH) != FROZEN_ROBUSTNESS_SHA256:
         raise ResearchArtifactError("Frozen robustness artifact identity changed.")
 
+    try:
+        linked_robustness = scientific["robustness_records"]["ppg_dalia_fault_robustness"]
+    except KeyError as exc:
+        raise ResearchArtifactError("Scientific contract lacks the integrated robustness record.") from exc
+    expected_link = {
+        "status": "RESOLVED_FROM_INTEGRATION_SOURCE",
+        "source_artifact": ROBUSTNESS_PATH,
+        "source_sha256": FROZEN_ROBUSTNESS_SHA256,
+        "source_experiment_id": robustness["experiment_id"],
+    }
+    for field, expected in expected_link.items():
+        if linked_robustness.get(field) != expected:
+            raise ResearchArtifactError(f"Scientific robustness link changed at {field!r}.")
+    linked_execution = linked_robustness.get("execution", {})
+    source_execution = robustness["execution"]
+    for field in ("condition_count", "eligible_windows_per_condition", "total_condition_windows", "no_fallback_prediction"):
+        if linked_execution.get(field) != source_execution[field]:
+            raise ResearchArtifactError(f"Scientific robustness execution field changed at {field!r}.")
+    if linked_robustness.get("metric_semantics", {}).get("availability_is_separate_from_accuracy") is not True:
+        raise ResearchArtifactError("Robustness availability must remain separate from accuracy.")
+
     audit = audit_path.read_text(encoding="utf-8")
     for required in ("first affected S14 replay batch", "fail-closed pipeline availability", "not evidence that IMU is irrelevant"):
         if required not in audit:
@@ -264,7 +280,11 @@ def build_decision_inputs(repository_root: str | Path = REPOSITORY_ROOT) -> Pare
                 experiment_id=mapping.scientific_experiment_id,
                 scientific_marginal_value=_scientific_value(experiment),
                 operational_cost=_operational_value(operational, mapping.component_id),
-                robustness_evidence=_robustness_value(robustness) if mapping.component_id == "wrist_imu" else None,
+                robustness_evidence=(
+                    _robustness_value(robustness, linked_robustness)
+                    if mapping.component_id == "wrist_imu"
+                    else None
+                ),
             )
         )
 
