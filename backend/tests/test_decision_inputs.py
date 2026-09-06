@@ -177,7 +177,7 @@ def test_no_rank_or_architecture_action_fields_exist(artifact) -> None:
 # 14
 def test_readiness_reports_missing_dimensions_honestly(artifact) -> None:
     assert artifact.readiness.pareto_status == "NOT_READY"
-    assert len(artifact.readiness.missing_requirements) == 7
+    assert len(artifact.readiness.missing_requirements) == 8
     matrix = {item.component_id: item for item in artifact.readiness.component_matrix}
     assert matrix["wrist_imu"].power == "PARTIAL"
     assert matrix["wrist_imu"].mass == "MISSING"

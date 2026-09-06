@@ -19,6 +19,13 @@ class TopologyStatus(StrEnum):
     OPEN_BOUNDARY = "OPEN_BOUNDARY"
 
 
+class LocationStatus(StrEnum):
+    """Whether a component's physical placement (and thus body-worn burden) is settled."""
+
+    FROZEN = "FROZEN"
+    LOCATION_UNRESOLVED = "LOCATION_UNRESOLVED"
+
+
 class EvidenceConfidence(StrEnum):
     HIGH = "HIGH"
     MEDIUM = "MEDIUM"
@@ -65,6 +72,8 @@ class TopologyComponent(StrictModel):
     label: str
     modality: str
     module_id: str
+    location_status: LocationStatus = LocationStatus.FROZEN
+    location_alternatives: list[str] = Field(default_factory=list)
     target_body_region: str
     physical_sensing_site: str
     operation_mode: OperationMode

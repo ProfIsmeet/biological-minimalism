@@ -19,6 +19,12 @@ class CostEvidenceLevel(StrEnum):
     LITERATURE_ESTIMATE = "literature_estimate"
     DERIVED = "derived"
     ARCHITECTURAL_COUNT = "architectural_count"
+    # An acquisition/duty schedule that is an engineering or experiment-reference
+    # assumption, NOT a quantity derived or measured from a datasheet. A 100%
+    # ("continuous") acquisition schedule is a reference-schedule assumption, not a
+    # datasheet-derived duty cycle.
+    ENGINEERING_ASSUMPTION = "engineering_assumption"
+    REFERENCE_SCHEDULE = "reference_schedule"
     UNKNOWN = "unknown"
 
 

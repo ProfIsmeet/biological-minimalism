@@ -9,7 +9,7 @@
     },
     {
       "path": "results/operational_cost_catalog.json",
-      "sha256": "2ae90ea22b3b5cc6640159f5892506152bb4ca8592ea95a7e6639f207df847aa",
+      "sha256": "62c7f0f7846d2da6c73262ebc903b3339a0ef19bc03299637c1c8e777c83f732",
       "role": "operational-cost contract"
     },
     {
@@ -578,12 +578,12 @@
               "maximum": null,
               "unit": "fraction",
               "basis": "total",
-              "evidence_level": "derived",
+              "evidence_level": "reference_schedule",
               "provenance_ids": [
                 "ppg_dalia_window_parameters"
               ],
               "notes": [
-                "Continuous data collection for synchronized HR windows."
+                "Continuous acquisition is an experiment-reference schedule assumption (synchronized HR windows run continuously), not a datasheet-derived duty cycle."
               ]
             },
             "average_power": {
@@ -1853,7 +1853,8 @@
       "Reference component identities and topology are frozen, but the final BOM, MCU, radio, battery, regulator, enclosure, and attachment are not selected.",
       "The second PPG site's module boundary and contact-region allocation are unresolved.",
       "Only heart rate has marginal-value evidence; other mission-relevant targets are unvalidated.",
-      "Only two candidate additions have scientific evidence, from different datasets and model families."
+      "Only two candidate additions have scientific evidence, from different datasets and model families.",
+      "Interaction effects are unmeasured: one-component-at-a-time marginal value does not prove a globally minimal subset, so a formal Pareto frontier cannot be declared from independent single-sensor experiments alone."
     ],
     "cross_dataset_restriction": "Raw MAE/RMSE and relative-improvement magnitudes from PPG-DaLiA and PTT are not comparable ranking coordinates.",
     "limited_structural_observation": "Within the frozen PTT heart-rate experiment, the second PPG site worsened aggregate error while adding one physical and optical sensing site. This is a descriptive, target-specific observation—not a global architecture decision.",

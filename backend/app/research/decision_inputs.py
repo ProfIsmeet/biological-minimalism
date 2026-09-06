@@ -313,6 +313,7 @@ def build_decision_inputs(repository_root: str | Path = REPOSITORY_ROOT) -> Pare
                 "The second PPG site's module boundary and contact-region allocation are unresolved.",
                 "Only heart rate has marginal-value evidence; other mission-relevant targets are unvalidated.",
                 "Only two candidate additions have scientific evidence, from different datasets and model families.",
+                "Interaction effects are unmeasured: one-component-at-a-time marginal value does not prove a globally minimal subset, so a formal Pareto frontier cannot be declared from independent single-sensor experiments alone.",
             ],
             cross_dataset_restriction=(
                 "Raw MAE/RMSE and relative-improvement magnitudes from PPG-DaLiA and PTT are not comparable ranking coordinates."

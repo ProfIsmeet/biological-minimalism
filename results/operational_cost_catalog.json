@@ -641,12 +641,12 @@
             "maximum": null,
             "unit": "fraction",
             "basis": "total",
-            "evidence_level": "derived",
+            "evidence_level": "reference_schedule",
             "provenance_ids": [
               "ppg_dalia_window_parameters"
             ],
             "notes": [
-              "Continuous data collection for synchronized HR windows."
+              "Continuous acquisition is an experiment-reference schedule assumption (synchronized HR windows run continuously), not a datasheet-derived duty cycle."
             ]
           },
           "average_power": {
@@ -1877,12 +1877,12 @@
             "maximum": null,
             "unit": "fraction",
             "basis": "total",
-            "evidence_level": "derived",
+            "evidence_level": "reference_schedule",
             "provenance_ids": [
               "ppg_dalia_window_parameters"
             ],
             "notes": [
-              "Continuous data collection for the current model reference."
+              "Continuous acquisition is an experiment-reference schedule assumption (the frozen HR windowing runs continuously), not a datasheet-derived duty cycle."
             ]
           },
           "average_power": {
@@ -2399,12 +2399,12 @@
             "maximum": null,
             "unit": "fraction",
             "basis": "total",
-            "evidence_level": "derived",
+            "evidence_level": "reference_schedule",
             "provenance_ids": [
               "day6_ads1292r_datasheet"
             ],
             "notes": [
-              "Continuous reference acquisition."
+              "Continuous acquisition is an engineering reference-schedule assumption; the datasheet documents continuous-conversion capability, not a required or validated system duty cycle. Not a datasheet-derived duty cycle."
             ]
           },
           "average_power": {
@@ -3956,12 +3956,12 @@
             "maximum": null,
             "unit": "fraction",
             "basis": "total",
-            "evidence_level": "derived",
+            "evidence_level": "reference_schedule",
             "provenance_ids": [
               "day6_opt3001_datasheet"
             ],
             "notes": [
-              "Continuous-conversion reference mode."
+              "Continuous-conversion is an engineering reference-schedule assumption; the datasheet documents the device's continuous-conversion capability, not that continuous acquisition is required. Not a datasheet-derived duty cycle."
             ]
           },
           "average_power": {

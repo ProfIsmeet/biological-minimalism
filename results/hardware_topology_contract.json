@@ -37,7 +37,8 @@
         "clock"
       ],
       "notes": [
-        "Shared resource identities and allocation remain open; each must be counted once."
+        "Shared resource identities and allocation remain open; each must be counted once.",
+        "light_sensor is listed here as its candidate wrist placement, but its location_status is LOCATION_UNRESOLVED (wrist vs cabin/ambient). It must not be counted as body-worn burden until placement is frozen."
       ]
     },
     {
@@ -120,6 +121,8 @@
       "label": "Wrist IMU",
       "modality": "three-axis acceleration",
       "module_id": "wrist_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "wrist",
       "physical_sensing_site": "inside shared wrist enclosure",
       "operation_mode": "continuous",
@@ -177,6 +180,8 @@
       "label": "Second physical PPG site",
       "modality": "photoplethysmography",
       "module_id": "optical_site_evaluation_branch",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "finger/phalanx",
       "physical_sensing_site": "one added proximal phalanx optical site",
       "operation_mode": "continuous",
@@ -228,6 +233,8 @@
       "label": "Wrist PPG",
       "modality": "photoplethysmography",
       "module_id": "wrist_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "wrist",
       "physical_sensing_site": "ventral/dorsal wrist optical window",
       "operation_mode": "continuous",
@@ -286,6 +293,8 @@
       "label": "Chest ECG",
       "modality": "electrocardiography",
       "module_id": "chest_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "thorax",
       "physical_sensing_site": "chest electrode montage (open)",
       "operation_mode": "continuous",
@@ -343,6 +352,8 @@
       "label": "Thoracic BioZ / ICG",
       "modality": "thoracic bioimpedance",
       "module_id": "chest_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "thorax",
       "physical_sensing_site": "thoracic electrode montage (open)",
       "operation_mode": "intermittent",
@@ -401,6 +412,8 @@
       "label": "Skin temperature",
       "modality": "contact temperature",
       "module_id": "wrist_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "wrist",
       "physical_sensing_site": "shared wrist skin-facing surface",
       "operation_mode": "periodic",
@@ -457,6 +470,11 @@
       "label": "Ambient light sensor",
       "modality": "ambient light",
       "module_id": "wrist_module",
+      "location_status": "LOCATION_UNRESOLVED",
+      "location_alternatives": [
+        "wrist-worn outward optical aperture (shares the wrist module)",
+        "cabin/ambient fixed mount (contributes zero body-worn burden)"
+      ],
       "target_body_region": "wrist module outward surface",
       "physical_sensing_site": "outward optical aperture",
       "operation_mode": "continuous",
@@ -502,7 +520,8 @@
         "reporting interval",
         "optical window",
         "shared MCU/radio identity",
-        "component and finished-module mass"
+        "component and finished-module mass",
+        "Physical placement is unresolved (wrist module vs cabin/ambient mount); body-worn burden must not be attributed until placement is frozen."
       ]
     },
     {
@@ -510,6 +529,8 @@
       "label": "Frontal EEG",
       "modality": "electroencephalography",
       "module_id": "head_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "forehead/head",
       "physical_sensing_site": "frontal montage (open)",
       "operation_mode": "intermittent",
@@ -567,6 +588,8 @@
       "label": "Leg BioZ",
       "modality": "segmental bioimpedance",
       "module_id": "leg_module",
+      "location_status": "FROZEN",
+      "location_alternatives": [],
       "target_body_region": "lower leg",
       "physical_sensing_site": "segmental electrode montage (open)",
       "operation_mode": "intermittent",

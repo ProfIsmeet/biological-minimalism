@@ -1,5 +1,37 @@
 # Final Architecture Decision Rule — Frozen Day 6 Rule
 
+## What this rule is (terminology)
+
+This artifact is currently an **architecture decision gate**, not yet a final
+selection rule. It decides *whether* the evidence on a component/target pair is
+complete and comparable enough to authorize a formal target-specific trade-off —
+and, when it is not, it returns **Future evidence required**. It deliberately does
+**not** manufacture a tie-break operator or embed benefit thresholds to force a
+decision.
+
+- **Architecture decision gate** (this document, today): admissibility check on
+  evidence completeness/comparability; can return Retain / Conditional /
+  Deprioritize / Remove-from-named-target / Future-evidence-required.
+- **Architecture decision policy** (future): a frozen downstream trade-off method
+  over admissible candidates.
+- **Final selection rule** (future): applies only once such a policy is frozen.
+
+The filename is retained for backward compatibility with artifacts that reference
+it. Behaving like a gate that often returns *Future evidence required* is the
+intended, honest behavior — not a defect to be papered over with arbitrary
+thresholds.
+
+## Interaction-effect precondition
+
+One-component-at-a-time marginal-value evidence does **not** prove a globally
+minimal subset. Greedy accumulation of independent single-component results must
+never be reported as a proof of global optimality. Formal target-specific Pareto
+readiness therefore **cannot** become TRUE from independent one-sensor experiments
+alone when interaction evidence is a decision-critical dimension; a dedicated
+interaction design (e.g. baseline / +A / +B / +A+B within one dataset/target/
+protocol) is future work, and `interaction_evidence` remains `unavailable`
+(see `docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md` §14).
+
 ## Independence
 
 This rule is frozen before any final component outcome is calculated. It does not encode a preferred winner and is unchanged by whether a scientific experiment is positive or negative.

@@ -24,7 +24,8 @@
         "clock"
       ],
       "notes": [
-        "Shared resource identities and allocation remain open; each must be counted once."
+        "Shared resource identities and allocation remain open; each must be counted once.",
+        "light_sensor is listed here as its candidate wrist placement, but its location_status is LOCATION_UNRESOLVED (wrist vs cabin/ambient). It must not be counted as body-worn burden until placement is frozen."
       ]
     },
     {
