@@ -10,7 +10,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Biological Minimalism — Mission Control",
   description:
-    "AI-driven minimal sensor architecture for autonomous astronaut health monitoring — IAC 2026 research demonstrator.",
+    "Evidence-driven methodology for target-specific sensor marginal value in autonomous astronaut health monitoring — IAC 2026 research demonstrator. Final minimal architecture not yet resolved.",
 };
 
 export const viewport: Viewport = {

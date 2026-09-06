@@ -32,7 +32,7 @@ export function SensorHealthPanel() {
   const availableChannels = liveChannels?.length ? liveChannels : configuredChannels;
 
   return (
-    <Panel title="Sensor Health" subtitle="Four-sensor minimal architecture" icon={<Radio size={16} />}>
+    <Panel title="Sensor Health" subtitle="Proposed four-sensor concept (synthetic demo)" icon={<Radio size={16} />}>
       <div className="grid grid-cols-2 gap-3">
         {SENSOR_NAMES.map(({ value, label }) => {
           const reading = sensors?.find((s) => s.sensor === value);

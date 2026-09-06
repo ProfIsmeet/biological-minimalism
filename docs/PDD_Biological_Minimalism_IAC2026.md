@@ -9,6 +9,22 @@ Symposium (A1), Interactive Presentation**
 **Team:** Haydarpaşa Lisesi — F. Atila, E. H. Sünbül, I. Y. Virdil, P. Özdemir
 **Document status:** Draft v1.0
 
+> ⚠️ **Framing note (evidence-driven methodology in effect).** This PDD predates the
+> current methodology and is preserved as the design-rationale document. Read it with
+> these clarifications, which are authoritative:
+> - The **four-sensor design** (EEG/PPG/temperature/BioZ) is a **design hypothesis /
+>   proposed deployment**, not a validated or selected minimal set. The current
+>   architecture-decision status is **`NOT_READY`**.
+> - The **Information Density Index (IDI)** described in Section 1 is a **proposed,
+>   superseded** metric — it was *not* adopted. The project deliberately refuses a
+>   universal weighted scalar because it would embed arbitrary weightings across
+>   incomparable burden dimensions. See `docs/OPERATIONAL_COST_METHODOLOGY.md`.
+> - The **Biological Digital Twin** is architecture/reference code only — untrained,
+>   with no validated checkpoint. Any "recover the picture of 12-sensor systems"
+>   language is a **motivating research question**, not a demonstrated result.
+> - **Current source of truth** for scientific evidence: the root `README.md`, the
+>   research API (`backend/app/research/`), and the immutable `results/` artifacts.
+
 ---
 
 > **How to read this document.** Every claim in this PDD is one of two kinds, and we

@@ -63,7 +63,9 @@ export default function DigitalTwinPage() {
       <div>
         <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
         <p className="text-sm text-slate-500">
-          Demo — Digital Twin Evolution. Move the slider to see the personalized baseline adapt across a simulated 30-day mission.
+          Demo — Digital Twin Evolution. A <span className="text-slate-400">synthetic, conceptual</span> illustration of a
+          <em> proposed</em> personalized baseline: the model is architecture/reference code only, untrained and not validated.
+          Move the slider to see the illustrative adaptation across a simulated 30-day mission.
         </p>
       </div>
 

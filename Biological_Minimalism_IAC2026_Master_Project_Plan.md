@@ -2,6 +2,22 @@
 
 > AI-Driven Minimal Sensor Architecture for Autonomous Astronaut Health Monitoring
 
+> ⚠️ **HISTORICAL PLANNING DOCUMENT (Day-0/1 design hypothesis).** This file records
+> the project's *original* framing and is preserved for provenance. Several ideas here
+> have since been **superseded** by the evidence-driven methodology now in effect:
+> - The "only four sensors" set (EEG/PPG/temperature/BioZ) is a **historical design
+>   hypothesis**, not a validated or selected minimal set. The current architecture
+>   decision status is **`NOT_READY`**.
+> - The **Information Density Index (IDI = information / #sensors)** is a **proposed,
+>   superseded** concept — it was *not* adopted, because a single weighted scalar
+>   would embed arbitrary value judgments across incomparable burden dimensions
+>   (power vs mass vs contacts vs comfort). See `docs/OPERATIONAL_COST_METHODOLOGY.md`.
+> - Early single-seed figures (e.g. "≈23%" IMU benefit, "%90" reduction targets) are
+>   historical; the replicated multi-seed IMU benefit is **≈20.6%**.
+>
+> **Current source of truth:** the root `README.md`, the research API
+> (`backend/app/research/`), and the immutable artifacts in `results/`.
+
 ## Overview
 
 This document captures the complete project roadmap for the IAC 2026 paper and demonstrator.

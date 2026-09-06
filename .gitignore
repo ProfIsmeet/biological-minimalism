@@ -30,3 +30,8 @@ datasets/**/processed/
 Thumbs.db
 .vscode/
 .idea/
+
+# --- Agent/tooling scratch & unrelated working data (never commit) ---
+.work/
+.codex_tmp/
+outputs/

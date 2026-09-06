@@ -142,6 +142,12 @@ def build_multiseed_replication_block(multiseed: dict) -> dict:
             "beyond the shuffled control. This decomposition is DESCRIPTIVE, not a proven causal "
             "split; no exact fraction is attributed to 'synchronization' versus 'context'."
         ),
+        # NOTE: supported_claims are intentionally NOT propagated into this contract.
+        # The scientific contract's SHA256 is embedded in results/pareto_decision_inputs.json
+        # (frozen provenance chain); changing the contract bytes would cascade a SHA
+        # mismatch there. The machine-readable supported_claims live in the source
+        # artifact (results/ppg_dalia_imu_multiseed_replication.json) and are surfaced
+        # by the research API (backend/app/research/catalog.py).
         "unsupported_claims": multiseed["unsupported_claims"],
     }
 

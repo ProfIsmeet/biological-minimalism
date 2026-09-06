@@ -327,7 +327,23 @@ def main() -> None:
         "performance_note": "torch.set_num_threads(4) set at module import - a runtime/infrastructure choice (measured ~28x faster than the PyTorch default of 20 threads on this 20-logical-core CPU-only VM for this model size), not a scientific parameter.",
     }
 
-    out["supported_claims"] = []  # filled in after inspecting results, see report
+    _agg = out["aggregate"]
+    out["supported_claims"] = [
+        (
+            "On PPG-DaLiA held-out subjects under the frozen 8s/2s protocol, adding "
+            "synchronized wrist IMU to wrist PPG reduced heart-rate MAE from "
+            f"{_agg['model_a']['mean_mae']:.3f} to {_agg['model_b']['mean_mae']:.3f} bpm "
+            f"(~{_agg['relative_improvement_B_over_A']['mean'] * 100:.1f}% relative); this "
+            f"direction replicated across seeds ({replication_status})."
+        ),
+        (
+            "The capacity-matched comparison (shuffled-IMU control C vs synchronized IMU B) "
+            f"gave a synchronization increment of {_agg['synchronization_increment_mae_C_minus_B']['mean']:.3f} bpm. "
+            "This C->B comparison is capacity-matched; A->B and A->C are capacity-confounded "
+            "(baseline A ~8k params vs candidate B/C ~29k params), so the full A->B benefit is "
+            "not attributable to IMU sensor value alone."
+        ),
+    ]
     out["unsupported_claims"] = [
         "Causal attribution of the exact fraction of benefit to 'synchronization' vs 'context' - the shuffle control is descriptive, not a proof of causal decomposition.",
         "Generalization beyond PPG-DaLiA's population/activities/model family.",

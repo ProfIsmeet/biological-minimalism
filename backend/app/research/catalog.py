@@ -296,6 +296,12 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
                 "The data are terrestrial and free-living.",
                 "Shuffled IMU also helped, so synchronization explains only part of Model B's gain.",
                 "Motion-quartile benefit was not monotonic.",
+                (
+                    "A->B and A->C are capacity-confounded (baseline A ~8k params vs candidate "
+                    "B/C ~29k params); the capacity-matched C->B comparison is the cleanest "
+                    "current evidence. The full A->B benefit is not attributable to IMU sensor "
+                    "value alone until a capacity-matched PPG-only control exists."
+                ),
             ],
         ),
     )

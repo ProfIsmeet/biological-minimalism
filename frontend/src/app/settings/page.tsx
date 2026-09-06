@@ -105,9 +105,10 @@ export default function SettingsPage() {
       <Panel title="About" subtitle="Project attribution & scope" icon={<Info size={16} />}>
         <div className="flex flex-col gap-2 text-sm leading-relaxed text-slate-400">
           <p>
-            <span className="font-medium text-slate-200">Biological Minimalism</span> — AI-driven minimal sensor architecture for
-            autonomous astronaut health monitoring. Prepared for IAC 2026 (Interactive Presentation, IAF/IAA Space Life Sciences
-            Symposium).
+            <span className="font-medium text-slate-200">Biological Minimalism</span> — an evidence-driven methodology for
+            determining the target-specific marginal value of sensing components for autonomous astronaut health monitoring. The
+            final minimal architecture is <span className="font-medium text-slate-200">not yet resolved</span>. Prepared for IAC 2026
+            (Interactive Presentation, IAF/IAA Space Life Sciences Symposium).
           </p>
           <p>
             Synthetic demo mode uses the mock engine. PPG-DaLiA replay mode streams previously recorded, synchronized real human channels
