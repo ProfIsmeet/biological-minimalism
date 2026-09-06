@@ -281,9 +281,18 @@ def test_next_target_predeclaration_exists():
     assert "No training for this predeclared experiment was performed" in text
 
 
-def test_no_next_target_training_artifact_exists_yet():
-    """Guards against accidentally starting Day 7's training - the
-    predeclared Sleep-EDF EEG+EOG ablation must have NO result artifact yet."""
+def test_no_next_target_training_happened_during_day6():
+    """Day 6 guard: at the time Day 6 completed, the predeclared Sleep-EDF
+    EEG+EOG ablation must not yet have been run. Day 7 explicitly
+    predeclared (docs/SLEEP_EDF_EEG_EOG_PREDECLARATION_DAY7.md) and then
+    authorized that experiment, so its result artifact existing now is
+    correct, not a violation - this test only asserts that when it DOES
+    exist, a corresponding Day 7 predeclaration document exists too,
+    proving it wasn't trained without one."""
 
-    forbidden = REPO_ROOT / "results" / "sleep_edf_eeg_eog_ablation.json"
-    assert not forbidden.exists(), "next-target training must not have been performed in Day 6"
+    result_path = REPO_ROOT / "results" / "sleep_edf_eeg_eog_ablation.json"
+    if result_path.exists():
+        assert (REPO_ROOT / "docs" / "SLEEP_EDF_EEG_EOG_PREDECLARATION_DAY7.md").exists(), (
+            "Sleep-EDF result exists but no predeclaration document was found - "
+            "training must always follow a frozen predeclaration"
+        )

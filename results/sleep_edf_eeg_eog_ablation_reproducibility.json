@@ -1,0 +1,56 @@
+{
+  "tolerance": 1e-06,
+  "all_ok": true,
+  "runs": [
+    {
+      "run_id": "baseline_eeg_only_seed42",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "baseline_eeg_only_seed43",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "baseline_eeg_only_seed44",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "baseline_eeg_only_seed45",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "baseline_eeg_only_seed46",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "candidate_eeg_plus_eog_seed42",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "candidate_eeg_plus_eog_seed43",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "candidate_eeg_plus_eog_seed44",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "candidate_eeg_plus_eog_seed45",
+      "ok": true,
+      "f1_diff": 0.0
+    },
+    {
+      "run_id": "candidate_eeg_plus_eog_seed46",
+      "ok": true,
+      "f1_diff": 0.0
+    }
+  ]
+}
