@@ -1,5 +1,5 @@
 {
-  "methodology_version": "1.0.1",
+  "methodology_version": "1.2.0",
   "methodology_doc": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
   "generated_by": "ml/build_sensor_marginal_value_contract.py",
   "sign_convention": {
@@ -71,6 +71,7 @@
         "shuffled_imu_mae": 7.956958293914795,
         "shuffled_imu_rmse": 11.959531784057617
       },
+      "headline_metrics_basis": "frozen single-seed (seed=42) point estimate from results/ppg_dalia_imu_ablation.json; multi-seed means are reported separately under multiseed_replication.",
       "baseline_metrics": {
         "mae_bpm": 9.090062141418457,
         "rmse_bpm": 12.522624015808105,
@@ -99,7 +100,7 @@
         "interpretation_note": "Temporally shuffled same-subject IMU retained some predictive value (candidate-vs-shuffled and shuffled-vs-baseline are both non-zero), so the synchronized-IMU benefit is not attributable to synchronization alone. This decomposition is descriptive, not a proven causal split."
       },
       "variability": {
-        "training_seed_replication": "1/1 (single seed=42, no multi-seed replication performed for this experiment)",
+        "training_seed_replication": "5/5 training seeds favor candidate (seeds [42, 43, 44, 45, 46], see results/ppg_dalia_imu_multiseed_replication.json)",
         "subject_direction_consistency": "3/3 held-out subjects favor candidate",
         "motion_quartile_direction_consistency": "4/4 motion quartiles favor candidate",
         "activity_direction_consistency": "8/9 activities favor candidate",
@@ -112,10 +113,100 @@
         "n_held_out_subjects": 3,
         "n_total_subjects": 15,
         "n_datasets": 1,
-        "n_training_seeds": 1,
+        "n_training_seeds": 5,
         "independent_ground_truth": "real chest-ECG-derived HR label shipped with PPG-DaLiA (not computed by this project)",
         "negative_control_present": true,
         "subject_disjoint_split": true
+      },
+      "multiseed_replication": {
+        "source_artifact": "results/ppg_dalia_imu_multiseed_replication.json",
+        "replication_status": "STRONGLY_REPLICATED_POSITIVE",
+        "interpretation_thresholds_frozen_before_running": {
+          "STRONGLY_REPLICATED_POSITIVE": "seed_direction_count >= 4 of 5 favor B AND mean(A-B) > 0",
+          "REPLICATED_BUT_VARIABLE": "seed_direction_count == 3 of 5 favor B AND mean(A-B) > 0",
+          "MIXED": "seed_direction_count <= 2 of 5 favor B, or mean(A-B) approximately 0",
+          "NON_REPLICATED": "mean(A-B) <= 0"
+        },
+        "training_seeds": [
+          42,
+          43,
+          44,
+          45,
+          46
+        ],
+        "model_metrics_across_seeds": {
+          "model_a_ppg_only": {
+            "mae_bpm_mean": 9.086226463317871,
+            "mae_bpm_sd": 0.2306219374643015,
+            "rmse_bpm_mean": 12.312088966369629,
+            "rmse_bpm_sd": 0.18564846606391255
+          },
+          "model_b_ppg_plus_imu": {
+            "mae_bpm_mean": 7.2076342582702635,
+            "mae_bpm_sd": 0.15664695860140332,
+            "rmse_bpm_mean": 10.795911598205567,
+            "rmse_bpm_sd": 0.10469128107669785
+          },
+          "model_c_ppg_plus_shuffled_imu": {
+            "mae_bpm_mean": 7.983925724029541,
+            "mae_bpm_sd": 0.20444261016249607,
+            "rmse_bpm_mean": 11.957774543762207,
+            "rmse_bpm_sd": 0.19639930630554328
+          }
+        },
+        "decomposition_across_seeds_mae_bpm": {
+          "total_imu_benefit_A_minus_B": {
+            "mean": 1.8785922050476074,
+            "sd": 0.2633888136300174,
+            "n_seeds_favor_candidate": 5,
+            "n_seeds_total": 5
+          },
+          "context_only_like_benefit_A_minus_C": {
+            "mean": 1.1023007392883302,
+            "sd": 0.14819397283096972,
+            "n_seeds_favor_shuffled": 5,
+            "n_seeds_total": 5
+          },
+          "synchronization_increment_C_minus_B": {
+            "mean": 0.7762914657592773,
+            "sd": 0.22692920822040621,
+            "n_seeds_favor_candidate_over_shuffled": 5,
+            "n_seeds_total": 5
+          }
+        },
+        "seed_aware_consistency": {
+          "subject_direction": {
+            "S14": "5/5",
+            "S2": "5/5",
+            "S9": "5/5"
+          },
+          "motion_quartile_direction": {
+            "q1_lowest_motion": "5/5",
+            "q2": "5/5",
+            "q3": "5/5",
+            "q4_highest_motion": "5/5"
+          },
+          "activity_direction": {
+            "cycling": "4/5",
+            "driving": "5/5",
+            "lunch_break": "5/5",
+            "sitting": "5/5",
+            "stairs": "4/5",
+            "table_soccer": "0/5",
+            "transient/unlabeled": "5/5",
+            "walking": "5/5",
+            "working": "5/5"
+          },
+          "activities_never_favoring_candidate": [
+            "table_soccer"
+          ]
+        },
+        "interpretation_note": "Across five independent training seeds the synchronized-IMU configuration (B) beats PPG-only (A) in 5/5 seeds, and beats the temporally shuffled control (C) in 5/5 seeds; the shuffled control also beats PPG-only in 5/5 seeds. A substantial portion of the improvement survives temporal shuffling while synchronized IMU adds further benefit beyond the shuffled control. This decomposition is DESCRIPTIVE, not a proven causal split; no exact fraction is attributed to 'synchronization' versus 'context'.",
+        "unsupported_claims": [
+          "Causal attribution of the exact fraction of benefit to 'synchronization' vs 'context' - the shuffle control is descriptive, not a proof of causal decomposition.",
+          "Generalization beyond PPG-DaLiA's population/activities/model family.",
+          "Any claim this replicates across datasets - PTT and PPG-DaLiA are separate, non-comparable experiments (see docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md)."
+        ]
       },
       "marginal_status": {
         "overall_direction": "POSITIVE",
@@ -123,8 +214,8 @@
           "subject_level": "CONSISTENT",
           "activity_level": "MOSTLY_CONSISTENT"
         },
-        "evidence_strength": "preliminary",
-        "evidence_strength_rationale": "Direction is consistent across all held-out subjects and all motion quartiles, and a negative control was run - methodologically strong within its scope. Classified 'preliminary' (not 'replicated-within-dataset') because there is no multi-seed training replication and only one dataset/population."
+        "evidence_strength": "replicated-within-dataset",
+        "evidence_strength_rationale": "5/5 independent training seeds favor the candidate - a consistent, replicated-within-dataset direction across independent model initializations. This remains a single-dataset/single-population signal and is not a cross-dataset or cross-target generalization claim."
       },
       "limitations": [
         "Trained and evaluated on PPG-DaLiA (terrestrial, free-living daily activities), not astronaut or spaceflight data - no microgravity validation.",

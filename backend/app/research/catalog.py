@@ -194,6 +194,48 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
     ]
     if activities:
         breakdowns.append(_ppg_breakdown(result, "per_activity_metrics", "per_activity", "Activities"))
+
+    # Day-6 multi-seed replication is layered on as ADDITIONAL evidence; the
+    # single-seed artifact above remains the frozen headline point estimate.
+    multiseed_path = repository_root / "results" / "ppg_dalia_imu_multiseed_replication.json"
+    marginal_notes = [
+        "Improvement was present for all three held-out subjects and all four motion quartiles.",
+        "The benefit did not increase monotonically with motion.",
+        "The shuffled-IMU negative control also improved over PPG-only.",
+    ]
+    paired_replicates: int | None = None
+    candidate_improved_count: int | None = None
+    candidate_worsened_count: int | None = None
+    if multiseed_path.is_file():
+        multiseed = json.loads(multiseed_path.read_text(encoding="utf-8"))
+        agg = multiseed["aggregate"]
+        total = agg["total_sync_imu_benefit_mae_A_minus_B"]
+        ctx = agg["shuffled_context_like_benefit_mae_A_minus_C"]
+        inc = agg["synchronization_increment_mae_C_minus_B"]
+        paired_replicates = total["n_seeds_total"]
+        candidate_improved_count = total["n_seeds_favor_B"]
+        candidate_worsened_count = total["n_seeds_total"] - total["n_seeds_favor_B"]
+        never_favor = sorted(
+            act for act, rec in multiseed["activity_level_consistency"].items()
+            if rec["n_seeds_favor_B"] == 0
+        )
+        marginal_notes = [
+            f"Multi-seed replication ({multiseed['replication_status']}, seeds "
+            f"{multiseed['frozen_protocol']['training_seeds']}): B beats A in "
+            f"{total['n_seeds_favor_B']}/{total['n_seeds_total']} seeds, C beats A in "
+            f"{ctx['n_seeds_favor_C']}/{ctx['n_seeds_total']}, B beats C in "
+            f"{inc['n_seeds_favor_B_over_C']}/{inc['n_seeds_total']}.",
+            f"Across-seed MAE mean±SD (bpm): A {agg['model_a']['mean_mae']:.3f}±{agg['model_a']['sd_mae']:.3f}, "
+            f"B {agg['model_b']['mean_mae']:.3f}±{agg['model_b']['sd_mae']:.3f}, "
+            f"C {agg['model_c']['mean_mae']:.3f}±{agg['model_c']['sd_mae']:.3f}.",
+            f"Decomposition (descriptive, not a causal split): total IMU benefit A−B "
+            f"{total['mean']:.3f}±{total['sd']:.3f}; retained under shuffle A−C "
+            f"{ctx['mean']:.3f}±{ctx['sd']:.3f}; additional synchronized increment C−B "
+            f"{inc['mean']:.3f}±{inc['sd']:.3f} bpm.",
+            "All three held-out subjects and all four motion quartiles favor synchronized IMU in 5/5 seeds; "
+            f"activities never favoring the candidate across seeds: {', '.join(never_favor) if never_favor else 'none'}.",
+        ]
+
     return ResearchExperiment(
         experiment_id=PPG_DALIA_ABLATION_ID,
         title="PPG-DaLiA — Marginal value of synchronized IMU",
@@ -222,11 +264,10 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
             metric="mae",
             delta=_metric(candidate_mae - baseline_mae, "bpm"),
             direction=MarginalDirection.IMPROVED,
-            notes=[
-                "Improvement was present for all three held-out subjects and all four motion quartiles.",
-                "The benefit did not increase monotonically with motion.",
-                "The shuffled-IMU negative control also improved over PPG-only.",
-            ],
+            paired_replicates=paired_replicates,
+            candidate_improved_count=candidate_improved_count,
+            candidate_worsened_count=candidate_worsened_count,
+            notes=marginal_notes,
         ),
         breakdowns=breakdowns,
         provenance=ResearchProvenance(
