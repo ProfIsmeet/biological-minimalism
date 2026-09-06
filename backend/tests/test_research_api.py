@@ -142,6 +142,26 @@ def test_research_routes_are_read_only_and_report_unknown_ids() -> None:
     assert client.get("/research/experiments/not-a-real-experiment").status_code == 404
 
 
+def test_target_evidence_matrix_is_artifact_backed_and_multi_target_aware() -> None:
+    response = client.get("/research/target-evidence-matrix")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["availability"] == "available"
+    matrix = body["matrix"]
+    # Only the two real experiments; Sleep-EDF/EOG must NOT be fabricated.
+    experiment_ids = {entry["experiment_id"] for entry in matrix["entries"]}
+    assert experiment_ids == {"ppg-dalia-imu-ablation", "ptt-ppg-site-ablation"}
+    by_id = {entry["experiment_id"]: entry for entry in matrix["entries"]}
+    # Capacity-confound and heterogeneity are represented.
+    assert by_id["ppg-dalia-imu-ablation"]["capacity_match_status"] == "confounded"
+    assert by_id["ptt-ppg-site-ablation"]["result_class"] == "heterogeneous_marginal_result"
+    assert by_id["ptt-ppg-site-ablation"]["sensitivity_status"] == "pending"
+    assert "PROHIBITED" in matrix["cross_target_comparability"]
+    # Awaiting list names the not-yet-produced classification target.
+    assert any("Sleep-EDF" in item for item in matrix["awaiting"])
+    assert client.post("/research/target-evidence-matrix", json={}).status_code == 405
+
+
 def test_research_models_do_not_contaminate_live_telemetry_schema() -> None:
     telemetry_fields = set(LiveMetricsSnapshot.model_fields)
     assert not telemetry_fields.intersection(

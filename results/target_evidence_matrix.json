@@ -1,0 +1,64 @@
+{
+  "matrix_id": "biological-minimalism-target-evidence-matrix-v1",
+  "statement": "Target-specific marginal-value evidence for each completed experiment. Only frozen, committed evidence is included; empty targets are listed under 'awaiting' and are not fabricated.",
+  "cross_target_comparability": "PROHIBITED: raw metric magnitudes across different targets/datasets/model families are not comparable and must never be ranked against each other.",
+  "entries": [
+    {
+      "experiment_id": "ppg-dalia-imu-ablation",
+      "target": "heart_rate_bpm",
+      "dataset": "PPG-DaLiA",
+      "candidate": "synchronized wrist IMU",
+      "metric": "MAE (bpm)",
+      "metric_kind": "regression",
+      "metric_directionality": "lower_is_better",
+      "baseline_configuration_id": "model_a_ppg_only",
+      "candidate_configuration_id": "model_b_ppg_plus_imu",
+      "direction": "improved",
+      "result_class": "positive_marginal_value",
+      "evidence_strength": "strongly_replicated",
+      "capacity_match_status": "confounded",
+      "subject_heterogeneity": "Benefit held for all three held-out subjects (S2, S9, S14); motion-quartile benefit was positive but non-monotonic.",
+      "class_heterogeneity": null,
+      "sensitivity_status": "available",
+      "operational_cost_linkage_status": "linked (component wrist_imu in pareto_decision_inputs)",
+      "supported_claim": "On PPG-DaLiA held-out subjects under the frozen 8s/2s protocol, adding synchronized wrist IMU reduced HR MAE 9.086->7.208 bpm (~20.6% relative), replicated 5/5 seeds. The capacity-matched C->B increment (0.776 bpm) is the cleanest comparison.",
+      "prohibited_claims": [
+        "The full A->B benefit is pure IMU sensor value (A->B and A->C are capacity-confounded, ~8k vs ~29k params).",
+        "IMU is universally required for heart rate or any other target.",
+        "The evaluated sensor set is globally optimal.",
+        "Generalizes to astronauts / microgravity or beyond PPG-DaLiA's population."
+      ]
+    },
+    {
+      "experiment_id": "ptt-ppg-site-ablation",
+      "target": "heart_rate_bpm",
+      "dataset": "PTT-PPG",
+      "candidate": "second physical PPG site",
+      "metric": "MAE (bpm)",
+      "metric_kind": "regression",
+      "metric_directionality": "lower_is_better",
+      "baseline_configuration_id": "single_ppg_site",
+      "candidate_configuration_id": "two_ppg_site",
+      "direction": "worsened",
+      "result_class": "heterogeneous_marginal_result",
+      "evidence_strength": "replicated_but_variable",
+      "capacity_match_status": "unknown",
+      "subject_heterogeneity": "Subject behavior is heterogeneous: subject s2 strongly dominates the aggregate negative direction and descriptively removing s2 reverses the aggregate. The 5 seeds are optimization replications, NOT five independent populations.",
+      "class_heterogeneity": null,
+      "sensitivity_status": "pending",
+      "operational_cost_linkage_status": "linked (component second_ppg_site in pareto_decision_inputs)",
+      "supported_claim": "Under the frozen PTT protocol, the single-site PPG baseline beat the two-site candidate in aggregate HR MAE across 5 optimization seeds \u2014 bounded, heterogeneous negative evidence.",
+      "prohibited_claims": [
+        "The second PPG site is universally harmful or useless.",
+        "This proves the second PPG site should be removed.",
+        "s2 should be removed from the analysis.",
+        "PTT and PPG-DaLiA magnitudes are comparable or rankable."
+      ]
+    }
+  ],
+  "awaiting": [
+    "Sleep stage / Sleep-EDF, candidate = EOG (classification target) \u2014 not yet produced by the ML track.",
+    "PPG-DaLiA capacity-matched PPG-only control (A_cap) \u2014 required before A->B can be attributed to IMU alone.",
+    "PTT leave-one-subject-out sensitivity artifact \u2014 required to characterize the s2-dominated heterogeneity."
+  ]
+}

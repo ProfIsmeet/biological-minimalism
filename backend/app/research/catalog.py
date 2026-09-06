@@ -30,6 +30,8 @@ from app.schemas.research import (
     ResearchResultClass,
     ResearchScope,
     ResearchStatus,
+    TargetEvidenceMatrix,
+    TargetEvidenceMatrixEnvelope,
 )
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -744,6 +746,19 @@ class ResearchCatalog:
                 )
             )
         return responses
+
+    def target_evidence_matrix(self) -> TargetEvidenceMatrixEnvelope:
+        """Read-through the committed target-specific evidence matrix (§18)."""
+        try:
+            raw = _read_json(self.repository_root, "results/target_evidence_matrix.json")
+            matrix = TargetEvidenceMatrix.model_validate(raw)
+        except (ResearchArtifactError, ValidationError, KeyError, TypeError, ValueError) as exc:
+            return TargetEvidenceMatrixEnvelope(
+                availability=ResearchAvailability.UNAVAILABLE, error=str(exc)
+            )
+        return TargetEvidenceMatrixEnvelope(
+            availability=ResearchAvailability.AVAILABLE, matrix=matrix
+        )
 
     def summary(self) -> ResearchProjectSummary:
         experiments = self.list()

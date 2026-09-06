@@ -18,6 +18,7 @@ from app.schemas.research import (
     ResearchExperimentEnvelope,
     ResearchExperimentSummaryEnvelope,
     ResearchProjectSummary,
+    TargetEvidenceMatrixEnvelope,
 )
 
 router = APIRouter()
@@ -51,6 +52,15 @@ def get_research_experiment(experiment_id: str) -> ResearchExperimentEnvelope:
 )
 def get_research_summary() -> ResearchProjectSummary:
     return research_catalog.summary()
+
+
+@router.get(
+    "/target-evidence-matrix",
+    response_model=TargetEvidenceMatrixEnvelope,
+    summary="Target-specific evidence matrix (multi-target, capacity & heterogeneity aware)",
+)
+def get_target_evidence_matrix() -> TargetEvidenceMatrixEnvelope:
+    return research_catalog.target_evidence_matrix()
 
 
 @router.get(

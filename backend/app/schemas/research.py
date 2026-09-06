@@ -38,7 +38,47 @@ class MarginalDirection(StrEnum):
 class ResearchResultClass(StrEnum):
     POSITIVE_MARGINAL_VALUE = "positive_marginal_value"
     NEGATIVE_MARGINAL_RESULT = "negative_marginal_result"
+    NEUTRAL_MARGINAL_RESULT = "neutral_marginal_result"
+    HETEROGENEOUS_MARGINAL_RESULT = "heterogeneous_marginal_result"
     ROBUSTNESS_CHARACTERIZATION = "robustness_characterization"
+
+
+class MetricKind(StrEnum):
+    """Whether a target's primary metric is a regression or classification metric.
+    Enables representing non-HR targets (e.g. sleep-stage classification) without
+    assuming a regression/HR-only structure."""
+
+    REGRESSION = "regression"
+    CLASSIFICATION = "classification"
+
+
+class MetricDirectionality(StrEnum):
+    LOWER_IS_BETTER = "lower_is_better"
+    HIGHER_IS_BETTER = "higher_is_better"
+    NOT_APPLICABLE = "not_applicable"
+
+
+class CapacityMatchStatus(StrEnum):
+    """Whether a baseline/candidate comparison is confounded by model capacity."""
+
+    MATCHED = "matched"
+    CONFOUNDED = "confounded"
+    UNKNOWN = "unknown"
+    NOT_APPLICABLE = "not_applicable"
+
+
+class EvidenceStrength(StrEnum):
+    STRONGLY_REPLICATED = "strongly_replicated"
+    REPLICATED_BUT_VARIABLE = "replicated_but_variable"
+    MIXED = "mixed"
+    SINGLE_SEED = "single_seed"
+    INSUFFICIENT = "insufficient"
+
+
+class SensitivityStatus(StrEnum):
+    AVAILABLE = "available"
+    UNAVAILABLE = "unavailable"
+    PENDING = "pending"
 
 
 class ResearchMetricEstimate(BaseModel):
@@ -78,6 +118,15 @@ class ResearchMarginalResult(BaseModel):
     paired_replicates: int | None = Field(default=None, ge=0)
     candidate_improved_count: int | None = Field(default=None, ge=0)
     candidate_worsened_count: int | None = Field(default=None, ge=0)
+    # Multi-target / capacity / heterogeneity extensions (optional, backward-compatible).
+    # Populated only where current frozen evidence supports them.
+    metric_kind: MetricKind | None = None
+    metric_directionality: MetricDirectionality | None = None
+    capacity_match_status: CapacityMatchStatus | None = None
+    evidence_strength: EvidenceStrength | None = None
+    subject_heterogeneity: str | None = None
+    class_heterogeneity: str | None = None
+    sensitivity_status: SensitivityStatus | None = None
     notes: list[str] = Field(default_factory=list)
 
 
@@ -181,3 +230,43 @@ class ResearchProjectSummary(BaseModel):
     unavailable_count: int = Field(..., ge=0)
     experiments: list[ResearchExperimentSummaryEnvelope]
     statement: str
+
+
+class TargetEvidenceMatrixEntry(BaseModel):
+    """One (target, dataset, candidate) evidence cell. Raw metric magnitudes across
+    different targets/datasets are NOT comparable and must never be ranked against
+    each other."""
+
+    experiment_id: str
+    target: str
+    dataset: str
+    candidate: str
+    metric: str
+    metric_kind: MetricKind
+    metric_directionality: MetricDirectionality
+    baseline_configuration_id: str
+    candidate_configuration_id: str
+    direction: MarginalDirection
+    result_class: ResearchResultClass
+    evidence_strength: EvidenceStrength
+    capacity_match_status: CapacityMatchStatus
+    subject_heterogeneity: str | None = None
+    class_heterogeneity: str | None = None
+    sensitivity_status: SensitivityStatus
+    operational_cost_linkage_status: str
+    supported_claim: str
+    prohibited_claims: list[str] = Field(default_factory=list)
+
+
+class TargetEvidenceMatrix(BaseModel):
+    matrix_id: str
+    statement: str
+    cross_target_comparability: str
+    entries: list[TargetEvidenceMatrixEntry]
+    awaiting: list[str] = Field(default_factory=list)
+
+
+class TargetEvidenceMatrixEnvelope(BaseModel):
+    availability: ResearchAvailability
+    matrix: TargetEvidenceMatrix | None = None
+    error: str | None = None
