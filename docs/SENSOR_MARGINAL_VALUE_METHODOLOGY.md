@@ -234,4 +234,38 @@ cited fault-robustness figures were copied into this methodology or into
 `results/sensor_marginal_value_contract.json`. The contract's
 `ppg_dalia_fault_robustness` record instead carries a
 `SOURCE_ARTIFACT_NOT_FOUND` status and an explicit `action_required` note.
-This is reported for team review, not silently resolved.
+This is reported for team review, not silently resolved. Still absent as
+of Day 7 (`day7-accelerated-ml`); re-confirmed, not fabricated.
+
+## Appendix B — Day 7 revisions (methodology v1.2.0)
+
+- **PPG-DaLiA capacity confound repaired**: a capacity-matched PPG-only
+  control (Model A_cap) showed that ~68% of the originally-reported
+  wrist-IMU benefit was attributable to model capacity/architecture, not
+  IMU sensing information. The contract's `ppg_dalia_imu_hr` record now
+  carries a `capacity_confound_status` field with the full revised
+  decomposition. The direction remains POSITIVE, but at materially
+  reduced magnitude (~0.6 bpm, still 5/5-seed-consistent, vs. the
+  originally reported ~1.9 bpm). See
+  `docs/PPG_DALIA_CAPACITY_CONTROL_RESULTS.md`.
+- **PTT subject-heterogeneity/sensitivity added**: the aggregate negative
+  result is driven almost entirely by held-out subject s2; excluding s2
+  (descriptively, not as a re-run) flips the aggregate direction. s2 is
+  never removed from the frozen primary result. See
+  `docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md` SS "cross-dataset
+  comparability" (unchanged) and `results/ptt_sensitivity_analysis.json`.
+- **New target added**: `sleep_stage_5class` (Sleep-EDF, EOG added to
+  EEG) — the methodology's first non-HR, non-regression application,
+  confirming the marginal-value framework (baseline/candidate,
+  subject-disjoint split, seed replication, evidence-strength
+  categorization) transfers to a classification task and a different
+  modality family. See `docs/SLEEP_EDF_EEG_EOG_RESULTS.md`.
+- **Statistical reporting**: all multi-seed SD figures going forward
+  report sample SD (`ddof=1`) as primary; historical `ddof=0` figures in
+  frozen artifacts are preserved unchanged, with a side-by-side audit in
+  `results/sd_convention_audit.json`. See
+  `docs/STATISTICAL_REPORTING_AUDIT.md`.
+- **Interaction limitation formalized**: `docs/SENSOR_INTERACTION_LIMITATION.md`
+  — one-at-a-time marginal-value evidence does not establish a globally
+  minimal sensor subset; referenced from the contract's
+  `interaction_effects` block.

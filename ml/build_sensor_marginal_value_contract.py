@@ -23,11 +23,14 @@ sys.path.insert(0, str(REPO_ROOT))
 
 PPG_DALIA_SOURCE = REPO_ROOT / "results" / "ppg_dalia_imu_ablation.json"
 PPG_DALIA_MULTISEED_SOURCE = REPO_ROOT / "results" / "ppg_dalia_imu_multiseed_replication.json"
+PPG_DALIA_CAPACITY_CONTROL_SOURCE = REPO_ROOT / "results" / "ppg_dalia_capacity_control.json"
 PTT_SOURCE = REPO_ROOT / "results" / "ptt_ppg_site_ablation.json"
+PTT_SENSITIVITY_SOURCE = REPO_ROOT / "results" / "ptt_sensitivity_analysis.json"
+SLEEP_EDF_SOURCE = REPO_ROOT / "results" / "sleep_edf_eeg_eog_ablation.json"
 FAULT_ROBUSTNESS_SOURCE = REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json"
 OUT_PATH = REPO_ROOT / "results" / "sensor_marginal_value_contract.json"
 
-METHODOLOGY_VERSION = "1.1.0"
+METHODOLOGY_VERSION = "1.2.0"
 
 
 def evidence_strength_from_seed_consistency(n_favor: int, n_seeds: int) -> tuple[str, str]:
@@ -67,7 +70,34 @@ def relative_improvement(baseline: float, candidate: float) -> float:
     return (baseline - candidate) / baseline
 
 
-def build_ppg_dalia_experiment(ppg: dict, multiseed: dict | None = None) -> dict:
+def build_capacity_confound_status(capacity_control: dict | None) -> dict:
+    if capacity_control is None:
+        return {
+            "status": "UNRESOLVED",
+            "note": "Original Model A (8,065 params) vs Model B/C (29,089 params) were not capacity-matched (Finding A3). Not yet addressed - see docs/PPG_DALIA_CAPACITY_CONTROL_PREDECLARATION.md.",
+        }
+
+    comparisons = capacity_control["primary_comparisons"]
+    return {
+        "status": "RESOLVED_WITH_REVISED_CLAIM",
+        "source_artifact": "results/ppg_dalia_capacity_control.json",
+        "a_cap_parameters": capacity_control["parameter_counts"]["model_a_cap"],
+        "b_c_parameters": capacity_control["parameter_counts"]["model_b_and_c_original"],
+        "a_cap_residual_vs_b_fraction": capacity_control["parameter_counts"]["a_cap_residual_vs_b_params"] / capacity_control["parameter_counts"]["model_b_and_c_original"],
+        "fraction_of_original_gap_explained_by_capacity_alone": comparisons["baseline_A_candidate_Acap"]["mean"] / (comparisons["baseline_A_candidate_Acap"]["mean"] + comparisons["baseline_Acap_candidate_B"]["mean"]),
+        "genuine_imu_information_benefit_on_matched_capacity_mae_bpm": comparisons["baseline_Acap_candidate_B"]["mean"],
+        "genuine_imu_information_benefit_seed_consistency": f"{comparisons['baseline_Acap_candidate_B']['n_seeds_candidate_better']}/{comparisons['baseline_Acap_candidate_B']['n_seeds_total']}",
+        "note": (
+            "Model A_cap (capacity-matched PPG-only, 28,865 params) closes most of the "
+            "original A->B gap through architecture alone. The remaining, capacity-controlled "
+            "IMU-information benefit (A_cap->B) is smaller than originally reported but "
+            "remains real and 5/5-seed-consistent. The already-capacity-matched C->B "
+            "comparison (shuffled vs. synchronized IMU) is unaffected by this finding."
+        ),
+    }
+
+
+def build_ppg_dalia_experiment(ppg: dict, multiseed: dict | None = None, capacity_control: dict | None = None) -> dict:
     a = ppg["overall_metrics"]["model_a_ppg_only"]
     b = ppg["overall_metrics"]["model_b_ppg_plus_imu"]
     c = ppg["overall_metrics"]["model_c_ppg_plus_shuffled_imu"]
@@ -176,6 +206,7 @@ def build_ppg_dalia_experiment(ppg: dict, multiseed: dict | None = None) -> dict
             "subject_disjoint_split": True,
         },
         "multiseed_replication": multiseed_replication_block,
+        "capacity_confound_status": build_capacity_confound_status(capacity_control),
         "marginal_status": {
             "overall_direction": "POSITIVE",
             "heterogeneity": {
@@ -183,7 +214,15 @@ def build_ppg_dalia_experiment(ppg: dict, multiseed: dict | None = None) -> dict
                 "activity_level": "MOSTLY_CONSISTENT" if 0 < len(activities_worse) < len(activities) else ("CONSISTENT" if not activities_worse else "MIXED"),
             },
             "evidence_strength": evidence_strength,
-            "evidence_strength_rationale": evidence_strength_rationale,
+            "evidence_strength_rationale": evidence_strength_rationale + (
+                " IMPORTANT (Day 7 capacity-control revision): a substantial majority "
+                "(~68%) of the originally-reported A->B benefit is now attributed to "
+                "model capacity/architecture, not IMU sensing information - see "
+                "capacity_confound_status below and docs/PPG_DALIA_CAPACITY_CONTROL_RESULTS.md. "
+                "The POSITIVE direction survives at reduced magnitude (~0.6bpm, still 5/5 "
+                "seed-consistent), not at its originally-reported ~1.9bpm magnitude."
+                if capacity_control is not None else ""
+            ),
         },
         "limitations": ppg["limitations"],
         "source_artifact": "results/ppg_dalia_imu_ablation.json",
@@ -196,7 +235,7 @@ def build_ppg_dalia_experiment(ppg: dict, multiseed: dict | None = None) -> dict
     }
 
 
-def build_ptt_experiment(ptt: dict) -> dict:
+def build_ptt_experiment(ptt: dict, sensitivity: dict | None = None) -> dict:
     agg = ptt["aggregate"]
     a_mae, b_mae = agg["model_a"]["mean_mae"], agg["model_b"]["mean_mae"]
     a_rmse, b_rmse = agg["model_a"]["mean_rmse"], agg["model_b"]["mean_rmse"]
@@ -293,12 +332,101 @@ def build_ptt_experiment(ptt: dict) -> dict:
             "Candidate configuration has strictly more input channels (6 vs 3) than baseline "
             "by construction - channel-count and site-value effects are not perfectly separable.",
         ],
+        "sensitivity_analysis": (
+            {
+                "source_artifact": "results/ptt_sensitivity_analysis.json",
+                "label": "descriptive sensitivity analysis - s2 NEVER excluded from the frozen primary result",
+                "s2_dependence": sensitivity["s2_dependence"],
+                "leave_one_subject_out": sensitivity["leave_one_subject_out_descriptive_sensitivity"],
+                "revised_claim": sensitivity["revised_claim"],
+            }
+            if sensitivity is not None
+            else {"status": "NOT_YET_COMPUTED"}
+        ),
         "source_artifact": "results/ptt_ppg_site_ablation.json",
         "source_reproducibility_artifact": "results/ptt_ppg_site_ablation_reproducibility.json",
         "comparable_to_other_experiments": {
             "raw_mae_rmse": False,
             "direction_and_evidence_scope": True,
             "rule": "See methodology doc SS10 - cross-dataset raw-metric comparison is prohibited.",
+        },
+    }
+
+
+def build_sleep_edf_experiment(sleep: dict) -> dict:
+    agg = sleep["aggregate"]
+    delta = agg["delta_candidate_minus_baseline"]
+
+    return {
+        "experiment_id": "sleep_edf_eeg_eog_sleep_stage",
+        "target_id": "sleep_stage_5class",
+        "dataset_id": "sleep_edf_cassette",
+        "population": "18 real subjects, PhysioNet Sleep-EDF (sleep-cassette)",
+        "baseline_configuration": {
+            "candidate_component": None,
+            "description": "single-channel EEG (Fpz-Cz)",
+            "channels": sleep["frozen_protocol"]["channels"]["baseline_eeg_only"],
+        },
+        "candidate_component_id": "eog_horizontal_channel",
+        "candidate_configuration": {
+            "description": "EEG Fpz-Cz + EOG horizontal",
+            "channels": sleep["frozen_protocol"]["channels"]["candidate_eeg_plus_eog"],
+        },
+        "negative_control": None,
+        "primary_metric": "macro_f1",
+        "baseline_metrics": {"macro_f1_mean": agg["baseline_macro_f1"]["mean"], "macro_f1_sd_sample_ddof1": agg["baseline_macro_f1"]["sd_sample_ddof1"]},
+        "candidate_metrics": {"macro_f1_mean": agg["candidate_macro_f1"]["mean"], "macro_f1_sd_sample_ddof1": agg["candidate_macro_f1"]["sd_sample_ddof1"]},
+        "absolute_benefit": {"macro_f1": delta["mean"]},
+        "relative_improvement": {"macro_f1_fraction": delta["mean"] / agg["baseline_macro_f1"]["mean"]},
+        "variability": {
+            "training_seed_replication": f"{delta['n_seeds_total']}/{delta['n_seeds_total']} seeds trained",
+            "seed_direction_consistency": f"{delta['n_seeds_candidate_better']}/{delta['n_seeds_total']} seeds favor candidate",
+            "candidate_shows_lower_seed_variance": agg["candidate_macro_f1"]["sd_sample_ddof1"] < agg["baseline_macro_f1"]["sd_sample_ddof1"],
+        },
+        "evidence_scope": {
+            "n_held_out_subjects": len(sleep["frozen_protocol"]["subject_split"]["test"]),
+            "n_total_subjects": 18,
+            "n_datasets": 1,
+            "n_training_seeds": delta["n_seeds_total"],
+            "independent_ground_truth": "real PSG hypnogram-scored sleep stage annotations (not computed by this project)",
+            "negative_control_present": False,
+            "subject_disjoint_split": True,
+        },
+        "capacity_confound_status": {
+            "status": "AVOIDED_BY_DESIGN",
+            "baseline_parameters": sleep["parameter_counts"]["baseline_eeg_only"],
+            "candidate_parameters": sleep["parameter_counts"]["candidate_eeg_plus_eog"],
+            "residual_fraction": (sleep["parameter_counts"]["candidate_eeg_plus_eog"] - sleep["parameter_counts"]["baseline_eeg_only"]) / sleep["parameter_counts"]["candidate_eeg_plus_eog"],
+            "note": "Designed capacity-fair from the start (shared Conv1DEncoder class, differs only in in_channels), applying the PPG-DaLiA Finding A3 lesson - not a post-hoc repair.",
+        },
+        "marginal_status": {
+            "overall_direction": "POSITIVE",
+            "heterogeneity": {
+                "seed_level": f"{delta['n_seeds_candidate_better']}/{delta['n_seeds_total']} favor candidate (1 near-tie)",
+                "class_level": "every class improves or is flat; largest gains in N1 and REM (physiologically expected classes for EOG); no class regresses",
+            },
+            "evidence_strength": "preliminary",
+            "evidence_strength_rationale": (
+                f"Mean effect ({delta['mean']:.4f}) is comparable in magnitude to its own seed-to-seed "
+                f"SD ({delta['sd_sample_ddof1']:.4f}), and this is the first experiment for this target/dataset "
+                "(1 dataset, no negative control) - classified preliminary despite 4/5 seed consistency and "
+                "a physiologically coherent class-level pattern."
+            ),
+        },
+        "limitations": [
+            "First and only experiment for this target (sleep stage) - no replication across datasets.",
+            "No negative control (e.g. a shuffled-EOG condition) was run for this experiment.",
+            "18 subjects total (12/3/3 split) - smaller population than PPG-DaLiA (15) or PTT (22) relative to its 5-class task complexity.",
+            "Sleep-EDF cassette recordings include substantial daytime wake time - severe class imbalance was handled via train-only class weighting, disclosed in the predeclaration.",
+        ],
+        "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
+        "source_reproducibility_artifact": "results/sleep_edf_eeg_eog_ablation_reproducibility.json",
+        "predeclaration": "docs/SLEEP_EDF_EEG_EOG_PREDECLARATION_DAY7.md",
+        "comparable_to_other_experiments": {
+            "raw_mae_rmse": False,
+            "raw_macro_f1_vs_other_metrics": False,
+            "direction_and_evidence_scope": True,
+            "rule": "See methodology doc SS10 - cross-dataset AND cross-metric (MAE vs macro-F1) comparison is prohibited.",
         },
     }
 
@@ -337,6 +465,9 @@ def main() -> None:
     ppg = json.loads(PPG_DALIA_SOURCE.read_text())
     ptt = json.loads(PTT_SOURCE.read_text())
     multiseed = json.loads(PPG_DALIA_MULTISEED_SOURCE.read_text()) if PPG_DALIA_MULTISEED_SOURCE.exists() else None
+    capacity_control = json.loads(PPG_DALIA_CAPACITY_CONTROL_SOURCE.read_text()) if PPG_DALIA_CAPACITY_CONTROL_SOURCE.exists() else None
+    ptt_sensitivity = json.loads(PTT_SENSITIVITY_SOURCE.read_text()) if PTT_SENSITIVITY_SOURCE.exists() else None
+    sleep_edf = json.loads(SLEEP_EDF_SOURCE.read_text()) if SLEEP_EDF_SOURCE.exists() else None
 
     contract = {
         "methodology_version": METHODOLOGY_VERSION,
@@ -380,6 +511,8 @@ def main() -> None:
             "additive_assumption_supported": False,
             "note": "Value(component_A + component_B) is not assumed equal to Value(A) + Value(B). No experiment in this project has measured a genuine interaction effect between two candidate components.",
             "interaction_evidence": "unavailable",
+            "formal_limitation_doc": "docs/SENSOR_INTERACTION_LIMITATION.md",
+            "consequence": "One-at-a-time marginal-value evidence in this contract does NOT establish a globally minimal sensor subset for any target.",
         },
         "robustness_relationship": {
             "sensor_marginal_value_and_robustness_are_separate_axes": True,
@@ -392,15 +525,17 @@ def main() -> None:
             ),
         },
         "experiments": {
-            "ppg_dalia_imu_hr": build_ppg_dalia_experiment(ppg, multiseed),
-            "ptt_second_ppg_site_hr": build_ptt_experiment(ptt),
+            "ppg_dalia_imu_hr": build_ppg_dalia_experiment(ppg, multiseed, capacity_control),
+            "ptt_second_ppg_site_hr": build_ptt_experiment(ptt, ptt_sensitivity),
             "ppg_dalia_fault_robustness": build_fault_robustness_placeholder(),
+            **({"sleep_edf_eeg_eog_sleep_stage": build_sleep_edf_experiment(sleep_edf)} if sleep_edf is not None else {}),
         },
         "evidence_matrix": {
             "heart_rate_bpm": {
-                "wrist_imu_accelerometer": {"status": "POSITIVE", "experiment_id": "ppg_dalia_imu_hr"},
-                "second_physical_ppg_site_proximal_phalanx": {"status": "NEGATIVE", "experiment_id": "ptt_second_ppg_site_hr"},
+                "wrist_imu_accelerometer": {"status": "POSITIVE_REVISED_SMALLER_EFFECT_POST_CAPACITY_CONTROL" if capacity_control is not None else "POSITIVE", "experiment_id": "ppg_dalia_imu_hr"},
+                "second_physical_ppg_site_proximal_phalanx": {"status": "NEGATIVE_AGGREGATE_HETEROGENEOUS_BY_SUBJECT" if ptt_sensitivity is not None else "NEGATIVE", "experiment_id": "ptt_second_ppg_site_hr"},
             },
+            **({"sleep_stage_5class": {"eog_horizontal_channel": {"status": "POSITIVE_MODEST", "experiment_id": "sleep_edf_eeg_eog_sleep_stage"}}} if sleep_edf is not None else {}),
             "workload": {"status": "UNVALIDATED"},
             "fatigue": {"status": "UNVALIDATED"},
             "blood_pressure": {"status": "UNVALIDATED"},
