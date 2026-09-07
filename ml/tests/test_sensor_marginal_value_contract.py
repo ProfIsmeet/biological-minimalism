@@ -374,3 +374,49 @@ def test_sleep_edf_per_subject_dominated_flag_present(contract):
     per_subj = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["per_subject_analysis"]
     assert per_subj["dominated_by_one_subject"] is True
     assert per_subj["subject_directions"]["SC4011"] == "IMPROVES"
+
+
+# --- Day 9 additions (prospective secondary holdout) -------------------------
+
+
+SLEEP_SECONDARY_HOLDOUT_PATH = REPO_ROOT / "results" / "sleep_edf_secondary_holdout_evaluation.json"
+
+requires_day9 = pytest.mark.skipif(
+    not SLEEP_SECONDARY_HOLDOUT_PATH.exists(),
+    reason="Day 9 secondary holdout evaluation artifact not present",
+)
+
+
+@requires_day9
+def test_sleep_edf_secondary_holdout_present_and_separate_from_primary(contract):
+    sh = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["prospective_secondary_holdout"]
+    assert sh["cohort_size"] == 8
+    assert sh["relationship_to_primary_test"].startswith("SEPARATE_COHORT_NOT_MERGED")
+
+
+@requires_day9
+def test_sleep_edf_secondary_holdout_no_retraining(contract):
+    sh = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["prospective_secondary_holdout"]
+    assert sh["no_retraining"] is True
+
+
+@requires_day9
+def test_sleep_edf_evidence_strength_not_auto_upgraded_by_secondary_holdout(contract):
+    """The taxonomy category itself must remain replicated-with-control - a
+    secondary holdout is same-dataset generalization evidence, not grounds
+    to invent/assign a stronger category automatically."""
+    status = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["marginal_status"]
+    assert status["evidence_strength"] == "replicated-with-control"
+    assert "prospective_secondary_holdout" in status["evidence_strength_rationale"]
+
+
+@requires_day9
+def test_sleep_edf_secondary_holdout_outcome_classified(contract):
+    sh = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["prospective_secondary_holdout"]
+    assert sh["outcome_classification"].startswith("OUTCOME_")
+
+
+@requires_day9
+def test_methodology_version_bumped_for_day9(contract):
+    major, minor, _patch = (int(p) for p in contract["methodology_version"].split("."))
+    assert (major, minor) >= (1, 4)
