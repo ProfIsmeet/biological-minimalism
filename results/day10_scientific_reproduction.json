@@ -1,0 +1,105 @@
+{
+  "canonical_git_commit": "ce3caf1115c75e902bef6ae0e9f508b72b43d6c4",
+  "day10_branch": "day10-scientific-repro-freeze-ml",
+  "environment": {
+    "frozen_stack_verified": true,
+    "source": "results/day10_frozen_environment_verification.json",
+    "status": "EXACT_FROZEN_ENVIRONMENT"
+  },
+  "dataset_fingerprints": {
+    "source": "results/dataset_fingerprint_manifest_day10.json",
+    "n_records_total": 266,
+    "n_present": 266,
+    "n_missing": 0,
+    "n_committed_to_git": 0
+  },
+  "ppg_dalia": {
+    "reproduction_sources": [
+      "results/ppg_dalia_capacity_control_reproducibility.json",
+      "results/ppg_dalia_imu_multiseed_replication_reproducibility.json"
+    ],
+    "checkpoints_verified": 20,
+    "all_metrics_match": true,
+    "max_abs_difference": 0.0,
+    "tolerance": 0.0,
+    "note": "5 A_cap checkpoints + 15 multiseed (A/B/C x 5 seeds) checkpoints reloaded from disk, re-evaluated on the exact frozen test subjects. Every MAE/RMSE reproduced with zero difference (dMAE=0.00e+00, dRMSE=0.00e+00) for all 20."
+  },
+  "robustness": {
+    "reproduction_scope": "FULL_114_CONDITIONS",
+    "canonical_artifact": "results/ppg_dalia_fault_robustness.json",
+    "canonical_artifact_sha256_git_blob": "c40397fb0bb43b4f4a778aac4a4e0ba72b7b0387cab1aabec1e0708cc2912dcb",
+    "reproduction_artifact": "results/day10_ppg_dalia_fault_robustness_reproduction.json",
+    "n_conditions_canonical": 114,
+    "n_conditions_reproduced": 114,
+    "clean_baseline_exact_match": true,
+    "fields_compared": ["mae_bpm_valid_only", "rmse_bpm_valid_only", "prediction_availability_rate", "valid_prediction_count", "eligible_window_count"],
+    "max_abs_difference_bpm": 7.62939453125e-06,
+    "tolerance_bpm": 0.0001,
+    "tolerance_rationale": "1000x smaller than the smallest reported effect (~0.6 bpm) in this project's contract; observed max difference is float32 rounding noise, not scientific drift.",
+    "n_mismatches_beyond_tolerance": 0,
+    "all_metrics_match": true,
+    "reproduced_from_local_checkpoint": true,
+    "note": "Full 114-condition sweep re-run (not a subset - runtime was acceptable, ~single-digit minutes). No retraining; loaded ml/checkpoints/model_b_ppg_plus_imu_ppg_dalia.pt (SHA256-guarded in the experiment config itself)."
+  },
+  "ptt": {
+    "reproduction_source": "results/ptt_ppg_site_ablation_reproducibility.json",
+    "checkpoints_verified": 10,
+    "all_metrics_match": true,
+    "max_abs_difference": 0.0,
+    "tolerance": 0.0,
+    "note": "Model A + Model B x 5 seeds each, reloaded from disk, re-evaluated on the exact frozen test subjects. Zero difference for all 10."
+  },
+  "sleep_primary": {
+    "reproduction_sources": [
+      "results/sleep_edf_eeg_eog_ablation_reproducibility.json",
+      "results/sleep_edf_shuffled_eog_control_reproducibility.json"
+    ],
+    "checkpoints_verified": 15,
+    "all_metrics_match": true,
+    "max_abs_difference": 0.0,
+    "tolerance": 0.0,
+    "note": "Baseline (5) + candidate EEG+EOG (5) + shuffled-EOG control (5) checkpoints reloaded and re-evaluated, including deterministic re-shuffle for the control. Zero difference for all 15."
+  },
+  "sleep_secondary": {
+    "reproduction_source": "results/sleep_edf_secondary_holdout_reproducibility.json",
+    "checkpoints_verified": 15,
+    "cohort_size": 8,
+    "cohort_overlap_with_primary": 0,
+    "all_metrics_match": true,
+    "max_abs_difference": 0.0,
+    "tolerance": 0.0,
+    "note": "Same 15 checkpoints as sleep_primary (A/B/C x 5 seeds), re-evaluated on the frozen n=8 secondary cohort with deterministic re-shuffle for C. Zero difference for all 5 seeds x 3 configs."
+  },
+  "n3_diagnostic": {
+    "source": "results/sleep_edf_secondary_n3_diagnostic.json",
+    "recomputed_from": "results/sleep_edf_secondary_holdout_evaluation.json (stored confusion matrices, pooled across 5 seeds)",
+    "recomputed_A_N3_precision": 0.499211356466877,
+    "recomputed_A_N3_recall": 0.8525252525252526,
+    "recomputed_B_N3_precision": 0.42960052390307796,
+    "recomputed_B_N3_recall": 0.8835016835016835,
+    "recomputed_N2_to_N3_false_positive_delta": 605,
+    "canonical_day9_reported": {
+      "n3_recall_approx": "0.853 -> 0.884",
+      "n3_precision_approx": "0.499 -> 0.430",
+      "n2_to_n3_fp_delta_approx": "+605"
+    },
+    "verified": true,
+    "note": "Exact match to the canonical Day-9 reported figures within their stated rounding."
+  },
+  "interaction_experiment": {
+    "feasibility_audit": "docs/INTERACTION_EXPERIMENT_FEASIBILITY_DAY10.md",
+    "predeclaration": "docs/INTERACTION_EXPERIMENT_PREDECLARATION_DAY10.md",
+    "results": "docs/INTERACTION_EXPERIMENT_RESULTS_DAY10.md",
+    "results_artifact": "results/sleep_edf_interaction_resp_day10.json",
+    "reproducibility_artifact": "results/sleep_edf_interaction_resp_day10_reproducibility.json",
+    "status": "RUN",
+    "design": "Sleep-EDF EEG (M0, existing) x EOG (M_A, existing) x Resp oro-nasal (M_B, new) x EOG+Resp (M_AB, new)",
+    "capacity_fairness_verified": true,
+    "interaction_term_mean": 0.003060978660014868,
+    "interaction_term_sd_sample_ddof1": 0.043415260033099375,
+    "classification": "approximately_additive_or_unresolved",
+    "deferred_candidates": ["PPG-DaLiA IMU x EDA/TEMP (sample-rate mismatch raises capacity-fairness risk)", "PTT second-site x IMU (built on an already-unstable base effect)"]
+  },
+  "overall": "SCIENTIFIC_REPRODUCTION_PASS",
+  "overall_rationale": "Every checkpoint-based canonical result (PPG-DaLiA capacity control, PPG-DaLiA multiseed A/B/C, PTT A/B, Sleep primary A/B/C, Sleep secondary holdout A/B/C) reproduced with exactly zero numerical difference from frozen checkpoints under the verified frozen environment. The full 114-condition robustness sweep reproduced within a documented, conservative tolerance (max observed difference 7.6e-6 bpm, float32 rounding noise). The N3 diagnostic recomputation matches the canonical Day-9 reported figures exactly. No core result drifted. The interaction experiment is new evidence (not a reproduction of a prior claim) and does not affect this PASS determination either way - it was run, honestly analyzed, and did not need to reach a positive result to count as a pass."
+}

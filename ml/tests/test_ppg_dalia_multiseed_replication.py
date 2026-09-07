@@ -181,7 +181,12 @@ def test_robustness_artifact_resolved_after_integration_not_fabricated():
     )
     import hashlib
 
-    actual_sha = hashlib.sha256(FAULT_ROBUSTNESS_PATH.read_bytes()).hexdigest()
+    # Day 10 finding: core.autocrlf=true means a Windows checkout's raw bytes
+    # differ from the LF-normalized git-blob bytes the constant was frozen
+    # against, even with byte-for-byte-identical JSON content. Normalize
+    # before hashing (matches the fix in build_sensor_marginal_value_contract.py).
+    normalized = FAULT_ROBUSTNESS_PATH.read_bytes().replace(b"\r\n", b"\n")
+    actual_sha = hashlib.sha256(normalized).hexdigest()
     assert actual_sha == frozen_sha256, "Frozen robustness source identity changed - investigate."
 
     contract_text = contract_path.read_text()

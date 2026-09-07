@@ -149,6 +149,14 @@ def load_dataset_windows(dataset_dir: str | Path) -> tuple[np.ndarray, np.ndarra
 
 EOG_CHANNEL = "EOG horizontal"
 
+# Day 10: interaction-experiment candidate channel. Real, genuinely measured,
+# same 100 Hz sample rate as EEG_CHANNEL/EOG_CHANNEL, present in the same PSG
+# files. Not one of the official AASM/R&K sleep-staging scoring channels
+# (those are EEG+EOG+chin EMG) - a genuinely independent information source
+# relative to how the hypnogram ground truth was originally produced. See
+# docs/INTERACTION_EXPERIMENT_FEASIBILITY_DAY10.md.
+RESP_CHANNEL = "Resp oro-nasal"
+
 
 def load_subject_windows_multi(psg_path: Path, hypnogram_path: Path, channels: tuple[str, ...]) -> tuple[np.ndarray, np.ndarray]:
     """Same real epoch/label construction as `load_subject_windows()`

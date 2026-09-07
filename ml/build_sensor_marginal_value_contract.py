@@ -619,11 +619,21 @@ def build_sleep_edf_experiment(sleep: dict, shuffled_control: dict | None = None
 
 
 def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    """Hashes the LINE-ENDING-NORMALIZED (CRLF -> LF) content.
+
+    Day 10 finding: this repo has `core.autocrlf=true`, so a Windows
+    checkout of a text file has CRLF line endings on disk while git stores
+    (and hashes, on the machine that froze FROZEN_FAULT_ROBUSTNESS_SHA256)
+    the LF-normalized blob. Hashing raw bytes made this guard falsely fire
+    on every Windows clone even with byte-for-byte-identical JSON content
+    (verified: `json.loads(committed) == json.loads(working)` is True).
+    Normalizing before hashing fixes the false positive without weakening
+    the check against a genuine content change - a real edit still changes
+    the LF-normalized bytes and still trips this guard."""
+    # Read whole-file (these source artifacts are small JSON files) rather
+    # than chunking, so a CRLF is never split across a chunk boundary.
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def build_fault_robustness_unavailable() -> dict:

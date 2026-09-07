@@ -210,7 +210,13 @@ def test_fault_source_is_parsed_not_hardcoded(contract):
 
 
 def test_fault_robustness_source_sha_and_required_semantics(contract):
-    assert hashlib.sha256(ROBUSTNESS_SOURCE.read_bytes()).hexdigest() == EXPECTED_ROBUSTNESS_SHA256
+    # Day 10 finding: this repo has core.autocrlf=true, so hashing raw
+    # checked-out bytes on Windows differs from the LF-normalized git-blob
+    # hash the constant was frozen against, even with byte-for-byte-identical
+    # JSON content. Normalize before hashing (matches the fix applied to
+    # ml/build_sensor_marginal_value_contract.py's _sha256()).
+    normalized = ROBUSTNESS_SOURCE.read_bytes().replace(b"\r\n", b"\n")
+    assert hashlib.sha256(normalized).hexdigest() == EXPECTED_ROBUSTNESS_SHA256
     source = json.loads(ROBUSTNESS_SOURCE.read_text())
     record = contract["robustness_records"]["ppg_dalia_fault_robustness"]
     assert record["source_sha256"] == EXPECTED_ROBUSTNESS_SHA256
