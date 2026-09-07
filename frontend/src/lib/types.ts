@@ -277,6 +277,14 @@ export interface ResearchMarginalResult {
   paired_replicates: number | null;
   candidate_improved_count: number | null;
   candidate_worsened_count: number | null;
+  // Multi-target / capacity / heterogeneity extensions (optional, backward-compatible).
+  metric_kind?: string | null;
+  metric_directionality?: string | null;
+  capacity_match_status?: string | null;
+  evidence_strength?: string | null;
+  subject_heterogeneity?: string | null;
+  class_heterogeneity?: string | null;
+  sensitivity_status?: string | null;
   notes: string[];
 }
 

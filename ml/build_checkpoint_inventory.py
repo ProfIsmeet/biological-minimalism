@@ -116,6 +116,12 @@ def build() -> dict:
     for artifact in sorted(RESULTS.glob("*.json")):
         if artifact.name == OUT_PATH.name:
             continue
+        # The consolidated manifest is Ismet's cross-machine roll-up recorded on
+        # his Windows clone (bare filenames, present_locally reflects THAT machine).
+        # It is kept as a separate, un-collapsed view (see cross_machine_manifest
+        # below), not merged into this Mac-reality inventory.
+        if artifact.name == "checkpoint_manifest_consolidated.json":
+            continue
         try:
             data = json.loads(artifact.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
@@ -174,15 +180,44 @@ def build() -> dict:
         inventory.append(record)
 
     inventory.sort(key=lambda r: (r["expected_path_posix"] or r["run_id"] or ""))
+
+    # Cross-machine reconciliation (§10/§23): Ismet's consolidated manifest records
+    # 43 checkpoint hashes as present on HIS Windows machine. Model weights are
+    # machine-local and gitignored, so that count must NOT be conflated with what
+    # physically exists on this Mac. Report both, un-collapsed.
+    cross_machine = None
+    consolidated_path = RESULTS / "checkpoint_manifest_consolidated.json"
+    if consolidated_path.is_file():
+        try:
+            consolidated = json.loads(consolidated_path.read_text(encoding="utf-8"))
+            cm_summary = consolidated.get("summary", {})
+            cross_machine = {
+                "source_artifact": "results/checkpoint_manifest_consolidated.json",
+                "hashes_recorded_on_ismet_windows_machine": cm_summary.get("total_expected"),
+                "present_locally_on_ismet_windows_machine": cm_summary.get("present_locally"),
+                "checkpoint_files_physically_present_on_this_mac": present,
+                "durably_archived": False,
+                "archival_note": (
+                    "No checkpoint weight files are committed to git (ml/checkpoints/* is "
+                    "gitignored) and none were pushed to the remote. A recorded hash is NOT a "
+                    "durable archive. Regenerating weights would not reproduce the originals "
+                    "bit-identically and must never be relabelled 'original'."
+                ),
+            }
+        except (OSError, json.JSONDecodeError):
+            cross_machine = None
+
     return {
         "inventory_id": "biological-minimalism-checkpoint-inventory-v1",
         "note": (
             "Model checkpoints are gitignored (ml/checkpoints/*). This inventory records "
-            "every checkpoint referenced by committed artifacts, whether it is present, and "
-            "whether present files match their declared SHA256. Missing historical checkpoints "
-            "are NOT regenerated. Paths are normalised to POSIX repository-relative form; the "
-            "source artifacts contain non-portable Windows-style paths (documented, not rewritten, "
-            "to preserve their frozen SHA chains)."
+            "every checkpoint referenced by committed EXPERIMENT artifacts on THIS machine, "
+            "whether it is present, and whether present files match their declared SHA256. "
+            "Ismet's cross-machine roll-up (checkpoint_manifest_consolidated.json) is kept "
+            "separate under 'cross_machine_manifest' and is NOT merged in. Missing historical "
+            "checkpoints are NOT regenerated. Paths are normalised to POSIX repository-relative "
+            "form; source artifacts contain non-portable Windows-style paths (documented, not "
+            "rewritten, to preserve their frozen SHA chains)."
         ),
         "summary": {
             "total_referenced_checkpoints": len(inventory),
@@ -191,6 +226,7 @@ def build() -> dict:
             "sha256_verified": verified,
             "sha256_mismatched": mismatched,
         },
+        "cross_machine_manifest": cross_machine,
         "checkpoints": inventory,
     }
 

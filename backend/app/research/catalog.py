@@ -11,7 +11,11 @@ from typing import Any
 from pydantic import ValidationError
 
 from app.schemas.research import (
+    CapacityMatchStatus,
+    EvidenceStrength,
     MarginalDirection,
+    MetricDirectionality,
+    MetricKind,
     ResearchAvailability,
     ResearchBreakdown,
     ResearchBreakdownEntry,
@@ -30,6 +34,7 @@ from app.schemas.research import (
     ResearchResultClass,
     ResearchScope,
     ResearchStatus,
+    SensitivityStatus,
     TargetEvidenceMatrix,
     TargetEvidenceMatrixEnvelope,
 )
@@ -39,6 +44,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 PPG_DALIA_ABLATION_ID = "ppg-dalia-imu-ablation"
 PPG_DALIA_ROBUSTNESS_ID = "ppg-dalia-s14-fault-robustness"
 PTT_SITE_ABLATION_ID = "ptt-ppg-site-ablation"
+SLEEP_EDF_ABLATION_ID = "sleep-edf-eeg-eog-ablation"
 
 
 class ResearchArtifactError(RuntimeError):
@@ -301,8 +307,12 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
                 (
                     "A->B and A->C are capacity-confounded (baseline A ~8k params vs candidate "
                     "B/C ~29k params); the capacity-matched C->B comparison is the cleanest "
-                    "current evidence. The full A->B benefit is not attributable to IMU sensor "
-                    "value alone until a capacity-matched PPG-only control exists."
+                    "current evidence. A supplemental capacity-matched PPG-only control (A_cap, "
+                    "~29k params) now exists (results/ppg_dalia_capacity_control.json): a large "
+                    "majority of the original A->B gap was recovered by architecture/capacity "
+                    "alone, leaving a smaller but still 5/5-seed-consistent capacity-controlled "
+                    "IMU-information benefit (A_cap->B). The original A->B magnitude must not be "
+                    "read as pure IMU sensor value."
                 ),
             ],
         ),
@@ -642,10 +652,22 @@ def adapt_ptt_site_ablation(repository_root: Path) -> ResearchExperiment:
             paired_replicates=5,
             candidate_improved_count=0,
             candidate_worsened_count=5,
+            metric_kind=MetricKind.REGRESSION,
+            metric_directionality=MetricDirectionality.LOWER_IS_BETTER,
+            capacity_match_status=CapacityMatchStatus.UNKNOWN,
+            evidence_strength=EvidenceStrength.REPLICATED_BUT_VARIABLE,
+            subject_heterogeneity=(
+                "Heterogeneous across only 4 held-out subjects (2 of 4 favor the candidate). The "
+                "aggregate negative direction is dominated by subject s2; descriptively excluding s2 "
+                "flips the aggregate direction. s2 is never removed from the frozen primary result. "
+                "The 5/5 seed agreement is optimization replication, not 5 independent populations."
+            ),
+            sensitivity_status=SensitivityStatus.AVAILABLE,
             notes=[
-                "The two-site model was worse in 5/5 paired training seeds.",
+                "The two-site model was worse in 5/5 paired training seeds (optimization replication).",
                 "Across held-out subjects, the second site improved s9 and s20 but worsened s2 and s14.",
                 "Walking MAE was approximately equal/slightly better for Model B; sitting and running were worse.",
+                "See results/ptt_sensitivity_analysis.json for the descriptive s2/LOSO sensitivity analysis.",
             ],
         ),
         breakdowns=[
@@ -696,6 +718,181 @@ def adapt_ptt_site_ablation(repository_root: Path) -> ResearchExperiment:
     )
 
 
+def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
+    artifact = "results/sleep_edf_eeg_eog_ablation.json"
+    result = _read_json(repository_root, artifact)
+    if _require(result, "experiment_id", artifact) != "sleep_edf_eeg_eog_ablation":
+        raise ResearchArtifactError("Sleep-EDF experiment identity changed.")
+    protocol = _require(result, "frozen_protocol", artifact)
+    split = _require(protocol, "subject_split", artifact)
+    if [len(split[key]) for key in ("train", "val", "test")] != [12, 3, 3]:
+        raise ResearchArtifactError("Sleep-EDF frozen subject split changed.")
+    channels = _require(protocol, "channels", artifact)
+    params = _require(result, "parameter_counts", artifact)
+    aggregate = _require(result, "aggregate", artifact)
+    base = _require(aggregate, "baseline_macro_f1", artifact)
+    cand = _require(aggregate, "candidate_macro_f1", artifact)
+    delta = _require(aggregate, "delta_candidate_minus_baseline", artifact)
+    per_seed = _require(delta, "per_seed", artifact)
+    better = int(_require(delta, "n_seeds_candidate_better", artifact))
+    total = int(_require(delta, "n_seeds_total", artifact))
+    if len(per_seed) != total or better != 4:
+        raise ResearchArtifactError("Sleep-EDF seed direction contradicts the accepted frozen result.")
+    test_windows = int(_require(_require(result, "window_counts", artifact), "candidate_eeg_plus_eog", artifact)["test"])
+
+    configurations = [
+        ResearchConfiguration(
+            configuration_id="baseline_eeg_only",
+            label="Baseline — EEG Fpz-Cz only",
+            description="Single-channel EEG (Fpz-Cz), 30s epochs, 5-class sleep staging.",
+            sensing=list(channels["baseline_eeg_only"]),
+            metrics={
+                "macro_f1": _metric(base["mean"], "macro-F1", sd=base["sd_sample_ddof1"], n=test_windows),
+            },
+        ),
+        ResearchConfiguration(
+            configuration_id="candidate_eeg_plus_eog",
+            label="Candidate — EEG Fpz-Cz + horizontal EOG",
+            description="EEG Fpz-Cz plus one horizontal EOG channel; capacity-fair (shared encoder, differs only in in_channels).",
+            sensing=list(channels["candidate_eeg_plus_eog"]),
+            metrics={
+                "macro_f1": _metric(cand["mean"], "macro-F1", sd=cand["sd_sample_ddof1"], n=test_windows),
+            },
+        ),
+    ]
+
+    seed_entries = []
+    for seed_key in sorted(per_seed, key=lambda value: int(value.removeprefix("seed"))):
+        b_f1 = base["per_seed"][seed_key]
+        c_f1 = cand["per_seed"][seed_key]
+        seed_entries.append(
+            ResearchBreakdownEntry(
+                entry_id=f"paired-{seed_key}",
+                label=seed_key,
+                dimensions={"seed": int(seed_key.removeprefix("seed"))},
+                configuration_metrics={
+                    "baseline_eeg_only": {"macro_f1": _metric(b_f1, "macro-F1")},
+                    "candidate_eeg_plus_eog": {"macro_f1": _metric(c_f1, "macro-F1")},
+                },
+                delta=_metric(per_seed[seed_key], "macro-F1"),
+            )
+        )
+
+    checkpoints = [
+        ResearchCheckpointIdentity(
+            run_id=str(item["run_id"]),
+            model_id=str(item["config"]),
+            sha256=str(item["sha256"]),
+            size_bytes=int(item["size_bytes"]),
+        )
+        for item in _require(result, "checkpoint_manifest", artifact)
+    ]
+
+    return ResearchExperiment(
+        experiment_id=SLEEP_EDF_ABLATION_ID,
+        title="Sleep-EDF — Marginal value of horizontal EOG added to EEG",
+        research_question=(
+            "Does adding one horizontal EOG channel to single-channel EEG improve 5-class sleep-stage "
+            "classification under a frozen, subject-disjoint Sleep-EDF protocol?"
+        ),
+        dataset="PhysioNet Sleep-EDF (sleep-cassette)",
+        target="5-class sleep stage (Wake/N1/N2/N3/REM)",
+        status=ResearchStatus.COMPLETE,
+        result_class=ResearchResultClass.POSITIVE_MARGINAL_VALUE,
+        outcome_summary=(
+            "Adding horizontal EOG to EEG produced a modest positive marginal-value result: macro-F1 "
+            f"improved in {better}/{total} training seeds (balanced accuracy improved 5/5), with the "
+            "largest class gains in N1 and REM. Preliminary — first experiment for this target/dataset."
+        ),
+        scope=ResearchScope(
+            subjects=sorted(list(split["train"]) + list(split["val"]) + list(split["test"])),
+            held_out_subjects=list(split["test"]),
+            evaluation_windows=test_windows,
+            activities=[],
+            environment_scope=ResearchEnvironmentScope.TERRESTRIAL_CONTROLLED,
+            cohort_note=(
+                "18 real Sleep-EDF subjects (one night each), 12 train / 3 validation / 3 held-out "
+                "test, subject-disjoint. Selected from 153 recording files in the PhysioNet "
+                "sleep-cassette directory (recordings/files are not subjects)."
+            ),
+        ),
+        configurations=configurations,
+        marginal_result=ResearchMarginalResult(
+            baseline_configuration_id="baseline_eeg_only",
+            candidate_configuration_id="candidate_eeg_plus_eog",
+            added_sensing="one horizontal EOG channel",
+            metric="macro_f1",
+            delta=_metric(delta["mean"], "macro-F1", sd=delta["sd_sample_ddof1"]),
+            direction=MarginalDirection.IMPROVED,
+            paired_replicates=total,
+            candidate_improved_count=better,
+            candidate_worsened_count=total - better,
+            metric_kind=MetricKind.CLASSIFICATION,
+            metric_directionality=MetricDirectionality.HIGHER_IS_BETTER,
+            capacity_match_status=CapacityMatchStatus.MATCHED,
+            evidence_strength=EvidenceStrength.REPLICATED_BUT_VARIABLE,
+            subject_heterogeneity=(
+                "Only 3 held-out test subjects; per-subject decomposition not yet computed."
+            ),
+            class_heterogeneity=(
+                "Largest gains in N1 and REM (physiologically expected for EOG); no class regresses "
+                "(N2/N3 approximately flat). Balanced accuracy improved in all 5 seeds."
+            ),
+            sensitivity_status=SensitivityStatus.UNAVAILABLE,
+            notes=[
+                f"Baseline {params['baseline_eeg_only']} params vs candidate {params['candidate_eeg_plus_eog']} params (capacity-fair by design).",
+                "Primary metric is macro-F1 (classification); it must never be compared against the HR-MAE experiments.",
+                "Mean macro-F1 effect is comparable in magnitude to its own seed-to-seed SD.",
+            ],
+        ),
+        breakdowns=[
+            ResearchBreakdown(
+                breakdown_id="paired_seeds",
+                kind="seed",
+                title="Paired training seeds (macro-F1)",
+                entries=seed_entries,
+            ),
+        ],
+        provenance=ResearchProvenance(
+            source_artifact=artifact,
+            supporting_artifacts=[
+                "results/sleep_edf_eeg_eog_ablation_reproducibility.json",
+                "docs/SLEEP_EDF_EEG_EOG_PREDECLARATION_DAY7.md",
+                "docs/SLEEP_EDF_EEG_EOG_RESULTS.md",
+                "ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json",
+            ],
+            split_identity="ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json",
+            model_identity=[
+                f"Conv1DEncoder baseline ({params['baseline_eeg_only']} params)",
+                f"Conv1DEncoder candidate ({params['candidate_eeg_plus_eog']} params)",
+            ],
+            checkpoints=checkpoints,
+        ),
+        claim_boundaries=ResearchClaimBoundaries(
+            supported=[
+                "Under the frozen Sleep-EDF protocol, adding horizontal EOG to EEG produced a modest "
+                "positive macro-F1 result, improving in 4/5 training seeds (balanced accuracy 5/5).",
+                "This demonstrates the marginal-value methodology transfers to a classification target "
+                "and a different modality family (EEG/EOG).",
+            ],
+            unsupported=[
+                "EOG is necessary or universally improves sleep staging.",
+                "This validates astronaut, microgravity, or spaceflight sleep monitoring.",
+                "The final architecture should contain EOG.",
+                "Sleep-EDF macro-F1 is comparable to or rankable against the HR-MAE experiments.",
+                "This result validates the (untrained) Biological Digital Twin.",
+            ],
+            limitations=[
+                "Only 3 held-out test subjects.",
+                "No per-subject decomposition computed yet.",
+                "No shuffled-EOG / negative-control experiment was run.",
+                "Single dataset; terrestrial population.",
+                "Mean effect is comparable in magnitude to its seed-to-seed SD (classified preliminary).",
+            ],
+        ),
+    )
+
+
 Adapter = Callable[[Path], ResearchExperiment]
 
 
@@ -706,6 +903,7 @@ class ResearchCatalog:
         PPG_DALIA_ABLATION_ID: adapt_ppg_dalia_ablation,
         PPG_DALIA_ROBUSTNESS_ID: adapt_ppg_dalia_robustness,
         PTT_SITE_ABLATION_ID: adapt_ptt_site_ablation,
+        SLEEP_EDF_ABLATION_ID: adapt_sleep_edf_ablation,
     }
 
     def __init__(self, repository_root: str | Path = REPOSITORY_ROOT) -> None:

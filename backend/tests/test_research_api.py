@@ -13,6 +13,7 @@ from app.research.catalog import (
     PPG_DALIA_ABLATION_ID,
     PPG_DALIA_ROBUSTNESS_ID,
     PTT_SITE_ABLATION_ID,
+    SLEEP_EDF_ABLATION_ID,
     ResearchCatalog,
     research_catalog,
 )
@@ -30,11 +31,12 @@ def _experiment(experiment_id: str):
     return envelope.experiment
 
 
-def test_catalog_has_three_stable_experiment_identities() -> None:
+def test_catalog_has_four_stable_experiment_identities() -> None:
     assert research_catalog.experiment_ids == (
         PPG_DALIA_ABLATION_ID,
         PPG_DALIA_ROBUSTNESS_ID,
         PTT_SITE_ABLATION_ID,
+        SLEEP_EDF_ABLATION_ID,
     )
     assert all(item.availability == ResearchAvailability.AVAILABLE for item in research_catalog.list())
 
@@ -135,7 +137,7 @@ def test_research_routes_are_read_only_and_report_unknown_ids() -> None:
 
     summary_response = client.get("/research/summary")
     assert summary_response.status_code == 200
-    assert summary_response.json()["available_count"] == 3
+    assert summary_response.json()["available_count"] == 4
     assert summary_response.json()["unavailable_count"] == 0
 
     assert client.post("/research/experiments", json={}).status_code == 405
@@ -148,17 +150,26 @@ def test_target_evidence_matrix_is_artifact_backed_and_multi_target_aware() -> N
     body = response.json()
     assert body["availability"] == "available"
     matrix = body["matrix"]
-    # Only the two real experiments; Sleep-EDF/EOG must NOT be fabricated.
+    # Three real experiments after Day-7 integration; Sleep-EDF is now REAL evidence.
     experiment_ids = {entry["experiment_id"] for entry in matrix["entries"]}
-    assert experiment_ids == {"ppg-dalia-imu-ablation", "ptt-ppg-site-ablation"}
+    assert experiment_ids == {
+        "ppg-dalia-imu-ablation",
+        "ptt-ppg-site-ablation",
+        "sleep-edf-eeg-eog-ablation",
+    }
     by_id = {entry["experiment_id"]: entry for entry in matrix["entries"]}
     # Capacity-confound and heterogeneity are represented.
     assert by_id["ppg-dalia-imu-ablation"]["capacity_match_status"] == "confounded"
     assert by_id["ptt-ppg-site-ablation"]["result_class"] == "heterogeneous_marginal_result"
-    assert by_id["ptt-ppg-site-ablation"]["sensitivity_status"] == "pending"
+    # PTT sensitivity artifact now exists -> available (was pending pre-integration).
+    assert by_id["ptt-ppg-site-ablation"]["sensitivity_status"] == "available"
+    # Sleep-EDF is a classification target, modestly positive, capacity-matched by design.
+    assert by_id["sleep-edf-eeg-eog-ablation"]["metric_kind"] == "classification"
+    assert by_id["sleep-edf-eeg-eog-ablation"]["result_class"] == "positive_marginal_value"
+    assert by_id["sleep-edf-eeg-eog-ablation"]["capacity_match_status"] == "matched"
     assert "PROHIBITED" in matrix["cross_target_comparability"]
-    # Awaiting list names the not-yet-produced classification target.
-    assert any("Sleep-EDF" in item for item in matrix["awaiting"])
+    # The three planned experiments are complete; nothing left awaiting.
+    assert matrix["awaiting"] == []
     assert client.post("/research/target-evidence-matrix", json={}).status_code == 405
 
 

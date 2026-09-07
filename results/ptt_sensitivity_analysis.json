@@ -1,0 +1,151 @@
+{
+  "experiment_id": "ptt_sensitivity_analysis",
+  "label": "descriptive sensitivity analysis - NOT a new primary result, NOT grounds for subject exclusion",
+  "source_artifact": "results/ptt_ppg_site_ablation.json (unchanged, no retraining)",
+  "held_out_subjects": [
+    "s14",
+    "s2",
+    "s20",
+    "s9"
+  ],
+  "seeds": [
+    "seed42",
+    "seed43",
+    "seed44",
+    "seed45",
+    "seed46"
+  ],
+  "full_aggregate": {
+    "model_a_mean_mae": 17.540314865112304,
+    "model_b_mean_mae": 19.002723693847656,
+    "paired_delta_b_minus_a_mean": 1.4624088287353516,
+    "note": "positive delta = B (candidate, two-site) worse than A (baseline, one-site)"
+  },
+  "per_subject_effect": {
+    "s14": {
+      "model_a_mae_seed_mean": 21.667861938476562,
+      "model_b_mae_seed_mean": 22.961432266235352,
+      "delta_b_minus_a": 1.2935703277587898,
+      "direction": "B_WORSE",
+      "per_seed_a_mae": {
+        "seed42": 20.39754867553711,
+        "seed43": 22.095178604125977,
+        "seed44": 19.75064468383789,
+        "seed45": 19.980953216552734,
+        "seed46": 26.1149845123291
+      },
+      "per_seed_b_mae": {
+        "seed42": 22.367677688598633,
+        "seed43": 22.41392707824707,
+        "seed44": 23.862031936645508,
+        "seed45": 21.67531394958496,
+        "seed46": 24.488210678100586
+      }
+    },
+    "s2": {
+      "model_a_mae_seed_mean": 31.64147491455078,
+      "model_b_mae_seed_mean": 38.90664367675781,
+      "delta_b_minus_a": 7.265168762207029,
+      "direction": "B_WORSE",
+      "per_seed_a_mae": {
+        "seed42": 31.8409366607666,
+        "seed43": 32.49806594848633,
+        "seed44": 33.743560791015625,
+        "seed45": 28.15491485595703,
+        "seed46": 31.96989631652832
+      },
+      "per_seed_b_mae": {
+        "seed42": 40.86554718017578,
+        "seed43": 37.04669952392578,
+        "seed44": 40.57029724121094,
+        "seed45": 36.86591339111328,
+        "seed46": 39.18476104736328
+      }
+    },
+    "s20": {
+      "model_a_mae_seed_mean": 6.546902847290039,
+      "model_b_mae_seed_mean": 5.1292119979858395,
+      "delta_b_minus_a": -1.4176908493041998,
+      "direction": "B_BETTER",
+      "per_seed_a_mae": {
+        "seed42": 6.336061000823975,
+        "seed43": 6.444641590118408,
+        "seed44": 5.300520420074463,
+        "seed45": 6.8173089027404785,
+        "seed46": 7.835982322692871
+      },
+      "per_seed_b_mae": {
+        "seed42": 4.710448741912842,
+        "seed43": 5.464696884155273,
+        "seed44": 4.742271900177002,
+        "seed45": 5.124570369720459,
+        "seed46": 5.604072093963623
+      }
+    },
+    "s9": {
+      "model_a_mae_seed_mean": 10.232390403747559,
+      "model_b_mae_seed_mean": 8.905494880676269,
+      "delta_b_minus_a": -1.3268955230712898,
+      "direction": "B_BETTER",
+      "per_seed_a_mae": {
+        "seed42": 9.513075828552246,
+        "seed43": 9.861393928527832,
+        "seed44": 10.097162246704102,
+        "seed45": 10.109993934631348,
+        "seed46": 11.580326080322266
+      },
+      "per_seed_b_mae": {
+        "seed42": 8.106640815734863,
+        "seed43": 10.359143257141113,
+        "seed44": 8.133647918701172,
+        "seed45": 9.468685150146484,
+        "seed46": 8.459357261657715
+      }
+    }
+  },
+  "leave_one_subject_out_descriptive_sensitivity": {
+    "excluding_s14": {
+      "model_a_mae": 16.166360866224363,
+      "model_b_mae": 17.684973087170672,
+      "delta_b_minus_a": 1.5186122209463093,
+      "direction": "B_WORSE"
+    },
+    "excluding_s2": {
+      "model_a_mae": 12.811820910452917,
+      "model_b_mae": 12.328411470341265,
+      "delta_b_minus_a": -0.483409440111652,
+      "direction": "B_BETTER"
+    },
+    "excluding_s20": {
+      "model_a_mae": 21.219948781243687,
+      "model_b_mae": 23.646364801078004,
+      "delta_b_minus_a": 2.426416019834317,
+      "direction": "B_WORSE"
+    },
+    "excluding_s9": {
+      "model_a_mae": 19.955078089335554,
+      "model_b_mae": 22.339160388593385,
+      "delta_b_minus_a": 2.3840822992578303,
+      "direction": "B_WORSE"
+    }
+  },
+  "s2_dependence": {
+    "with_s2": {
+      "model_a_mae": 17.540314802629062,
+      "model_b_mae": 19.002724690622927,
+      "delta_b_minus_a": 1.4624098879938643,
+      "direction": "B_WORSE"
+    },
+    "without_s2": {
+      "model_a_mae": 12.811820910452917,
+      "model_b_mae": 12.328411470341265,
+      "delta_b_minus_a": -0.483409440111652,
+      "direction": "B_BETTER"
+    },
+    "direction_flips_when_s2_excluded": true,
+    "magnitude_of_s2_influence_on_delta": 1.9458193281055163,
+    "note": "s2 is RETAINED in the frozen primary result. This is a descriptive sensitivity finding, not a re-run excluding s2."
+  },
+  "seed_vs_subject_independence_statement": "5/5 training-seed agreement on the aggregate direction (Model B worse) reflects OPTIMIZATION/TRAINING-SEED replication - the same 4 held-out subjects were evaluated every time, so this is NOT five independent population replications. Subject-level evidence comes from only 4 held-out subjects, of which 2 favor the baseline and 2 favor the candidate (see per_subject_effect above) - a much smaller and more heterogeneous evidence base than the seed-count alone would suggest. These are two distinct evidence axes and must not be conflated into a single replication claim.",
+  "revised_claim": "Under the frozen PTT protocol, the single-site baseline has a better aggregate held-out HR MAE (17.540 bpm) than the two-site candidate (19.003 bpm) across all five training seeds, but this aggregate direction is strongly heterogeneous across the 4 held-out subjects (2 of 4 favor the candidate) and is sensitive to subject s2 specifically (excluding s2 changes the aggregate delta by 1.946 bpm, flipping its direction). The result does not establish that a second PPG site is globally harmful or unnecessary for heart-rate estimation - only that, under this specific frozen protocol and this specific 4-subject held-out set, the aggregate favors the single-site baseline."
+}

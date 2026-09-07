@@ -1,12 +1,20 @@
 {
   "inventory_id": "biological-minimalism-checkpoint-inventory-v1",
-  "note": "Model checkpoints are gitignored (ml/checkpoints/*). This inventory records every checkpoint referenced by committed artifacts, whether it is present, and whether present files match their declared SHA256. Missing historical checkpoints are NOT regenerated. Paths are normalised to POSIX repository-relative form; the source artifacts contain non-portable Windows-style paths (documented, not rewritten, to preserve their frozen SHA chains).",
+  "note": "Model checkpoints are gitignored (ml/checkpoints/*). This inventory records every checkpoint referenced by committed EXPERIMENT artifacts on THIS machine, whether it is present, and whether present files match their declared SHA256. Ismet's cross-machine roll-up (checkpoint_manifest_consolidated.json) is kept separate under 'cross_machine_manifest' and is NOT merged in. Missing historical checkpoints are NOT regenerated. Paths are normalised to POSIX repository-relative form; source artifacts contain non-portable Windows-style paths (documented, not rewritten, to preserve their frozen SHA chains).",
   "summary": {
-    "total_referenced_checkpoints": 26,
+    "total_referenced_checkpoints": 41,
     "present": 1,
-    "missing": 25,
+    "missing": 40,
     "sha256_verified": 1,
     "sha256_mismatched": 0
+  },
+  "cross_machine_manifest": {
+    "source_artifact": "results/checkpoint_manifest_consolidated.json",
+    "hashes_recorded_on_ismet_windows_machine": 43,
+    "present_locally_on_ismet_windows_machine": 43,
+    "checkpoint_files_physically_present_on_this_mac": 1,
+    "durably_archived": false,
+    "archival_note": "No checkpoint weight files are committed to git (ml/checkpoints/* is gitignored) and none were pushed to the remote. A recorded hash is NOT a durable archive. Regenerating weights would not reproduce the originals bit-identically and must never be relabelled 'original'."
   },
   "checkpoints": [
     {
@@ -25,6 +33,86 @@
       "actual_sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
       "actual_size_bytes": 138086,
       "archival_status": "present_local_untracked",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/ppg_dalia_model_a_cap_seed42.pt",
+      "run_id": "model_a_cap_seed42",
+      "seed": 42,
+      "role": "ppg_only (baseline A)",
+      "declared_sha256": "c69209dc1fd30e4bebf5be3c17448567f4c7acd55bb159d9689d241e65ccafcd",
+      "declared_size_bytes": 137196,
+      "referenced_by": [
+        "ppg_dalia_capacity_control.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/ppg_dalia_model_a_cap_seed43.pt",
+      "run_id": "model_a_cap_seed43",
+      "seed": 43,
+      "role": "ppg_only (baseline A)",
+      "declared_sha256": "1e5fd5b89f0567d6b33935499c9f32ae59845a627eb3c8507edd6af8dfd5f999",
+      "declared_size_bytes": 137196,
+      "referenced_by": [
+        "ppg_dalia_capacity_control.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/ppg_dalia_model_a_cap_seed44.pt",
+      "run_id": "model_a_cap_seed44",
+      "seed": 44,
+      "role": "ppg_only (baseline A)",
+      "declared_sha256": "764efc8d3c2f3d24ef72968efe1fd2624224c9fbbed22ad43a43f709a7899863",
+      "declared_size_bytes": 137196,
+      "referenced_by": [
+        "ppg_dalia_capacity_control.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/ppg_dalia_model_a_cap_seed45.pt",
+      "run_id": "model_a_cap_seed45",
+      "seed": 45,
+      "role": "ppg_only (baseline A)",
+      "declared_sha256": "be7661c885ae1a19eaa75d0d0293c5e3e7789c6c02fc6d4cd6e51d14c8683bea",
+      "declared_size_bytes": 137196,
+      "referenced_by": [
+        "ppg_dalia_capacity_control.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/ppg_dalia_model_a_cap_seed46.pt",
+      "run_id": "model_a_cap_seed46",
+      "seed": 46,
+      "role": "ppg_only (baseline A)",
+      "declared_sha256": "c11a7fa7eb122eb0d505c6c860fd0a9dddc77378b99899b12622d314c353d035",
+      "declared_size_bytes": 137196,
+      "referenced_by": [
+        "ppg_dalia_capacity_control.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
       "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
     },
     {
@@ -420,6 +508,166 @@
       "declared_size_bytes": 42554,
       "referenced_by": [
         "ptt_ppg_site_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_baseline_eeg_only_seed42.pt",
+      "run_id": "baseline_eeg_only_seed42",
+      "seed": 42,
+      "role": null,
+      "declared_sha256": "00555856962a4bdd5e8b555ce3b4b6cf8259cf4b61faecdbd2df8a2265f242d1",
+      "declared_size_bytes": 41706,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_baseline_eeg_only_seed43.pt",
+      "run_id": "baseline_eeg_only_seed43",
+      "seed": 43,
+      "role": null,
+      "declared_sha256": "8d9845729ebc724e053d48eac7b9abb601678ff4d30819028bb5657a9e6602b2",
+      "declared_size_bytes": 41706,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_baseline_eeg_only_seed44.pt",
+      "run_id": "baseline_eeg_only_seed44",
+      "seed": 44,
+      "role": null,
+      "declared_sha256": "fe732b6cae3ca39288aae2500899049e44e7e357b054e9b2eedef32da738cb6e",
+      "declared_size_bytes": 41706,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_baseline_eeg_only_seed45.pt",
+      "run_id": "baseline_eeg_only_seed45",
+      "seed": 45,
+      "role": null,
+      "declared_sha256": "08e5062eb5a25949e67d2923662192f632a9cc4f23d1d6120cc62f71bae3c502",
+      "declared_size_bytes": 41706,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_baseline_eeg_only_seed46.pt",
+      "run_id": "baseline_eeg_only_seed46",
+      "seed": 46,
+      "role": null,
+      "declared_sha256": "eab7222973dd4ad74eafbf0894e2d57f35ff26883f571981a73ff6dd02c561f9",
+      "declared_size_bytes": 41706,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seed42.pt",
+      "run_id": "candidate_eeg_plus_eog_seed42",
+      "seed": 42,
+      "role": null,
+      "declared_sha256": "0da23a85b140e17d6254fbb4d7817ca667555d68dfab603f76d498479be09c73",
+      "declared_size_bytes": 42353,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seed43.pt",
+      "run_id": "candidate_eeg_plus_eog_seed43",
+      "seed": 43,
+      "role": null,
+      "declared_sha256": "516f7860bfd775bd23f01e095ef2bdb5ec17bef78cf21a2fb1e0493338b06470",
+      "declared_size_bytes": 42353,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seed44.pt",
+      "run_id": "candidate_eeg_plus_eog_seed44",
+      "seed": 44,
+      "role": null,
+      "declared_sha256": "f5339271ec2cdd15c6d85ad4af18180ce2b954d71ed909e0be67bfc59e78c48a",
+      "declared_size_bytes": 42353,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seed45.pt",
+      "run_id": "candidate_eeg_plus_eog_seed45",
+      "seed": 45,
+      "role": null,
+      "declared_sha256": "a774be2a22b9a2e5daffee7ad35cb5ded89e04dcb9883104a17d9338b055b081",
+      "declared_size_bytes": 42353,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seed46.pt",
+      "run_id": "candidate_eeg_plus_eog_seed46",
+      "seed": 46,
+      "role": null,
+      "declared_sha256": "fdbe3e39c2d8f91b7c6400b846ae2dabd6fa6ced535ae0fe6b70ce422d414980",
+      "declared_size_bytes": 42353,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_ablation.json"
       ],
       "present": false,
       "git_tracked": false,

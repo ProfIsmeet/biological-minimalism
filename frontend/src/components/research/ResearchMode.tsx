@@ -135,15 +135,21 @@ function MarginalValueTable({ experiments }: { experiments: ResearchExperiment[]
       icon={<FlaskConical size={16} />}
       contentClassName="overflow-x-auto p-0"
     >
-      <table className="w-full min-w-[880px] text-left text-xs">
+      <p className="px-4 pt-3 text-[11px] leading-relaxed text-amber-200/80">
+        Each row uses its own target-specific primary metric (see the Metric column). Values in
+        different rows are <strong className="font-semibold">not comparable</strong> across
+        targets/datasets/metrics (e.g. bpm MAE vs macro-F1) and are never ranked or combined into a
+        single sensor score.
+      </p>
+      <table className="w-full min-w-[920px] text-left text-xs">
         <thead className="border-b border-white/5 bg-white/[0.02] text-[10px] uppercase tracking-wider text-slate-500">
           <tr>
             <th className="px-4 py-3 font-medium">Experiment / target</th>
-            <th className="px-4 py-3 font-medium">Baseline</th>
             <th className="px-4 py-3 font-medium">Added sensing</th>
-            <th className="px-4 py-3 text-right font-medium">Baseline MAE</th>
-            <th className="px-4 py-3 text-right font-medium">Candidate MAE</th>
-            <th className="px-4 py-3 text-right font-medium">ΔMAE</th>
+            <th className="px-4 py-3 font-medium">Metric</th>
+            <th className="px-4 py-3 text-right font-medium">Baseline</th>
+            <th className="px-4 py-3 text-right font-medium">Candidate</th>
+            <th className="px-4 py-3 text-right font-medium">Δ (candidate vs baseline)</th>
             <th className="px-4 py-3 font-medium">Result</th>
           </tr>
         </thead>
@@ -153,17 +159,22 @@ function MarginalValueTable({ experiments }: { experiments: ResearchExperiment[]
             if (!marginal) return null;
             const baseline = configurationById(experiment, marginal.baseline_configuration_id);
             const candidate = configurationById(experiment, marginal.candidate_configuration_id);
+            const metricKey = marginal.metric;
+            const isClassification = marginal.metric_kind === "classification";
             return (
               <tr key={experiment.experiment_id} className="text-slate-300">
                 <td className="px-4 py-3">
                   <p className="font-medium text-slate-200">{experiment.dataset}</p>
                   <p className="mt-0.5 text-[11px] text-slate-500">{experiment.target}</p>
                 </td>
-                <td className="px-4 py-3">{baseline?.label ?? marginal.baseline_configuration_id}</td>
                 <td className="px-4 py-3">{marginal.added_sensing}</td>
-                <td className="tabular-nums-mono px-4 py-3 text-right">{metricText(baseline?.metrics.mae)}</td>
-                <td className="tabular-nums-mono px-4 py-3 text-right">{metricText(candidate?.metrics.mae)}</td>
-                <td className={clsx("tabular-nums-mono px-4 py-3 text-right font-semibold", marginal.direction === "improved" ? "text-emerald-300" : "text-amber-300")}>{signedMetric(marginal.delta)}</td>
+                <td className="px-4 py-3">
+                  <span className="text-slate-300">{baseline?.metrics[metricKey]?.unit ?? metricKey}</span>
+                  {marginal.metric_kind ? <span className="ml-1 text-[10px] uppercase tracking-wide text-slate-600">({marginal.metric_kind})</span> : null}
+                </td>
+                <td className="tabular-nums-mono px-4 py-3 text-right">{metricText(baseline?.metrics[metricKey])}</td>
+                <td className="tabular-nums-mono px-4 py-3 text-right">{metricText(candidate?.metrics[metricKey])}</td>
+                <td className={clsx("tabular-nums-mono px-4 py-3 text-right font-semibold", marginal.direction === "improved" ? "text-emerald-300" : "text-amber-300")}>{signedMetric(marginal.delta)}{isClassification ? " ↑better" : " ↓better"}</td>
                 <td className="px-4 py-3"><ResultBadge resultClass={experiment.result_class} /></td>
               </tr>
             );
@@ -201,13 +212,20 @@ function ConfigurationGrid({ experiment }: { experiment: ResearchExperiment }) {
   );
 }
 
-function deltaClass(entry: ResearchBreakdownEntry): string {
+function deltaClass(entry: ResearchBreakdownEntry, higherIsBetter = false): string {
   if (entry.delta?.mean === null || entry.delta?.mean === undefined) return "text-slate-500";
   if (Math.abs(entry.delta.mean) < 0.05) return "text-slate-300";
-  return entry.delta.mean < 0 ? "text-emerald-300" : "text-amber-300";
+  const improved = higherIsBetter ? entry.delta.mean > 0 : entry.delta.mean < 0;
+  return improved ? "text-emerald-300" : "text-amber-300";
+}
+
+function metricUnitFor(configuration: ResearchConfiguration, metricKey: string): string {
+  return configuration.metrics[metricKey]?.unit ?? metricKey;
 }
 
 function BreakdownTable({ breakdown, experiment }: { breakdown: ResearchBreakdown; experiment: ResearchExperiment }) {
+  const breakdownMetricKey = experiment.marginal_result?.metric ?? "mae";
+  const breakdownHigherIsBetter = experiment.marginal_result?.metric_directionality === "higher_is_better";
   return (
     <div className="overflow-hidden rounded-lg border border-white/5">
       <div className="border-b border-white/5 bg-white/[0.025] px-3 py-2.5">
@@ -219,7 +237,7 @@ function BreakdownTable({ breakdown, experiment }: { breakdown: ResearchBreakdow
             <tr>
               <th className="px-3 py-2 font-medium">Group</th>
               {experiment.configurations.map((configuration) => (
-                <th key={configuration.configuration_id} className="px-3 py-2 text-right font-medium">{configuration.label} MAE</th>
+                <th key={configuration.configuration_id} className="px-3 py-2 text-right font-medium">{configuration.label} ({metricUnitFor(configuration, breakdownMetricKey)})</th>
               ))}
               <th className="px-3 py-2 text-right font-medium">Candidate − baseline</th>
             </tr>
@@ -230,10 +248,10 @@ function BreakdownTable({ breakdown, experiment }: { breakdown: ResearchBreakdow
                 <td className="px-3 py-2.5 text-slate-300">{entry.label}</td>
                 {experiment.configurations.map((configuration) => (
                   <td key={configuration.configuration_id} className="tabular-nums-mono px-3 py-2.5 text-right text-slate-300">
-                    {metricText(entry.configuration_metrics[configuration.configuration_id]?.mae, 3)}
+                    {metricText(entry.configuration_metrics[configuration.configuration_id]?.[breakdownMetricKey], 3)}
                   </td>
                 ))}
-                <td className={clsx("tabular-nums-mono px-3 py-2.5 text-right font-medium", deltaClass(entry))}>{signedMetric(entry.delta)}</td>
+                <td className={clsx("tabular-nums-mono px-3 py-2.5 text-right font-medium", deltaClass(entry, breakdownHigherIsBetter))}>{signedMetric(entry.delta)}</td>
               </tr>
             ))}
           </tbody>
@@ -391,10 +409,14 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
         <div className={clsx("rounded-lg border p-4", experiment.marginal_result.direction === "improved" ? "border-emerald-400/20 bg-emerald-400/[0.05]" : "border-amber-400/20 bg-amber-400/[0.05]")}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs font-semibold text-slate-200">Marginal result: {humanize(experiment.marginal_result.direction)}</p>
-            <p className="tabular-nums-mono text-sm font-semibold text-slate-100">ΔMAE {signedMetric(experiment.marginal_result.delta)}</p>
+            <p className="tabular-nums-mono text-sm font-semibold text-slate-100">Δ {signedMetric(experiment.marginal_result.delta)}{experiment.marginal_result.metric_directionality === "higher_is_better" ? " (higher is better)" : experiment.marginal_result.metric_directionality === "lower_is_better" ? " (lower is better)" : ""}</p>
           </div>
           <p className="mt-2 text-xs text-slate-400">Added sensing: {experiment.marginal_result.added_sensing}</p>
           {experiment.marginal_result.paired_replicates !== null ? <p className="mt-1 text-xs text-slate-400">Paired seeds: {experiment.marginal_result.candidate_worsened_count}/{experiment.marginal_result.paired_replicates} worse for candidate; {experiment.marginal_result.candidate_improved_count}/{experiment.marginal_result.paired_replicates} improved.</p> : null}
+          {experiment.marginal_result.capacity_match_status ? <p className="mt-1 text-xs text-slate-400">Capacity fairness: {humanize(experiment.marginal_result.capacity_match_status)}.</p> : null}
+          {experiment.marginal_result.subject_heterogeneity ? <p className="mt-1 text-xs text-slate-400"><span className="text-slate-500">Subject heterogeneity:</span> {experiment.marginal_result.subject_heterogeneity}</p> : null}
+          {experiment.marginal_result.class_heterogeneity ? <p className="mt-1 text-xs text-slate-400"><span className="text-slate-500">Class heterogeneity:</span> {experiment.marginal_result.class_heterogeneity}</p> : null}
+          {experiment.marginal_result.sensitivity_status ? <p className="mt-1 text-xs text-slate-400">Sensitivity analysis: {humanize(experiment.marginal_result.sensitivity_status)}.</p> : null}
           <ul className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-slate-400">{experiment.marginal_result.notes.map((note) => <li key={note}>• {note}</li>)}</ul>
         </div>
       ) : null}
