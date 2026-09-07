@@ -1,0 +1,59 @@
+{
+  "title": "PTT: per-subject B-A delta and s2 sensitivity",
+  "metric": "delta MAE (bpm), positive = candidate (B, two-site) worse",
+  "sample_unit": "held-out subject (n=4)",
+  "per_subject_delta": {
+    "s14": 1.2935703277587898,
+    "s2": 7.265168762207029,
+    "s20": -1.4176908493041998,
+    "s9": -1.3268955230712898
+  },
+  "leave_one_subject_out": {
+    "excluding_s14": {
+      "model_a_mae": 16.166360866224363,
+      "model_b_mae": 17.684973087170672,
+      "delta_b_minus_a": 1.5186122209463093,
+      "direction": "B_WORSE"
+    },
+    "excluding_s2": {
+      "model_a_mae": 12.811820910452917,
+      "model_b_mae": 12.328411470341265,
+      "delta_b_minus_a": -0.483409440111652,
+      "direction": "B_BETTER"
+    },
+    "excluding_s20": {
+      "model_a_mae": 21.219948781243687,
+      "model_b_mae": 23.646364801078004,
+      "delta_b_minus_a": 2.426416019834317,
+      "direction": "B_WORSE"
+    },
+    "excluding_s9": {
+      "model_a_mae": 19.955078089335554,
+      "model_b_mae": 22.339160388593385,
+      "delta_b_minus_a": 2.3840822992578303,
+      "direction": "B_WORSE"
+    }
+  },
+  "s2_with_without": {
+    "with_s2": {
+      "model_a_mae": 17.540314802629062,
+      "model_b_mae": 19.002724690622927,
+      "delta_b_minus_a": 1.4624098879938643,
+      "direction": "B_WORSE"
+    },
+    "without_s2": {
+      "model_a_mae": 12.811820910452917,
+      "model_b_mae": 12.328411470341265,
+      "delta_b_minus_a": -0.483409440111652,
+      "direction": "B_BETTER"
+    },
+    "direction_flips_when_s2_excluded": true,
+    "magnitude_of_s2_influence_on_delta": 1.9458193281055163,
+    "note": "s2 is RETAINED in the frozen primary result. This is a descriptive sensitivity finding, not a re-run excluding s2."
+  },
+  "uncertainty_meaning": "NO defensible population CI at n=4 - show all 4 subject points individually, never a mean+CI bar",
+  "claim_boundary": "Must visually disclose that excluding s2 flips the aggregate sign - do not show only the with-s2 aggregate.",
+  "provenance": [
+    "results/ptt_sensitivity_day11.json"
+  ]
+}

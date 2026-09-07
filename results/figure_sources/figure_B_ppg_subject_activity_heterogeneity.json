@@ -1,0 +1,26 @@
+{
+  "title": "PPG-DaLiA: per-subject and per-activity A_cap->B delta",
+  "metric": "delta MAE (bpm), positive = candidate (B) better",
+  "sample_unit": "held-out subject (n=3) / activity (n=9, from the original A-vs-B multiseed breakdown)",
+  "per_subject_delta": {
+    "S14": 0.7420694351196289,
+    "S2": -0.07595510482788086,
+    "S9": 1.1151174545288085
+  },
+  "per_activity_delta": {
+    "cycling": 2.278848075866699,
+    "driving": 2.667247200012207,
+    "lunch_break": 1.9531797409057616,
+    "sitting": 4.208269119262695,
+    "stairs": 1.038104248046875,
+    "table_soccer": -1.833482265472412,
+    "transient/unlabeled": 1.2775111198425293,
+    "walking": 1.3429176330566406,
+    "working": 2.4926834106445312
+  },
+  "uncertainty_meaning": "no error bars at n=3 subjects - show individual subject points, not a bar+CI",
+  "claim_boundary": "n=3 subjects only for the capacity-matched comparison; activity breakdown is from the original (non-capacity-matched) A-vs-B comparison, must be labeled as such if shown alongside Figure A.",
+  "provenance": [
+    "results/ppg_dalia_sensitivity_day11.json"
+  ]
+}

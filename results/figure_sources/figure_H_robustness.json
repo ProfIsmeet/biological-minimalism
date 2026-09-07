@@ -1,0 +1,48 @@
+{
+  "title": "PPG-DaLiA robustness: per-condition MAE degradation (S14 only)",
+  "metric": "MAE (bpm) / prediction availability, per fault condition",
+  "sample_unit": "perturbation condition (n=114), single subject S14 - NOT independent subjects",
+  "clean_baseline": {
+    "condition_id": "clean",
+    "delta_from_clean": {
+      "availability": null,
+      "mae_bpm": null,
+      "rmse_bpm": null
+    },
+    "eligible_window_count": 4476,
+    "failure_counts": {
+      "canonical_invalid_input": 0,
+      "inference_error": 0,
+      "input_unavailable": 0
+    },
+    "failure_rates": {
+      "canonical_invalid_input": 0.0,
+      "inference_error": 0.0,
+      "input_unavailable": 0.0
+    },
+    "fault_provenance": null,
+    "fault_type": "clean",
+    "group_id": "clean",
+    "mae_bpm_valid_only": 5.0838541984558105,
+    "prediction_availability_rate": 1.0,
+    "rmse_bpm_valid_only": 7.492855072021484,
+    "seed": null,
+    "severity": null,
+    "stochastic": false,
+    "target": null,
+    "valid_prediction_count": 4476
+  },
+  "n_conditions": 114,
+  "condition_summary_fields": [
+    "fault_type",
+    "severity",
+    "mae_bpm_valid_only",
+    "prediction_availability_rate"
+  ],
+  "full_condition_data_source": "results/day10_ppg_dalia_fault_robustness_reproduction.json (conditions array)",
+  "uncertainty_meaning": "stochastic conditions have 5 seeds - show seed spread where present; deterministic conditions have none",
+  "claim_boundary": "Single-subject (S14) scope must be visible on the figure itself, not only in a caption.",
+  "provenance": [
+    "results/day10_ppg_dalia_fault_robustness_reproduction.json"
+  ]
+}

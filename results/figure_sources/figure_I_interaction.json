@@ -1,0 +1,55 @@
+{
+  "title": "Sleep-EDF: EOG x Resp interaction term",
+  "metric": "interaction = Benefit(AB) - Benefit(A) - Benefit(B), macro-F1 units",
+  "sample_unit": "training seed (n=5), held-out subjects n=3 (same primary split)",
+  "interaction_per_seed": {
+    "seed42": -0.04225348648820337,
+    "seed43": -0.013054254250608022,
+    "seed44": -0.01446213606330582,
+    "seed45": 0.012515685741932514,
+    "seed46": 0.07255908436025904
+  },
+  "subject_level_interaction": {
+    "SC4011": 0.0004050738133819509,
+    "SC4081": 0.0021183432416033376,
+    "SC4131": 0.008505606170484436
+  },
+  "class_level_interaction": {
+    "Wake": {
+      "benefit_A": 0.0019495578915608158,
+      "benefit_B": -0.009646066891990435,
+      "benefit_AB": -0.003235755034316723,
+      "interaction": 0.004460753966112896
+    },
+    "N1": {
+      "benefit_A": 0.10701467013393029,
+      "benefit_B": -0.02365495758974767,
+      "benefit_AB": 0.0801997192812115,
+      "interaction": -0.003159993262971117
+    },
+    "N2": {
+      "benefit_A": -0.013210287939539045,
+      "benefit_B": -0.004309958612677023,
+      "benefit_AB": -0.012232399543385286,
+      "interaction": 0.005287847008830782
+    },
+    "N3": {
+      "benefit_A": -0.01522146575636596,
+      "benefit_B": -0.03141899564656603,
+      "benefit_AB": -0.013211850640123424,
+      "interaction": 0.033428610762808564
+    },
+    "REM": {
+      "benefit_A": 0.029504555385472142,
+      "benefit_B": -0.001058123936728328,
+      "benefit_AB": 0.003734106274036919,
+      "interaction": -0.024712325174706895
+    }
+  },
+  "uncertainty_meaning": "error bars = sample SD across 5 seeds; SD (0.043) is ~14x the mean (0.003) - this must be visually obvious (e.g. an error bar crossing zero by a wide margin), not hidden by a misleadingly-scaled axis",
+  "claim_boundary": "Must not be captioned as 'no interaction' or 'synergy found' - the honest caption is 'approximately additive or unresolved at this sample size'.",
+  "provenance": [
+    "results/sleep_edf_interaction_resp_day10.json",
+    "results/sleep_interaction_sensitivity_day11.json"
+  ]
+}

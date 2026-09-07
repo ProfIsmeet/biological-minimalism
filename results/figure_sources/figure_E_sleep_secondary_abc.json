@@ -1,0 +1,45 @@
+{
+  "title": "Sleep-EDF prospective secondary holdout: A/B/C macro-F1",
+  "metric": "macro-F1, higher is better",
+  "sample_unit": "training seed (n=5, existing frozen checkpoints, no retraining), held-out subjects n=8",
+  "series": {
+    "A": {
+      "mean": 0.6529656695652062,
+      "sd_sample_ddof1": 0.015443900659988293,
+      "per_seed": {
+        "seed42": 0.6380552915617401,
+        "seed43": 0.6530094048283595,
+        "seed44": 0.6656277022634247,
+        "seed45": 0.6709347727505947,
+        "seed46": 0.6372011764219121
+      }
+    },
+    "B": {
+      "mean": 0.6857738751954685,
+      "sd_sample_ddof1": 0.02717467064563812,
+      "per_seed": {
+        "seed42": 0.6870045625232678,
+        "seed43": 0.7192201657085003,
+        "seed44": 0.7002779141255009,
+        "seed45": 0.6755696208016566,
+        "seed46": 0.6467971128184166
+      }
+    },
+    "C": {
+      "mean": 0.6556150452220249,
+      "sd_sample_ddof1": 0.014131881343919989,
+      "per_seed": {
+        "seed42": 0.6596558430256548,
+        "seed43": 0.6677983399798768,
+        "seed44": 0.6687022250652022,
+        "seed45": 0.6450355556062576,
+        "seed46": 0.6368832624331332
+      }
+    }
+  },
+  "uncertainty_meaning": "error bars = sample SD (ddof=1) across seeds",
+  "claim_boundary": "Must be plotted SEPARATELY from Figure D (primary) - never merged into one n=11 bar/panel. Same dataset/protocol as primary, not an independent replication.",
+  "provenance": [
+    "results/sleep_edf_secondary_holdout_evaluation.json"
+  ]
+}
