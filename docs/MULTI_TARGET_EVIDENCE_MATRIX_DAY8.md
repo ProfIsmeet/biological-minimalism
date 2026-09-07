@@ -34,11 +34,13 @@ tasks; see `docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md` SS10.
 
 | Field | Value |
 |---|---|
-| Aggregate (5 seeds) | Baseline 0.7473±0.0244, Candidate 0.7693±0.0132 macro-F1 |
-| Seed stability | 4/5 seeds favor candidate (1 near-tie) |
+| Aggregate (5 seeds) | Baseline 0.7473±0.0244, Aligned candidate 0.7693±0.0132, **Shuffled-EOG control 0.7420±0.0138** macro-F1 |
+| Seed stability | Aligned beats baseline 4/5 seeds; **aligned beats shuffled control 5/5 seeds** |
+| **Temporal-alignment control (Day 8)** | Shuffled EOG ≈ baseline (mean Δ −0.005, only 1/5 seeds favor it) — **the benefit does not survive shuffling** (Outcome 1: aligned timing matters) |
+| **Per-subject decomposition (Day 8)** | SC4011 IMPROVES (4/5 seeds, dominant effect); SC4081 and SC4131 MIXED (3/5, small deltas) — aggregate is not uniform across subjects |
 | Class heterogeneity | Every class improves or is flat; largest gains in N1, REM; none regresses |
-| Capacity | Avoided by design (1.35% parameter difference) — not a repeat of the PPG-DaLiA confound |
-| Evidence strength | `preliminary` (first experiment for this target/dataset, no negative control yet) |
+| Capacity | Avoided by design (1.35% parameter difference); shuffled control uses the identical architecture/parameter count as the aligned candidate |
+| Evidence strength | **`replicated-with-control`** (upgraded Day 8 from `preliminary`, per the matched negative control + coherent subject-level pattern) |
 | Prohibited claims | Astronaut/microgravity sleep validation; EOG necessity; any macro-F1-vs-MAE numeric comparison |
 
 ## Cross-target observations (descriptive only, not a ranking)

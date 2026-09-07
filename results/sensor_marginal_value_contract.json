@@ -1,5 +1,5 @@
 {
-  "methodology_version": "1.2.0",
+  "methodology_version": "1.3.0",
   "methodology_doc": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
   "generated_by": "ml/build_sensor_marginal_value_contract.py",
   "sign_convention": {
@@ -337,7 +337,50 @@
           "EOG horizontal"
         ]
       },
-      "negative_control": null,
+      "negative_control": {
+        "description": "EEG + EOG epochs shuffled within-subject-and-partition (temporal alignment destroyed, signal distribution preserved)",
+        "shuffled_eog_macro_f1_mean": 0.7420213232275609,
+        "shuffled_eog_macro_f1_sd_sample_ddof1": 0.013757100765136795,
+        "A_to_C": {
+          "mean": -0.005231210233164085,
+          "sd_sample_ddof1": 0.02406795935508609,
+          "per_seed": {
+            "seed42": 0.03680482726990886,
+            "seed43": -0.015420449490322619,
+            "seed44": -0.01987823254234422,
+            "seed45": -0.020302814195391594,
+            "seed46": -0.00735938220767085
+          },
+          "n_seeds_favor_C": 1,
+          "n_seeds_total": 5
+        },
+        "C_to_B": {
+          "mean": 0.027238616176175713,
+          "sd_sample_ddof1": 0.020092307538648674,
+          "per_seed": {
+            "seed42": 0.01541834792146668,
+            "seed43": 0.012229179271052049,
+            "seed44": 0.0571103065723676,
+            "seed45": 0.039000255580176946,
+            "seed46": 0.012434991535815287
+          },
+          "n_seeds_favor_B": 5,
+          "n_seeds_total": 5
+        },
+        "outcome_classification": "OUTCOME_1_ALIGNED_TIMING_MATTERS",
+        "note": "B beats C in 5/5 seeds; C is approximately equal to A - the EOG benefit does not survive within-subject temporal shuffling.",
+        "source_artifact": "results/sleep_edf_eeg_eog_control_analysis.json"
+      },
+      "per_subject_analysis": {
+        "source_artifact": "results/sleep_edf_per_subject_analysis.json",
+        "subject_directions": {
+          "SC4011": "IMPROVES",
+          "SC4081": "MIXED",
+          "SC4131": "MIXED"
+        },
+        "dominated_by_one_subject": true,
+        "note": "SC4011 shows the strongest, most consistent (4/5 seeds) positive effect; the other two held-out subjects are MIXED (3/5) with small mean deltas. The aggregate positive result is not uniform across subjects."
+      },
       "primary_metric": "macro_f1",
       "baseline_metrics": {
         "macro_f1_mean": 0.7472525334607252,
@@ -364,7 +407,7 @@
         "n_datasets": 1,
         "n_training_seeds": 5,
         "independent_ground_truth": "real PSG hypnogram-scored sleep stage annotations (not computed by this project)",
-        "negative_control_present": false,
+        "negative_control_present": true,
         "subject_disjoint_split": true
       },
       "capacity_confound_status": {
@@ -380,14 +423,14 @@
           "seed_level": "4/5 favor candidate (1 near-tie)",
           "class_level": "every class improves or is flat; largest gains in N1 and REM (physiologically expected classes for EOG); no class regresses"
         },
-        "evidence_strength": "preliminary",
-        "evidence_strength_rationale": "Mean effect (0.0220) is comparable in magnitude to its own seed-to-seed SD (0.0228), and this is the first experiment for this target/dataset (1 dataset, no negative control) - classified preliminary despite 4/5 seed consistency and a physiologically coherent class-level pattern."
+        "evidence_strength": "replicated-with-control",
+        "evidence_strength_rationale": "Mean effect (0.0220) is modest relative to its own seed-to-seed SD, but is now supported by a matched shuffled-EOG negative control: the aligned candidate beats the shuffled control in 5/5 seeds, and the shuffled control shows no benefit over baseline (mean delta -0.0052, only 1/5 seeds favor it) - the effect specifically depends on EEG-EOG temporal alignment, not merely on having an EOG-shaped input. Still limited to one dataset/population and 3 held-out subjects."
       },
       "limitations": [
         "First and only experiment for this target (sleep stage) - no replication across datasets.",
-        "No negative control (e.g. a shuffled-EOG condition) was run for this experiment.",
         "18 subjects total (12/3/3 split) - smaller population than PPG-DaLiA (15) or PTT (22) relative to its 5-class task complexity.",
-        "Sleep-EDF cassette recordings include substantial daytime wake time - severe class imbalance was handled via train-only class weighting, disclosed in the predeclaration."
+        "Sleep-EDF cassette recordings include substantial daytime wake time - severe class imbalance was handled via train-only class weighting, disclosed in the predeclaration.",
+        "Only 3 held-out test subjects; per-subject analysis shows the aggregate positive effect is not uniform (1 strong subject, 2 mixed/weak) - see per_subject_analysis."
       ],
       "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
       "source_reproducibility_artifact": "results/sleep_edf_eeg_eog_ablation_reproducibility.json",
@@ -413,7 +456,7 @@
     },
     "sleep_stage_5class": {
       "eog_horizontal_channel": {
-        "status": "POSITIVE_MODEST",
+        "status": "POSITIVE_MODEST_WITH_TEMPORAL_ALIGNMENT_CONTROL",
         "experiment_id": "sleep_edf_eeg_eog_sleep_stage"
       }
     },

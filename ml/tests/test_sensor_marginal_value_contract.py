@@ -203,7 +203,7 @@ def test_no_numeric_confidence_or_evidence_percentage(contract):
         status = exp.get("marginal_status")
         if not status:
             continue
-        assert status["evidence_strength"] in ("preliminary", "replicated-within-dataset", "mixed", "insufficient")
+        assert status["evidence_strength"] in ("preliminary", "replicated-within-dataset", "replicated-with-control", "mixed", "insufficient")
         # evidence_strength must be categorical text, never a bare numeric confidence
         assert not isinstance(status["evidence_strength"], (int, float))
 
@@ -271,7 +271,11 @@ requires_day7 = pytest.mark.skipif(
 
 @requires_day7
 def test_methodology_version_bumped_for_day7(contract):
-    assert contract["methodology_version"] == "1.2.0"
+    # Version has continued to advance (Day 8 shuffled-EOG control) - check
+    # it is at least the Day 7 baseline, not pinned to an exact string that
+    # legitimately keeps incrementing.
+    major, minor, _patch = (int(p) for p in contract["methodology_version"].split("."))
+    assert (major, minor) >= (1, 2)
 
 
 @requires_day7
@@ -313,7 +317,7 @@ def test_sleep_edf_capacity_avoided_by_design(contract):
 @requires_day7
 def test_evidence_matrix_includes_sleep_stage_target(contract):
     assert "sleep_stage_5class" in contract["evidence_matrix"]
-    assert contract["evidence_matrix"]["sleep_stage_5class"]["eog_horizontal_channel"]["status"] == "POSITIVE_MODEST"
+    assert contract["evidence_matrix"]["sleep_stage_5class"]["eog_horizontal_channel"]["status"].startswith("POSITIVE")
 
 
 @requires_day7
@@ -337,3 +341,36 @@ def test_no_conservative_terms_misused_in_contract_text(contract):
     forbidden_unqualified = ["is astronaut validated", "is microgravity validated", "is globally optimal", "is a proven causal"]
     for phrase in forbidden_unqualified:
         assert phrase not in text, f"prohibited unqualified claim phrase found: {phrase!r}"
+
+
+# --- Day 8 additions (shuffled-EOG control, per-subject decomposition) -----
+
+
+SLEEP_CONTROL_PATH = REPO_ROOT / "results" / "sleep_edf_eeg_eog_control_analysis.json"
+SLEEP_PER_SUBJECT_PATH = REPO_ROOT / "results" / "sleep_edf_per_subject_analysis.json"
+
+requires_day8 = pytest.mark.skipif(
+    not (SLEEP_CONTROL_PATH.exists() and SLEEP_PER_SUBJECT_PATH.exists()),
+    reason="Day 8 sleep-EDF control/per-subject artifacts not present",
+)
+
+
+@requires_day8
+def test_sleep_edf_evidence_upgraded_to_replicated_with_control(contract):
+    status = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["marginal_status"]
+    assert status["evidence_strength"] == "replicated-with-control"
+
+
+@requires_day8
+def test_sleep_edf_negative_control_present_and_outcome_1(contract):
+    nc = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["negative_control"]
+    assert nc is not None
+    assert nc["outcome_classification"] == "OUTCOME_1_ALIGNED_TIMING_MATTERS"
+    assert nc["C_to_B"]["n_seeds_favor_B"] == 5
+
+
+@requires_day8
+def test_sleep_edf_per_subject_dominated_flag_present(contract):
+    per_subj = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["per_subject_analysis"]
+    assert per_subj["dominated_by_one_subject"] is True
+    assert per_subj["subject_directions"]["SC4011"] == "IMPROVES"

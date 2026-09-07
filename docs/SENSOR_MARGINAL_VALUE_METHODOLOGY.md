@@ -101,6 +101,14 @@ presence, and known caveats. Categories used in the contract:
   replication and/or only one dataset/population (Experiment A's status).
 - `replicated-within-dataset` — the same direction holds across multiple
   independent training seeds on one dataset (Experiment B's status).
+- `replicated-with-control` (added Day 8) — `replicated-within-dataset`,
+  PLUS a matched negative control (e.g. a shuffled/scrambled version of
+  the candidate component) that shows the effect specifically depends on
+  the property the control removes (e.g. temporal alignment), not merely
+  on the candidate's presence. Strictly stronger than
+  `replicated-within-dataset` alone, but still scoped to one dataset/
+  population — see the Sleep-EDF EOG experiment for the first use of
+  this category.
 - `mixed` — direction itself is inconsistent across a primary evidence axis.
 - `insufficient` — too little evidence to assign a direction at all.
 
