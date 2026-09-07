@@ -1,0 +1,145 @@
+{
+  "artifact_id": "biological-minimalism-power-calculation-inputs-day11-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART1",
+  "canonical_base_commit": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+  "statement": "Frozen INPUTS for Day-11 Part-2 defensible power calculations. Part-1 does NOT calculate unsupported average or system power. This table records, per component, the direct datasheet active current/voltage, calculated active power, the relevant operating mode, the reference acquisition schedule, the duty-cycle assumption + confidence, whether average-power is ready to compute, and missing dependencies. Duty-cycle assumptions are REFERENCE_SCHEDULE_ASSUMPTIONs, NOT validated deployable duty cycles. No system power total is authorized here.",
+  "prohibited": [
+    "Do NOT sum component active powers into a system power number.",
+    "Do NOT treat a REFERENCE_SCHEDULE_ASSUMPTION duty as a validated deployable duty cycle.",
+    "Do NOT use the AD5940 6.5 uA potentiostat point as active BioZ measurement power.",
+    "Do NOT treat AFE-only <10 uA MAX86141 readout as deployable optical (LED-inclusive) power."
+  ],
+  "source_of_truth": "results/operational_cost_catalog.json (power_energy blocks) + results/engineering_evidence_inventory_day11.json",
+  "components": [
+    {
+      "component_id": "wrist_ppg", "representative_part": "MAX86141", "module": "wrist_module",
+      "datasheet_active_current": {"value": null, "max": 10.0, "unit": "uA", "class": "DATASHEET_DIRECT"},
+      "voltage": {"value": 1.8, "unit": "V", "class": "DATASHEET_DIRECT", "note": "AFE supply; LED supply separate/open"},
+      "calculated_active_power": {"value": null, "max": 0.018, "unit": "mW", "class": "DATASHEET_CALCULATED", "note": "AFE readout floor; excludes LEDs"},
+      "relevant_operating_mode": "optical readout @25 s/s (AFE reference); 64 Hz deployable mode UNVALIDATED",
+      "reference_acquisition_schedule": {"rate_hz": 64, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "continuous": true},
+      "duty_cycle_assumption": {"value": 100, "unit": "percent", "class": "REFERENCE_SCHEDULE_ASSUMPTION"},
+      "duty_cycle_confidence": "MEDIUM",
+      "average_power_ready": false,
+      "missing_dependencies": ["LED wavelengths/currents (dominant optical power)", "64 Hz operating-point AFE current", "MCU/radio/regulator", "idle/sleep states"]
+    },
+    {
+      "component_id": "wrist_imu", "representative_part": "BMI270", "module": "wrist_module",
+      "datasheet_active_current": {"min": 10.0, "max": 210.0, "unit": "uA", "class": "DATASHEET_DIRECT"},
+      "voltage": {"value": 1.8, "unit": "V", "class": "DATASHEET_DIRECT"},
+      "calculated_active_power": {"min": 0.018, "max": 0.378, "unit": "mW", "class": "DATASHEET_CALCULATED"},
+      "relevant_operating_mode": "accelerometer-only; 10 uA low-power @25 Hz .. 210 uA normal @ max ODR",
+      "reference_acquisition_schedule": {"rate_hz": 32, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "continuous": true},
+      "duty_cycle_assumption": {"value": 100, "unit": "percent", "class": "REFERENCE_SCHEDULE_ASSUMPTION"},
+      "duty_cycle_confidence": "MEDIUM",
+      "average_power_ready": "PARTIAL",
+      "average_power_ready_note": "A REFERENCE active power at a chosen accelerometer mode is computable, but the exact 32 Hz-compatible BMI270 mode current is not pinned to a single point (range 10-210 uA). Part-2 may compute a REFERENCE-band active power, not a single deployable average.",
+      "missing_dependencies": ["exact 32 Hz-compatible mode current (single point)", "idle/sleep duty", "MCU/radio/regulator"]
+    },
+    {
+      "component_id": "skin_temperature", "representative_part": "TMP117", "module": "wrist_module",
+      "datasheet_active_current": {"value": 3.5, "unit": "uA", "class": "DATASHEET_DIRECT", "note": "avg @1 Hz, averaging off"},
+      "voltage": {"value": 3.3, "unit": "V", "class": "ARCHITECTURE_ASSUMPTION"},
+      "calculated_active_power": {"value": 0.01155, "unit": "mW", "class": "DATASHEET_CALCULATED"},
+      "relevant_operating_mode": "1 Hz conversion, averaging off (component boundary)",
+      "reference_acquisition_schedule": {"rate_hz": 1, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "continuous": true},
+      "duty_cycle_assumption": {"value": 100, "unit": "percent_of_1Hz_schedule", "class": "REFERENCE_SCHEDULE_ASSUMPTION"},
+      "duty_cycle_confidence": "MEDIUM",
+      "average_power_ready": true,
+      "average_power_ready_note": "Component-boundary average power (0.01155 mW) is defensible at the 1 Hz reference schedule. This is IC-only, NOT system power.",
+      "missing_dependencies": ["MCU/radio/regulator allocation", "shutdown-mode duty if intermittent"]
+    },
+    {
+      "component_id": "light_sensor", "representative_part": "OPT3001-Q1-class", "module": "wrist_module",
+      "datasheet_active_current": {"value": 1.8, "unit": "uA", "class": "DATASHEET_DIRECT"},
+      "voltage": {"value": 3.3, "unit": "V", "class": "ARCHITECTURE_ASSUMPTION"},
+      "calculated_active_power": {"value": 0.00594, "unit": "mW", "class": "DATASHEET_CALCULATED"},
+      "relevant_operating_mode": "continuous conversion",
+      "reference_acquisition_schedule": {"rate_hz": null, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "continuous": true, "note": "report cadence open"},
+      "duty_cycle_assumption": {"value": 100, "unit": "percent", "class": "REFERENCE_SCHEDULE_ASSUMPTION"},
+      "duty_cycle_confidence": "MEDIUM",
+      "average_power_ready": true,
+      "average_power_ready_note": "Component-boundary average power (0.00594 mW) = active power in continuous-conversion reference mode. IC-only. NOTE: LOCATION_UNRESOLVED — if cabin-mounted this contributes ZERO body-worn power.",
+      "missing_dependencies": ["placement (wrist vs cabin) — determines whether it is body-worn burden at all", "single-shot duty if intermittent", "MCU/radio/regulator"]
+    },
+    {
+      "component_id": "ecg_chest", "representative_part": "ADS1292R", "module": "chest_module",
+      "datasheet_active_current": {"value": null, "class": "DATASHEET_DIRECT", "note": "per-channel power point used directly (335 uW/ch)"},
+      "voltage": {"value": null, "unit": "V", "class": "DATASHEET_DIRECT", "note": "per-channel power used directly; combined rail not asserted"},
+      "calculated_active_power": {"value": 0.67, "unit": "mW", "class": "DATASHEET_CALCULATED", "note": "2 x 335 uW/ch @250 s/s"},
+      "relevant_operating_mode": "2-channel AFE @250 s/s reference",
+      "reference_acquisition_schedule": {"rate_hz": 250, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "continuous": true},
+      "duty_cycle_assumption": {"value": 100, "unit": "percent", "class": "REFERENCE_SCHEDULE_ASSUMPTION"},
+      "duty_cycle_confidence": "MEDIUM",
+      "average_power_ready": true,
+      "average_power_ready_note": "AFE-boundary average power (0.67 mW) defensible at continuous 250 s/s. AFE-only; excludes lead-off excitation, electrodes, MCU/radio/regulator. NOT system power.",
+      "missing_dependencies": ["lead-off excitation power", "electrode count/montage", "MCU/radio/regulator"]
+    },
+    {
+      "component_id": "thoracic_bioz", "representative_part": "AD5940-class", "module": "chest_module",
+      "datasheet_active_current": {"value": null, "class": "UNKNOWN", "note": "6.5 uA potentiostat point is NOT BioZ measurement current"},
+      "voltage": {"min": 2.8, "max": 3.6, "unit": "V", "class": "DATASHEET_DIRECT"},
+      "calculated_active_power": {"value": null, "class": "UNKNOWN"},
+      "relevant_operating_mode": "intermittent BioZ measurement (excitation + sequence OPEN)",
+      "reference_acquisition_schedule": {"rate_hz": null, "class": "UNKNOWN", "note": "cadence/duration open"},
+      "duty_cycle_assumption": {"value": null, "class": "UNKNOWN"},
+      "duty_cycle_confidence": "LOW",
+      "average_power_ready": false,
+      "missing_dependencies": ["active BioZ measurement current/power", "excitation frequency/amplitude", "measurement cadence + duration", "MCU/radio/regulator"]
+    },
+    {
+      "component_id": "frontal_eeg", "representative_part": "ADS1299-4-class", "module": "head_module",
+      "datasheet_active_current": {"value": null, "class": "UNKNOWN"},
+      "voltage": {"value": null, "unit": "V", "class": "UNKNOWN"},
+      "calculated_active_power": {"value": null, "class": "UNKNOWN", "note": "no complete operating point"},
+      "relevant_operating_mode": "4-channel EEG AFE, intermittent session (OPEN)",
+      "reference_acquisition_schedule": {"rate_hz": 250, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "note": "payload reference; dataset EEG is 100 Hz"},
+      "duty_cycle_assumption": {"value": null, "class": "UNKNOWN", "note": "session-based; duration/frequency open"},
+      "duty_cycle_confidence": "LOW",
+      "average_power_ready": false,
+      "missing_dependencies": ["AFE supply + active current operating point", "session duty schedule", "electrode/bias network power", "MCU/radio/regulator"]
+    },
+    {
+      "component_id": "frontal_eog_horizontal", "representative_part": "shares ADS1299-4-class head-module AFE", "module": "head_module",
+      "datasheet_active_current": {"value": null, "class": "UNKNOWN", "note": "one added channel on shared AFE; not independently quantified"},
+      "voltage": {"value": null, "unit": "V", "class": "UNKNOWN"},
+      "calculated_active_power": {"value": null, "class": "UNKNOWN"},
+      "relevant_operating_mode": "1 added biopotential channel on shared EEG AFE",
+      "reference_acquisition_schedule": {"rate_hz": 100, "class": "REFERENCE_SCHEDULE_ASSUMPTION", "note": "Sleep-EDF EOG horizontal is 100 Hz"},
+      "duty_cycle_assumption": {"value": null, "class": "UNKNOWN", "note": "tracks EEG session schedule"},
+      "duty_cycle_confidence": "LOW",
+      "average_power_ready": false,
+      "average_power_ready_note": "Incremental power is one channel on the already-counted head-module AFE. SYSTEM_POWER_NOT_READY: not zero, not quantified. Depends entirely on frontal_eeg operating point.",
+      "missing_dependencies": ["head-module AFE operating point (shared with frontal_eeg)", "session duty schedule", "standalone-vs-shared front-end decision"]
+    },
+    {
+      "component_id": "leg_bioz", "representative_part": "AD5940-class (separate instance)", "module": "leg_module",
+      "datasheet_active_current": {"value": null, "class": "UNKNOWN"},
+      "voltage": {"min": 2.8, "max": 3.6, "unit": "V", "class": "DATASHEET_DIRECT"},
+      "calculated_active_power": {"value": null, "class": "UNKNOWN"},
+      "relevant_operating_mode": "intermittent experimental BioZ (OPEN)",
+      "reference_acquisition_schedule": {"rate_hz": null, "class": "UNKNOWN"},
+      "duty_cycle_assumption": {"value": null, "class": "UNKNOWN"},
+      "duty_cycle_confidence": "LOW",
+      "average_power_ready": false,
+      "missing_dependencies": ["active BioZ measurement current/power", "excitation params", "measurement cadence", "MCU/radio/regulator", "own module electronics"]
+    },
+    {
+      "component_id": "second_ppg_site", "representative_part": "MAX86141-class extension", "module": "optical_site_evaluation_branch",
+      "datasheet_active_current": {"value": null, "max": 10.0, "unit": "uA", "class": "DATASHEET_DIRECT", "note": "AFE readout floor; NOT 500 Hz multi-wavelength site current"},
+      "voltage": {"value": 1.8, "unit": "V", "class": "DATASHEET_DIRECT", "note": "AFE supply; LED supply separate"},
+      "calculated_active_power": {"value": null, "max": 0.018, "unit": "mW", "class": "DATASHEET_CALCULATED", "note": "AFE floor only"},
+      "relevant_operating_mode": "3-wavelength optical @500 Hz (deployable OPEN)",
+      "reference_acquisition_schedule": {"rate_hz": 500, "class": "REFERENCE_SCHEDULE_ASSUMPTION"},
+      "duty_cycle_assumption": {"value": null, "class": "UNKNOWN", "note": "continuous in experiment; deployable open"},
+      "duty_cycle_confidence": "LOW",
+      "average_power_ready": false,
+      "missing_dependencies": ["LED currents (dominant)", "500 Hz AFE sequencing current", "module boundary (shared/tethered/standalone)", "MCU/radio/regulator"]
+    }
+  ],
+  "system_power_authorization": {
+    "status": "SYSTEM_AVERAGE_POWER_NOT_READY",
+    "reason": "Component/AFE-boundary reference powers exist for 5 ICs; deployable duty, shared MCU/radio/regulator efficiency, battery, and module scheduling are not frozen. No system sum is authorized in Part-1 or from these inputs alone."
+  }
+}
