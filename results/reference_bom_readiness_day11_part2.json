@@ -1,0 +1,374 @@
+{
+  "artifact_id": "biological-minimalism-reference-bom-readiness-day11-part2-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "not_a_final_bom": true,
+  "advances_from": "results/reference_bom_readiness_day10.json",
+  "vocabulary": [
+    "REFERENCE_SELECTED",
+    "AVAILABLE",
+    "PARTIAL",
+    "MISSING",
+    "NOT_APPLICABLE"
+  ],
+  "vocabulary_note": "REFERENCE_SELECTED = a representative reference class is chosen for calculation; it is NOT a final component (final = false).",
+  "part2_advance": "MCU / radio / regulator / battery moved MISSING -> REFERENCE_SELECTED (class level, final=false). Sensing ICs/AFEs remain REFERENCE_SELECTED classes. Electrodes/PCB/enclosure/attachment/wiring remain MISSING (no geometry/materials).",
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "items": [
+        {
+          "item": "sensing_ic_ppg",
+          "reference": "MAX86141",
+          "status": "REFERENCE_SELECTED",
+          "note": "AFE class; LEDs/optical stack MISSING"
+        },
+        {
+          "item": "sensing_ic_imu",
+          "reference": "BMI270",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "sensing_ic_temp",
+          "reference": "TMP117",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "sensing_ic_light",
+          "reference": "OPT3001-Q1",
+          "status": "REFERENCE_SELECTED",
+          "note": "LOCATION_UNRESOLVED (wrist vs cabin)"
+        },
+        {
+          "item": "afe",
+          "reference": "integrated in sensing ICs",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "mcu",
+          "reference": "Cortex-M4F BLE SoC class",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false; exact current unresolved"
+        },
+        {
+          "item": "radio",
+          "reference": "BLE (scenario-level)",
+          "status": "REFERENCE_SELECTED",
+          "note": "continuous vs burst scenarios; final=false"
+        },
+        {
+          "item": "regulator",
+          "reference": "multi-rail PMIC/LDO (rails defined)",
+          "status": "REFERENCE_SELECTED",
+          "note": "efficiency NOT frozen"
+        },
+        {
+          "item": "battery",
+          "reference": "REFERENCE_MECHANICAL_BATTERY_CASE (Li-Po class)",
+          "status": "REFERENCE_SELECTED",
+          "note": "capacity/mass/dims unknown"
+        },
+        {
+          "item": "electrodes",
+          "reference": null,
+          "status": "NOT_APPLICABLE",
+          "note": "optical/thermal/light \u2014 no skin electrodes"
+        },
+        {
+          "item": "pcb",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "enclosure",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "attachment",
+          "reference": "wrist strap",
+          "status": "MISSING",
+          "note": "geometry/material MISSING"
+        },
+        {
+          "item": "wiring",
+          "reference": null,
+          "status": "MISSING"
+        }
+      ]
+    },
+    {
+      "module_id": "chest_module",
+      "items": [
+        {
+          "item": "sensing_ic_ecg",
+          "reference": "ADS1292R",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "sensing_ic_bioz",
+          "reference": "AD5940-class",
+          "status": "REFERENCE_SELECTED",
+          "note": "active BioZ operating point MISSING"
+        },
+        {
+          "item": "afe",
+          "reference": "ADS1292R + AD5940-class",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "mcu",
+          "reference": "Cortex-M4F BLE SoC class",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false"
+        },
+        {
+          "item": "radio",
+          "reference": "BLE (scenario-level)",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false"
+        },
+        {
+          "item": "regulator",
+          "reference": "multi-rail PMIC/LDO",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "battery",
+          "reference": "REFERENCE_MECHANICAL_BATTERY_CASE",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "electrodes",
+          "reference": null,
+          "status": "MISSING",
+          "note": "montage/count/material OPEN"
+        },
+        {
+          "item": "pcb",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "enclosure",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "attachment",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "wiring",
+          "reference": null,
+          "status": "MISSING"
+        }
+      ]
+    },
+    {
+      "module_id": "head_module",
+      "items": [
+        {
+          "item": "sensing_ic_eeg",
+          "reference": "ADS1299-4-class",
+          "status": "REFERENCE_SELECTED",
+          "note": "operating-point power MISSING"
+        },
+        {
+          "item": "sensing_ic_eog",
+          "reference": "shared ADS1299-4 spare channel",
+          "status": "REFERENCE_SELECTED",
+          "note": "+2 ocular electrodes; shared reference/bias"
+        },
+        {
+          "item": "afe",
+          "reference": "ADS1299-4-class",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "mcu",
+          "reference": "Cortex-M4F BLE SoC class",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false"
+        },
+        {
+          "item": "radio",
+          "reference": "BLE (scenario-level)",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false"
+        },
+        {
+          "item": "regulator",
+          "reference": "multi-rail PMIC/LDO (5V AVDD + DVDD)",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "battery",
+          "reference": "REFERENCE_MECHANICAL_BATTERY_CASE",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "electrodes",
+          "reference": "EEG montage + 2 EOG ocular",
+          "status": "PARTIAL",
+          "note": "EOG sensing-contact increment=2 defensible; EEG count OPEN; materials MISSING"
+        },
+        {
+          "item": "pcb",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "enclosure",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "attachment",
+          "reference": "head band + peri-ocular extension",
+          "status": "MISSING"
+        },
+        {
+          "item": "wiring",
+          "reference": "2 EOG leads to head AFE",
+          "status": "PARTIAL",
+          "note": "count defensible; material MISSING"
+        }
+      ]
+    },
+    {
+      "module_id": "leg_module",
+      "items": [
+        {
+          "item": "sensing_ic_bioz",
+          "reference": "AD5940-class (separate)",
+          "status": "REFERENCE_SELECTED",
+          "note": "active BioZ operating point MISSING"
+        },
+        {
+          "item": "afe",
+          "reference": "AD5940-class",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "mcu",
+          "reference": "Cortex-M4F BLE SoC class",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false"
+        },
+        {
+          "item": "radio",
+          "reference": "BLE (scenario-level)",
+          "status": "REFERENCE_SELECTED",
+          "note": "final=false"
+        },
+        {
+          "item": "regulator",
+          "reference": "multi-rail PMIC/LDO",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "battery",
+          "reference": "REFERENCE_MECHANICAL_BATTERY_CASE",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "electrodes",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "pcb",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "enclosure",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "attachment",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "wiring",
+          "reference": null,
+          "status": "MISSING"
+        }
+      ]
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "items": [
+        {
+          "item": "sensing_ic_ppg2",
+          "reference": "MAX86141-class extension",
+          "status": "REFERENCE_SELECTED",
+          "note": "optical stack MISSING; 500 Hz current MISSING"
+        },
+        {
+          "item": "afe",
+          "reference": "MAX86141-class",
+          "status": "REFERENCE_SELECTED"
+        },
+        {
+          "item": "mcu",
+          "reference": null,
+          "status": "MISSING",
+          "note": "module boundary OPEN \u2014 shared/tethered/standalone undecided"
+        },
+        {
+          "item": "radio",
+          "reference": null,
+          "status": "MISSING",
+          "note": "only if standalone"
+        },
+        {
+          "item": "regulator",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "battery",
+          "reference": null,
+          "status": "MISSING",
+          "note": "only if standalone"
+        },
+        {
+          "item": "electrodes",
+          "reference": null,
+          "status": "NOT_APPLICABLE",
+          "note": "optical"
+        },
+        {
+          "item": "pcb",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "enclosure",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "attachment",
+          "reference": null,
+          "status": "MISSING"
+        },
+        {
+          "item": "wiring",
+          "reference": null,
+          "status": "MISSING"
+        }
+      ]
+    }
+  ],
+  "system_readiness": {
+    "system_average_power": "SYSTEM_AVERAGE_POWER_NOT_READY",
+    "system_mass": "SYSTEM_MASS_NOT_READY",
+    "final_bom": "FINAL_BOM_NOT_SELECTED"
+  }
+}

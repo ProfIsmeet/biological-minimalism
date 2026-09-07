@@ -1,0 +1,106 @@
+{
+  "artifact_id": "biological-minimalism-reference-shared-electronics-day11-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "final_part": false,
+  "statement": "Reference shared-electronics CLASSES for an engineering calculation case only \u2014 NOT a final BOM and NOT a procurement decision. Classes are representative of a low-power wearable; exact currents are kept unresolved where not frozen so that NO system power is implied.",
+  "mcu": {
+    "reference_class": "ARM Cortex-M4F-class BLE wearable SoC (e.g. Nordic nRF52-class)",
+    "selection_criteria_met": [
+      "SPI/I2C sensor interfaces",
+      "aggregate reference data rate (tens of kbps)",
+      "local buffering + timestamping",
+      "basic preprocessing",
+      "integrated BLE control"
+    ],
+    "chosen_for_maximum_performance": false,
+    "active_current": {
+      "value": null,
+      "class": "UNKNOWN",
+      "note": "representative class ~mA active; exact point NOT frozen"
+    },
+    "sleep_current": {
+      "value": null,
+      "class": "UNKNOWN",
+      "note": "representative ~uA deep-sleep; exact point NOT frozen"
+    },
+    "voltage": {
+      "value": null,
+      "class": "UNKNOWN"
+    },
+    "clock": {
+      "value": null,
+      "class": "UNKNOWN"
+    },
+    "peripheral_assumptions": [
+      "shared SPI bus to AFEs",
+      "I2C to temp/light",
+      "internal RTC for timestamping"
+    ],
+    "source": "reference-class assumption (no datasheet frozen)",
+    "final_part": false,
+    "note": "No exact current is used in any power sum; system power stays NOT_READY by construction."
+  },
+  "radio": {
+    "reference_scenarios": {
+      "continuous_stream_reference": {
+        "description": "BLE continuous streaming of raw/lightly-processed data",
+        "deployment_final": false,
+        "duty": "high radio-on fraction"
+      },
+      "buffered_burst_reference": {
+        "description": "Local storage + intermittent BLE burst upload",
+        "deployment_final": false,
+        "duty": "low radio-on fraction, higher local storage"
+      }
+    },
+    "communication_schedule_frozen": false,
+    "chosen_to_minimise_power": false,
+    "final_part": false
+  },
+  "regulator_pmic": {
+    "rails_distinguished": [
+      "sensor/analog rail (e.g. 3.3 V for TMP117/OPT3001; 5 V AVDD for EEG)",
+      "digital rail (1.8 V AFE cores / DVDD)",
+      "battery voltage"
+    ],
+    "efficiency": {
+      "value": null,
+      "class": "UNKNOWN",
+      "note": "NOT frozen; an arbitrary 90% is explicitly NOT applied. Efficiency would be a labelled reference assumption ONLY when a system power calc is authorised."
+    },
+    "final_part": false
+  },
+  "battery": {
+    "id": "REFERENCE_MECHANICAL_BATTERY_CASE",
+    "used_to_compute_runtime": false,
+    "chemistry": {
+      "value": "rechargeable Li-polymer (reference class)",
+      "class": "ARCHITECTURE_ASSUMPTION"
+    },
+    "capacity": {
+      "value": null,
+      "class": "UNKNOWN"
+    },
+    "nominal_voltage": {
+      "value": 3.7,
+      "unit": "V",
+      "class": "ARCHITECTURE_ASSUMPTION",
+      "note": "typical Li-Po nominal; representative only"
+    },
+    "mass": {
+      "value": null,
+      "class": "UNKNOWN",
+      "note": "no cell datasheet frozen; mass NOT asserted"
+    },
+    "dimensions": {
+      "value": null,
+      "class": "UNKNOWN"
+    },
+    "source": "reference-class assumption (no cell datasheet frozen)",
+    "runtime_note": "No runtime computed \u2014 system average power is NOT_READY.",
+    "final_part": false
+  },
+  "data_rate_requirement_reference": "See results/reference_data_rate_budget_day11.json (partial raw payload ~48 kbps, radio rate NOT_READY).",
+  "source_confidence": "LOW-MEDIUM (reference classes, not selected parts)"
+}

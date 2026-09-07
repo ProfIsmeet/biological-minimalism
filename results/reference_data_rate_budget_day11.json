@@ -1,0 +1,147 @@
+{
+  "artifact_id": "biological-minimalism-reference-data-rate-budget-day11-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "statement": "Transparent RAW-sensor data-rate table. raw_payload_bit_rate = channels x sample_rate x bits/sample. RAW excludes framing, protocol, and compression. RADIO_DATA_RATE and PROCESSED_DATA_RATE are NOT computed (overhead/compression/schedule open).",
+  "equation": "raw_payload_bit_rate = channels x sample_rate_hz x bits_per_sample",
+  "rate_class_separation": {
+    "RAW_SENSOR_DATA_RATE": "computed where channels/rate/bits are frozen",
+    "PROCESSED_DATA_RATE": "NOT_READY",
+    "RADIO_DATA_RATE": "NOT_READY"
+  },
+  "modalities": [
+    {
+      "modality": "wrist_ppg",
+      "module": "wrist_module",
+      "channels": 1,
+      "sample_rate_hz": 64,
+      "bits_per_sample": 19,
+      "raw_payload_bit_rate": 1216,
+      "class": "DATASHEET_CALCULATED",
+      "note": "64 Hz is a REFERENCE_SCHEDULE_ASSUMPTION; 19-bit MAX86141 conversion."
+    },
+    {
+      "modality": "wrist_imu",
+      "module": "wrist_module",
+      "channels": 3,
+      "sample_rate_hz": 32,
+      "bits_per_sample": 16,
+      "raw_payload_bit_rate": 1536,
+      "class": "DATASHEET_CALCULATED"
+    },
+    {
+      "modality": "skin_temperature",
+      "module": "wrist_module",
+      "channels": 1,
+      "sample_rate_hz": 1,
+      "bits_per_sample": 16,
+      "raw_payload_bit_rate": 16,
+      "class": "DATASHEET_CALCULATED"
+    },
+    {
+      "modality": "light_sensor",
+      "module": "wrist_module",
+      "channels": 1,
+      "sample_rate_hz": null,
+      "bits_per_sample": 16,
+      "raw_payload_bit_rate": null,
+      "class": "UNKNOWN",
+      "note": "report cadence open; placement LOCATION_UNRESOLVED. NOT_READY (not zero)."
+    },
+    {
+      "modality": "ecg_chest",
+      "module": "chest_module",
+      "channels": 2,
+      "sample_rate_hz": 250,
+      "bits_per_sample": 24,
+      "raw_payload_bit_rate": 12000,
+      "class": "DATASHEET_CALCULATED"
+    },
+    {
+      "modality": "thoracic_bioz",
+      "module": "chest_module",
+      "channels": null,
+      "sample_rate_hz": null,
+      "bits_per_sample": 16,
+      "raw_payload_bit_rate": null,
+      "class": "UNKNOWN",
+      "note": "BioZ cadence/channels open. NOT_READY."
+    },
+    {
+      "modality": "frontal_eeg",
+      "module": "head_module",
+      "channels": 1,
+      "sample_rate_hz": 100,
+      "bits_per_sample": 24,
+      "raw_payload_bit_rate": 2400,
+      "class": "DATASHEET_CALCULATED",
+      "note": "Scientific use case: 1 EEG derivation @100 Hz. AFE-capacity framing = 4ch x 250 SPS x 24 = 24000 bps."
+    },
+    {
+      "modality": "frontal_eog_horizontal",
+      "module": "head_module",
+      "channels": 1,
+      "sample_rate_hz": 100,
+      "bits_per_sample": 24,
+      "raw_payload_bit_rate": 2400,
+      "class": "DATASHEET_CALCULATED",
+      "note": "Matches frozen results/eog_operational_burden_day10.json (2400 bps). On a shared AFE at 250 SPS it would be 6000 bps."
+    },
+    {
+      "modality": "second_ppg_site",
+      "module": "optical_site_evaluation_branch",
+      "channels": 3,
+      "sample_rate_hz": 500,
+      "bits_per_sample": 19,
+      "raw_payload_bit_rate": 28500,
+      "class": "DATASHEET_CALCULATED"
+    },
+    {
+      "modality": "leg_bioz",
+      "module": "leg_module",
+      "channels": null,
+      "sample_rate_hz": null,
+      "bits_per_sample": 16,
+      "raw_payload_bit_rate": null,
+      "class": "UNKNOWN",
+      "note": "BioZ cadence/channels open. NOT_READY."
+    }
+  ],
+  "module_raw_totals": {
+    "wrist_module": {
+      "raw_bps_excl_light": 2768,
+      "light_status": "NOT_READY_ADDS_UNKNOWN"
+    },
+    "chest_module": {
+      "raw_bps_ecg_only": 12000,
+      "bioz_status": "NOT_READY_ADDS_UNKNOWN"
+    },
+    "head_module": {
+      "raw_bps_scientific_2ch_100hz": 4800,
+      "raw_bps_afe_capacity_4ch_250sps": 24000,
+      "note": "scientific use case enables 2 of 4 channels @100 Hz"
+    },
+    "leg_module": {
+      "raw_bps": null,
+      "status": "NOT_READY"
+    },
+    "optical_site_evaluation_branch": {
+      "raw_bps": 28500
+    }
+  },
+  "system_raw_total": {
+    "value_bps": 48068,
+    "value_kbps": 48.068,
+    "framing": "PARTIAL LOWER BOUND \u2014 scientific-use-case head (2ch@100Hz)",
+    "excludes": [
+      "light_sensor (open)",
+      "thoracic BioZ (open)",
+      "leg BioZ (open)",
+      "protocol overhead",
+      "compression"
+    ],
+    "class": "DATASHEET_CALCULATED_PARTIAL",
+    "not_a_radio_rate": true
+  },
+  "radio_rate_status": "RADIO_DATA_RATE_NOT_READY (overhead, compression, and upload schedule unfrozen)"
+}
