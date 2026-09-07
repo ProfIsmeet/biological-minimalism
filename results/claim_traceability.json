@@ -171,6 +171,93 @@
         11
       ],
       "status": "frozen"
+    },
+    {
+      "claim_id": "day10-scientific-reproduction-pass",
+      "claim_text": "Every checkpoint-based canonical result was independently re-evaluated from frozen weights under the verified frozen environment with exactly zero numerical difference; the full 114-condition robustness sweep reproduced within a documented float32 tolerance (max 7.6e-6 bpm). Overall: SCIENTIFIC_REPRODUCTION_PASS. This is re-evaluation from frozen artifacts on the same stack, NOT independent-dataset replication.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/day10_scientific_reproduction.json",
+      "source_field": "overall",
+      "api_surface": "GET /research/reproducibility",
+      "frontend_surface": "Research Mode > Reproducibility panel",
+      "paper_section": "Methods (Reproducibility)",
+      "jury_question_ids": [
+        21,
+        22
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day10-frozen-environment",
+      "claim_text": "The scientific training/evaluation environment was verified field-by-field against the frozen manifest (Python 3.13.0, PyTorch 2.6.0+cpu, NumPy 2.5.2, SciPy 1.18.1, scikit-learn 1.9.0, MNE 1.12.1, WFDB 4.3.1, pandas 3.0.5): EXACT_FROZEN_ENVIRONMENT, no package changed to force a match.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/day10_frozen_environment_verification.json",
+      "source_field": "environment_status",
+      "api_surface": "GET /research/reproducibility",
+      "frontend_surface": "Research Mode > Reproducibility panel (frozen environment)",
+      "paper_section": "Methods (Reproducibility)",
+      "jury_question_ids": [
+        22
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day10-dataset-fingerprints",
+      "claim_text": "All 266 raw input records used by the canonical experiments (PPG-DaLiA 16, PTT 198, Sleep primary 36, Sleep secondary 16) are present and fingerprinted; zero raw files are committed to git.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/dataset_fingerprint_manifest_day10.json",
+      "source_field": "overall_summary",
+      "api_surface": "GET /research/reproducibility",
+      "frontend_surface": "Research Mode > Reproducibility panel (dataset fingerprints)",
+      "paper_section": "Methods (Reproducibility)",
+      "jury_question_ids": [
+        23
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day10-robustness-reproduction",
+      "claim_text": "The full 114-condition PPG-DaLiA fault-robustness sweep was re-run from the local frozen checkpoint (no retraining); all 114 conditions match within 1e-4 bpm (max observed 7.6e-6 bpm, float32 rounding noise).",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/day10_ppg_dalia_fault_robustness_reproduction.json",
+      "source_field": "n_conditions_reproduced",
+      "api_surface": "GET /research/reproducibility",
+      "frontend_surface": "Research Mode > Case 1 reproducibility",
+      "paper_section": "Methods (Reproducibility) + Results 4.1",
+      "jury_question_ids": [
+        21
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day10-interaction-approx-additive",
+      "claim_text": "One predeclared, capacity-fair (112 params/channel) factorial experiment (Sleep-EDF EEG x EOG x Resp) gives an interaction term of +0.0031 +/- 0.0434 macro-F1 (2/5 seeds positive): approximately additive / unresolved. Adding both EOG and respiration showed no stable extra benefit beyond their individual effects under this model and dataset. This does NOT prove sensor interactions are globally absent and is NOT an EOG+Resp synergy claim.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/sleep_edf_interaction_resp_day10.json",
+      "source_field": "interaction_term_mean",
+      "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
+      "frontend_surface": "Research Mode > Case 3 interaction panel",
+      "paper_section": "Results 4.3 (Interaction) / Methods",
+      "jury_question_ids": [
+        24,
+        25,
+        26
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day10-eog-operational-burden",
+      "claim_text": "Adding horizontal EOG for sleep staging needs 2 lateral-ocular sensing electrodes (interpretation-independent); under a shared-reference head-module architecture it reuses the existing ADS1299-class reference/bias and adds no new module (standalone: 3-4 contacts, possibly a new front-end). Incremental power and mass remain NOT_READY. The EOG contact burden is NOT zero.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/eog_operational_burden_day10.json",
+      "source_field": "burden_output.sensing_contact_increment",
+      "api_surface": "GET /research/operational-costs",
+      "frontend_surface": "Research Mode > Case 3 EOG burden",
+      "paper_section": "Discussion (operational burden)",
+      "jury_question_ids": [
+        28
+      ],
+      "status": "frozen"
     }
   ]
 }

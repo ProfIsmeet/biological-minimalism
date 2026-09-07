@@ -54,6 +54,17 @@ FORBIDDEN = [
     (re.compile(r"\b20\.6\s*%[^.\n]{0,40}\bpure\b", re.IGNORECASE), "'20.6% pure IMU' claim"),
     (re.compile(r"\b1\.88(0|8|79)?\s*bpm\b[^.\n]{0,30}\b(clean|current|pure)\b", re.IGNORECASE), "'1.88 bpm current clean IMU' claim"),
     (re.compile(r"\b68\s*%[^.\n]{0,40}\b(pure|parameter|causal)", re.IGNORECASE), "'68% pure parameter' claim"),
+    # Day-10 forbidden bald claims (§33). Each is exempt when the line carries a
+    # negation marker, so legitimate "does NOT prove...", "NOT ready", "not a final
+    # BOM" copy passes; only bald positive assertions are flagged.
+    (re.compile(r"\bsynerg(y|istic)\b", re.IGNORECASE), "sensor 'synergy' claim (EOG+Resp interaction is approximately additive/unresolved)"),
+    (re.compile(r"\binteractions?\s+(are\s+|is\s+)?(absent|globally\s+absent|proven\s+absent|don't\s+matter|do\s+not\s+matter)\b", re.IGNORECASE), "'interactions absent/proven' claim"),
+    (re.compile(r"\bfinal\s+BOM\b", re.IGNORECASE), "'final BOM' claim (only reference BOM readiness exists)"),
+    (re.compile(r"\bfinal\s+architecture\s+(is\s+)?(selected|chosen|decided|resolved|frozen)\b", re.IGNORECASE), "'final architecture selected' claim (architecture is UNRESOLVED)"),
+    (re.compile(r"\bsystem\s+(average\s+)?power\s+(is\s+)?(known|quantified|determined|ready)\b", re.IGNORECASE), "'system power known' claim (SYSTEM_AVERAGE_POWER_NOT_READY)"),
+    (re.compile(r"\bsystem\s+mass\s+(is\s+)?(known|quantified|determined|ready)\b", re.IGNORECASE), "'system mass known' claim (SYSTEM_MASS_NOT_READY)"),
+    (re.compile(r"\bpareto\s+(frontier\s+)?(is\s+)?ready\b", re.IGNORECASE), "'Pareto ready' claim (FORMAL_PARETO_NOT_READY)"),
+    (re.compile(r"scientific\s+freeze\b[^.\n]{0,25}\b(=|equals|is|means)\b[^.\n]{0,25}\b(final|product|project)\s+freeze", re.IGNORECASE), "'scientific freeze = final/project freeze' conflation"),
 ]
 
 # Bare "robust" as an adjective claim (word boundary excludes "robustness").

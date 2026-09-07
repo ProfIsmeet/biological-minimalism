@@ -43,9 +43,23 @@ rehearsal/freeze, not science integration. Status: ☐ open · ◐ partial · �
 - ◐ Integration/backend env is Python 3.14 + torch 2.14 (distinct from frozen training env — documented, not conflated). Frontend env separate.
 - ☑ Split files + per-experiment code version recorded in provenance.
 
+## Day 10 — Newly closed (scientific reproducibility & first interaction)
+- ☑ **Frozen environment verified** — field-by-field EXACT_FROZEN_ENVIRONMENT (`results/day10_frozen_environment_verification.json`).
+- ☑ **Dataset fingerprint coverage** — 266/266 raw records present + fingerprinted (16/198/36/16), 0 committed to git (`results/dataset_fingerprint_manifest_day10.json`).
+- ☑ **Checkpoint durability** — re-confirmed externally durable (GitHub Release, 50 checkpoints).
+- ☑ **Canonical result reproduction** — every checkpoint-based result re-evaluated from frozen weights with zero numerical difference; `SCIENTIFIC_REPRODUCTION_PASS` (`results/day10_scientific_reproduction.json`).
+- ☑ **Robustness reproduction** — full 114/114 conditions within 1e-4 bpm (max 7.6e-6).
+- ☑ **N3 diagnostic verification** — recomputed and matches canonical Day-9 figures (precision 0.499→0.430, recall 0.853→0.884, +605 N2→N3 FP).
+- ☑ **First interaction experiment** — predeclared EEG×EOG×Resp factorial run; approximately additive/unresolved (+0.0031 ± 0.0434). One controlled pair only; NOT global interaction knowledge, NOT a synergy claim.
+- ◐ **EOG operational burden** — materially improved, not fully closed (`results/eog_operational_burden_day10.json`): 2 incremental sensing electrodes (interpretation-independent); power/mass still NOT_READY.
+- ◐ **Reference BOM readiness** — datasheet-backed reference table (`results/reference_bom_readiness_day10.json`); still SYSTEM_AVERAGE_POWER_NOT_READY / SYSTEM_MASS_NOT_READY / FINAL_BOM_NOT_SELECTED.
+
+**Scientific freeze status:** `READY_WITH_KNOWN_LIMITATIONS`.
+**Project freeze status:** `NOT_READY_FOR_FINAL_PROJECT_FREEZE` (engineering/paper/presentation/rehearsal unfinished). These two are tracked separately and must not be conflated — scientific reproducibility being ready does NOT mean the project is ready to freeze.
+
 ## Still OPEN before final freeze (do NOT close yet)
-1. ☐ **Final architecture** — UNRESOLVED (no RETAIN outcome; interaction evidence unavailable).
-2. ☐ **Formal Pareto** — NOT_READY (power/energy, mass, electrode montage, full BOM/module allocation absent).
+1. ☐ **Final architecture** — UNRESOLVED (no RETAIN outcome; interaction evidence now **partial** — one controlled pair — not global).
+2. ☐ **Formal Pareto** — NOT_READY (power/energy, mass, electrode montage, full BOM/module allocation absent; interaction coverage incomplete).
 3. ☐ **Missing power/mass** for every component; **full BOM** and module/attachment identities.
 4. ☐ **Final paper freeze** and **final dashboard freeze**.
 5. ☐ **Final jury rehearsal** (full live walkthrough + Q&A dry run).

@@ -158,4 +158,36 @@ terrestrial. Independent-dataset / cross-population replication remains explicit
    near-zero/negative).
 3. N3 regresses in the secondary cohort (precision effect, disclosed).
 4. Final architecture is **UNRESOLVED**; formal Pareto is **NOT_READY** (no power/mass/BOM).
-5. No interaction evidence — marginal-value experiments do not prove a globally minimal sensor set.
+5. Interaction evidence is only **partial** — one controlled EEG×EOG×Resp pair was tested (approximately additive/unresolved); marginal-value experiments still do not prove a globally minimal sensor set.
+
+## Day 10 — Reproducibility & interaction Q&A
+
+**Q21: "Can your results actually be reproduced?"**
+Yes, from frozen artifacts. Every checkpoint-based canonical result (PPG-DaLiA capacity control + multiseed, PTT A/B, Sleep primary + secondary A/B/C) was re-evaluated from the frozen checkpoints with **exactly zero** numerical difference; the full 114-condition robustness sweep reproduced within a documented float32 tolerance (max 7.6e-6 bpm). Overall `SCIENTIFIC_REPRODUCTION_PASS`.
+
+**Q22: "Did you re-run them under the same environment?"**
+Yes. We verified the training/evaluation stack field-by-field against the frozen manifest (Python 3.13.0, PyTorch 2.6.0+cpu, NumPy 2.5.2, SciPy 1.18.1, scikit-learn 1.9.0, MNE 1.12.1, WFDB 4.3.1, pandas 3.0.5) → `EXACT_FROZEN_ENVIRONMENT`. No package was changed to force a match. (The separate Mac integration env is never used to produce a scientific result.)
+
+**Q23: "How do you know the raw datasets are identical?"**
+All 266 raw input records used by the canonical experiments (PPG-DaLiA 16, PTT 198, Sleep primary 36, Sleep secondary 16) are fingerprinted; 266/266 present, **0 raw files committed to git**.
+
+**Q24: "Did you test sensor interactions?"**
+Once, cleanly. We predeclared and ran a capacity-fair (112 params/channel) EEG × EOG × Resp factorial on Sleep-EDF (M0/M_A/M_B/M_AB, 5 seeds).
+
+**Q25: "What did the EOG×Resp interaction show?"**
+An interaction term of **+0.0031 ± 0.0434** macro-F1 (2/5 seeds positive): approximately additive / unresolved. Adding both EOG and respiration did not show a stable extra benefit beyond their individual effects under this model and dataset.
+
+**Q26: "Does a near-zero interaction mean interactions don't matter?"**
+No. This is one candidate pair, one target, one dataset, one model family. It does **not** prove sensor interactions are absent in general, and it is **not** an EOG+Resp synergy claim. It is honest, bounded methodological evidence, not a headline result.
+
+**Q27: "Is this independent replication now?"**
+No. It is **independent re-evaluation from frozen artifacts** on the same stack. Same-team, same-machine reproduction — not an independent-dataset or independent-lab replication. We say so explicitly.
+
+**Q28: "What is the physical cost of adding EOG?"**
+Horizontal EOG needs **2 lateral-ocular sensing electrodes** (interpretation-independent). Under a shared-reference head-module architecture it reuses the existing ADS1299-class reference/bias and adds **no new module** (standalone interpretation: 3–4 contacts, possibly a new front-end). Incremental power and mass are **NOT_READY** — not zero, not quantified. The EOG contact burden is not free, which is why EOG stays CONDITIONAL.
+
+**Q29: "Why is N3 worse with EOG?"**
+Descriptively: in the secondary cohort aligned EOG raises N3 recall (0.853→0.884) but lowers N3 precision (0.499→0.430) because it produces ~605 more N2→N3 false positives; REM gains strongly. We report this as a read-only diagnostic and do **not** offer a physiological causal explanation.
+
+**Q30: "Why is Pareto still NOT_READY after all this work?"**
+Because reproducibility strengthens confidence but does not supply the missing engineering axes: cross-target metrics remain incomparable (HR MAE vs sleep macro-F1), system average power and system mass are unquantified, the full module BOM/allocation is unselected, and interaction coverage is only partial. `FORMAL_PARETO_NOT_READY` is the honest status.
