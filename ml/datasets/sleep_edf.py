@@ -228,3 +228,26 @@ def load_dataset_windows_multi(dataset_dir: str | Path, channels: tuple[str, ...
         prefixes.append(prefix)
 
     return np.concatenate(all_x), np.concatenate(all_y), np.concatenate(all_subject), prefixes
+
+
+def shuffle_eog_within_subject(x: np.ndarray, subject_idx: np.ndarray, eog_channel_index: int, seed: int) -> np.ndarray:
+    """Negative control (Day 8): permutes the EOG channel's epochs among
+    THAT SUBJECT'S OWN epochs only, breaking true EEG<->EOG temporal
+    correspondence while preserving the real EOG signal distribution.
+    Never mixes epochs across subjects or across partitions (the caller
+    is expected to invoke this separately per-partition, matching the
+    original PPG-DaLiA shuffle_imu_within_subject() convention).
+
+    `x`: (n_epochs, n_channels, samples). `subject_idx`: (n_epochs,) int
+    array matching each epoch to its real subject (as returned by
+    load_dataset_windows_multi). Deterministic given `seed`; the EEG
+    channel and the label array are never touched by this function.
+    """
+
+    rng = np.random.default_rng(seed)
+    shuffled = x.copy()
+    for s in sorted(set(subject_idx.tolist())):
+        idx = np.where(subject_idx == s)[0]
+        permuted = rng.permutation(idx)
+        shuffled[idx, eog_channel_index, :] = x[permuted, eog_channel_index, :]
+    return shuffled
