@@ -228,7 +228,7 @@ def test_no_universal_score_or_cross_dataset_raw_ranking() -> None:
     payloads = [build_topology().model_dump(mode="json"), build_readiness().model_dump(mode="json")]
     keys = {key for payload in payloads for key in _all_keys(payload)}
     assert {"score", "weighted_score", "universal_sensor_score", "ranking", "pareto_frontier"}.isdisjoint(keys)
-    decision = json.loads((REPOSITORY_ROOT / "results/pareto_decision_inputs.json").read_text())
+    decision = json.loads((REPOSITORY_ROOT / "results/pareto_decision_inputs.json").read_text(encoding="utf-8"))
     assert "not comparable ranking coordinates" in decision["readiness"]["cross_dataset_restriction"]
 
 
@@ -239,16 +239,22 @@ def test_frozen_source_hashes_remain_unchanged() -> None:
         "docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md": "dc2f33355a3aad65e4eafb6148254549c48d3f93b4ff1d943ba8826baf13e194",
     }
     for relative_path, digest in expected.items():
-        assert hashlib.sha256((REPOSITORY_ROOT / relative_path).read_bytes()).hexdigest() == digest
+        # core.autocrlf=true means a Windows checkout has CRLF line endings
+        # while these frozen hashes were computed against LF-normalized
+        # git-blob content - normalize before hashing (see
+        # ml/build_sensor_marginal_value_contract.py's _sha256() for the
+        # reference fix of this same root cause).
+        content = (REPOSITORY_ROOT / relative_path).read_bytes().replace(b"\r\n", b"\n")
+        assert hashlib.sha256(content).hexdigest() == digest
 
 
 # 22
 def test_json_outputs_match_deterministic_builders() -> None:
     topology = build_topology()
-    assert json.loads((REPOSITORY_ROOT / "results/hardware_topology_contract.json").read_text()) == topology.model_dump(mode="json")
-    assert json.loads((REPOSITORY_ROOT / "results/system_architecture_topology.json").read_text()) == build_system_architecture(topology).model_dump(mode="json")
-    assert json.loads((REPOSITORY_ROOT / "results/pareto_readiness_day6.json").read_text()) == build_readiness().model_dump(mode="json")
-    raw_catalog = json.loads((REPOSITORY_ROOT / "results/operational_cost_catalog.json").read_text())
+    assert json.loads((REPOSITORY_ROOT / "results/hardware_topology_contract.json").read_text(encoding="utf-8")) == topology.model_dump(mode="json")
+    assert json.loads((REPOSITORY_ROOT / "results/system_architecture_topology.json").read_text(encoding="utf-8")) == build_system_architecture(topology).model_dump(mode="json")
+    assert json.loads((REPOSITORY_ROOT / "results/pareto_readiness_day6.json").read_text(encoding="utf-8")) == build_readiness().model_dump(mode="json")
+    raw_catalog = json.loads((REPOSITORY_ROOT / "results/operational_cost_catalog.json").read_text(encoding="utf-8"))
     assert build_operational_catalog(raw_catalog).model_dump(mode="json") == raw_catalog
 
 

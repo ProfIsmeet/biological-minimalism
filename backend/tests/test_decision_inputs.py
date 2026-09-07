@@ -58,7 +58,7 @@ def test_ismet_day5_artifacts_are_integrated() -> None:
 
 # 2
 def test_exact_scientific_benefits_come_from_contract(artifact) -> None:
-    source = json.loads((REPOSITORY_ROOT / "results/sensor_marginal_value_contract.json").read_text())
+    source = json.loads((REPOSITORY_ROOT / "results/sensor_marginal_value_contract.json").read_text(encoding="utf-8"))
     for component_id, experiment_id in (
         ("wrist_imu", "ppg_dalia_imu_hr"),
         ("second_ppg_site", "ptt_second_ppg_site_hr"),
@@ -109,7 +109,7 @@ def test_unknown_physical_costs_remain_null(artifact) -> None:
 
 # 7
 def test_scientific_contract_and_decision_input_resolve_same_robustness_source(artifact) -> None:
-    scientific = json.loads((REPOSITORY_ROOT / "results/sensor_marginal_value_contract.json").read_text())
+    scientific = json.loads((REPOSITORY_ROOT / "results/sensor_marginal_value_contract.json").read_text(encoding="utf-8"))
     linked = scientific["robustness_records"]["ppg_dalia_fault_robustness"]
     assert linked["status"] == "RESOLVED_FROM_INTEGRATION_SOURCE"
     assert linked["source_artifact"] == "results/ppg_dalia_fault_robustness.json"
@@ -132,7 +132,10 @@ def test_api_exposes_resolved_source_without_contradictory_missing_status() -> N
 
 # 8
 def test_frozen_robustness_source_identity_is_unchanged() -> None:
-    content = (REPOSITORY_ROOT / "results/ppg_dalia_fault_robustness.json").read_bytes()
+    # core.autocrlf=true means a Windows checkout has CRLF line endings while
+    # FROZEN_ROBUSTNESS_SHA256 was computed against LF-normalized git-blob
+    # content - normalize before hashing (same fix as app/research/decision_inputs.py's _sha256()).
+    content = (REPOSITORY_ROOT / "results/ppg_dalia_fault_robustness.json").read_bytes().replace(b"\r\n", b"\n")
     assert hashlib.sha256(content).hexdigest() == FROZEN_ROBUSTNESS_SHA256
 
 
@@ -187,7 +190,7 @@ def test_readiness_reports_missing_dimensions_honestly(artifact) -> None:
 
 # 15
 def test_integrated_artifact_serialization_is_deterministic() -> None:
-    committed = json.loads((REPOSITORY_ROOT / DECISION_INPUTS_PATH).read_text())
+    committed = json.loads((REPOSITORY_ROOT / DECISION_INPUTS_PATH).read_text(encoding="utf-8"))
     first = build_decision_inputs().model_dump(mode="json")
     second = build_decision_inputs().model_dump(mode="json")
     assert committed == first == second

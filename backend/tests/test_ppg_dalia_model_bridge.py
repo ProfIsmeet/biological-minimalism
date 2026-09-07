@@ -378,7 +378,7 @@ def test_bridge_uses_canonical_predictor_and_is_deterministic() -> None:
 
 
 def test_checkpoint_identity_constants_match_golden_reference() -> None:
-    reference = json.loads(GOLDEN_REFERENCE.read_text())
+    reference = json.loads(GOLDEN_REFERENCE.read_text(encoding="utf-8"))
     assert reference["checkpoint_size_bytes"] == EXPECTED_CHECKPOINT_SIZE_BYTES
     assert reference["checkpoint_sha256"] == EXPECTED_CHECKPOINT_SHA256
 
@@ -388,7 +388,7 @@ def test_checkpoint_identity_constants_match_golden_reference() -> None:
     reason="validated checkpoint and official S14 archive are required",
 )
 def test_replay_window_assembler_and_bridge_match_all_golden_windows() -> None:
-    reference = json.loads(GOLDEN_REFERENCE.read_text())
+    reference = json.loads(GOLDEN_REFERENCE.read_text(encoding="utf-8"))
     final_window_index = max(item["window_index"] for item in reference["windows"])
     duration_seconds = final_window_index * STEP_SECONDS + WINDOW_SECONDS
     replay = DatasetReplaySource(

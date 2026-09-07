@@ -58,11 +58,17 @@ JOIN_MAPPINGS = (
 
 
 def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+    """Hashes LINE-ENDING-NORMALIZED (CRLF -> LF) content.
+
+    This repo has core.autocrlf=true, so a Windows checkout of a text file
+    has CRLF line endings on disk while the frozen SHA256 constants were
+    computed against the LF-normalized git-blob content. Hashing raw bytes
+    made this a false positive on every Windows checkout even with
+    byte-for-byte-identical JSON/text content (same root cause and fix as
+    ml/build_sensor_marginal_value_contract.py's _sha256()). Binary files
+    are unaffected (no CRLF sequences to replace)."""
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def _read_json(root: Path, relative_path: str) -> dict[str, Any]:

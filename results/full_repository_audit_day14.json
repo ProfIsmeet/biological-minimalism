@@ -1,0 +1,101 @@
+{
+  "purpose": "Structured findings from the Day 12-14 independent repository audit. Findings only - no fixes applied except where explicitly noted as a separate, documented fix commit.",
+  "findings": [
+    {
+      "id": "REPRO-1",
+      "severity": "HIGH",
+      "category": "REPRODUCIBILITY",
+      "title": "Backend live API reported 'unavailable' on this Windows machine due to the same CRLF/autocrlf SHA256 false-positive already fixed in the ML track - a broader instance than previously catalogued",
+      "location": "backend/app/research/decision_inputs.py _sha256(); backend/tests/test_day6_hardware.py; backend/tests/test_decision_inputs.py",
+      "detail": "Running the full backend test suite for the first time in this audit (it was not run during the ML-focused Day 10/11-14 sprints) surfaced 7 failures + 12 cascading fixture errors, ALL traced to the identical root cause already found and fixed in ml/build_sensor_marginal_value_contract.py: hashing raw checked-out bytes of a text artifact against a frozen SHA256 constant computed from LF-normalized git-blob content. This is MORE serious than the ML-track instance: it meant the actual `decision_inputs.artifact()` function - which backs a live research API endpoint - was computing `ResearchAvailability.UNAVAILABLE` on this Windows machine, not just a test assertion failing.",
+      "verification": "Confirmed via the same method as the ML-track fix: git-blob content and working-tree content are byte-for-byte identical once CRLF-normalized.",
+      "fix_applied_this_session": true,
+      "fix_detail": "Applied the identical normalize-before-hash fix to backend/app/research/decision_inputs.py's _sha256(), plus the same fix to two direct raw-hash checks in backend/tests/test_day6_hardware.py and backend/tests/test_decision_inputs.py. Committed separately (Audit Commit) with no scientific or engineering value changed - purely a hashing-method portability fix, identical pattern to the already-reviewed ML-track fix."
+    },
+    {
+      "id": "REPRO-2",
+      "severity": "MEDIUM",
+      "category": "REPRODUCIBILITY",
+      "title": "Multiple backend test files read committed JSON/text artifacts via .read_text() without an explicit encoding, risking silent mis-decoding of non-ASCII characters on a non-UTF-8-locale machine",
+      "location": "backend/tests/test_day6_hardware.py, backend/tests/test_decision_inputs.py, backend/tests/test_ppg_dalia_model_bridge.py",
+      "detail": "Path.read_text() without an explicit encoding argument uses the platform's default locale encoding (not necessarily UTF-8) unless Python's UTF-8 mode is active. One committed artifact (results/hardware_topology_contract.json) legitimately contains a non-ASCII em-dash in its title field; a fresh in-memory model comparison against the file read this way failed non-deterministically depending on decode path. Production code (backend/app/research/*.py) was checked and already specifies encoding=\"utf-8\" everywhere - this defect was confined to test files.",
+      "fix_applied_this_session": true,
+      "fix_detail": "Added encoding=\"utf-8\" to every affected .read_text() call in the three test files listed above. No production code was touched (it was already correct)."
+    },
+    {
+      "id": "SOFT-1",
+      "severity": "HIGH",
+      "category": "SOFTWARE",
+      "title": "engineering_readiness.py silently defaults two candidate fields to 0 if missing, violating the module's own stated invariant",
+      "location": "backend/app/research/engineering_readiness.py lines 130, 133",
+      "detail": "int(entry.get('incremental_sensing_contacts', 0)) and int(entry.get('raw_data_rate_increment_bps', 0)) default to 0 if the source field is absent. The module's own docstring states 'no unknown is rendered as a zero quantity' as a design invariant, and a sibling field (reference_component_power_status) correctly uses a NOT_READY status instead of a numeric default. These two fields do not follow the same discipline.",
+      "current_impact": "NONE TODAY - verified all 3 current candidate entries in results/day11_part3_engineering_inputs.json have explicit numeric values for both fields (wrist_imu contacts=0 genuinely, not defaulted).",
+      "latent_risk": "If a future candidate entry omits either field (e.g. an UNKNOWN data-rate increment), it will silently render as '0 contacts' or '0 bps' - indistinguishable from a genuine zero - rather than 'Not ready'.",
+      "test_coverage": "backend/tests/test_engineering_readiness.py::test_unknown_power_is_not_ready_never_zero covers the POWER field's NOT_READY behavior but has no equivalent test for these two fields' missing-value case.",
+      "recommended_fix": "Change the defaults to None and add a NOT_READY-style status field (or raise) for these two fields, mirroring the power field's pattern; add a test asserting a missing field renders as 'not ready', not 0.",
+      "fix_applied_this_session": false,
+      "reason_not_fixed": "Touches a Claude-owned engineering-evidence rendering path; flagged for Claude to fix per this task's Fix Policy (do not alter another track's code without explicit authorization)."
+    },
+    {
+      "id": "SOFT-2",
+      "severity": "MEDIUM",
+      "category": "SOFTWARE",
+      "title": "Hardcoded fallback duplicate of the canonical 48068 bps constant",
+      "location": "backend/app/research/engineering_readiness.py line 111",
+      "detail": "bps = int(system_total.get('value_bps', 48068)) hardcodes a duplicate of the canonical results/reference_data_rate_budget_day11.json value as a silent fallback if the 'value_bps' key is ever absent from an otherwise-present file.",
+      "current_impact": "NONE TODAY - the key is present. _read_json() already raises loudly if the whole file is missing.",
+      "latent_risk": "If the source artifact is regenerated by a builder that renames or omits 'value_bps', this code would silently keep serving the OLD hardcoded 48068 instead of failing loudly or showing NOT_READY - a duplicate-constant drift risk.",
+      "recommended_fix": "Raise ResearchArtifactError (consistent with the missing-file case) instead of defaulting to a hardcoded duplicate.",
+      "fix_applied_this_session": false
+    },
+    {
+      "id": "SOFT-3",
+      "severity": "LOW",
+      "category": "SOFTWARE",
+      "title": "Two more '... or 0' patterns in catalog.py, same class of risk as SOFT-1 but no evidence of current misfire",
+      "location": "backend/app/research/catalog.py lines 264, 843",
+      "detail": "int(configurations[0].metrics['mae'].n or 0) and (rec.get('B_minus_A') or 0) < 0 both fold a missing/None value into 0, which for the second case changes the semantics of a 'regresses' boolean flag (missing data would read as 'does not regress' rather than 'unknown').",
+      "current_impact": "Not confirmed to misfire today (both fields appear consistently populated in current data), but not proven safe either - lower confidence than SOFT-1/2 since this was a quick grep-based finding, not a full trace of every caller.",
+      "recommended_fix": "Same pattern as SOFT-1: use None + an explicit unknown/NOT_READY signal instead of `or 0`.",
+      "fix_applied_this_session": false
+    },
+    {
+      "id": "CLAIM-1",
+      "severity": "HIGH",
+      "category": "CLAIMS/TESTING",
+      "title": "The claim-consistency checker is lexical/regex-based and is demonstrably bypassed by paraphrase",
+      "location": "ml/check_claim_consistency.py",
+      "detail": "Tested 5 semantically-equivalent paraphrases of forbidden bald claims against the checker's actual FORBIDDEN pattern list: 'Our complete wearable consumes 45 milliwatts during normal operation', 'The device draws roughly forty-five milliwatts continuously', 'This configuration represents the best possible tradeoff across all sensors' (paraphrase of 'Pareto optimal'), 'The parts list below is what we will ship' (paraphrase of 'final BOM'), 'We measured the whole system drawing 45mW'. ALL FIVE bypassed every pattern in FORBIDDEN with zero matches.",
+      "current_impact": "The checker currently reports OK (results/claim_traceability.json, ml/check_claim_consistency.py output 'CLAIM CONSISTENCY: OK') because no current document happens to phrase a forbidden claim in a way the patterns miss. This is NOT evidence the checker would catch a future paraphrased overclaim.",
+      "recommended_fix": "Document this limitation explicitly wherever the checker's output is cited (e.g. jury/paper handoffs should not describe 'CLAIM CONSISTENCY: OK' as a strong guarantee - it is a lexical lint, not a semantic claim auditor). A stronger mitigation would require either an LLM-based semantic pass or much broader pattern coverage; neither was in scope for this audit to build.",
+      "fix_applied_this_session": false,
+      "note": "This is a genuine, demonstrated bypass, not a hypothetical - included as HIGH because claim governance is explicitly load-bearing for jury/paper trust in this project."
+    },
+    {
+      "id": "HW-1",
+      "severity": "MEDIUM",
+      "category": "HARDWARE",
+      "title": "48.068 kbps headline figure includes a deprioritized evaluation-branch's contribution (59% of the total)",
+      "location": "results/reference_data_rate_budget_day11.json system_raw_total",
+      "detail": "The 48,068 bps sum includes second_ppg_site's 28,500 bps (labeled 'optical_site_evaluation_branch'), even though the architecture-gate decision for that candidate is DEPRIORITIZE_FOR_TARGET. The framing/exclusions list is disclosed and the arithmetic is exactly correct (independently reproduced, results/independent_engineering_arithmetic_check_day12.json), so this is not a computation error - it is a presentation risk.",
+      "recommended_fix": "If this number reaches jury or paper copy as a headline, split it into a baseline-only figure and a baseline+evaluation-branch figure so a reader cannot mistake the deprioritized candidate's contribution for part of the committed baseline.",
+      "fix_applied_this_session": false
+    }
+  ],
+  "positive_findings": [
+    "All independently recomputed power arithmetic (6 components) and data-rate arithmetic (9 modality rows + 3 module totals + system total) matches the canonical values EXACTLY - zero discrepancies.",
+    "Architecture-gate decisions (IMU CONDITIONAL, second-PPG DEPRIORITIZE, EOG CONDITIONAL, final architecture UNRESOLVED) are consistent across the decision matrix, backend tests, and frontend rendering path - no contradiction found.",
+    "Formal Pareto status (FORMAL_PARETO_NOT_READY) and system power/mass NOT_READY states are consistent and test-covered.",
+    "ml/build_sensor_marginal_value_contract.py is confirmed byte-identical-deterministic across two independent rebuilds in this session.",
+    "Git chronology independently corroborates predeclaration-before-evaluation for the Sleep secondary holdout: cohort.json committed 2026-09-07 16:58:20, evaluation results committed 17:38:14 - a real 40-minute gap consistent with the documented download-then-evaluate sequence, not a same-commit or backdated artifact.",
+    "No secrets, credentials, absolute personal paths, or large/raw binaries found in tracked files (spot-checked via grep and file-size sort).",
+    "Digital Twin remains conceptual/untrained/unvalidated everywhere checked - no document or code path claims otherwise.",
+    "The Day-10 CRLF/autocrlf SHA256-guard fix (from the ML scientific track) is correctly present and inherited into the current canonical/engineering branch.",
+    "The 10 Day-10 interaction checkpoints, found NOT externally durable at the start of this audit lineage, were fixed in the prior sprint (Day-14 archive) and independently re-verified present in this session's final_checkpoint_inventory_day14.json (60/60 externally archived, 0 gaps)."
+  ],
+  "n_findings": 7,
+  "n_high": 3,
+  "n_medium": 3,
+  "n_low": 1,
+  "n_blocker": 0
+}
