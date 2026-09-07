@@ -253,7 +253,7 @@ def test_no_numeric_confidence_or_evidence_percentage(contract):
         status = exp.get("marginal_status")
         if not status:
             continue
-        assert status["evidence_strength"] in ("preliminary", "replicated-within-dataset", "mixed", "insufficient")
+        assert status["evidence_strength"] in ("preliminary", "replicated-within-dataset", "replicated-with-control", "mixed", "insufficient")
         # evidence_strength must be categorical text, never a bare numeric confidence
         assert not isinstance(status["evidence_strength"], (int, float))
 
@@ -321,7 +321,11 @@ requires_day7 = pytest.mark.skipif(
 
 @requires_day7
 def test_methodology_version_bumped_for_day7(contract):
-    assert contract["methodology_version"] == "1.2.0"
+    # Version has continued to advance (Day 8 shuffled-EOG control) - check
+    # it is at least the Day 7 baseline, not pinned to an exact string that
+    # legitimately keeps incrementing.
+    major, minor, _patch = (int(p) for p in contract["methodology_version"].split("."))
+    assert (major, minor) >= (1, 2)
 
 
 @requires_day7
@@ -363,7 +367,7 @@ def test_sleep_edf_capacity_avoided_by_design(contract):
 @requires_day7
 def test_evidence_matrix_includes_sleep_stage_target(contract):
     assert "sleep_stage_5class" in contract["evidence_matrix"]
-    assert contract["evidence_matrix"]["sleep_stage_5class"]["eog_horizontal_channel"]["status"] == "POSITIVE_MODEST"
+    assert contract["evidence_matrix"]["sleep_stage_5class"]["eog_horizontal_channel"]["status"].startswith("POSITIVE")
 
 
 @requires_day7
@@ -387,3 +391,82 @@ def test_no_conservative_terms_misused_in_contract_text(contract):
     forbidden_unqualified = ["is astronaut validated", "is microgravity validated", "is globally optimal", "is a proven causal"]
     for phrase in forbidden_unqualified:
         assert phrase not in text, f"prohibited unqualified claim phrase found: {phrase!r}"
+
+
+# --- Day 8 additions (shuffled-EOG control, per-subject decomposition) -----
+
+
+SLEEP_CONTROL_PATH = REPO_ROOT / "results" / "sleep_edf_eeg_eog_control_analysis.json"
+SLEEP_PER_SUBJECT_PATH = REPO_ROOT / "results" / "sleep_edf_per_subject_analysis.json"
+
+requires_day8 = pytest.mark.skipif(
+    not (SLEEP_CONTROL_PATH.exists() and SLEEP_PER_SUBJECT_PATH.exists()),
+    reason="Day 8 sleep-EDF control/per-subject artifacts not present",
+)
+
+
+@requires_day8
+def test_sleep_edf_evidence_upgraded_to_replicated_with_control(contract):
+    status = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["marginal_status"]
+    assert status["evidence_strength"] == "replicated-with-control"
+
+
+@requires_day8
+def test_sleep_edf_negative_control_present_and_outcome_1(contract):
+    nc = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["negative_control"]
+    assert nc is not None
+    assert nc["outcome_classification"] == "OUTCOME_1_ALIGNED_TIMING_MATTERS"
+    assert nc["C_to_B"]["n_seeds_favor_B"] == 5
+
+
+@requires_day8
+def test_sleep_edf_per_subject_dominated_flag_present(contract):
+    per_subj = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["per_subject_analysis"]
+    assert per_subj["dominated_by_one_subject"] is True
+    assert per_subj["subject_directions"]["SC4011"] == "IMPROVES"
+
+
+# --- Day 9 additions (prospective secondary holdout) -------------------------
+
+
+SLEEP_SECONDARY_HOLDOUT_PATH = REPO_ROOT / "results" / "sleep_edf_secondary_holdout_evaluation.json"
+
+requires_day9 = pytest.mark.skipif(
+    not SLEEP_SECONDARY_HOLDOUT_PATH.exists(),
+    reason="Day 9 secondary holdout evaluation artifact not present",
+)
+
+
+@requires_day9
+def test_sleep_edf_secondary_holdout_present_and_separate_from_primary(contract):
+    sh = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["prospective_secondary_holdout"]
+    assert sh["cohort_size"] == 8
+    assert sh["relationship_to_primary_test"].startswith("SEPARATE_COHORT_NOT_MERGED")
+
+
+@requires_day9
+def test_sleep_edf_secondary_holdout_no_retraining(contract):
+    sh = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["prospective_secondary_holdout"]
+    assert sh["no_retraining"] is True
+
+
+@requires_day9
+def test_sleep_edf_evidence_strength_not_auto_upgraded_by_secondary_holdout(contract):
+    """The taxonomy category itself must remain replicated-with-control - a
+    secondary holdout is same-dataset generalization evidence, not grounds
+    to invent/assign a stronger category automatically."""
+    status = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["marginal_status"]
+    assert status["evidence_strength"] == "replicated-with-control"
+    assert "prospective_secondary_holdout" in status["evidence_strength_rationale"]
+
+
+@requires_day9
+def test_sleep_edf_secondary_holdout_outcome_classified(contract):
+    sh = contract["experiments"]["sleep_edf_eeg_eog_sleep_stage"]["prospective_secondary_holdout"]
+    assert sh["outcome_classification"].startswith("OUTCOME_")
+
+
+@requires_day9
+def test_methodology_version_bumped_for_day9(contract):
+    major, minor, _patch = (int(p) for p in contract["methodology_version"].split("."))
+    assert (major, minor) >= (1, 4)

@@ -39,16 +39,22 @@ PPG_DALIA_CAPACITY_CONTROL_SOURCE = REPO_ROOT / "results" / "ppg_dalia_capacity_
 PTT_SOURCE = REPO_ROOT / "results" / "ptt_ppg_site_ablation.json"
 PTT_SENSITIVITY_SOURCE = REPO_ROOT / "results" / "ptt_sensitivity_analysis.json"
 SLEEP_EDF_SOURCE = REPO_ROOT / "results" / "sleep_edf_eeg_eog_ablation.json"
+SLEEP_EDF_SHUFFLED_CONTROL_SOURCE = REPO_ROOT / "results" / "sleep_edf_eeg_eog_control_analysis.json"
+SLEEP_EDF_PER_SUBJECT_SOURCE = REPO_ROOT / "results" / "sleep_edf_per_subject_analysis.json"
+SLEEP_EDF_SECONDARY_HOLDOUT_SOURCE = REPO_ROOT / "results" / "sleep_edf_secondary_holdout_evaluation.json"
 FAULT_ROBUSTNESS_SOURCE = REPO_ROOT / "results" / "ppg_dalia_fault_robustness.json"
 FAULT_ROBUSTNESS_AUDIT = REPO_ROOT / "docs" / "PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md"
 OUT_PATH = REPO_ROOT / "results" / "sensor_marginal_value_contract.json"
 
 FROZEN_FAULT_ROBUSTNESS_SHA256 = "c40397fb0bb43b4f4a778aac4a4e0ba72b7b0387cab1aabec1e0708cc2912dcb"
 
-# Day-7 integration: union of the integration-branch robustness-resolution
-# machinery and the ML-branch scientific additions (capacity-matched PPG
-# control, PTT sensitivity, Sleep-EDF EEG+EOG). Multi-target methodology.
-METHODOLOGY_VERSION = "1.2.0"
+# Day-8/9 canonical integration: union of the systems-branch robustness-
+# resolution machinery (fault robustness experiment + robustness axis SS13)
+# and the ML-branch scientific additions (capacity-matched PPG control, PTT
+# sensitivity, Sleep-EDF EEG+EOG with shuffled-EOG negative control,
+# per-subject decomposition, and prospective secondary holdout). Multi-target
+# methodology.
+METHODOLOGY_VERSION = "1.5.0"
 
 
 def evidence_strength_from_seed_consistency(n_favor: int, n_seeds: int) -> tuple[str, str]:
@@ -440,9 +446,106 @@ def build_ptt_experiment(ptt: dict, sensitivity: dict | None = None) -> dict:
     }
 
 
-def build_sleep_edf_experiment(sleep: dict) -> dict:
+def build_sleep_edf_secondary_holdout_block(secondary: dict | None) -> dict:
+    if secondary is None:
+        return {"status": "NOT_YET_RUN"}
+
+    agg = secondary["aggregate"]
+    sub_summary = secondary["subject_level_generalization_summary"]
+    a_to_b, a_to_c, c_to_b = agg["A_to_B"], agg["A_to_C"], agg["C_to_B"]
+
+    if a_to_b["n_seeds_favor_B"] >= 4 and c_to_b["n_seeds_favor_B"] >= 4:
+        outcome = "OUTCOME_1_ALIGNED_TIMING_GENERALIZES"
+        outcome_note = "B beats both A and C broadly (>=4/5 seeds each) in this independent n=8 cohort - the aligned-EOG effect generalizes beyond the original 3 primary-test subjects under the same frozen model/protocol. Still single-dataset and terrestrial."
+    elif c_to_b["n_seeds_favor_B"] >= 4 and a_to_b["n_seeds_favor_B"] < 4:
+        outcome = "OUTCOME_2_ALIGNMENT_INFORMATIVE_INCREMENT_WEAK"
+        outcome_note = "Temporal alignment remains informative relative to the shuffled control, but incremental value over EEG-only is weak in this cohort."
+    elif a_to_b["n_seeds_favor_B"] >= 4 and c_to_b["n_seeds_favor_B"] < 4:
+        outcome = "OUTCOME_3_CHANNEL_HELPS_ALIGNMENT_UNCLEAR"
+        outcome_note = "The added channel may help, but temporal alignment specifically is not clearly responsible in this cohort."
+    elif abs(a_to_b["mean"]) < 0.01 and abs(a_to_c["mean"]) < 0.01:
+        outcome = "OUTCOME_4_DOES_NOT_GENERALIZE_STRONGLY"
+        outcome_note = "The original positive result does not generalize strongly to this cohort."
+    else:
+        outcome = "OUTCOME_5_WEAKENED_OR_REVERSED"
+        outcome_note = "The original positive result is cohort-sensitive and is reported as weakened here. This is treated as a scientifically acceptable, disclosed outcome - not retuned."
+
+    return {
+        "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+        "predeclaration": "docs/SLEEP_EDF_SECONDARY_HOLDOUT_PREDECLARATION.md",
+        "cohort_size": secondary["cohort_size"],
+        "cohort_subjects": secondary["cohort_subjects"],
+        "no_retraining": secondary["no_retraining"],
+        "aggregate_macro_f1": {
+            "A": agg["model_a_macro_f1"], "B": agg["model_b_macro_f1"], "C": agg["model_c_macro_f1"],
+            "A_to_B": a_to_b, "A_to_C": a_to_c, "C_to_B": c_to_b,
+        },
+        "class_level_aggregate": secondary["class_level_aggregate"],
+        "subject_level_generalization": sub_summary,
+        "outcome_classification": outcome,
+        "outcome_note": outcome_note,
+        "relationship_to_primary_test": "SEPARATE_COHORT_NOT_MERGED - primary n=3 frozen test and this n=8 secondary holdout are reported independently, never pooled into a single headline n=11 test set.",
+    }
+
+
+def build_sleep_edf_experiment(sleep: dict, shuffled_control: dict | None = None, per_subject: dict | None = None, secondary_holdout: dict | None = None) -> dict:
     agg = sleep["aggregate"]
     delta = agg["delta_candidate_minus_baseline"]
+
+    if shuffled_control is not None:
+        c_agg = shuffled_control["aggregate"]
+        negative_control_block = {
+            "description": "EEG + EOG epochs shuffled within-subject-and-partition (temporal alignment destroyed, signal distribution preserved)",
+            "shuffled_eog_macro_f1_mean": c_agg["model_c_macro_f1"]["mean"],
+            "shuffled_eog_macro_f1_sd_sample_ddof1": c_agg["model_c_macro_f1"]["sd_sample_ddof1"],
+            "A_to_C": c_agg["A_to_C"],
+            "C_to_B": c_agg["C_to_B"],
+            "outcome_classification": "OUTCOME_1_ALIGNED_TIMING_MATTERS",
+            "note": "B beats C in 5/5 seeds; C is approximately equal to A - the EOG benefit does not survive within-subject temporal shuffling.",
+            "source_artifact": "results/sleep_edf_eeg_eog_control_analysis.json",
+        }
+        evidence_strength = "replicated-with-control"
+        evidence_strength_rationale = (
+            f"Mean effect ({delta['mean']:.4f}) is modest relative to its own seed-to-seed SD, but is now "
+            "supported by a matched shuffled-EOG negative control: the aligned candidate beats the shuffled "
+            "control in 5/5 seeds, and the shuffled control shows no benefit over baseline (mean delta "
+            f"{c_agg['A_to_C']['mean']:.4f}, only {c_agg['A_to_C']['n_seeds_favor_C']}/5 seeds favor it) - "
+            "the effect specifically depends on EEG-EOG temporal alignment, not merely on having an "
+            "EOG-shaped input. Still limited to one dataset/population and 3 held-out subjects."
+        )
+        negative_control_present = True
+        if secondary_holdout is not None:
+            sh_agg = secondary_holdout["aggregate"]
+            supported = sh_agg["A_to_B"]["n_seeds_favor_B"] >= 4 and sh_agg["C_to_B"]["n_seeds_favor_B"] >= 4
+            evidence_strength_rationale += (
+                f" Prospective secondary holdout (n={secondary_holdout['cohort_size']} genuinely untouched subjects, "
+                f"same frozen checkpoints, no retraining): A->B favors B in {sh_agg['A_to_B']['n_seeds_favor_B']}/5 seeds, "
+                f"C->B favors B in {sh_agg['C_to_B']['n_seeds_favor_B']}/5 seeds - "
+                + ("the effect generalizes to this independent cohort; " if supported else "the effect is weaker/less consistent in this independent cohort; ")
+                + "evidence strength is NOT automatically upgraded to a new taxonomy category for this - see "
+                "prospective_secondary_holdout below for the full independent-subject evidence, tagged "
+                f"{'prospective_secondary_holdout_supported' if supported else 'prospective_secondary_holdout_not_fully_supported'}."
+            )
+    else:
+        negative_control_block = None
+        evidence_strength = "preliminary"
+        evidence_strength_rationale = (
+            f"Mean effect ({delta['mean']:.4f}) is comparable in magnitude to its own seed-to-seed "
+            f"SD ({delta['sd_sample_ddof1']:.4f}), and this is the first experiment for this target/dataset "
+            "(1 dataset, no negative control) - classified preliminary despite 4/5 seed consistency and "
+            "a physiologically coherent class-level pattern."
+        )
+        negative_control_present = False
+
+    if per_subject is not None:
+        per_subject_block = {
+            "source_artifact": "results/sleep_edf_per_subject_analysis.json",
+            "subject_directions": {s: v["direction"] for s, v in per_subject["subject_summary"].items()},
+            "dominated_by_one_subject": per_subject["global_result_dominated_by_one_subject"],
+            "note": "SC4011 shows the strongest, most consistent (4/5 seeds) positive effect; the other two held-out subjects are MIXED (3/5) with small mean deltas. The aggregate positive result is not uniform across subjects.",
+        }
+    else:
+        per_subject_block = {"status": "NOT_YET_COMPUTED"}
 
     return {
         "experiment_id": "sleep_edf_eeg_eog_sleep_stage",
@@ -459,7 +562,9 @@ def build_sleep_edf_experiment(sleep: dict) -> dict:
             "description": "EEG Fpz-Cz + EOG horizontal",
             "channels": sleep["frozen_protocol"]["channels"]["candidate_eeg_plus_eog"],
         },
-        "negative_control": None,
+        "negative_control": negative_control_block,
+        "per_subject_analysis": per_subject_block,
+        "prospective_secondary_holdout": build_sleep_edf_secondary_holdout_block(secondary_holdout),
         "primary_metric": "macro_f1",
         "baseline_metrics": {"macro_f1_mean": agg["baseline_macro_f1"]["mean"], "macro_f1_sd_sample_ddof1": agg["baseline_macro_f1"]["sd_sample_ddof1"]},
         "candidate_metrics": {"macro_f1_mean": agg["candidate_macro_f1"]["mean"], "macro_f1_sd_sample_ddof1": agg["candidate_macro_f1"]["sd_sample_ddof1"]},
@@ -476,7 +581,7 @@ def build_sleep_edf_experiment(sleep: dict) -> dict:
             "n_datasets": 1,
             "n_training_seeds": delta["n_seeds_total"],
             "independent_ground_truth": "real PSG hypnogram-scored sleep stage annotations (not computed by this project)",
-            "negative_control_present": False,
+            "negative_control_present": negative_control_present,
             "subject_disjoint_split": True,
         },
         "capacity_confound_status": {
@@ -492,21 +597,15 @@ def build_sleep_edf_experiment(sleep: dict) -> dict:
                 "seed_level": f"{delta['n_seeds_candidate_better']}/{delta['n_seeds_total']} favor candidate (1 near-tie)",
                 "class_level": "every class improves or is flat; largest gains in N1 and REM (physiologically expected classes for EOG); no class regresses",
             },
-            "evidence_strength": "preliminary",
-            "evidence_strength_rationale": (
-                f"Mean effect ({delta['mean']:.4f}) is comparable in magnitude to its own seed-to-seed "
-                f"SD ({delta['sd_sample_ddof1']:.4f}), and this is the first experiment for this target/dataset "
-                "(1 dataset, no negative control) - classified preliminary despite 4/5 seed consistency and "
-                "a physiologically coherent class-level pattern."
-            ),
+            "evidence_strength": evidence_strength,
+            "evidence_strength_rationale": evidence_strength_rationale,
         },
         "limitations": [
             "First and only experiment for this target (sleep stage) - no replication across datasets.",
-            "No negative control (e.g. a shuffled-EOG condition) was run for this experiment.",
-            "Only 3 held-out test subjects - per-subject decomposition not yet computed.",
             "18 subjects total (12/3/3 split) - smaller population than PPG-DaLiA (15) or PTT (22) relative to its 5-class task complexity.",
             "Terrestrial population; Sleep-EDF cassette recordings include substantial daytime wake time - severe class imbalance was handled via train-only class weighting, disclosed in the predeclaration.",
-        ],
+            "Only 3 held-out primary test subjects; per-subject analysis shows the primary aggregate positive effect is not uniform (1 strong subject, 2 mixed/weak) - see per_subject_analysis." if per_subject is not None else "No per-subject decomposition performed yet.",
+        ] + (["No negative control (e.g. a shuffled-EOG condition) was run for this experiment."] if shuffled_control is None else []),
         "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
         "source_reproducibility_artifact": "results/sleep_edf_eeg_eog_ablation_reproducibility.json",
         "predeclaration": "docs/SLEEP_EDF_EEG_EOG_PREDECLARATION_DAY7.md",
@@ -632,6 +731,9 @@ def main() -> None:
     capacity_control = json.loads(PPG_DALIA_CAPACITY_CONTROL_SOURCE.read_text()) if PPG_DALIA_CAPACITY_CONTROL_SOURCE.exists() else None
     ptt_sensitivity = json.loads(PTT_SENSITIVITY_SOURCE.read_text()) if PTT_SENSITIVITY_SOURCE.exists() else None
     sleep_edf = json.loads(SLEEP_EDF_SOURCE.read_text()) if SLEEP_EDF_SOURCE.exists() else None
+    sleep_edf_shuffled_control = json.loads(SLEEP_EDF_SHUFFLED_CONTROL_SOURCE.read_text()) if SLEEP_EDF_SHUFFLED_CONTROL_SOURCE.exists() else None
+    sleep_edf_per_subject = json.loads(SLEEP_EDF_PER_SUBJECT_SOURCE.read_text()) if SLEEP_EDF_PER_SUBJECT_SOURCE.exists() else None
+    sleep_edf_secondary_holdout = json.loads(SLEEP_EDF_SECONDARY_HOLDOUT_SOURCE.read_text()) if SLEEP_EDF_SECONDARY_HOLDOUT_SOURCE.exists() else None
     if FAULT_ROBUSTNESS_SOURCE.is_file():
         source_sha256 = _sha256(FAULT_ROBUSTNESS_SOURCE)
         if source_sha256 != FROZEN_FAULT_ROBUSTNESS_SHA256:
@@ -702,7 +804,7 @@ def main() -> None:
         "experiments": {
             "ppg_dalia_imu_hr": build_ppg_dalia_experiment(ppg, multiseed, capacity_control),
             "ptt_second_ppg_site_hr": build_ptt_experiment(ptt, ptt_sensitivity),
-            **({"sleep_edf_eeg_eog_sleep_stage": build_sleep_edf_experiment(sleep_edf)} if sleep_edf is not None else {}),
+            **({"sleep_edf_eeg_eog_sleep_stage": build_sleep_edf_experiment(sleep_edf, sleep_edf_shuffled_control, sleep_edf_per_subject, sleep_edf_secondary_holdout)} if sleep_edf is not None else {}),
         },
         "robustness_records": {"ppg_dalia_fault_robustness": robustness_record},
         "evidence_matrix": {
@@ -710,7 +812,7 @@ def main() -> None:
                 "wrist_imu_accelerometer": {"status": "POSITIVE_REVISED_SMALLER_EFFECT_POST_CAPACITY_CONTROL" if capacity_control is not None else "POSITIVE", "experiment_id": "ppg_dalia_imu_hr"},
                 "second_physical_ppg_site_proximal_phalanx": {"status": "NEGATIVE_AGGREGATE_HETEROGENEOUS_BY_SUBJECT" if ptt_sensitivity is not None else "NEGATIVE", "experiment_id": "ptt_second_ppg_site_hr"},
             },
-            **({"sleep_stage_5class": {"eog_horizontal_channel": {"status": "POSITIVE_MODEST", "experiment_id": "sleep_edf_eeg_eog_sleep_stage"}}} if sleep_edf is not None else {}),
+            **({"sleep_stage_5class": {"eog_horizontal_channel": {"status": "POSITIVE_MODEST_WITH_TEMPORAL_ALIGNMENT_CONTROL" if sleep_edf_shuffled_control is not None else "POSITIVE_MODEST", "experiment_id": "sleep_edf_eeg_eog_sleep_stage"}}} if sleep_edf is not None else {}),
             "workload": {"status": "UNVALIDATED"},
             "fatigue": {"status": "UNVALIDATED"},
             "blood_pressure": {"status": "UNVALIDATED"},

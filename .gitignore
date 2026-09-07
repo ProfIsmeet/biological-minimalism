@@ -25,6 +25,10 @@ datasets/**/raw/
 datasets/**/raw_uci/
 datasets/**/processed/
 
+# --- Local checkpoint archival packages (large binaries, not committed - see
+# results/checkpoint_archival_verification.json for the manifest/hashes) ---
+archival/
+
 # --- OS / editor ---
 .DS_Store
 Thumbs.db

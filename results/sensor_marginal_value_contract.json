@@ -1,5 +1,5 @@
 {
-  "methodology_version": "1.2.0",
+  "methodology_version": "1.5.0",
   "methodology_doc": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
   "generated_by": "ml/build_sensor_marginal_value_contract.py",
   "sign_convention": {
@@ -413,7 +413,199 @@
           "EOG horizontal"
         ]
       },
-      "negative_control": null,
+      "negative_control": {
+        "description": "EEG + EOG epochs shuffled within-subject-and-partition (temporal alignment destroyed, signal distribution preserved)",
+        "shuffled_eog_macro_f1_mean": 0.7420213232275609,
+        "shuffled_eog_macro_f1_sd_sample_ddof1": 0.013757100765136795,
+        "A_to_C": {
+          "mean": -0.005231210233164085,
+          "sd_sample_ddof1": 0.02406795935508609,
+          "per_seed": {
+            "seed42": 0.03680482726990886,
+            "seed43": -0.015420449490322619,
+            "seed44": -0.01987823254234422,
+            "seed45": -0.020302814195391594,
+            "seed46": -0.00735938220767085
+          },
+          "n_seeds_favor_C": 1,
+          "n_seeds_total": 5
+        },
+        "C_to_B": {
+          "mean": 0.027238616176175713,
+          "sd_sample_ddof1": 0.020092307538648674,
+          "per_seed": {
+            "seed42": 0.01541834792146668,
+            "seed43": 0.012229179271052049,
+            "seed44": 0.0571103065723676,
+            "seed45": 0.039000255580176946,
+            "seed46": 0.012434991535815287
+          },
+          "n_seeds_favor_B": 5,
+          "n_seeds_total": 5
+        },
+        "outcome_classification": "OUTCOME_1_ALIGNED_TIMING_MATTERS",
+        "note": "B beats C in 5/5 seeds; C is approximately equal to A - the EOG benefit does not survive within-subject temporal shuffling.",
+        "source_artifact": "results/sleep_edf_eeg_eog_control_analysis.json"
+      },
+      "per_subject_analysis": {
+        "source_artifact": "results/sleep_edf_per_subject_analysis.json",
+        "subject_directions": {
+          "SC4011": "IMPROVES",
+          "SC4081": "MIXED",
+          "SC4131": "MIXED"
+        },
+        "dominated_by_one_subject": true,
+        "note": "SC4011 shows the strongest, most consistent (4/5 seeds) positive effect; the other two held-out subjects are MIXED (3/5) with small mean deltas. The aggregate positive result is not uniform across subjects."
+      },
+      "prospective_secondary_holdout": {
+        "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+        "predeclaration": "docs/SLEEP_EDF_SECONDARY_HOLDOUT_PREDECLARATION.md",
+        "cohort_size": 8,
+        "cohort_subjects": [
+          "SC4181",
+          "SC4191",
+          "SC4201",
+          "SC4211",
+          "SC4221",
+          "SC4231",
+          "SC4241",
+          "SC4251"
+        ],
+        "no_retraining": true,
+        "aggregate_macro_f1": {
+          "A": {
+            "mean": 0.6529656695652062,
+            "sd_sample_ddof1": 0.015443900659988293,
+            "per_seed": {
+              "seed42": 0.6380552915617401,
+              "seed43": 0.6530094048283595,
+              "seed44": 0.6656277022634247,
+              "seed45": 0.6709347727505947,
+              "seed46": 0.6372011764219121
+            }
+          },
+          "B": {
+            "mean": 0.6857738751954685,
+            "sd_sample_ddof1": 0.02717467064563812,
+            "per_seed": {
+              "seed42": 0.6870045625232678,
+              "seed43": 0.7192201657085003,
+              "seed44": 0.7002779141255009,
+              "seed45": 0.6755696208016566,
+              "seed46": 0.6467971128184166
+            }
+          },
+          "C": {
+            "mean": 0.6556150452220249,
+            "sd_sample_ddof1": 0.014131881343919989,
+            "per_seed": {
+              "seed42": 0.6596558430256548,
+              "seed43": 0.6677983399798768,
+              "seed44": 0.6687022250652022,
+              "seed45": 0.6450355556062576,
+              "seed46": 0.6368832624331332
+            }
+          },
+          "A_to_B": {
+            "mean": 0.03280820563026223,
+            "sd_sample_ddof1": 0.026039418169735262,
+            "per_seed": {
+              "seed42": 0.04894927096152768,
+              "seed43": 0.06621076088014088,
+              "seed44": 0.034650211862076175,
+              "seed45": 0.004634848051061957,
+              "seed46": 0.009595936396504468
+            },
+            "n_seeds_favor_B": 5,
+            "n_seeds_total": 5
+          },
+          "A_to_C": {
+            "mean": 0.0026493756568187086,
+            "sd_sample_ddof1": 0.01823817204422314,
+            "per_seed": {
+              "seed42": 0.021600551463914708,
+              "seed43": 0.014788935151517357,
+              "seed44": 0.003074522801777446,
+              "seed45": -0.025899217144337072,
+              "seed46": -0.0003179139887788951
+            },
+            "n_seeds_favor_C": 3,
+            "n_seeds_total": 5
+          },
+          "C_to_B": {
+            "mean": 0.030158829973443525,
+            "sd_sample_ddof1": 0.014764985599722042,
+            "per_seed": {
+              "seed42": 0.027348719497612972,
+              "seed43": 0.05142182572862353,
+              "seed44": 0.03157568906029873,
+              "seed45": 0.03053406519539903,
+              "seed46": 0.009913850385283363
+            },
+            "n_seeds_favor_B": 5,
+            "n_seeds_total": 5
+          }
+        },
+        "class_level_aggregate": {
+          "Wake": {
+            "A_mean_f1": 0.9685935711397378,
+            "B_mean_f1": 0.9752987616336899,
+            "C_mean_f1": 0.970344076445147,
+            "B_minus_A": 0.006705190493952129,
+            "B_minus_C": 0.004954685188542918
+          },
+          "N1": {
+            "A_mean_f1": 0.37744782751301387,
+            "B_mean_f1": 0.40358532547301806,
+            "C_mean_f1": 0.382878945088042,
+            "B_minus_A": 0.026137497960004197,
+            "B_minus_C": 0.020706380384976075
+          },
+          "N2": {
+            "A_mean_f1": 0.7710981789585984,
+            "B_mean_f1": 0.7958303720514913,
+            "C_mean_f1": 0.7805488028822546,
+            "B_minus_A": 0.024732193092892873,
+            "B_minus_C": 0.01528156916923673
+          },
+          "N3": {
+            "A_mean_f1": 0.6311756147072874,
+            "B_mean_f1": 0.5876783736899267,
+            "C_mean_f1": 0.6039719751127178,
+            "B_minus_A": -0.043497241017360744,
+            "B_minus_C": -0.016293601422791126
+          },
+          "REM": {
+            "A_mean_f1": 0.5165131555073935,
+            "B_mean_f1": 0.6664765431292162,
+            "C_mean_f1": 0.5403314265819632,
+            "B_minus_A": 0.1499633876218227,
+            "B_minus_C": 0.12614511654725302
+          }
+        },
+        "subject_level_generalization": {
+          "n_subjects_total": 8,
+          "n_subjects_B_greater_than_A": 6,
+          "n_subjects_B_greater_than_C": 7,
+          "n_subjects_B_wins_both": 6,
+          "distribution_of_B_minus_A_deltas": [
+            0.029482909023675008,
+            -0.004822290080345825,
+            0.062206288578808513,
+            0.02588917948645315,
+            0.1363492840088756,
+            0.06574329004900799,
+            0.02190871856662009,
+            -0.004503455468430606
+          ],
+          "dominant_subject_by_abs_effect": "SC4221",
+          "dominant_subject_share_of_summed_effect": 0.41037674529105445,
+          "single_subject_dominance_flag": false
+        },
+        "outcome_classification": "OUTCOME_1_ALIGNED_TIMING_GENERALIZES",
+        "outcome_note": "B beats both A and C broadly (>=4/5 seeds each) in this independent n=8 cohort - the aligned-EOG effect generalizes beyond the original 3 primary-test subjects under the same frozen model/protocol. Still single-dataset and terrestrial.",
+        "relationship_to_primary_test": "SEPARATE_COHORT_NOT_MERGED - primary n=3 frozen test and this n=8 secondary holdout are reported independently, never pooled into a single headline n=11 test set."
+      },
       "primary_metric": "macro_f1",
       "baseline_metrics": {
         "macro_f1_mean": 0.7472525334607252,
@@ -440,7 +632,7 @@
         "n_datasets": 1,
         "n_training_seeds": 5,
         "independent_ground_truth": "real PSG hypnogram-scored sleep stage annotations (not computed by this project)",
-        "negative_control_present": false,
+        "negative_control_present": true,
         "subject_disjoint_split": true
       },
       "capacity_confound_status": {
@@ -456,15 +648,14 @@
           "seed_level": "4/5 favor candidate (1 near-tie)",
           "class_level": "every class improves or is flat; largest gains in N1 and REM (physiologically expected classes for EOG); no class regresses"
         },
-        "evidence_strength": "preliminary",
-        "evidence_strength_rationale": "Mean effect (0.0220) is comparable in magnitude to its own seed-to-seed SD (0.0228), and this is the first experiment for this target/dataset (1 dataset, no negative control) - classified preliminary despite 4/5 seed consistency and a physiologically coherent class-level pattern."
+        "evidence_strength": "replicated-with-control",
+        "evidence_strength_rationale": "Mean effect (0.0220) is modest relative to its own seed-to-seed SD, but is now supported by a matched shuffled-EOG negative control: the aligned candidate beats the shuffled control in 5/5 seeds, and the shuffled control shows no benefit over baseline (mean delta -0.0052, only 1/5 seeds favor it) - the effect specifically depends on EEG-EOG temporal alignment, not merely on having an EOG-shaped input. Still limited to one dataset/population and 3 held-out subjects. Prospective secondary holdout (n=8 genuinely untouched subjects, same frozen checkpoints, no retraining): A->B favors B in 5/5 seeds, C->B favors B in 5/5 seeds - the effect generalizes to this independent cohort; evidence strength is NOT automatically upgraded to a new taxonomy category for this - see prospective_secondary_holdout below for the full independent-subject evidence, tagged prospective_secondary_holdout_supported."
       },
       "limitations": [
         "First and only experiment for this target (sleep stage) - no replication across datasets.",
-        "No negative control (e.g. a shuffled-EOG condition) was run for this experiment.",
-        "Only 3 held-out test subjects - per-subject decomposition not yet computed.",
         "18 subjects total (12/3/3 split) - smaller population than PPG-DaLiA (15) or PTT (22) relative to its 5-class task complexity.",
-        "Terrestrial population; Sleep-EDF cassette recordings include substantial daytime wake time - severe class imbalance was handled via train-only class weighting, disclosed in the predeclaration."
+        "Terrestrial population; Sleep-EDF cassette recordings include substantial daytime wake time - severe class imbalance was handled via train-only class weighting, disclosed in the predeclaration.",
+        "Only 3 held-out primary test subjects; per-subject analysis shows the primary aggregate positive effect is not uniform (1 strong subject, 2 mixed/weak) - see per_subject_analysis."
       ],
       "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
       "source_reproducibility_artifact": "results/sleep_edf_eeg_eog_ablation_reproducibility.json",
@@ -670,7 +861,7 @@
     },
     "sleep_stage_5class": {
       "eog_horizontal_channel": {
-        "status": "POSITIVE_MODEST",
+        "status": "POSITIVE_MODEST_WITH_TEMPORAL_ALIGNMENT_CONTROL",
         "experiment_id": "sleep_edf_eeg_eog_sleep_stage"
       }
     },
