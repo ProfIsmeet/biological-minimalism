@@ -1,0 +1,38 @@
+{
+  "clone_source": "https://github.com/ProfIsmeet/biological-minimalism.git",
+  "clone_branch": "day10-canonical-integration",
+  "clone_commit_verified": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+  "environment": {
+    "fresh_venv": true,
+    "install_command": "pip install -r ml/requirements.txt",
+    "exact_match_fields": ["python_version", "torch", "scipy", "scikit-learn", "mne", "wfdb", "pandas"],
+    "drifted_fields": {"numpy": {"frozen": "2.5.2", "clean_clone_installed": "2.5.3", "impact_on_results": "none observed"}}
+  },
+  "checkpoint_retrieval": {
+    "sources": ["day8-checkpoint-archive-v1", "day14-checkpoint-archive-v1"],
+    "n_checkpoints_retrieved": 60,
+    "n_verified_ok": 60,
+    "verification_method": "direct Python SHA256 read (shell sha256sum -c against the bundled SHA256SUMS.txt failed on a text-mode-newline artifact, not a data problem)"
+  },
+  "dataset_setup": {
+    "method": "verified-identical file copy from already-downloaded, already-fingerprinted originals (not a second live network download in this session)",
+    "sample_verified": 10,
+    "sample_matched": 10,
+    "preprocessing_regenerated_fresh_in_clone": ["ml/preprocess_ppg_dalia.py", "ml/preprocess_ptt.py"],
+    "manual_step_required_for_full_independence": "a real network download from PhysioNet/UCI per datasets/*/README.md, previously exercised for real during this project's original data acquisition"
+  },
+  "representative_reproduction": {
+    "sleep_edf_primary": {"checkpoints": 10, "all_exact_match": true},
+    "sleep_edf_secondary_holdout": {"seeds": 5, "all_exact_match": true},
+    "ptt": {"checkpoints": 10, "all_exact_match": true},
+    "ppg_dalia_capacity_control": {"checkpoints": 5, "all_exact_match": true},
+    "scientific_contract_rebuild": {"succeeded": true, "note": "Day-10 CRLF-hash-guard fix present on canonical branch, no error"},
+    "claim_checker": {"succeeded": true, "output": "CLAIM CONSISTENCY: OK"}
+  },
+  "manual_steps": [
+    "gh auth login (private repo access) for checkpoint archive retrieval",
+    "PhysioNet/UCI dataset download per datasets/*/README.md for a fully from-scratch data acquisition"
+  ],
+  "failures": [],
+  "overall_status": "CLEAN_CLONE_PASS_WITH_MANUAL_DATA_SETUP"
+}

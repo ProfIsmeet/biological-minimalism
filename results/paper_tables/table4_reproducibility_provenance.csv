@@ -1,0 +1,6 @@
+axis,n_checkpoints_or_conditions,all_metrics_match,max_abs_difference,tolerance
+ppg_dalia,20,True,0.0,0.0
+robustness,114,True,7.62939453125e-06,0.0001
+ptt,10,True,0.0,0.0
+sleep_primary,15,True,0.0,0.0
+sleep_secondary,15,True,0.0,0.0

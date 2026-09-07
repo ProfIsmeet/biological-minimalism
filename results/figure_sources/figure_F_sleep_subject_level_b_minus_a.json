@@ -1,0 +1,25 @@
+{
+  "title": "Sleep-EDF: per-subject B-A delta, primary vs. secondary",
+  "metric": "delta macro-F1, positive = aligned EOG (B) better",
+  "sample_unit": "held-out subject: primary n=3, secondary n=8 (shown as two distinct groups, never merged)",
+  "primary_per_subject": {
+    "SC4011": 0.04885590039645715,
+    "SC4081": 0.007986328751987237,
+    "SC4131": 0.009094943918696585
+  },
+  "secondary_per_subject": {
+    "SC4181": 0.029482909023675008,
+    "SC4191": -0.004822290080345825,
+    "SC4201": 0.062206288578808513,
+    "SC4211": 0.02588917948645315,
+    "SC4221": 0.1363492840088756,
+    "SC4231": 0.06574329004900799,
+    "SC4241": 0.02190871856662009,
+    "SC4251": -0.004503455468430606
+  },
+  "uncertainty_meaning": "no error bars - individual subject points; secondary group MAY additionally show the DESCRIPTIVE_SUBJECT_BOOTSTRAP percentile band from results/sleep_edf_sensitivity_day11.json, explicitly labeled as descriptive, not inferential",
+  "claim_boundary": "Two visually distinct groups (primary/secondary) on one axis is acceptable; a single pooled distribution is NOT.",
+  "provenance": [
+    "results/sleep_edf_sensitivity_day11.json"
+  ]
+}

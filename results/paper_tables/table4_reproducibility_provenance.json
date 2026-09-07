@@ -1,0 +1,49 @@
+{
+  "header": [
+    "axis",
+    "n_checkpoints_or_conditions",
+    "all_metrics_match",
+    "max_abs_difference",
+    "tolerance"
+  ],
+  "rows": [
+    [
+      "ppg_dalia",
+      20,
+      true,
+      0.0,
+      0.0
+    ],
+    [
+      "robustness",
+      114,
+      true,
+      7.62939453125e-06,
+      0.0001
+    ],
+    [
+      "ptt",
+      10,
+      true,
+      0.0,
+      0.0
+    ],
+    [
+      "sleep_primary",
+      15,
+      true,
+      0.0,
+      0.0
+    ],
+    [
+      "sleep_secondary",
+      15,
+      true,
+      0.0,
+      0.0
+    ]
+  ],
+  "provenance": {
+    "source": "results/day10_scientific_reproduction.json"
+  }
+}

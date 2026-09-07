@@ -1,0 +1,42 @@
+{
+  "header": [
+    "config",
+    "channels",
+    "n_parameters",
+    "macro_f1_mean",
+    "macro_f1_sample_sd"
+  ],
+  "rows": [
+    [
+      "M0",
+      "EEG",
+      8197,
+      0.7472525334607252,
+      0.024382202199124535
+    ],
+    [
+      "M_A",
+      "EEG+EOG",
+      8309,
+      0.7692599394037367,
+      0.013215074328560379
+    ],
+    [
+      "M_B",
+      "EEG+Resp",
+      8309,
+      0.7332349129251832,
+      0.023997507314604944
+    ],
+    [
+      "M_AB",
+      "EEG+EOG+Resp",
+      8421,
+      0.7583032975282097,
+      0.022947733654619305
+    ]
+  ],
+  "provenance": {
+    "source": "results/sleep_edf_interaction_resp_day10.json"
+  }
+}

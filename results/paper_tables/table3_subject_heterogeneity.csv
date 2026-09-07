@@ -1,0 +1,5 @@
+experiment_id,n_subjects,n_favor_candidate,dominant_subject,dominant_share,single_subject_dominance
+ppg_dalia_imu_hr,3,2,S9,0.6260372535633518,True
+ptt_second_ppg_site_hr,4,2,s2,1.2495662076826342,True
+sleep_edf_primary,3,3,SC4011,0.7409462390313473,True
+sleep_edf_secondary_holdout,8,6,SC4221,0.41037674529105445,False
