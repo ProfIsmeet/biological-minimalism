@@ -1,0 +1,51 @@
+{
+  "artifact_id": "biological-minimalism-checkpoint-archival-schema-v1",
+  "schema_version": "1.0.0",
+  "purpose": "Integration schema to receive Ismet's durable external checkpoint archival. Local presence + SHA are already tracked (results/checkpoint_inventory.json, checkpoint_manifest_consolidated.json). External-archive fields stay 'pending' until Ismet provides verifiable evidence. Nothing is marked externally archived here.",
+  "status_vocabulary": {
+    "checkpoint_hash_known": "SHA256 of the local checkpoint is recorded",
+    "checkpoint_file_present": "the .pt file exists locally",
+    "checkpoint_locally_archived": "copied into a local durable archive location",
+    "checkpoint_externally_archived": "uploaded to an external durable store (Zenodo/S3/etc.)",
+    "external_archive_location": "URI/DOI of the external artifact",
+    "archive_sha": "SHA256 of the externally archived object",
+    "archive_verification_status": "verified | unverified | pending"
+  },
+  "records": [
+    {
+      "run_id_group": "ppg_dalia_imu_ablation (model_a/b/c seeds)",
+      "checkpoint_hash_known": true,
+      "checkpoint_file_present": true,
+      "checkpoint_locally_archived": true,
+      "local_manifest": "results/checkpoint_manifest_consolidated.json",
+      "checkpoint_externally_archived": "pending",
+      "external_archive_location": null,
+      "archive_sha": null,
+      "archive_verification_status": "pending"
+    },
+    {
+      "run_id_group": "ptt_ppg_site_ablation (model_a/b seeds)",
+      "checkpoint_hash_known": true,
+      "checkpoint_file_present": true,
+      "checkpoint_locally_archived": true,
+      "local_manifest": "results/ptt_ppg_site_ablation.json (checkpoint_manifest)",
+      "checkpoint_externally_archived": "pending",
+      "external_archive_location": null,
+      "archive_sha": null,
+      "archive_verification_status": "pending"
+    },
+    {
+      "run_id_group": "sleep_edf_eeg_eog_ablation (baseline/candidate seeds)",
+      "checkpoint_hash_known": true,
+      "checkpoint_file_present": true,
+      "checkpoint_locally_archived": true,
+      "local_manifest": "results/sleep_edf_eeg_eog_ablation.json (checkpoint_manifest)",
+      "checkpoint_externally_archived": "pending",
+      "external_archive_location": null,
+      "archive_sha": null,
+      "archive_verification_status": "pending",
+      "note": "Ismet tag day8-checkpoint-archive-v1 observed on origin; treat as PENDING external evidence until a verifiable location + SHA are provided."
+    }
+  ],
+  "integration_rule": "Flip checkpoint_externally_archived to true and populate external_archive_location + archive_sha ONLY when Ismet provides a resolvable location whose downloaded object SHA matches archive_sha; then set archive_verification_status=verified."
+}
