@@ -1,7 +1,9 @@
 {
-  "artifact_id": "biological-minimalism-sleep-secondary-holdout-pending-v1",
-  "schema_version": "1.0.0",
-  "purpose": "Receiving schema for Ismet's prospective Sleep-EDF secondary holdout AND the day8 shuffled-EOG control + per-subject decomposition. Every value is 'pending' until the corresponding Ismet branch is integrated and re-verified. NO future numbers are fabricated here.",
+  "artifact_id": "biological-minimalism-sleep-secondary-holdout-resolved-v1",
+  "schema_version": "2.0.0",
+  "supersedes": "biological-minimalism-sleep-secondary-holdout-pending-v1",
+  "purpose": "RESOLVED. The Day-8 shuffled-EOG control + per-subject decomposition and the Day-9 prospective secondary holdout have been integrated from Ismet's branches and independently re-verified. All previously-pending values are now populated from committed source artifacts. No value is fabricated; each traces to a source artifact.",
+  "integration_status": "COMPLETE",
   "primary_cohort_reference": {
     "experiment_id": "sleep-edf-eeg-eog-ablation",
     "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
@@ -14,44 +16,77 @@
     "n_seeds_total": 5,
     "status": "FROZEN_ON_THIS_BRANCH"
   },
-  "pending_items": {
+  "resolved_items": {
     "shuffled_eog_control": {
-      "status": "PENDING_SCIENTIFIC_INTEGRATION",
-      "description": "Model C = EEG + within-epoch shuffled EOG (matched negative control).",
-      "lives_on_branch": "origin/day8-sleep-strengthening-ml",
-      "source_artifact_when_merged": "results/sleep_edf_eeg_eog_control_analysis.json",
-      "control_macro_f1_mean": null,
-      "b_gt_c_seeds": null,
-      "b_gt_c_seeds_total": null,
-      "outcome": "pending"
+      "status": "COMPLETE",
+      "description": "Model C = EEG + within-subject/within-partition shuffled EOG (capacity-identical matched negative control).",
+      "integrated_from_branch": "origin/day8-sleep-strengthening-ml",
+      "source_artifact": "results/sleep_edf_eeg_eog_control_analysis.json",
+      "control_macro_f1_mean": 0.7420213232275609,
+      "primary_a_to_c_mean": -0.005231210233164085,
+      "primary_a_to_c_neutral": true,
+      "b_gt_c_seeds": 5,
+      "b_gt_c_seeds_total": 5,
+      "outcome": "OUTCOME_1_ALIGNED_TIMING_MATTERS"
     },
     "per_subject_decomposition": {
-      "status": "PENDING_SCIENTIFIC_INTEGRATION",
-      "description": "Per-held-out-subject delta (candidate - baseline); expected SC4011 dominance.",
-      "lives_on_branch": "origin/day8-sleep-strengthening-ml",
-      "source_artifact_when_merged": "results/sleep_edf_per_subject_analysis.json",
-      "per_subject_delta": {"SC4011": null, "SC4081": null, "SC4131": null},
-      "dominant_subject": null,
-      "outcome": "pending"
+      "status": "COMPLETE",
+      "description": "Per-held-out-subject delta (candidate - baseline) for the primary n=3 test.",
+      "integrated_from_branch": "origin/day8-sleep-strengthening-ml",
+      "source_artifact": "results/sleep_edf_per_subject_analysis.json",
+      "per_subject_delta": {"SC4011": 0.048855900396457194, "SC4081": 0.007986328751987171, "SC4131": 0.009094943918696585},
+      "per_subject_direction": {"SC4011": "IMPROVES", "SC4081": "MIXED", "SC4131": "MIXED"},
+      "dominant_subject": "SC4011",
+      "global_result_dominated_by_one_subject": true,
+      "outcome": "primary positive effect concentrated in SC4011"
     },
     "secondary_holdout": {
-      "status": "PENDING_EXTERNAL_SCIENTIFIC_INTEGRATION",
-      "description": "Prospective secondary held-out cohort, subject-disjoint from the primary 3.",
-      "lives_on_branch": "origin/day9-sleep-secondary-holdout-ml",
-      "secondary_cohort_subjects": null,
-      "n_secondary_held_out": null,
-      "secondary_baseline_macro_f1_mean": null,
-      "secondary_candidate_macro_f1_mean": null,
-      "secondary_delta_mean": null,
-      "secondary_per_subject_delta": null,
+      "status": "COMPLETE",
+      "description": "Prospective secondary held-out cohort, subject-disjoint from primary train/val/test; frozen before download and before any prediction; evaluation-only, zero retraining.",
+      "integrated_from_branch": "origin/day9-sleep-secondary-holdout-ml",
+      "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+      "reproducibility_artifact": "results/sleep_edf_secondary_holdout_reproducibility.json",
+      "secondary_cohort_subjects": ["SC4181", "SC4191", "SC4201", "SC4211", "SC4221", "SC4231", "SC4241", "SC4251"],
+      "n_secondary_held_out": 8,
+      "no_retraining": true,
+      "secondary_baseline_macro_f1_mean": 0.653,
+      "secondary_candidate_macro_f1_mean": 0.6858,
+      "secondary_control_macro_f1_mean": 0.6556,
+      "secondary_a_to_b_mean": 0.0328,
+      "secondary_a_to_b_seeds_favor_b": 5,
+      "secondary_c_to_b_seeds_favor_b": 5,
+      "secondary_seeds_total": 5,
+      "secondary_per_subject_b_minus_a": {
+        "SC4181": 0.029482909023675008,
+        "SC4191": -0.004822290080345825,
+        "SC4201": 0.062206288578808513,
+        "SC4211": 0.02588917948645315,
+        "SC4221": 0.1363492840088756,
+        "SC4231": 0.06574329004900799,
+        "SC4241": 0.02190871856662009,
+        "SC4251": -0.004503455468430606
+      },
+      "n_subjects_b_gt_a": 6,
+      "n_subjects_b_gt_c": 7,
+      "dominant_subject_by_abs_effect": "SC4221",
+      "dominant_subject_share_of_summed_effect": 0.41037674529105445,
+      "single_subject_dominance_flag": false,
+      "class_level_b_minus_a": {"Wake": 0.0067, "N1": 0.0261, "N2": 0.0247, "N3": -0.043497241017360744, "REM": 0.1499633876218227},
+      "n3_regression_disclosed": true,
+      "n3_regression_read_only_diagnostic": "Precision effect: model B over-labels true N2 epochs as N3 (N2->N3 false positives rise), lowering N3 precision (~0.499->0.430) even though N3 recall improves (~0.853->0.884). No retraining performed; from summed per-seed confusion matrices in the evaluation artifact.",
       "relationship_to_primary": {
         "vocabulary": ["support", "weaken", "contradict", "pending"],
-        "outcome": "pending"
+        "outcome": "support"
       }
     }
   },
+  "evidence_strength": {
+    "category": "replicated-with-control",
+    "qualifier": "prospective_secondary_holdout_supported",
+    "not_upgraded_to": "independent-dataset or cross-population replication (same Sleep-EDF cassette protocol)"
+  },
   "display_rules": {
-    "case3_research_mode": "Show baseline A and aligned B as frozen. Show shuffled C, per-subject, and secondary as explicit PENDING cards; never render null as 0.",
-    "on_integration": "See docs/DAY8_9_INTEGRATION_STATE.md section 3 checklist."
+    "case3_research_mode": "Show primary A/B/C (n=3, SC4011-dominated) and secondary A/B/C (n=8) as SEPARATE frozen panels. Never pool into one n=11 test. Show shuffled-EOG control, per-subject support (6/8 B>A, 7/8 B>C), and class-level results including the REM gain and the N3 regression.",
+    "on_integration": "RESOLVED — see docs/EMIR_INTEGRATION_HANDOFF_DAY9.md and results/sensor_marginal_value_contract.json -> experiments.sleep_edf_eeg_eog_sleep_stage."
   }
 }

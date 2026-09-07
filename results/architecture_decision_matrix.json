@@ -67,33 +67,36 @@
       "component_id": "frontal_eog_horizontal",
       "source_experiment": "sleep-edf-eeg-eog-ablation",
       "reasoning": {
-        "1_scientific_evidence": "Positive, modest: macro-F1 0.7473->0.7693 (delta ~0.022) on this branch; candidate better in 4/5 training seeds; balanced accuracy 5/5; largest class gains N1/REM.",
-        "2_evidence_strength": "replicated_but_variable; mean effect comparable in magnitude to seed-to-seed SD; PRELIMINARY (first experiment for this target/dataset).",
-        "3_heterogeneity": "Only 3 held-out subjects. On THIS branch: per-subject decomposition NOT computed and NO shuffled-EOG negative control. Both exist on Ismet's unmerged day8-sleep-strengthening-ml branch and are PENDING_SCIENTIFIC_INTEGRATION.",
-        "4_burden_completeness": "MISSING. EEG/EOG components not linked into the HR-focused pareto_decision_inputs; ocular/electrode burden unresolved.",
-        "5_interaction_limitation": "No interaction evidence.",
-        "6_decision": "FUTURE_EVIDENCE_REQUIRED"
+        "1_scientific_evidence": "Positive, modest, now control- and secondary-supported. Primary (n=3): macro-F1 0.7473->0.7693 (delta ~0.022), candidate better 4/5 seeds. Matched shuffled-EOG negative control: aligned B beats shuffled C in 5/5 seeds primary and 5/5 secondary; A->C approximately neutral -> the benefit depends on temporal alignment, not mere EOG presence. Prospective secondary holdout (n=8, frozen before evaluation, zero retraining): 0.6530->0.6858, A->B 5/5 seeds.",
+        "2_evidence_strength": "replicated-with-control + prospective_secondary_holdout_supported. Upgraded from the prior preliminary/replicated_but_variable state because the shuffled control, per-subject decomposition, and secondary holdout are now integrated and re-verified. NOT independent-dataset or cross-population replication (same Sleep-EDF cassette protocol).",
+        "3_heterogeneity": "Primary effect concentrated in one subject (SC4011 improves; SC4081/SC4131 mixed; global_result_dominated_by_one_subject=true). Secondary broadens support (6/8 B>A, 7/8 B>C; largest subject SC4221 ~41% of summed effect, single_subject_dominance_flag=false) but is still not uniform (2/8 near-zero/negative). Class-level: large REM gain but an N3 regression (B-A ~-0.043) in the secondary cohort, disclosed; read-only diagnostic shows N3 precision drops (B over-labels true N2 as N3) while N3 recall improves.",
+        "4_burden_completeness": "MISSING/UNRESOLVED. EEG/EOG components are still not linked into the (HR-focused) pareto_decision_inputs / operational cost catalog. EOG adds ocular electrode/contact burden versus EEG-only; the exact contact increment, module boundary, power, and mass are not frozen and are left unresolved (not zero).",
+        "5_interaction_limitation": "No interaction evidence; cannot prove membership in a globally minimal sensor set.",
+        "6_decision": "CONDITIONAL_FOR_TARGET"
       },
-      "decision": "FUTURE_EVIDENCE_REQUIRED",
-      "decision_basis": "A modest positive signal on a different target and modality that demonstrates the method transfers, but with 3 subjects, preliminary strength, missing negative control and per-subject breakdown ON THIS BRANCH, and no operational burden linkage, the gate returns Future-evidence-required. The pending shuffled control and per-subject analysis (and the prospective secondary holdout) are the specified next evidence.",
-      "pending_integration": {
-        "shuffled_eog_control": "PENDING_SCIENTIFIC_INTEGRATION",
-        "per_subject_decomposition": "PENDING_SCIENTIFIC_INTEGRATION",
-        "secondary_holdout": "PENDING_EXTERNAL_SCIENTIFIC_INTEGRATION"
+      "decision": "CONDITIONAL_FOR_TARGET",
+      "decision_basis": "The scientific blocker that previously forced FUTURE_EVIDENCE_REQUIRED (missing negative control, missing per-subject decomposition, preliminary strength) is now resolved: aligned EOG shows a matched-control-supported, prospectively-secondary-supported positive marginal value for 5-class sleep staging. Applying the same gate that made PPG-DaLiA/IMU CONDITIONAL with incomplete mass/power burden, EOG moves to CONDITIONAL_FOR_TARGET: real, control-supported target-specific value but with unresolved ocular electrode/contact burden (less complete than the IMU colocation case), single-dataset scope, non-uniform subject benefit, an N3 regression, and no interaction evidence. This is explicitly NOT a RETAIN outcome and does not put EOG into any final architecture.",
+      "resolved_integration": {
+        "shuffled_eog_control": "COMPLETE (results/sleep_edf_eeg_eog_control_analysis.json)",
+        "per_subject_decomposition": "COMPLETE (results/sleep_edf_per_subject_analysis.json)",
+        "secondary_holdout": "COMPLETE (results/sleep_edf_secondary_holdout_evaluation.json)"
       },
       "prohibited_upgrades": [
-        "Do not claim EOG is necessary or that the final architecture should contain EOG.",
-        "Do not display shuffled-control or per-subject numbers as frozen on this branch.",
-        "Do not compare macro-F1 to the HR-MAE experiments."
+        "Do not upgrade to RETAIN_FOR_TARGET or 'the final architecture should contain EOG'.",
+        "Do not claim EOG is necessary or universally beneficial across subjects.",
+        "Do not claim independent-dataset / cross-population replication or an astronaut/microgravity validation.",
+        "Do not pool primary n=3 and secondary n=8 into one n=11 test.",
+        "Do not compare macro-F1 to the HR-MAE experiments.",
+        "Do not treat the unresolved ocular electrode/contact burden as zero."
       ]
     }
   ],
   "summary": {
     "RETAIN_FOR_TARGET": [],
-    "CONDITIONAL_FOR_TARGET": ["heart_rate_bpm / PPG-DaLiA / synchronized wrist IMU"],
+    "CONDITIONAL_FOR_TARGET": ["heart_rate_bpm / PPG-DaLiA / synchronized wrist IMU", "sleep_stage_5class / Sleep-EDF / horizontal EOG"],
     "DEPRIORITIZE_FOR_TARGET": ["heart_rate_bpm / PTT-PPG / second physical PPG site"],
     "REMOVAL_CANDIDATE_FOR_TARGET": [],
-    "FUTURE_EVIDENCE_REQUIRED": ["sleep_stage_5class / Sleep-EDF / horizontal EOG"],
-    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence unavailable; burden incomplete; cross-dataset ranking prohibited."
+    "FUTURE_EVIDENCE_REQUIRED": [],
+    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence unavailable; operational burden incomplete (EOG ocular electrode/contact burden unresolved and unlinked; IMU mass/power/latency partial); cross-dataset ranking prohibited. Sleep/EOG moved FUTURE_EVIDENCE_REQUIRED -> CONDITIONAL_FOR_TARGET after the shuffled-control + per-subject + prospective secondary holdout were integrated; this does NOT change the global UNRESOLVED status."
   }
 }

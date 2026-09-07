@@ -2,16 +2,16 @@
   "inventory_id": "biological-minimalism-checkpoint-inventory-v1",
   "note": "Model checkpoints are gitignored (ml/checkpoints/*). This inventory records every checkpoint referenced by committed EXPERIMENT artifacts on THIS machine, whether it is present, and whether present files match their declared SHA256. Ismet's cross-machine roll-up (checkpoint_manifest_consolidated.json) is kept separate under 'cross_machine_manifest' and is NOT merged in. Missing historical checkpoints are NOT regenerated. Paths are normalised to POSIX repository-relative form; source artifacts contain non-portable Windows-style paths (documented, not rewritten, to preserve their frozen SHA chains).",
   "summary": {
-    "total_referenced_checkpoints": 41,
+    "total_referenced_checkpoints": 46,
     "present": 1,
-    "missing": 40,
+    "missing": 45,
     "sha256_verified": 1,
     "sha256_mismatched": 0
   },
   "cross_machine_manifest": {
     "source_artifact": "results/checkpoint_manifest_consolidated.json",
-    "hashes_recorded_on_ismet_windows_machine": 43,
-    "present_locally_on_ismet_windows_machine": 43,
+    "hashes_recorded_on_ismet_windows_machine": null,
+    "present_locally_on_ismet_windows_machine": null,
     "checkpoint_files_physically_present_on_this_mac": 1,
     "durably_archived": false,
     "archival_note": "No checkpoint weight files are committed to git (ml/checkpoints/* is gitignored) and none were pushed to the remote. A recorded hash is NOT a durable archive. Regenerating weights would not reproduce the originals bit-identically and must never be relabelled 'original'."
@@ -668,6 +668,86 @@
       "declared_size_bytes": 42353,
       "referenced_by": [
         "sleep_edf_eeg_eog_ablation.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seed42.pt",
+      "run_id": "model_c_shuffled_eog_seed42",
+      "seed": 42,
+      "role": "ppg_plus_shuffled_imu (capacity-matched control C)",
+      "declared_sha256": "456015d88fb412a3935b61da5b3df315c075ef46ad8757aa1a1d8725b45adf5c",
+      "declared_size_bytes": 42299,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_control_analysis.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seed43.pt",
+      "run_id": "model_c_shuffled_eog_seed43",
+      "seed": 43,
+      "role": "ppg_plus_shuffled_imu (capacity-matched control C)",
+      "declared_sha256": "0a38a8ebf9ae3860cc8cbc8323ec229dd553ca37e81f331daf55584b51f0396c",
+      "declared_size_bytes": 42299,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_control_analysis.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seed44.pt",
+      "run_id": "model_c_shuffled_eog_seed44",
+      "seed": 44,
+      "role": "ppg_plus_shuffled_imu (capacity-matched control C)",
+      "declared_sha256": "b4909ed14c0ec0bf38deafb4b0324893a8d2dcd8b4d2d4ec133a3023a14b2a57",
+      "declared_size_bytes": 42299,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_control_analysis.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seed45.pt",
+      "run_id": "model_c_shuffled_eog_seed45",
+      "seed": 45,
+      "role": "ppg_plus_shuffled_imu (capacity-matched control C)",
+      "declared_sha256": "95618e9a7ff97dbaf365ed14492ca9684892781e715a2788cbeb25738af198b7",
+      "declared_size_bytes": 42299,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_control_analysis.json"
+      ],
+      "present": false,
+      "git_tracked": false,
+      "sha256_verification": "not_present",
+      "archival_status": "absent",
+      "reconstructability": "deterministic_training_script_exists_but_rerun_not_guaranteed_bit_identical"
+    },
+    {
+      "expected_path_posix": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seed46.pt",
+      "run_id": "model_c_shuffled_eog_seed46",
+      "seed": 46,
+      "role": "ppg_plus_shuffled_imu (capacity-matched control C)",
+      "declared_sha256": "a30a36ab6d06612c6346431a508ccf440778ad379c96636f464d0d6306f029f1",
+      "declared_size_bytes": 42299,
+      "referenced_by": [
+        "sleep_edf_eeg_eog_control_analysis.json"
       ],
       "present": false,
       "git_tracked": false,

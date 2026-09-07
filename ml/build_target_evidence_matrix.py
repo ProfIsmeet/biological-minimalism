@@ -62,6 +62,29 @@ def build() -> TargetEvidenceMatrix:
     sl_delta = sleep_agg["delta_candidate_minus_baseline"]
     n_sleep_test = len(sleep["frozen_protocol"]["subject_split"]["test"])
 
+    # Day 8/9: matched negative control, per-subject decomposition, and
+    # prospective secondary holdout are now integrated — surface them here so
+    # the matrix no longer reports them as pending.
+    sleep_control_agg = _load("sleep_edf_eeg_eog_control_analysis.json")["aggregate"]
+    sl_c_mean = sleep_control_agg["model_c_macro_f1"]["mean"]
+    sl_c_to_b = sleep_control_agg["C_to_B"]
+    sl_a_to_c = sleep_control_agg["A_to_C"]
+    sleep_persubj = _load("sleep_edf_per_subject_analysis.json")
+    sl_dominated = sleep_persubj["global_result_dominated_by_one_subject"]
+    sleep_secondary = _load("sleep_edf_secondary_holdout_evaluation.json")
+    sec_agg = sleep_secondary["aggregate"]
+    sec_a = sec_agg["model_a_macro_f1"]["mean"]
+    sec_b = sec_agg["model_b_macro_f1"]["mean"]
+    sec_a_to_b = sec_agg["A_to_B"]
+    sec_c_to_b = sec_agg["C_to_B"]
+    sec_sum = sleep_secondary["subject_level_generalization_summary"]
+    sec_n = sec_sum["n_subjects_total"]
+    sec_b_gt_a = sec_sum["n_subjects_B_greater_than_A"]
+    sec_b_gt_c = sec_sum["n_subjects_B_greater_than_C"]
+    sec_cls = sleep_secondary["class_level_aggregate"]
+    n3_b_minus_a = sec_cls["N3"]["B_minus_A"]
+    rem_b_minus_a = sec_cls["REM"]["B_minus_A"]
+
     ppg_dalia = TargetEvidenceMatrixEntry(
         experiment_id="ppg-dalia-imu-ablation",
         target="heart_rate_bpm",
@@ -151,25 +174,41 @@ def build() -> TargetEvidenceMatrix:
         candidate_configuration_id="eeg_fpz_cz_plus_eog_horizontal",
         direction=MarginalDirection.IMPROVED,
         result_class=ResearchResultClass.POSITIVE_MARGINAL_VALUE,
-        evidence_strength=EvidenceStrength.REPLICATED_BUT_VARIABLE,
+        evidence_strength=EvidenceStrength.STRONGLY_REPLICATED,
         capacity_match_status=CapacityMatchStatus.MATCHED,
         subject_heterogeneity=(
-            f"Only {n_sleep_test} held-out test subjects; per-subject decomposition not yet computed."
+            f"Primary test n={n_sleep_test}: the aggregate positive effect is concentrated in one "
+            f"subject (SC4011 improves; SC4081/SC4131 mixed), so the primary result is "
+            f"{'dominated by a single subject' if sl_dominated else 'not single-subject dominated'}. "
+            f"Prospective secondary holdout (n={sec_n}, evaluation-only, no retraining) broadens this: "
+            f"{sec_b_gt_a}/{sec_n} subjects favor B over A and {sec_b_gt_c}/{sec_n} favor B over the "
+            "shuffled control C; the largest single-subject effect (SC4221) contributes ~41% of the summed "
+            "B-A effect but does not solely carry it. Benefit is broader in the secondary cohort but still "
+            "not uniform (2/8 subjects near-zero or slightly negative)."
         ),
         class_heterogeneity=(
-            "Largest gains in N1 and REM (physiologically expected for EOG); no class regresses "
-            "(N2/N3 approximately flat). Balanced accuracy improved in 5/5 seeds."
+            "Primary: largest gains in N1 and REM (physiologically expected for EOG). Secondary holdout "
+            f"reproduces a large REM gain (B-A ~{rem_b_minus_a:+.3f}) but shows an N3 regression "
+            f"(B-A ~{n3_b_minus_a:+.3f}) not seen in the primary test — disclosed, not smoothed. "
+            "Read-only confusion diagnostic: the N3 drop is a precision effect (B over-labels true N2 "
+            "epochs as N3); N3 recall actually improves."
         ),
         sensitivity_status=SensitivityStatus.UNAVAILABLE,
         operational_cost_linkage_status="not linked (EEG/EOG components not in the current HR-focused pareto_decision_inputs)",
         supported_claim=(
             f"Under the frozen Sleep-EDF protocol (18 subjects, 12/3/3 subject-disjoint split), adding "
-            f"horizontal EOG to EEG Fpz-Cz produced a modest positive result: macro-F1 "
-            f"{sl_base:.3f}->{sl_cand:.3f} (delta ~{sl_delta['mean']:.3f}), with the candidate better in "
-            f"{sl_delta['n_seeds_candidate_better']}/{sl_delta['n_seeds_total']} training seeds. Preliminary "
-            f"evidence (mean effect comparable to its seed-to-seed SD). Key limitations: only {n_sleep_test} "
-            "held-out test subjects, no shuffled-EOG negative control, no per-subject breakdown yet, single "
-            "dataset, terrestrial population."
+            f"horizontal EOG to EEG Fpz-Cz improved 5-class sleep-stage macro-F1 in the primary test "
+            f"({sl_base:.3f}->{sl_cand:.3f}, delta ~{sl_delta['mean']:.3f}, {sl_delta['n_seeds_candidate_better']}/"
+            f"{sl_delta['n_seeds_total']} seeds) and again in a prospectively-frozen {sec_n}-subject secondary "
+            f"holdout from the same dataset ({sec_a:.3f}->{sec_b:.3f}, "
+            f"{sec_a_to_b['n_seeds_favor_B']}/{sec_a_to_b['n_seeds_total']} seeds). A capacity-identical "
+            f"shuffled-EOG control (C, macro-F1 {sl_c_mean:.3f}) is consistently worse than aligned EOG "
+            f"(primary C->B {sl_c_to_b['n_seeds_favor_B']}/{sl_c_to_b['n_seeds_total']} seeds; secondary "
+            f"C->B {sec_c_to_b['n_seeds_favor_B']}/{sec_c_to_b['n_seeds_total']} seeds), while A->C is "
+            f"approximately neutral — supporting a role for temporally aligned ocular information rather than "
+            f"mere EOG presence. Evidence strength: replicated-with-control with prospective secondary-holdout "
+            f"support. Key limitations: single dataset (Sleep-EDF cassette), terrestrial population, benefit "
+            f"non-uniform across subjects, and an N3 regression in the secondary cohort."
         ),
         prohibited_claims=[
             "EOG is necessary or universally improves sleep staging.",
@@ -177,6 +216,8 @@ def build() -> TargetEvidenceMatrix:
             "The final architecture should contain EOG.",
             "Sleep-EDF macro-F1 is comparable to or rankable against the HR-MAE experiments.",
             "This validates the Biological Digital Twin.",
+            "The primary and secondary holdouts form one pooled n=11 test set.",
+            "This is independent-dataset or cross-population replication.",
         ],
     )
 

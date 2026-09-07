@@ -4,7 +4,7 @@
   "source_artifacts": [
     {
       "path": "results/sensor_marginal_value_contract.json",
-      "sha256": "4941eed31fc115361b898012bf4cc78f7b7cdcb7b98b32a3b1927264e3da8aea",
+      "sha256": "c0d259421bb998780d8ab17907137210be60f8df42be83a53d7e51e29a80495e",
       "role": "scientific marginal-value contract"
     },
     {
