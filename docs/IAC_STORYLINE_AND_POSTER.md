@@ -38,3 +38,20 @@ Open `/research` → Case 1 (IMU, show capacity + shuffled controls) → Case 2 
 s2 toggle narrative) → Case 3 (Sleep A/B frozen, shuffled/secondary shown as PENDING) →
 Architecture status per case → Global Pareto NOT_READY with blocker breakdown → Digital Twin page
 (clearly labeled synthetic/untrained).
+
+---
+
+## Day 8/9 Update — Sleep panel (stronger, still honest)
+
+The sleep panel can now show three bars (EEG-only A / aligned-EOG B / shuffled-EOG C) for BOTH
+evaluations, kept visually separate:
+
+- **Primary (n=3):** B > C in 5/5 seeds; per-subject note "concentrated in SC4011".
+- **Prospective secondary holdout (n=8):** B > A in 5/5 seeds; B > C in 5/5 seeds; 6/8 subjects
+  B>A, 7/8 B>C; zero retraining.
+- **Class-level (secondary):** REM large positive (+0.150), N3 regression (−0.043) shown, not hidden.
+
+Poster caption (approved framing): *"Aligned EOG showed positive within-dataset marginal value
+with matched-control and prospective secondary-holdout support."* Do NOT show a single pooled
+score or an "n=11" test. Spaceflight remains motivation, not a validated claim; no astronaut
+validation. Global architecture panel stays **UNRESOLVED / NOT_READY**.

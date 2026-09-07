@@ -93,3 +93,69 @@ Evidence-backed answers. Every answer distinguishes **proven** / **supported-wit
 25. **What is the next experiment before deployment?** — A factorial interaction experiment
     (baseline/+A/+B/+A+B) on one target, plus the sleep secondary holdout, plus a frozen module BOM
     to quantify average power and finished mass. *Future.*
+
+---
+
+## Day 8/9 Canonical Integration — Updated Sleep Answers
+
+After merging Ismet's shuffled-EOG control, per-subject decomposition, and prospective
+secondary holdout, the strongest defensible answers to the sleep line of attack are:
+
+**Q: "Sleep is only 3 subjects."**
+Correct for the *primary* frozen test (n=3), and we disclose it is dominated by one subject
+(SC4011). We did not enlarge or re-split the primary test. Instead we prospectively froze a
+*separate* 8-subject secondary cohort (SC4181–SC4251), subject-disjoint from train/val/test,
+before evaluation, and evaluated the existing frozen checkpoints with **zero retraining**. The
+direction reproduced (A→B 5/5 seeds; 6/8 subjects B>A). Primary and secondary are reported
+**separately** — never pooled into an "n=11" test.
+
+**Q: "Your result depends on SC4011."**
+For the primary n=3 test, yes — and we say so (`global_result_dominated_by_one_subject=true`).
+The secondary holdout is the answer: its effect is *not* single-subject-dominated (largest
+subject SC4221 ≈ 41% of the summed effect, not ~100%), so the secondary cohort materially
+strengthens the finding's robustness.
+
+**Q: "Where is the negative control?"**
+Integrated. Model C = EEG + EOG shuffled within-subject/within-partition, capacity-identical to
+B. Aligned B beats shuffled C in **5/5 seeds** in both the primary and the secondary evaluation,
+while A→C is ≈ neutral. The benefit depends on *temporal alignment*, not the mere presence of an
+EOG-shaped input.
+
+**Q: "Does EOG really provide timing information?"**
+That is exactly what the shuffled control isolates: destroying EOG↔EEG temporal alignment removes
+the benefit. This is evidence for aligned ocular *timing* information, offered as support — not
+causal proof.
+
+**Q: "Did the secondary holdout use retraining?"**
+No. The 15 frozen checkpoints (A/B/C × seeds 42–46) were reloaded unmodified; no training, no
+tuning, no outcome-based seed selection. Reproducibility artifact shows 5/5 exact macro-F1 match.
+
+**Q: "Why is N3 worse?"**
+Disclosed, not hidden. In the secondary cohort N3 per-class F1 regresses (B−A ≈ −0.043) while REM
+gains strongly (+0.150). A read-only confusion diagnostic (no retraining) shows it is a
+*precision* effect: B over-labels true N2 epochs as N3, so N3 precision drops (~0.50→0.43) even
+though N3 recall improves (~0.85→0.88). We do not invent physiology beyond this observation.
+
+**Q: "Is this independent replication?"**
+No — and we never claim it. Evidence strength stays **replicated-with-control** with a
+**prospective_secondary_holdout_supported** qualifier. It is same-dataset (Sleep-EDF cassette),
+terrestrial. Independent-dataset / cross-population replication remains explicitly unsupported.
+
+### Strongest five claims (current)
+1. Aligned EOG improved 5-class sleep macro-F1 in the primary test **and** a prospectively-frozen
+   8-subject secondary holdout (same dataset), A→B 5/5 seeds in the secondary.
+2. A capacity-identical shuffled-EOG control is worse than aligned EOG in **5/5 seeds** in both
+   evaluations → benefit depends on temporal alignment.
+3. Capacity-controlled IMU HR benefit persists after A_cap matching (A_cap→B ~0.605 bpm, C→B
+   ~0.776 bpm, 5/5 seeds).
+4. Checkpoint archival is externally durable and independently re-verified (SHA `5e0661a6…`, 50
+   checkpoints, 0 raw datasets).
+5. Every live claim is artifact-traceable; the consistency checker passes with 0 issues.
+
+### Strongest five limitations (current)
+1. Sleep evidence is single-dataset, terrestrial; not independent-dataset replication.
+2. Primary sleep effect is SC4011-dominated; secondary benefit is broader but not uniform (2/8
+   near-zero/negative).
+3. N3 regresses in the secondary cohort (precision effect, disclosed).
+4. Final architecture is **UNRESOLVED**; formal Pareto is **NOT_READY** (no power/mass/BOM).
+5. No interaction evidence — marginal-value experiments do not prove a globally minimal sensor set.

@@ -2,7 +2,12 @@
   "artifact_id": "biological-minimalism-claim-traceability-v1",
   "schema_version": "1.0.0",
   "statement": "One source-of-truth mapping for every key claim: artifact -> API -> frontend -> paper -> jury. Enables consistent propagation and is audited by ml/check_claim_consistency.py.",
-  "evidence_levels": ["tier1_replicated_controlled", "tier2_supported_limited", "tier3_software_demo", "tier4_proposed"],
+  "evidence_levels": [
+    "tier1_replicated_controlled",
+    "tier2_supported_limited",
+    "tier3_software_demo",
+    "tier4_proposed"
+  ],
   "claims": [
     {
       "claim_id": "hr-imu-capacity-controlled-benefit",
@@ -13,7 +18,10 @@
       "api_surface": "GET /research/experiments/ppg-dalia-imu-ablation",
       "frontend_surface": "Research Mode > Case 1 (IMU->HR)",
       "paper_section": "Results 4.1 (PPG-DaLiA capacity control)",
-      "jury_question_ids": [4, 5],
+      "jury_question_ids": [
+        4,
+        5
+      ],
       "status": "frozen"
     },
     {
@@ -25,7 +33,10 @@
       "api_surface": "GET /research/target-evidence-matrix",
       "frontend_surface": "Research Mode > Case 1 caveat",
       "paper_section": "Results 4.1 + Limitations",
-      "jury_question_ids": [4, 5],
+      "jury_question_ids": [
+        4,
+        5
+      ],
       "status": "frozen"
     },
     {
@@ -37,7 +48,9 @@
       "api_surface": "GET /research/experiments/ppg-dalia-imu-ablation",
       "frontend_surface": "Research Mode > Case 1 (shuffled control)",
       "paper_section": "Results 4.1 (negative control)",
-      "jury_question_ids": [6],
+      "jury_question_ids": [
+        6
+      ],
       "status": "frozen"
     },
     {
@@ -49,44 +62,56 @@
       "api_surface": "GET /research/experiments/ptt-ppg-site-ablation",
       "frontend_surface": "Research Mode > Case 2 (2nd PPG->HR)",
       "paper_section": "Results 4.2 (PTT)",
-      "jury_question_ids": [7, 8],
+      "jury_question_ids": [
+        7,
+        8
+      ],
       "status": "frozen"
     },
     {
       "claim_id": "sleep-eog-modest-positive",
-      "claim_text": "Adding horizontal EOG to EEG gives a modest positive sleep-staging result (macro-F1 0.7473->0.7693, 4/5 seeds on this branch).",
+      "claim_text": "Adding aligned horizontal EOG to EEG improves 5-class sleep-stage macro-F1 in the primary test (0.7473->0.7693, 4/5 seeds) and again in a prospectively-frozen 8-subject secondary holdout (0.6530->0.6858, 5/5 seeds); same-dataset, replicated-with-control.",
       "evidence_level": "tier2_supported_limited",
       "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
       "source_field": "aggregate.delta_candidate_minus_baseline.mean",
       "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
       "frontend_surface": "Research Mode > Case 3 (EOG->sleep)",
       "paper_section": "Results 4.3 (Sleep-EDF)",
-      "jury_question_ids": [9, 10, 11, 12],
+      "jury_question_ids": [
+        9,
+        10,
+        11,
+        12
+      ],
       "status": "frozen"
     },
     {
       "claim_id": "sleep-eog-shuffled-control",
-      "claim_text": "Sleep-EDF shuffled-EOG negative control (B>C) and per-subject SC4011 decomposition.",
+      "claim_text": "Capacity-identical shuffled-EOG negative control is consistently worse than aligned EOG (C->B 5/5 seeds primary and secondary; A->C ~neutral) -> benefit depends on temporal alignment. Primary per-subject effect is concentrated in SC4011.",
       "evidence_level": "tier2_supported_limited",
-      "source_artifact": "results/sleep_secondary_holdout_pending.json",
-      "source_field": "pending_items.shuffled_eog_control.outcome",
-      "api_surface": "PENDING",
-      "frontend_surface": "Research Mode > Case 3 PENDING card",
-      "paper_section": "Results 4.3 (pending)",
-      "jury_question_ids": [11],
-      "status": "pending_scientific_integration"
+      "source_artifact": "results/sleep_edf_eeg_eog_control_analysis.json",
+      "source_field": "aggregate.C_to_B.n_seeds_favor_B",
+      "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
+      "frontend_surface": "Research Mode > Case 3 negative-control + primary per-subject breakdowns",
+      "paper_section": "Results 4.3 (Sleep-EDF matched control)",
+      "jury_question_ids": [
+        11
+      ],
+      "status": "frozen"
     },
     {
       "claim_id": "sleep-secondary-holdout",
-      "claim_text": "Prospective Sleep-EDF secondary holdout outcome (support/weaken/contradict primary).",
+      "claim_text": "Prospective Sleep-EDF secondary holdout (n=8, frozen before evaluation, zero retraining) SUPPORTS the primary finding: A->B 5/5 seeds, 6/8 subjects B>A, 7/8 B>C. Not independent-dataset replication; primary (n=3) and secondary (n=8) are never pooled.",
       "evidence_level": "tier2_supported_limited",
-      "source_artifact": "results/sleep_secondary_holdout_pending.json",
-      "source_field": "pending_items.secondary_holdout.relationship_to_primary.outcome",
-      "api_surface": "PENDING",
-      "frontend_surface": "Research Mode > Case 3 PENDING card",
-      "paper_section": "Results 4.3 (pending)",
-      "jury_question_ids": [9],
-      "status": "pending_external_scientific_integration"
+      "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+      "source_field": "aggregate.A_to_B.n_seeds_favor_B",
+      "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
+      "frontend_surface": "Research Mode > Case 3 secondary-holdout breakdown",
+      "paper_section": "Results 4.3 (Sleep-EDF secondary holdout)",
+      "jury_question_ids": [
+        9
+      ],
+      "status": "frozen"
     },
     {
       "claim_id": "architecture-not-ready",
@@ -97,7 +122,11 @@
       "api_surface": "GET /research/decision-inputs",
       "frontend_surface": "Research Mode > Architecture Status + Global Readiness",
       "paper_section": "Discussion (NOT_READY)",
-      "jury_question_ids": [2, 18, 20],
+      "jury_question_ids": [
+        2,
+        18,
+        20
+      ],
       "status": "frozen"
     },
     {
@@ -109,7 +138,9 @@
       "api_surface": "GET /digital-twin (footprint)",
       "frontend_surface": "Digital Twin page (synthetic/untrained label)",
       "paper_section": "Future work (Digital Twin)",
-      "jury_question_ids": [13],
+      "jury_question_ids": [
+        13
+      ],
       "status": "frozen"
     },
     {
@@ -121,7 +152,24 @@
       "api_surface": "GET /research/target-evidence-matrix",
       "frontend_surface": "Research Mode caveats",
       "paper_section": "Scope & Limitations",
-      "jury_question_ids": [14],
+      "jury_question_ids": [
+        14
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "sleep-n3-regression",
+      "claim_text": "In the secondary holdout, N3 per-class F1 regresses under aligned EOG (B-A ~-0.043) while REM gains strongly (+0.150). Read-only diagnostic: N3 recall improves but precision drops (B over-labels true N2 as N3). Disclosed limitation, not smoothed away.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+      "source_field": "class_level_aggregate.N3.B_minus_A",
+      "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
+      "frontend_surface": "Research Mode > Case 3 secondary class-level breakdown",
+      "paper_section": "Results 4.3 (Sleep-EDF class-level, N3 limitation)",
+      "jury_question_ids": [
+        9,
+        11
+      ],
       "status": "frozen"
     }
   ]

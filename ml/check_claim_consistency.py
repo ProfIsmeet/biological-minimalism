@@ -59,6 +59,26 @@ FORBIDDEN = [
 # Bare "robust" as an adjective claim (word boundary excludes "robustness").
 ROBUST = re.compile(r"\brobust\b", re.IGNORECASE)
 
+# Post-integration stale-pending assertions: statements that were TRUE on the
+# systems branch before Ismet's Day-8/9 science merged, but are now FALSE. These
+# contain their own negation words, so they are checked independently of
+# NEGATION_MARKERS; a line is exempt only if it is CLEARLY historical/resolved.
+STALE_PENDING = [
+    (re.compile(r"no shuffled[- ]?eog\b", re.IGNORECASE), "'no shuffled-EOG control' (now integrated)"),
+    (re.compile(r"per[- ]subject\b[^.\n]{0,40}\bnot (yet )?(computed|available|performed)", re.IGNORECASE), "'per-subject decomposition not computed' (now integrated)"),
+    (re.compile(r"no per[- ]subject\b", re.IGNORECASE), "'no per-subject decomposition' (now integrated)"),
+    (re.compile(r"secondary[- ]holdout[^.\n]{0,30}\bpending\b", re.IGNORECASE), "'secondary holdout pending' (now integrated)"),
+    (re.compile(r"\bpending[^.\n]{0,30}secondary[- ]holdout\b", re.IGNORECASE), "'pending secondary holdout' (now integrated)"),
+]
+
+# A stale-pending line is allowed only when explicitly framed as history/resolved.
+HISTORICAL_MARKERS = re.compile(
+    r"\b(historical|superseded|supersedes|resolved|was |were |previously|prior to|"
+    r"day[- ]?7|no longer|used to|before integration|now integrated|now complete|"
+    r"COMPLETE|RESOLVED)\b",
+    re.IGNORECASE,
+)
+
 
 def _iter_files() -> list[Path]:
     files: list[Path] = [f for f in SCAN_FILES if f.is_file()]
@@ -106,6 +126,12 @@ def check_stale() -> list[str]:
             for pattern, label in FORBIDDEN:
                 if pattern.search(line) and not negated:
                     problems.append(f"[stale] {rel}:{lineno}: bald {label}")
+            # Post-integration stale-pending assertions (checked regardless of the
+            # generic negation exemption; allowed only if explicitly historical).
+            historical = bool(HISTORICAL_MARKERS.search(line))
+            for pattern, label in STALE_PENDING:
+                if pattern.search(line) and not historical:
+                    problems.append(f"[stale-pending] {rel}:{lineno}: {label}")
             # 'robust' only in live UI/response copy, excluding the word 'robustness'
             if ROBUST.search(line) and not negated and "robustness" not in line.lower():
                 if path.suffix.lower() in {".tsx", ".jsx", ".ts", ".js"}:
