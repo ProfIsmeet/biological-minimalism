@@ -224,12 +224,41 @@ class ResearchExperimentSummaryEnvelope(BaseModel):
     error: str | None = None
 
 
+class ReproducibilityInteraction(BaseModel):
+    """Day-10 EEG x EOG x Resp interaction summary (conservative, bounded)."""
+
+    tested: bool
+    configs: str
+    interaction_estimate: str
+    uncertainty: str
+    interpretation: str
+    plain_language: str
+    boundary: str
+
+
+class ReproducibilitySummary(BaseModel):
+    """Concise Day-10 reproducibility panel (§11). All fields are honest status
+    strings; nothing here upgrades a scientific claim."""
+
+    frozen_environment: str
+    checkpoints: str
+    datasets: str
+    canonical_results: str
+    robustness: str
+    raw_data_committed: str
+    n3_diagnostic: str
+    independence_caveat: str
+    overall_status: str
+    interaction: ReproducibilityInteraction | None = None
+
+
 class ResearchProjectSummary(BaseModel):
     experiment_count: int = Field(..., ge=0)
     available_count: int = Field(..., ge=0)
     unavailable_count: int = Field(..., ge=0)
     experiments: list[ResearchExperimentSummaryEnvelope]
     statement: str
+    reproducibility: ReproducibilitySummary | None = None
 
 
 class TargetEvidenceMatrixEntry(BaseModel):

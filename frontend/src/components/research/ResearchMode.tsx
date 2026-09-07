@@ -484,6 +484,34 @@ export function ResearchMode() {
         <p>MAE and RMSE here are frozen <strong className="font-semibold text-slate-200">experimental evaluation metrics</strong>. They are not live measurements, current-person confidence, or predictive uncertainty.</p>
       </div>
 
+      {projectSummary?.reproducibility ? (
+        <section aria-label="Reproducibility" className="rounded-lg border border-emerald-400/15 bg-emerald-400/[0.03] px-4 py-3">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">Reproducibility</span>
+            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-2 py-0.5 text-[10px] font-semibold text-emerald-200">{projectSummary.reproducibility.overall_status}</span>
+            <span className="text-[10px] text-slate-500">— re-evaluated from frozen artifacts; this is not a final-architecture readiness signal.</span>
+          </div>
+          <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-[11px] leading-relaxed text-slate-400 sm:grid-cols-2 lg:grid-cols-3">
+            <div><dt className="inline text-slate-500">Frozen environment: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.frozen_environment}</dd></div>
+            <div><dt className="inline text-slate-500">Checkpoints: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.checkpoints}</dd></div>
+            <div><dt className="inline text-slate-500">Datasets: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.datasets}</dd></div>
+            <div><dt className="inline text-slate-500">Canonical results: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.canonical_results}</dd></div>
+            <div><dt className="inline text-slate-500">Robustness: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.robustness}</dd></div>
+            <div><dt className="inline text-slate-500">Raw data committed: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.raw_data_committed}</dd></div>
+          </dl>
+          <p className="mt-2 text-[10px] leading-relaxed text-slate-500">N3 diagnostic — {projectSummary.reproducibility.n3_diagnostic}. {projectSummary.reproducibility.independence_caveat}.</p>
+          {projectSummary.reproducibility.interaction?.tested ? (
+            <div className="mt-2 rounded border border-white/10 bg-white/[0.02] px-3 py-2">
+              <p className="text-[11px] font-semibold text-slate-300">Interaction experiment (Sleep, EEG × EOG × Resp)</p>
+              <p className="mt-0.5 text-[10px] text-slate-500">{projectSummary.reproducibility.interaction.configs}</p>
+              <p className="mt-1 text-[11px] text-slate-300">Interaction estimate {projectSummary.reproducibility.interaction.interaction_estimate} ({projectSummary.reproducibility.interaction.uncertainty}) — <span className="text-amber-300">{projectSummary.reproducibility.interaction.interpretation}</span></p>
+              <p className="mt-1 text-[10px] leading-relaxed text-slate-400">{projectSummary.reproducibility.interaction.plain_language}</p>
+              <p className="mt-0.5 text-[10px] leading-relaxed text-slate-500">{projectSummary.reproducibility.interaction.boundary}</p>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
       {error ? (
         <div role="alert" className="flex items-start justify-between gap-4 rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3">
           <div className="flex gap-2"><AlertTriangle size={15} className="mt-0.5 shrink-0 text-rose-300" /><div><p className="text-xs font-semibold text-rose-200">Research artifact loading issue</p><p className="mt-1 text-[11px] leading-relaxed text-slate-400">{error}</p></div></div>

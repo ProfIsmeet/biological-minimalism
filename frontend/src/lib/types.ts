@@ -380,12 +380,36 @@ export interface ResearchExperimentSummaryEnvelope {
   error: string | null;
 }
 
+export interface ReproducibilityInteraction {
+  tested: boolean;
+  configs: string;
+  interaction_estimate: string;
+  uncertainty: string;
+  interpretation: string;
+  plain_language: string;
+  boundary: string;
+}
+
+export interface ReproducibilitySummary {
+  frozen_environment: string;
+  checkpoints: string;
+  datasets: string;
+  canonical_results: string;
+  robustness: string;
+  raw_data_committed: string;
+  n3_diagnostic: string;
+  independence_caveat: string;
+  overall_status: string;
+  interaction: ReproducibilityInteraction | null;
+}
+
 export interface ResearchProjectSummary {
   experiment_count: number;
   available_count: number;
   unavailable_count: number;
   experiments: ResearchExperimentSummaryEnvelope[];
   statement: string;
+  reproducibility?: ReproducibilitySummary | null;
 }
 
 export type CostEvidenceLevel =
