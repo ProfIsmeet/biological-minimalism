@@ -1,0 +1,102 @@
+{
+  "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+  "method": "Pooled the 5 per-seed confusion matrices (sklearn convention: rows=true, cols=predicted) for A and B, computed N3 precision/recall from the pooled matrix. No retraining, no new predictions - purely a recomputation from already-stored confusion matrices.",
+  "n3_precision_recall_pooled_across_5_seeds": {
+    "A_N3_precision": 0.499211356466877,
+    "A_N3_recall": 0.8525252525252526,
+    "B_N3_precision": 0.42960052390307796,
+    "B_N3_recall": 0.8835016835016835,
+    "precision_change_B_minus_A": -0.06961083256379902,
+    "recall_change_B_minus_A": 0.03097643097643088
+  },
+  "n2_to_n3_false_positives_pooled_across_5_seeds": {
+    "A": 2427,
+    "B": 3032,
+    "delta_B_minus_A": 605
+  },
+  "false_positive_source_breakdown_pooled": {
+    "description": "For predicted=N3, count of epochs whose TRUE label was something else, by true class, pooled across seeds and summed cohort.",
+    "true_class_names": [
+      "Wake",
+      "N1",
+      "N2",
+      "N3",
+      "REM"
+    ],
+    "count_A": [
+      71,
+      12,
+      2427,
+      0,
+      30
+    ],
+    "count_B": [
+      353,
+      33,
+      3032,
+      0,
+      66
+    ],
+    "delta_B_minus_A": [
+      282,
+      21,
+      605,
+      0,
+      36
+    ],
+    "dominant_new_false_positive_source": "N2"
+  },
+  "per_seed": {
+    "seed42": {
+      "A_N3_precision": 0.5426966292134832,
+      "A_N3_recall": 0.8131313131313131,
+      "B_N3_precision": 0.5035389282103134,
+      "B_N3_recall": 0.8383838383838383,
+      "N2_to_N3_false_positives_A": 404,
+      "N2_to_N3_false_positives_B": 487
+    },
+    "seed43": {
+      "A_N3_precision": 0.470961887477314,
+      "A_N3_recall": 0.8737373737373737,
+      "B_N3_precision": 0.5373781148429035,
+      "B_N3_recall": 0.835016835016835,
+      "N2_to_N3_false_positives_A": 521,
+      "N2_to_N3_false_positives_B": 401
+    },
+    "seed44": {
+      "A_N3_precision": 0.5255319148936171,
+      "A_N3_recall": 0.8316498316498316,
+      "B_N3_precision": 0.4562937062937063,
+      "B_N3_recall": 0.8787878787878788,
+      "N2_to_N3_false_positives_A": 431,
+      "N2_to_N3_false_positives_B": 518
+    },
+    "seed45": {
+      "A_N3_precision": 0.5288461538461539,
+      "A_N3_recall": 0.8333333333333334,
+      "B_N3_precision": 0.4163483575248281,
+      "B_N3_recall": 0.9175084175084175,
+      "N2_to_N3_false_positives_A": 433,
+      "N2_to_N3_false_positives_B": 664
+    },
+    "seed46": {
+      "A_N3_precision": 0.44933554817275745,
+      "A_N3_recall": 0.9107744107744108,
+      "B_N3_precision": 0.3230063109581182,
+      "B_N3_recall": 0.9478114478114478,
+      "N2_to_N3_false_positives_A": 638,
+      "N2_to_N3_false_positives_B": 962
+    }
+  },
+  "canonical_day9_reported_observation": {
+    "n3_recall_approx": "0.853 -> 0.884",
+    "n3_precision_approx": "0.499 -> 0.430",
+    "n2_to_n3_false_positives_approx_delta": "+605"
+  },
+  "verified_against_canonical": {
+    "recall_direction_matches": true,
+    "precision_direction_matches": true,
+    "n2_to_n3_fp_increase_matches_sign": true
+  },
+  "interpretation": "The secondary-cohort N3 regression is primarily precision-driven: aligned EOG increases N3 recall but also increases N2->N3 false positives. This is a descriptive statement about confusion-matrix structure, not a physiological claim - the data do not establish why the model confuses more N2 epochs for N3 under the aligned-EOG configuration."
+}

@@ -1,0 +1,43 @@
+{
+  "canonical_git_commit": "ce3caf1115c75e902bef6ae0e9f508b72b43d6c4",
+  "canonical_git_tag": "day9-canonical-integration",
+  "canonical_branch": "origin/day8-9-systems-readiness",
+  "day10_branch": "day10-scientific-repro-freeze-ml",
+  "environment_source_of_truth": "results/environment_manifest.json (Day 8, unmodified)",
+  "verification_method": "Re-queried the actual installed interpreter/package versions in backend/.venv (the same venv every ml/ training and evaluation script in this repository's history has used) and compared field-by-field against the frozen manifest. No package was upgraded, downgraded, or reinstalled to force a match.",
+  "expected": {
+    "python_version": "3.13.0",
+    "os": "Windows-2022Server-10.0.20348-SP0",
+    "cuda_available": false,
+    "torch": "2.6.0+cpu",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.0",
+    "mne": "1.12.1",
+    "wfdb": "4.3.1",
+    "pandas": "3.0.5"
+  },
+  "actual": {
+    "python_version": "3.13.0",
+    "os": "Microsoft Windows Server 2022 Standard, 10.0.20348",
+    "cuda_available": false,
+    "torch": "2.6.0+cpu",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.0",
+    "mne": "1.12.1",
+    "wfdb": "4.3.1",
+    "pandas": "3.0.5"
+  },
+  "exact_match_fields": [
+    "python_version", "os", "cuda_available", "torch", "numpy", "scipy",
+    "scikit-learn", "mne", "wfdb", "pandas"
+  ],
+  "mismatched_fields": [],
+  "deterministic_settings": {
+    "torch_num_threads": 4,
+    "note": "torch.set_num_threads(4) is called at the top of every training/evaluation script in ml/ - an infrastructure/performance setting (avoids CPU thread-oversubscription on this machine), not a scientific parameter. Does not affect numerical results, only wall-clock time."
+  },
+  "note_on_mac_integration_environment": "The Mac integration environment (Python 3.14, different PyTorch) referenced in the Day-9 canonical report is Emir/Claude's systems-integration environment, not the scientific training/evaluation environment. It has never been used to produce or reproduce any frozen ML result in this project. This verification concerns only the scientific stack (this Windows machine's backend/.venv), which is the actual environment every checkpoint in ml/checkpoints/ was trained and evaluated under.",
+  "environment_status": "EXACT_FROZEN_ENVIRONMENT"
+}
