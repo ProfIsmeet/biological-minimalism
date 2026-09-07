@@ -1,0 +1,74 @@
+{
+  "archive_path": "archival\\biological_minimalism_checkpoints_day14.tar.gz",
+  "archive_sha256": "9ad647ee76fd1bb7d1200b2d8479c1d13d66d0aeaa3cadcb8accb990bd77e83a",
+  "archive_size_bytes": 344110,
+  "n_checkpoints_packaged": 10,
+  "n_checkpoints_verified_ok": 10,
+  "all_checkpoints_verified_ok": true,
+  "raw_dataset_files_found_in_archive": [],
+  "no_raw_datasets_included": true,
+  "external_copy_created": true,
+  "external_destination": "GitHub Release (private repo) ProfIsmeet/biological-minimalism, tag day14-checkpoint-archive-v1, asset biological_minimalism_checkpoints_day14.tar.gz",
+  "external_copy_sha256": "9ad647ee76fd1bb7d1200b2d8479c1d13d66d0aeaa3cadcb8accb990bd77e83a",
+  "external_copy_verified": true,
+  "external_copy_verification_method": "gh release download + sha256sum, compared byte-for-byte against local archive hash",
+  "linked_archive": {
+    "name": "biological_minimalism_checkpoints_day8.tar.gz",
+    "github_release_tag": "day8-checkpoint-archive-v1",
+    "covers": "the other 50 canonical checkpoints (PPG-DaLiA, PTT, Sleep primary/control/legacy)",
+    "sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4"
+  },
+  "checkpoint_details": [
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed42.pt",
+      "sha256_in_archive": "b82994f558edfaab8649348bb4e6604cf20fff2cc28178ba3f484ca63ab3d933",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed43.pt",
+      "sha256_in_archive": "976746192d05a9b4ff996e167aaf35864093ca303ca65661c8f8343a0f304506",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed44.pt",
+      "sha256_in_archive": "f8379552f6fcbf99225539bcd79d0eb2c54b8c5c12014090d9678db97b2a5d88",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed45.pt",
+      "sha256_in_archive": "6da24d2f25af436cb12ee8690704b97b1a1b211c181383518b72490378d931ed",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed46.pt",
+      "sha256_in_archive": "4d8c0937a46d64cec67bdca2c086e003c580414c485cec8754c11ba4e5d81324",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_B_eeg_plus_resp_seed42.pt",
+      "sha256_in_archive": "8cfa60cd23954de04b2f4532781b33cc887218d3e9ef9a31f2c5830ffdaf92cd",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_B_eeg_plus_resp_seed43.pt",
+      "sha256_in_archive": "0d09b4a49e2d62b3e777683c865615db657c3a5186ce11b5f352952765e02d32",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_B_eeg_plus_resp_seed44.pt",
+      "sha256_in_archive": "1e1c840f34eed2128e5519e131a923e4b4d7e8f7cc3038d2d8c3bd8d706f516c",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_B_eeg_plus_resp_seed45.pt",
+      "sha256_in_archive": "eca184a98eb2b22e180a537a8e2c4d3e48fa1828a9ec8c994a36f82d0b27c187",
+      "matches_manifest": true
+    },
+    {
+      "name": "checkpoints_day14/checkpoints/sleep_edf_interaction_M_B_eeg_plus_resp_seed46.pt",
+      "sha256_in_archive": "5b4cb475b3b5e1d272e04715490ca28aa040153e1bd97555de0bc1bbbc2c93c4",
+      "matches_manifest": true
+    }
+  ],
+  "archival_status": "LOCAL_VERIFIED_EXTERNALLY_DURABLE"
+}

@@ -1,0 +1,564 @@
+{
+  "purpose": "Final canonical checkpoint inventory (Day 14) - original 50 (Day-8 archive) + 10 interaction (Day-14 archive) = 60 total. Every entry states its external archival location; no hidden local-only dependency.",
+  "archives": {
+    "day8": {
+      "tag": "day8-checkpoint-archive-v1",
+      "n_checkpoints": 50,
+      "sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4"
+    },
+    "day14": {
+      "tag": "day14-checkpoint-archive-v1",
+      "n_checkpoints": 10,
+      "sha256": "9ad647ee76fd1bb7d1200b2d8479c1d13d66d0aeaa3cadcb8accb990bd77e83a"
+    }
+  },
+  "entries": [
+    {
+      "checkpoint_id": "ppg_dalia_imu_ablation::model_a_ppg_only::seed42",
+      "experiment": "ppg_dalia_imu_ablation",
+      "seed": 42,
+      "sha256": "7919a31acd3958c9c309370cfc918f634fa09a902f907551b086b499178bee2a",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_ablation::model_b_ppg_plus_imu::seed42",
+      "experiment": "ppg_dalia_imu_ablation",
+      "seed": 42,
+      "sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_ablation::model_c_ppg_plus_shuffled_imu::seed42",
+      "experiment": "ppg_dalia_imu_ablation",
+      "seed": 42,
+      "sha256": "77792383ab03263002b452a44079d2f7c1c04badbf192478b0191521633c4464",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_a_ppg_only::seed42",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 42,
+      "sha256": "95b02b000c4cb2c9a74208239198ea5d732abfeabe782ed93d262c7113e03bae",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_a_ppg_only::seed43",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 43,
+      "sha256": "93fbb196b0fd15c6b57b55b2f74444d5f2382df6c020f075717e7fe55c1e71d0",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_a_ppg_only::seed44",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 44,
+      "sha256": "80c62e8d035c8cb0b8d3997343a5225dfee7559ef04aabf7511f4295b68a58c3",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_a_ppg_only::seed45",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 45,
+      "sha256": "c03a7f803d01925e32fbb2032b83c340d46717a4726123cfe021bc9c006df6ba",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_a_ppg_only::seed46",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 46,
+      "sha256": "1425282c37ba9dda4ec2f5495c2d6ace919673da5c48d0d1a319adc180f93acb",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_b_ppg_plus_imu::seed42",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 42,
+      "sha256": "c2ec170ebfcc2da0e4ccd6e6ad2a119113f259550ab20a7ca8e4d14464a416f7",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_b_ppg_plus_imu::seed43",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 43,
+      "sha256": "acbc15e34f2e8eeddd5bf42a98b18bac505f5f58eeb071e3f684042755540968",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_b_ppg_plus_imu::seed44",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 44,
+      "sha256": "4447d2169afe25f958de11baf4c33bb38e7c71b81c49f95fc8f239600c9bf4cb",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_b_ppg_plus_imu::seed45",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 45,
+      "sha256": "c7f2634fe3d8471e9a35936bb9117683ed4184aa8d883bbe94449c1cc6e405e6",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_b_ppg_plus_imu::seed46",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 46,
+      "sha256": "30fa0d6abdc92f05f08f1f42c1e2cd08a6846c23151c4a2d1f7d82b1e676e74c",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_c_ppg_plus_shuffled_imu::seed42",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 42,
+      "sha256": "97474ddb24e91ad0b837440391c325beba355601413d842e22ce0f76b2202f70",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_c_ppg_plus_shuffled_imu::seed43",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 43,
+      "sha256": "acaaf49c16ad889f39db1f2e77bba8162083fb5991e0c5612a592282481ed324",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_c_ppg_plus_shuffled_imu::seed44",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 44,
+      "sha256": "59f082b92951f9a33e54263bae8d26c373e294f7cceb2272742b061edf0b9312",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_c_ppg_plus_shuffled_imu::seed45",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 45,
+      "sha256": "fd1a418c0b16535d1bcc28525fdc9a1ec96e2d3c65076cf23cbbf1eb036a23f7",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_imu_multiseed_replication::model_c_ppg_plus_shuffled_imu::seed46",
+      "experiment": "ppg_dalia_imu_multiseed_replication",
+      "seed": 46,
+      "sha256": "f67a04f57fd109ef50f44991d16852db37a1b6cbdb1ffb76666a3ac872a9132d",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_capacity_control::model_a_cap::seed42",
+      "experiment": "ppg_dalia_capacity_control",
+      "seed": 42,
+      "sha256": "c69209dc1fd30e4bebf5be3c17448567f4c7acd55bb159d9689d241e65ccafcd",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_capacity_control::model_a_cap::seed43",
+      "experiment": "ppg_dalia_capacity_control",
+      "seed": 43,
+      "sha256": "1e5fd5b89f0567d6b33935499c9f32ae59845a627eb3c8507edd6af8dfd5f999",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_capacity_control::model_a_cap::seed44",
+      "experiment": "ppg_dalia_capacity_control",
+      "seed": 44,
+      "sha256": "764efc8d3c2f3d24ef72968efe1fd2624224c9fbbed22ad43a43f709a7899863",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_capacity_control::model_a_cap::seed45",
+      "experiment": "ppg_dalia_capacity_control",
+      "seed": 45,
+      "sha256": "be7661c885ae1a19eaa75d0d0293c5e3e7789c6c02fc6d4cd6e51d14c8683bea",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ppg_dalia_capacity_control::model_a_cap::seed46",
+      "experiment": "ppg_dalia_capacity_control",
+      "seed": 46,
+      "sha256": "c11a7fa7eb122eb0d505c6c860fd0a9dddc77378b99899b12622d314c353d035",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_a::seed42",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 42,
+      "sha256": "03b62378a8e9b71adf00bc9e766ae4d04e80d653e6ec326e5b4f5fef1bdc2c4e",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_a::seed43",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 43,
+      "sha256": "f0b64a8e5612de10808523d7ae6f9f8784e817c574edb570e9f18e240845960b",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_a::seed44",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 44,
+      "sha256": "eb350d9ef86d12c578a8b48a68d8ca8c82ac80a689a27040442f32a4b3d55558",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_a::seed45",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 45,
+      "sha256": "408beb97c68150ac7e04c59b97bee7be555231a7741ec909e4734158e4ff44c6",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_a::seed46",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 46,
+      "sha256": "d5109ac037f5558c15e4b025db36238c5e44b6c4515ccea65a33b4af494a6aca",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_b::seed42",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 42,
+      "sha256": "20a5793bbd020c3b947c1d3c7c583d4e6137c68d6e9f1a3b7f98e6e7eaf63f4f",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_b::seed43",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 43,
+      "sha256": "b138459b1c794ab3c7f0c409dcfa9700f137c309f766bea66094c87d6a841c23",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_b::seed44",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 44,
+      "sha256": "02244e95a7276cc20b956b06ebed8f0a42074c811d03397111a1a585c636327b",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_b::seed45",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 45,
+      "sha256": "1827f4ea4e4698c1ac42c9b671e250c0d52eee9d676a1d44490cd9337dec62b8",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "ptt_ppg_site_ablation::model_b::seed46",
+      "experiment": "ptt_ppg_site_ablation",
+      "seed": 46,
+      "sha256": "0f19af6f6603496282af9e0c76c9ff8eae0c27291b55c843e78a467c1e2ea877",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::baseline_eeg_only::seed42",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 42,
+      "sha256": "00555856962a4bdd5e8b555ce3b4b6cf8259cf4b61faecdbd2df8a2265f242d1",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::baseline_eeg_only::seed43",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 43,
+      "sha256": "8d9845729ebc724e053d48eac7b9abb601678ff4d30819028bb5657a9e6602b2",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::baseline_eeg_only::seed44",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 44,
+      "sha256": "fe732b6cae3ca39288aae2500899049e44e7e357b054e9b2eedef32da738cb6e",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::baseline_eeg_only::seed45",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 45,
+      "sha256": "08e5062eb5a25949e67d2923662192f632a9cc4f23d1d6120cc62f71bae3c502",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::baseline_eeg_only::seed46",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 46,
+      "sha256": "eab7222973dd4ad74eafbf0894e2d57f35ff26883f571981a73ff6dd02c561f9",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::candidate_eeg_plus_eog::seed42",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 42,
+      "sha256": "0da23a85b140e17d6254fbb4d7817ca667555d68dfab603f76d498479be09c73",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::candidate_eeg_plus_eog::seed43",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 43,
+      "sha256": "516f7860bfd775bd23f01e095ef2bdb5ec17bef78cf21a2fb1e0493338b06470",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::candidate_eeg_plus_eog::seed44",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 44,
+      "sha256": "f5339271ec2cdd15c6d85ad4af18180ce2b954d71ed909e0be67bfc59e78c48a",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::candidate_eeg_plus_eog::seed45",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 45,
+      "sha256": "a774be2a22b9a2e5daffee7ad35cb5ded89e04dcb9883104a17d9338b055b081",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_eeg_eog_ablation::candidate_eeg_plus_eog::seed46",
+      "experiment": "sleep_edf_eeg_eog_ablation",
+      "seed": 46,
+      "sha256": "fdbe3e39c2d8f91b7c6400b846ae2dabd6fa6ced535ae0fe6b70ce422d414980",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_shuffled_eog_control::model_c_shuffled_eog::seed42",
+      "experiment": "sleep_edf_shuffled_eog_control",
+      "seed": 42,
+      "sha256": "456015d88fb412a3935b61da5b3df315c075ef46ad8757aa1a1d8725b45adf5c",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_shuffled_eog_control::model_c_shuffled_eog::seed43",
+      "experiment": "sleep_edf_shuffled_eog_control",
+      "seed": 43,
+      "sha256": "0a38a8ebf9ae3860cc8cbc8323ec229dd553ca37e81f331daf55584b51f0396c",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_shuffled_eog_control::model_c_shuffled_eog::seed44",
+      "experiment": "sleep_edf_shuffled_eog_control",
+      "seed": 44,
+      "sha256": "b4909ed14c0ec0bf38deafb4b0324893a8d2dcd8b4d2d4ec133a3023a14b2a57",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_shuffled_eog_control::model_c_shuffled_eog::seed45",
+      "experiment": "sleep_edf_shuffled_eog_control",
+      "seed": 45,
+      "sha256": "95618e9a7ff97dbaf365ed14492ca9684892781e715a2788cbeb25738af198b7",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_shuffled_eog_control::model_c_shuffled_eog::seed46",
+      "experiment": "sleep_edf_shuffled_eog_control",
+      "seed": 46,
+      "sha256": "a30a36ab6d06612c6346431a508ccf440778ad379c96636f464d0d6306f029f1",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_single_channel_baseline_priority1::eeg_encoder::seedn/a",
+      "experiment": "sleep_edf_single_channel_baseline_priority1",
+      "seed": "n/a",
+      "sha256": "681ef553d72d83fdbf7337f99342c6e126b9309f914da3b0a8621fa163e3c09e",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "bidmc_ppg_training_priority1::ppg_encoder::seedn/a",
+      "experiment": "bidmc_ppg_training_priority1",
+      "seed": "n/a",
+      "sha256": "b01e013387bbbb96fb598d89b8e4591e1f8dbb3146c50f78987859ea58c495c8",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day8-checkpoint-archive-v1 (biological_minimalism_checkpoints_day8.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed42",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "b82994f558edfaab8649348bb4e6604cf20fff2cc28178ba3f484ca63ab3d933",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed43",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "976746192d05a9b4ff996e167aaf35864093ca303ca65661c8f8343a0f304506",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed44",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "f8379552f6fcbf99225539bcd79d0eb2c54b8c5c12014090d9678db97b2a5d88",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed45",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "6da24d2f25af436cb12ee8690704b97b1a1b211c181383518b72490378d931ed",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seed46",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "4d8c0937a46d64cec67bdca2c086e003c580414c485cec8754c11ba4e5d81324",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_B_eeg_plus_resp_seed42",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "8cfa60cd23954de04b2f4532781b33cc887218d3e9ef9a31f2c5830ffdaf92cd",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_B_eeg_plus_resp_seed43",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "0d09b4a49e2d62b3e777683c865615db657c3a5186ce11b5f352952765e02d32",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_B_eeg_plus_resp_seed44",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "1e1c840f34eed2128e5519e131a923e4b4d7e8f7cc3038d2d8c3bd8d706f516c",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_B_eeg_plus_resp_seed45",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "eca184a98eb2b22e180a537a8e2c4d3e48fa1828a9ec8c994a36f82d0b27c187",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    },
+    {
+      "checkpoint_id": "sleep_edf_interaction_M_B_eeg_plus_resp_seed46",
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "seed": null,
+      "sha256": "5b4cb475b3b5e1d272e04715490ca28aa040153e1bd97555de0bc1bbbc2c93c4",
+      "locally_present": true,
+      "external_archival_location": "GitHub Release day14-checkpoint-archive-v1 (biological_minimalism_checkpoints_day14.tar.gz)",
+      "duplicate_of": null
+    }
+  ],
+  "summary": {
+    "n_total_referenced": 60,
+    "n_unique_sha256": 60,
+    "n_present_locally": 60,
+    "n_with_external_archival": 60,
+    "n_without_external_archival": 0
+  }
+}
