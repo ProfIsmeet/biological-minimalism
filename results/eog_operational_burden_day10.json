@@ -1,0 +1,105 @@
+{
+  "artifact_id": "biological-minimalism-eog-operational-burden-day10-v1",
+  "schema_version": "1.0.0",
+  "generated_role": "systems/integration lead (day10-canonical-integration)",
+  "statement": "Day-10 closure of the EOG physical-burden blocker for the CURRENT Sleep-EDF 5-class sleep-stage use case, as far as defensible engineering evidence permits. This models the incremental contact/module burden of adding one horizontal-EOG channel to the existing frontal-EEG head module. It does NOT invent a final consumer product, does NOT freeze exact electrode geometry beyond what the signal requires, and does NOT assert system power or system mass. Unknowns remain unknown.",
+  "scope": {
+    "target": "sleep_stage_5class",
+    "dataset_context": "Sleep-EDF (EEG Fpz-Cz baseline; EOG horizontal candidate; both real, same 100 Hz sample rate)",
+    "not_a_final_bom": true,
+    "not_a_final_architecture": true,
+    "reference_architecture_source": "results/hardware_topology_contract.json (frontal_eeg / head_module, ADS1299-4-class AFE)"
+  },
+  "signal_requirement": {
+    "signal": "horizontal EOG",
+    "channel_count": 1,
+    "channel_kind": "bipolar_differential",
+    "experiment_channel_identity": "\"EOG horizontal\" (Sleep-EDF PSG), single differential channel at 100 Hz",
+    "note": "The frozen sleep experiment used exactly one horizontal-EOG channel added to the single EEG Fpz-Cz derivation. Vertical EOG, multi-channel oculography, or a full clinical montage are NOT required by the current result and are not modeled here."
+  },
+  "physical_site": {
+    "region": "peri-ocular / lateral ocular",
+    "placement": "lateral to the outer canthi (bilateral), the standard horizontal-EOG placement",
+    "relationship_to_existing_head_module": "adjacent to the forehead/frontal-EEG region; a new physical sensing SITE, but not obviously a new distant body region",
+    "new_body_region_status": "AMBIGUOUS_ADJACENT — peri-ocular is contiguous with the existing forehead head-module region; whether it counts as a distinct 'new region' or an extension of the head region is a framing choice, left explicit rather than forced to zero or to one."
+  },
+  "contact_burden_interpretations": {
+    "note": "The exact incremental electrode/contact count depends on whether the EOG reference and bias/DRL are shared with the existing EEG head module. Both interpretations are modeled; neither is collapsed into a single 'EOG = 2 electrodes' headline.",
+    "standalone_incremental_interpretation": {
+      "assumption": "EOG measured as a fully independent front-end (its own reference and bias/DRL network, no sharing with EEG).",
+      "sensing_electrodes": 2,
+      "reference_electrodes": 1,
+      "bias_or_drl_electrodes": 1,
+      "total_incremental_contacts": 4,
+      "total_incremental_contacts_range": "3-4 (3 if a single electrode serves combined reference/bias; 4 if reference and bias/DRL are separate)",
+      "module_impact": "Plausibly a new or clearly-separable front-end; a standalone EOG channel that does not reuse the EEG reference network is closer to an independent acquisition path.",
+      "confidence": "MEDIUM"
+    },
+    "shared_reference_architecture_interpretation": {
+      "assumption": "EOG shares the reference (SRB) and bias-drive (BIASOUT) network of the existing ADS1299-4-class frontal-EEG head module, and is wired into a spare channel of that same AFE.",
+      "incremental_new_sensing_contacts": 2,
+      "incremental_reference_contacts": 0,
+      "incremental_bias_drl_contacts": 0,
+      "total_incremental_contacts": 2,
+      "afe_channel_headroom": "The ADS1299-4 class is a 4-channel biopotential AFE; the current reference EEG uses a single Fpz-Cz derivation, so at least one spare channel is available for the one EOG differential channel without adding a second AFE. This is an architectural-count observation, not a validated final montage.",
+      "shared_reference_possible": true,
+      "shared_reference_basis": "ADS1299-family devices provide a common bias-drive (BIASOUT) and reference-select (SRB) network shared across all channels by design; a co-located ocular channel on the same head module can reuse it. Datasheet-class capability, not a frozen wiring diagram.",
+      "module_impact": "No new hardware module: the EOG channel is wired to the existing head-module AFE. Head attachment extends to the peri-ocular sites.",
+      "confidence": "MEDIUM"
+    }
+  },
+  "burden_output": {
+    "physical_region_increment": "0 or 1 (peri-ocular is contiguous with the head region; framing-dependent, not forced)",
+    "module_increment": "0 in the shared-reference interpretation (wired to existing head module); potentially 1 in the standalone interpretation",
+    "sensing_contact_increment": "2 (both interpretations agree the horizontal-EOG channel needs 2 lateral-ocular sensing electrodes)",
+    "shared_reference_possible": true,
+    "reference_bias_contact_increment": "0 if reference/bias shared with EEG head module; up to 2 if standalone",
+    "attachment_increment": "extend the existing head attachment to the peri-ocular sites (2 additional electrode positions); no new independent strap/harness required in the shared interpretation",
+    "wiring_increment": "2 electrode leads routed to the head-module AFE (shared interpretation)",
+    "compute_increment": {
+      "model_parameter_increment": 112,
+      "unit": "parameters",
+      "basis": "EEG-only classifier 8,197 params -> EEG+EOG classifier 8,309 params = +112 (the constant per-channel convention verified in the interaction experiment).",
+      "source": "results/sleep_edf_interaction_resp_day10.json",
+      "note": "Model/compute increment only; not an embedded latency or energy measurement."
+    },
+    "data_rate_increment": {
+      "channels": 1,
+      "sample_rate_hz": 100,
+      "afe_resolution_bits": 24,
+      "raw_payload_bit_rate_bit_per_second": 2400,
+      "basis": "1 channel x 100 Hz x 24-bit ADS1299-class conversion. Excludes framing, protocol, and transport overhead.",
+      "note": "Scientific-reference payload rate; the Sleep-EDF EOG horizontal channel is 100 Hz."
+    },
+    "power_increment_status": "SYSTEM_POWER_NOT_READY",
+    "power_increment_note": "One additional biopotential channel on the shared (already-counted) ADS1299-class head-module AFE. No standalone EOG operating point, session duty cycle, or complete head-module power state is frozen, so no incremental average power is asserted. Not zero, not quantified.",
+    "mass_increment_status": "SYSTEM_MASS_NOT_READY",
+    "mass_increment_note": "Two additional ocular electrodes plus leads. Electrode material/adhesive, lead mass, and any peri-ocular attachment mechanics are not selected. Component/PCB/enclosure mass for the head module remains unresolved upstream. Not zero, not quantified.",
+    "uncertainty": "The dominant uncertainty is the standalone-vs-shared-reference wiring (which drives whether the contact increment is 2 or up to 4 and whether a new module is added), plus fully-unquantified incremental power and mass. The sensing-contact increment of 2 is the one interpretation-independent, defensible quantity."
+  },
+  "comparison_to_imu_burden": {
+    "note": "For gate calibration only. The wrist-IMU CONDITIONAL case has near-zero incremental HUMAN contact burden (colocated inside the existing wrist enclosure, 0 new electrodes/region). EOG's incremental burden is materially higher: at least 2 new ocular sensing electrodes and a new peri-ocular sensing site, even in the most favorable shared-reference interpretation. This is why EOG remains CONDITIONAL rather than upgrading, despite strong within-dataset science."
+  },
+  "unresolved_items": [
+    "Exact standalone vs shared-reference wiring is not frozen (both modeled).",
+    "Whether peri-ocular counts as a distinct new body region or a head-region extension is a framing choice, left explicit.",
+    "Incremental average power and daily energy (session schedule/operating point open).",
+    "Incremental finished mass (electrode/adhesive/lead/attachment materials not selected).",
+    "Long-term ocular-electrode wearability, skin tolerance, and motion robustness in the intended setting.",
+    "Whether a single reference electrode can serve both EEG and EOG at acceptable signal quality (assumed plausible, not validated)."
+  ],
+  "closure_status": "MATERIALLY_IMPROVED_NOT_FULLY_CLOSED",
+  "closure_rationale": "The contact/module/wiring/compute/data-rate increments are now defensibly modeled under two explicit reference interpretations (standalone and shared-reference), replacing the prior 'MISSING/UNRESOLVED, contact burden unknown' state. The sensing-contact increment (2) is defensible and interpretation-independent; the shared-reference path plausibly needs no new module and no new reference/bias contacts. Power and mass remain honestly NOT_READY. This closes the qualitative structure of the EOG burden while preserving the quantitative unknowns.",
+  "prohibited_upgrades": [
+    "Do not treat the EOG contact/electrode burden as zero.",
+    "Do not assert an exact final electrode geometry beyond the signal-required 2 sensing electrodes.",
+    "Do not assert incremental EOG system power or system mass.",
+    "Do not use this burden closure to upgrade EOG from CONDITIONAL_FOR_TARGET to RETAIN."
+  ],
+  "provenance": {
+    "reference_topology": "results/hardware_topology_contract.json",
+    "eeg_afe_evidence": "day6_ads1299_datasheet (operational_cost_catalog.json)",
+    "interaction_capacity_evidence": "results/sleep_edf_interaction_resp_day10.json",
+    "signal_channel_source": "ml/datasets/sleep_edf.py (EOG_CHANNEL = \"EOG horizontal\")"
+  }
+}

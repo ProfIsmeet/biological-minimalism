@@ -1,0 +1,221 @@
+{
+  "artifact_id": "biological-minimalism-reference-bom-readiness-day10-v1",
+  "schema_version": "1.0.0",
+  "generated_role": "systems/integration lead (day10-canonical-integration)",
+  "statement": "A reference-engineering BOM READINESS table, NOT a final BOM. It records, per module and per representative component, what is datasheet-backed today, what is assumed, and what is still open. Representative parts already present in results/operational_cost_catalog.json are reused verbatim (BMI270, MAX86141, TMP117, OPT3001-Q1, ADS1292R, ADS1299-4, AD5940); none are silently replaced. No component is presented as a frozen final selection.",
+  "not_a_final_bom": true,
+  "source_of_truth": "results/operational_cost_catalog.json (datasheet evidence + exact_parameters)",
+  "power_accounting_note": "Component active-power values below are direct or derived datasheet points under stated conditions. They are NOT summed into a system power number. See system_readiness.system_average_power.",
+  "mass_accounting_note": "No component/package mass is asserted as system mass. Datasheet package dimensions are not mass. See system_readiness.system_mass.",
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "label": "Shared wrist module",
+      "worn": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "components": [
+        {
+          "role": "PPG (HR/HRV optical)",
+          "representative_part": "MAX86141-class wearable optical AFE",
+          "channels": 1,
+          "supply_voltage_v": 1.8,
+          "active_current_or_power": "<10 uA optical readout @ 25 s/s (AFE reference point; LEDs excluded)",
+          "resolution_bits": 19,
+          "required_support_circuitry": "LED emitters + drive currents, photodiodes, optical stack (OPEN)",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "shared wrist MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_max86141_datasheet)",
+          "confidence": "MEDIUM",
+          "final": false
+        },
+        {
+          "role": "IMU (accelerometry)",
+          "representative_part": "Bosch BMI270",
+          "channels": 3,
+          "supply_voltage_v": 1.8,
+          "active_current_or_power": "10 uA low-power @ 25 Hz to 210 uA normal @ max ODR",
+          "resolution_bits": 16,
+          "required_support_circuitry": "integrated MEMS; minimal passives",
+          "sleep_idle_current": "OPEN (low-power point documented, deployable duty not frozen)",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "shared wrist MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_bmi270_datasheet)",
+          "confidence": "HIGH",
+          "final": false
+        },
+        {
+          "role": "Skin temperature",
+          "representative_part": "TI TMP117",
+          "channels": 1,
+          "supply_voltage_v": 3.3,
+          "active_current_or_power": "3.5 uA avg @ 1 Hz (averaging off)",
+          "resolution_bits": 16,
+          "required_support_circuitry": "I2C pull-ups; thermal coupling path (OPEN)",
+          "sleep_idle_current": "shutdown mode available (not frozen)",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "shared wrist MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_tmp117_datasheet)",
+          "confidence": "MEDIUM",
+          "final": false
+        },
+        {
+          "role": "Ambient light",
+          "representative_part": "TI OPT3001-Q1-class",
+          "channels": 1,
+          "supply_voltage_v": 3.3,
+          "active_current_or_power": "1.8 uA typ -> 0.00594 mW derived @ 3.3 V continuous conversion",
+          "resolution_bits": null,
+          "required_support_circuitry": "optical window; I2C pull-ups",
+          "sleep_idle_current": "single-shot mode available",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "shared wrist MCU/radio/battery (identity OPEN)",
+          "placement_caveat": "LOCATION_UNRESOLVED (wrist vs cabin/ambient); must not be counted as body-worn burden until frozen",
+          "source_status": "manufacturer_spec (day6_opt3001_datasheet)",
+          "confidence": "MEDIUM",
+          "final": false
+        }
+      ]
+    },
+    {
+      "module_id": "chest_module",
+      "label": "Shared chest module",
+      "worn": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "components": [
+        {
+          "role": "ECG (+ respiration via impedance)",
+          "representative_part": "TI ADS1292R",
+          "channels": 2,
+          "supply_voltage_v": "per-channel power used directly (single combined rail not asserted)",
+          "active_current_or_power": "0.67 mW for 2 channels (2 x 335 uW/ch) @ 250 s/s reference",
+          "resolution_bits": 24,
+          "required_support_circuitry": "electrodes + lead-off excitation, input protection (OPEN)",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "shared chest MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_ads1292r_datasheet)",
+          "confidence": "MEDIUM",
+          "final": false
+        },
+        {
+          "role": "Thoracic BioZ / ICG",
+          "representative_part": "AD5940-class impedance AFE",
+          "channels": null,
+          "supply_voltage_v": "2.8-3.6",
+          "active_current_or_power": "OPEN (published 6.5 uA potentiostat point is NOT active BioZ measurement power)",
+          "resolution_bits": 16,
+          "required_support_circuitry": "excitation path, electrodes, input protection (OPEN)",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "shared chest MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_ad5940_datasheet)",
+          "confidence": "LOW",
+          "final": false
+        }
+      ]
+    },
+    {
+      "module_id": "head_module",
+      "label": "Intermittent frontal EEG (+ optional horizontal EOG) module",
+      "worn": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "components": [
+        {
+          "role": "Frontal EEG",
+          "representative_part": "TI ADS1299-4-class EEG AFE",
+          "channels": 4,
+          "supply_voltage_v": "OPEN (analog/digital rail config open)",
+          "active_current_or_power": "OPEN (no complete operating point asserted; session schedule open)",
+          "resolution_bits": 24,
+          "required_support_circuitry": "electrodes, bias/reference (SRB/BIAS) network, input protection (OPEN)",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "dedicated head-module MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_ads1299_datasheet)",
+          "confidence": "LOW",
+          "final": false
+        },
+        {
+          "role": "Horizontal EOG (Day-10 candidate for sleep staging)",
+          "representative_part": "shares the ADS1299-4-class head-module AFE (spare channel + shared SRB/BIAS)",
+          "channels": 1,
+          "supply_voltage_v": "shared with EEG head module",
+          "active_current_or_power": "OPEN (one additional biopotential channel; not independently quantified)",
+          "resolution_bits": 24,
+          "required_support_circuitry": "2 lateral-ocular sensing electrodes; reference/bias shared with EEG (shared-reference interpretation)",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN (2 electrodes + leads; materials not selected)",
+          "shared_mcu_battery_radio": "shared head-module MCU/radio/battery (identity OPEN)",
+          "burden_detail": "results/eog_operational_burden_day10.json",
+          "source_status": "derived from head-module AFE class + Day-10 EOG burden closure",
+          "confidence": "MEDIUM",
+          "final": false
+        }
+      ]
+    },
+    {
+      "module_id": "leg_module",
+      "label": "Experimental leg BioZ module",
+      "worn": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "components": [
+        {
+          "role": "Segmental leg BioZ (fluid status, experimental)",
+          "representative_part": "AD5940-class impedance AFE (separate instance from thoracic unless sharing is proven)",
+          "channels": null,
+          "supply_voltage_v": "2.8-3.6",
+          "active_current_or_power": "OPEN",
+          "resolution_bits": 16,
+          "required_support_circuitry": "excitation path, electrodes (OPEN)",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "leg-module MCU/radio/battery (identity OPEN)",
+          "source_status": "manufacturer_spec (day6_ad5940_datasheet)",
+          "confidence": "LOW",
+          "final": false
+        }
+      ]
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "label": "Second PPG-site evaluation branch (deprioritized for HR)",
+      "worn": true,
+      "topology_status": "OPEN_BOUNDARY",
+      "components": [
+        {
+          "role": "Second physical PPG site",
+          "representative_part": "MAX86141-class + optical stack",
+          "channels": 3,
+          "supply_voltage_v": 1.8,
+          "active_current_or_power": "<10 uA AFE readout reference (NOT the 500 Hz multi-wavelength site current)",
+          "resolution_bits": 19,
+          "required_support_circuitry": "added LEDs/photodiodes; shared/tethered/standalone module boundary OPEN",
+          "sleep_idle_current": "OPEN",
+          "package_mass": "UNKNOWN",
+          "shared_mcu_battery_radio": "OPEN (module boundary unresolved)",
+          "source_status": "manufacturer_spec (day6_max86141_datasheet)",
+          "confidence": "MEDIUM",
+          "final": false
+        }
+      ]
+    }
+  ],
+  "system_readiness": {
+    "system_average_power": {
+      "status": "SYSTEM_AVERAGE_POWER_NOT_READY",
+      "reason": "Component active-power points exist for several ICs, but duty cycle, shared MCU, radio, regulator efficiency, battery, and module scheduling are not frozen. Summing datasheet maxima would be a fabricated number and is prohibited.",
+      "what_is_known": ["Per-component active/reference points (BMI270, MAX86141, TMP117, OPT3001-Q1, ADS1292R)"],
+      "what_is_missing": ["MCU/radio identity and power", "regulator efficiency", "battery", "per-module duty cycle/scheduling", "EEG/EOG/BioZ operating points"]
+    },
+    "system_mass": {
+      "status": "SYSTEM_MASS_NOT_READY",
+      "reason": "No component package mass is asserted as system mass; PCB, battery, enclosure, electrodes/adhesives/straps, and wiring/connectors are all unselected.",
+      "missing_contributors": ["component/package mass", "PCB mass", "battery mass", "enclosure mass", "electrodes/adhesives/straps", "wiring/connectors"]
+    },
+    "final_bom": {
+      "status": "FINAL_BOM_NOT_SELECTED",
+      "reason": "All parts are representative component classes, not selected final devices; shared MCU/radio/battery/regulator identities are open."
+    }
+  }
+}

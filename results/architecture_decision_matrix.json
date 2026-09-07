@@ -11,10 +11,21 @@
     "FUTURE_EVIDENCE_REQUIRED": "Incomplete or non-comparable evidence on a decision-critical dimension prevents any decision."
   },
   "global_preconditions": {
-    "interaction_evidence_status": "unavailable",
-    "interaction_note": "All evidence is one-component-at-a-time. A global minimal subset is NOT provable from independent single-sensor experiments; greedy accumulation of marginals is prohibited (see FINAL_ARCHITECTURE_DECISION_RULE.md interaction precondition).",
+    "interaction_evidence_status": "partial",
+    "interaction_coverage": "one_controlled_pair_tested",
+    "interaction_note": "MOST evidence is still one-component-at-a-time. ONE predeclared factorial experiment now exists: Sleep-EDF EEG x EOG x Resp (M0/M_A/M_B/M_AB, 5 seeds, capacity-fair 112 params/channel). Its interaction term is approximately zero and unresolved (+0.0031 +/- 0.0434, 2/5 seeds positive). This materially addresses the interaction gap for ONE candidate pair on ONE target; it does NOT establish global interaction knowledge, is NOT factorial_supported globally, and does NOT prove a globally minimal subset. Greedy accumulation of marginals remains prohibited (see FINAL_ARCHITECTURE_DECISION_RULE.md interaction precondition).",
+    "interaction_source": "results/sleep_edf_interaction_resp_day10.json (docs/INTERACTION_EXPERIMENT_RESULTS_DAY10.md)",
     "cross_dataset_comparability": "PROHIBITED (MAE vs macro-F1 and different populations are not rankable)",
     "final_architecture_status": "UNRESOLVED"
+  },
+  "day10_reproducibility": {
+    "status": "SCIENTIFIC_REPRODUCTION_PASS",
+    "note": "Every checkpoint-based canonical result behind these decisions (PPG-DaLiA capacity control + multiseed, PTT A/B, Sleep primary + secondary A/B/C) was re-evaluated from frozen weights under the verified frozen environment with exactly zero numerical difference; the full 114-condition robustness sweep reproduced within a documented float32 tolerance (max 7.6e-6 bpm). Reproducibility STRENGTHENS confidence in the evidence but does NOT by itself upgrade any CONDITIONAL decision to RETAIN.",
+    "sources": [
+      "results/day10_scientific_reproduction.json",
+      "results/day10_frozen_environment_verification.json",
+      "results/dataset_fingerprint_manifest_day10.json"
+    ]
   },
   "entries": [
     {
@@ -25,7 +36,7 @@
       "source_experiment": "ppg-dalia-imu-ablation",
       "reasoning": {
         "1_scientific_evidence": "Positive marginal value; A_cap->B ~0.605 bpm and capacity-matched C->B ~0.776 bpm MAE improvement, 5/5 seeds. Raw A->B ~20.6% is capacity-confounded and must not be read as pure IMU value.",
-        "2_evidence_strength": "strongly_replicated (5 seeds; 3/3 held-out subjects; 4/4 motion quartiles) but capacity-confounded at the raw level and capacity-controlled effect is modest.",
+        "2_evidence_strength": "strongly_replicated (5 seeds; 3/3 held-out subjects; 4/4 motion quartiles) but capacity-confounded at the raw level and capacity-controlled effect is modest. Day-10: reproduced exactly from frozen checkpoints (20 checkpoints, zero numerical difference; 114-condition robustness within float32 tolerance).",
         "3_heterogeneity": "Direction consistent across subjects and motion quartiles; magnitude non-monotonic with motion; one activity (table_soccer) worse.",
         "4_burden_completeness": "PARTIAL. Contact/module/compute burden AVAILABLE (zero new body region/module/contact in the colocated wrist reference). Power PARTIAL (IC operating points only). Mass MISSING. Latency MISSING.",
         "5_interaction_limitation": "No interaction evidence; cannot prove membership in a globally minimal set.",
@@ -46,7 +57,7 @@
       "source_experiment": "ptt-ppg-site-ablation",
       "reasoning": {
         "1_scientific_evidence": "Aggregate negative marginal (candidate worse), 5/5 optimization seeds; but heterogeneous: 2/4 held-out subjects favor the candidate.",
-        "2_evidence_strength": "replicated_but_variable; aggregate direction dominated by out-of-distribution subject s2; descriptively removing s2 flips the aggregate.",
+        "2_evidence_strength": "replicated_but_variable; aggregate direction dominated by out-of-distribution subject s2; descriptively removing s2 flips the aggregate. Day-10: reproduced exactly from frozen checkpoints (10 checkpoints, zero numerical difference).",
         "3_heterogeneity": "High. Subject-level MIXED; activity-level MIXED (walk favors candidate).",
         "4_burden_completeness": "PARTIAL/MISSING. Adds >=1 physical + optical sensing site (AVAILABLE), but module boundary MISSING, contact-region allocation PARTIAL, mass MISSING, power PARTIAL, robustness evidence MISSING.",
         "5_interaction_limitation": "No interaction evidence.",
@@ -70,8 +81,8 @@
         "1_scientific_evidence": "Positive, modest, now control- and secondary-supported. Primary (n=3): macro-F1 0.7473->0.7693 (delta ~0.022), candidate better 4/5 seeds. Matched shuffled-EOG negative control: aligned B beats shuffled C in 5/5 seeds primary and 5/5 secondary; A->C approximately neutral -> the benefit depends on temporal alignment, not mere EOG presence. Prospective secondary holdout (n=8, frozen before evaluation, zero retraining): 0.6530->0.6858, A->B 5/5 seeds.",
         "2_evidence_strength": "replicated-with-control + prospective_secondary_holdout_supported. Upgraded from the prior preliminary/replicated_but_variable state because the shuffled control, per-subject decomposition, and secondary holdout are now integrated and re-verified. NOT independent-dataset or cross-population replication (same Sleep-EDF cassette protocol).",
         "3_heterogeneity": "Primary effect concentrated in one subject (SC4011 improves; SC4081/SC4131 mixed; global_result_dominated_by_one_subject=true). Secondary broadens support (6/8 B>A, 7/8 B>C; largest subject SC4221 ~41% of summed effect, single_subject_dominance_flag=false) but is still not uniform (2/8 near-zero/negative). Class-level: large REM gain but an N3 regression (B-A ~-0.043) in the secondary cohort, disclosed; read-only diagnostic shows N3 precision drops (B over-labels true N2 as N3) while N3 recall improves.",
-        "4_burden_completeness": "MISSING/UNRESOLVED. EEG/EOG components are still not linked into the (HR-focused) pareto_decision_inputs / operational cost catalog. EOG adds ocular electrode/contact burden versus EEG-only; the exact contact increment, module boundary, power, and mass are not frozen and are left unresolved (not zero).",
-        "5_interaction_limitation": "No interaction evidence; cannot prove membership in a globally minimal sensor set.",
+        "4_burden_completeness": "MATERIALLY IMPROVED, still PARTIAL. Day-10 EOG burden closure (results/eog_operational_burden_day10.json) now models the contact/module/wiring/compute/data-rate increment under two explicit interpretations: standalone (3-4 incremental contacts, possibly a new front-end) and shared-reference (2 incremental lateral-ocular sensing electrodes, reference/bias shared with the existing ADS1299-4-class head module, NO new module, one spare AFE channel). Sensing-contact increment = 2 (interpretation-independent). Power and mass remain SYSTEM_POWER_NOT_READY / SYSTEM_MASS_NOT_READY (not zero, not quantified). This is still less complete than the IMU colocation case and materially higher human burden (>=2 new ocular electrodes + a new peri-ocular sensing site).",
+        "5_interaction_limitation": "PARTIAL for this candidate. The predeclared Sleep-EDF EEG x EOG x Resp factorial (interaction +0.0031 +/- 0.0434, approximately additive/unresolved) partially addresses interaction for EOG on this exact target, but only against Resp, on one dataset, and does NOT prove membership in a globally minimal sensor set. A near-zero interaction is NOT evidence that interactions are globally absent.",
         "6_decision": "CONDITIONAL_FOR_TARGET"
       },
       "decision": "CONDITIONAL_FOR_TARGET",
@@ -79,7 +90,10 @@
       "resolved_integration": {
         "shuffled_eog_control": "COMPLETE (results/sleep_edf_eeg_eog_control_analysis.json)",
         "per_subject_decomposition": "COMPLETE (results/sleep_edf_per_subject_analysis.json)",
-        "secondary_holdout": "COMPLETE (results/sleep_edf_secondary_holdout_evaluation.json)"
+        "secondary_holdout": "COMPLETE (results/sleep_edf_secondary_holdout_evaluation.json)",
+        "frozen_checkpoint_reproduction": "COMPLETE (results/day10_scientific_reproduction.json: sleep primary + secondary reproduced with zero numerical difference)",
+        "eog_operational_burden_closure": "MATERIALLY IMPROVED (results/eog_operational_burden_day10.json: contact/module/wiring/compute/data-rate modeled; power/mass still NOT_READY)",
+        "interaction_experiment": "PARTIAL (results/sleep_edf_interaction_resp_day10.json: EEG x EOG x Resp, approximately additive/unresolved)"
       },
       "prohibited_upgrades": [
         "Do not upgrade to RETAIN_FOR_TARGET or 'the final architecture should contain EOG'.",
@@ -97,6 +111,6 @@
     "DEPRIORITIZE_FOR_TARGET": ["heart_rate_bpm / PTT-PPG / second physical PPG site"],
     "REMOVAL_CANDIDATE_FOR_TARGET": [],
     "FUTURE_EVIDENCE_REQUIRED": [],
-    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence unavailable; operational burden incomplete (EOG ocular electrode/contact burden unresolved and unlinked; IMU mass/power/latency partial); cross-dataset ranking prohibited. Sleep/EOG moved FUTURE_EVIDENCE_REQUIRED -> CONDITIONAL_FOR_TARGET after the shuffled-control + per-subject + prospective secondary holdout were integrated; this does NOT change the global UNRESOLVED status."
+    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence is now PARTIAL (one controlled EEG x EOG x Resp pair tested, approximately additive/unresolved) but not global; operational burden still incomplete (EOG contact/module burden now modeled but power/mass NOT_READY; IMU mass/power/latency partial); cross-dataset ranking prohibited. Day-10 frozen-checkpoint reproduction (SCIENTIFIC_REPRODUCTION_PASS) strengthens confidence in the underlying evidence but did NOT upgrade any decision. Sleep/EOG remains CONDITIONAL_FOR_TARGET; the global status remains UNRESOLVED."
   }
 }

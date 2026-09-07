@@ -25,9 +25,11 @@
     },
     {
       "id": "interaction_evidence_incomplete",
-      "severity": "BLOCKER",
-      "summary": "All evidence is one-component-at-a-time; interaction/subset optimality is unproven.",
-      "unlock": "At least one factorial (baseline/+A/+B/+A+B) experiment within one dataset/target/protocol."
+      "severity": "MEDIUM",
+      "status": "PARTIALLY_ADDRESSED",
+      "summary": "Interaction evidence is now PARTIAL, not absent. One predeclared factorial (Sleep-EDF EEG x EOG x Resp: M0/M_A/M_B/M_AB, 5 seeds, capacity-fair) was run; interaction term approximately zero and unresolved (+0.0031 +/- 0.0434). This covers ONE candidate pair on ONE target and does NOT prove global subset optimality; most candidates remain untested for interaction.",
+      "unlock_met": "The prior unlock ('at least one factorial experiment within one dataset/target/protocol') is now satisfied. Remaining: interaction coverage across the other candidate pairs/targets.",
+      "source": "results/sleep_edf_interaction_resp_day10.json"
     },
     {
       "id": "module_bom_unresolved",
@@ -36,10 +38,11 @@
       "unlock": "A frozen reference BOM / module boundary with shared-resource allocation."
     },
     {
-      "id": "sleep_single_dataset_preliminary",
+      "id": "sleep_single_dataset_scope",
       "severity": "MEDIUM",
-      "summary": "Sleep/EOG has single-dataset, 3-held-out-subject, preliminary evidence; shuffled control and per-subject breakdown are PENDING integration from Ismet's branch; secondary holdout in progress.",
-      "unlock": "Integrate day8-sleep-strengthening-ml (shuffled control + per-subject) and the day9 secondary holdout."
+      "status": "INTEGRATED_BUT_STILL_SINGLE_DATASET",
+      "summary": "Sleep/EOG shuffled control, per-subject decomposition, and prospective n=8 secondary holdout are now COMPLETE and integrated (no longer pending), and reproduced exactly from frozen checkpoints in Day-10. The remaining limitation is scope: all Sleep-EDF, same cassette protocol — NOT independent-dataset or cross-population replication. Primary (n=3) and secondary (n=8) are never pooled.",
+      "unlock": "Independent-dataset / cross-population sleep replication (out of Day-10 scope; not attempted)."
     },
     {
       "id": "targets_incomplete",
@@ -52,6 +55,13 @@
     "note": "Mirror of results/pareto_decision_inputs.json readiness.component_matrix (HR components only).",
     "wrist_imu": {"scientific_benefit": "AVAILABLE", "power": "PARTIAL", "mass": "MISSING", "contact_burden": "AVAILABLE", "module_burden": "AVAILABLE", "compute_data_burden": "AVAILABLE", "robustness_evidence": "AVAILABLE"},
     "second_ppg_site": {"scientific_benefit": "AVAILABLE", "power": "PARTIAL", "mass": "MISSING", "contact_burden": "PARTIAL", "module_burden": "MISSING", "compute_data_burden": "AVAILABLE", "robustness_evidence": "MISSING"},
-    "frontal_eog_horizontal": {"scientific_benefit": "AVAILABLE_PRELIMINARY", "power": "MISSING", "mass": "MISSING", "contact_burden": "MISSING", "module_burden": "MISSING", "compute_data_burden": "PARTIAL", "robustness_evidence": "MISSING"}
+    "frontal_eog_horizontal": {"scientific_benefit": "AVAILABLE", "power": "MISSING", "mass": "MISSING", "contact_burden": "PARTIAL", "module_burden": "PARTIAL", "compute_data_burden": "AVAILABLE", "robustness_evidence": "MISSING", "note": "Day-10: scientific_benefit upgraded from AVAILABLE_PRELIMINARY (shuffled control + secondary holdout + exact reproduction integrated). contact_burden/module_burden MISSING -> PARTIAL via results/eog_operational_burden_day10.json (2 incremental sensing electrodes, shared-reference head-module path, no new module). compute_data_burden PARTIAL -> AVAILABLE (+112 params/channel, 1 ch x 100 Hz x 24-bit). power/mass remain MISSING (NOT_READY)."}
+  },
+  "day10_updates": {
+    "interaction_evidence": "unavailable -> partial (one controlled EEG x EOG x Resp pair; approximately additive/unresolved)",
+    "eog_burden": "MISSING -> PARTIAL (results/eog_operational_burden_day10.json)",
+    "reference_bom_readiness": "results/reference_bom_readiness_day10.json (datasheet-backed component classes; SYSTEM_AVERAGE_POWER_NOT_READY / SYSTEM_MASS_NOT_READY / FINAL_BOM_NOT_SELECTED)",
+    "scientific_reproduction": "SCIENTIFIC_REPRODUCTION_PASS (results/day10_scientific_reproduction.json)",
+    "pareto_status_unchanged": "NOT_READY — cross-dataset incomparability, missing system power/mass, incomplete module BOM, and incomplete global interaction coverage remain."
   }
 }

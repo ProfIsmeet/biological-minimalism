@@ -1854,7 +1854,7 @@
       "The second PPG site's module boundary and contact-region allocation are unresolved.",
       "Only heart rate has marginal-value evidence; other mission-relevant targets are unvalidated.",
       "Only two candidate additions have scientific evidence, from different datasets and model families.",
-      "Interaction effects are unmeasured: one-component-at-a-time marginal value does not prove a globally minimal subset, so a formal Pareto frontier cannot be declared from independent single-sensor experiments alone."
+      "Interaction effects are only PARTIALLY measured: one predeclared factorial experiment (Sleep-EDF EEG x EOG x Resp, result approximately additive/unresolved) now exists, but it covers a single candidate pair on a single target and does not prove a globally minimal subset. One-component-at-a-time marginal value still dominates the evidence, so a formal Pareto frontier cannot be declared from these experiments alone."
     ],
     "cross_dataset_restriction": "Raw MAE/RMSE and relative-improvement magnitudes from PPG-DaLiA and PTT are not comparable ranking coordinates.",
     "limited_structural_observation": "Within the frozen PTT heart-rate experiment, the second PPG site worsened aggregate error while adding one physical and optical sensing site. This is a descriptive, target-specific observation—not a global architecture decision.",
