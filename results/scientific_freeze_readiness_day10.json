@@ -1,0 +1,52 @@
+{
+  "git": {
+    "canonical_base_branch": "origin/day8-9-systems-readiness",
+    "canonical_base_commit": "ce3caf1115c75e902bef6ae0e9f508b72b43d6c4",
+    "canonical_tag": "day9-canonical-integration",
+    "day10_branch": "day10-scientific-repro-freeze-ml",
+    "main_untouched": true
+  },
+  "environment": {
+    "exact_frozen_training_environment_verified": true,
+    "artifact": "results/day10_frozen_environment_verification.json"
+  },
+  "checkpoints": {
+    "n_total": 50,
+    "externally_durable": true,
+    "external_destination": "GitHub Release (private repo) tag day8-checkpoint-archive-v1",
+    "day10_new_checkpoints": 20,
+    "day10_new_checkpoints_description": "10 Sleep interaction (M_B, M_AB x 5 seeds) + already-counted-elsewhere reproduction reloads (no new checkpoints from pure reproduction runs, only from the new interaction experiment)"
+  },
+  "datasets": {
+    "fingerprinted": true,
+    "artifact": "results/dataset_fingerprint_manifest_day10.json",
+    "n_records": 266,
+    "n_present": 266,
+    "n_committed_to_git": 0
+  },
+  "ppg_dalia": {"reproduced": true, "all_metrics_match": true},
+  "robustness": {"reproduced": true, "scope": "full_114_conditions", "all_metrics_match": true},
+  "ptt": {"reproduced": true, "all_metrics_match": true},
+  "sleep_primary": {"reproduced": true, "all_metrics_match": true},
+  "sleep_secondary": {"reproduced": true, "all_metrics_match": true},
+  "n3_diagnostic": {"verified": true, "matches_canonical": true},
+  "interaction_limitation": {
+    "status": "partially_addressed",
+    "note": "One clean interaction experiment (Sleep-EDF EEG x EOG x Resp) was audited, predeclared, run, and honestly analyzed (result: approximately_additive_or_unresolved - no forced synergy claim). This materially addresses the interaction-evidence gap for one specific candidate pair on one target, but does NOT establish global sensor-interaction knowledge or a globally minimal sensor subset. Two other candidates (PPG-DaLiA IMU x EDA/TEMP, PTT second-site x IMU) remain explicitly deferred, not resolved. docs/SENSOR_INTERACTION_LIMITATION.md's overall limitation therefore remains open in general, materially addressed in this one instance."
+  },
+  "scientific_contract": {
+    "consistent": true,
+    "version": "1.5.0",
+    "note": "No canonical scientific value was changed by Day 10 reproduction (everything matched exactly or within documented float32 tolerance). The interaction result is new evidence, reported in its own dedicated artifacts (results/sleep_edf_interaction_resp_day10.json, docs/INTERACTION_EXPERIMENT_RESULTS_DAY10.md) rather than folded into the sensor marginal-value contract, since it answers a structurally different question (interaction, not marginal value) - no version churn was needed."
+  },
+  "claims_governance": {
+    "no_claim_expansion": true,
+    "note": "PPG-DaLiA IMU necessity, PTT second-site global uselessness, Sleep independent-dataset replication, Sleep EOG necessity, global minimal architecture, Digital Twin validation, and astronaut/spaceflight validation were NOT claimed or upgraded this sprint, per the explicit Day-10 prohibition."
+  },
+  "remaining_science_blockers": [
+    {"severity": "LOW", "description": "Interaction evidence exists for only one of three audited candidate pairs; the other two (PPG-DaLiA EDA/TEMP, PTT IMU) remain unresolved by design (deferred, not attempted this sprint)."},
+    {"severity": "LOW", "description": "N3 regression in the secondary Sleep-EDF cohort is verified/quantified but its underlying cause (why aligned EOG increases N2->N3 false positives) is not investigated - descriptive only, as required."},
+    {"severity": "LOW", "description": "This repo's core.autocrlf=true creates a real but now-understood-and-fixed checkout-encoding trap for any future frozen-content SHA256 guard; worth a one-line note in onboarding docs for any new contributor cloning on Windows."}
+  ],
+  "final_status": "READY_WITH_KNOWN_LIMITATIONS"
+}
