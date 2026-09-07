@@ -1,11 +1,18 @@
 {
   "archive_path": "archival\\biological_minimalism_checkpoints_day8.tar.gz",
+  "archive_sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
   "archive_size_bytes": 3108347,
   "n_checkpoints_packaged": 50,
   "n_checkpoints_verified_ok": 50,
   "all_checkpoints_verified_ok": true,
   "raw_dataset_files_found_in_archive": [],
   "no_raw_datasets_included": true,
+  "external_copy_created": true,
+  "external_destination": "GitHub Release (private repo) ProfIsmeet/biological-minimalism, tag day8-checkpoint-archive-v1, asset biological_minimalism_checkpoints_day8.tar.gz",
+  "external_copy_sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
+  "external_copy_verified": true,
+  "external_copy_verification_method": "gh release download + sha256sum, compared byte-for-byte against local archive hash",
+  "archival_status": "LOCAL_VERIFIED_EXTERNALLY_DURABLE",
   "checkpoint_details": [
     {
       "name": "checkpoints_day8/checkpoints/eeg_encoder_sleep_edf.pt",
