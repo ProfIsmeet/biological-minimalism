@@ -1,0 +1,66 @@
+{
+  "all_checkpoints_exact_match": true,
+  "n_checkpoints_checked": 10,
+  "results": [
+    {
+      "run_id": "M_B_eeg_plus_resp_seed42",
+      "recomputed_macro_f1": 0.7339961378539217,
+      "stored_macro_f1": 0.7339961378539217,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_B_eeg_plus_resp_seed43",
+      "recomputed_macro_f1": 0.7595214939714163,
+      "stored_macro_f1": 0.7595214939714163,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_B_eeg_plus_resp_seed44",
+      "recomputed_macro_f1": 0.7543356913357748,
+      "stored_macro_f1": 0.7543356913357748,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_B_eeg_plus_resp_seed45",
+      "recomputed_macro_f1": 0.7072148966941569,
+      "stored_macro_f1": 0.7072148966941569,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_B_eeg_plus_resp_seed46",
+      "recomputed_macro_f1": 0.711106344770646,
+      "stored_macro_f1": 0.711106344770646,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_AB_eeg_plus_eog_plus_resp_seed42",
+      "recomputed_macro_f1": 0.7439658265570939,
+      "stored_macro_f1": 0.7439658265570939,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_AB_eeg_plus_eog_plus_resp_seed43",
+      "recomputed_macro_f1": 0.7432759695015377,
+      "stored_macro_f1": 0.7432759695015377,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_AB_eeg_plus_eog_plus_resp_seed44",
+      "recomputed_macro_f1": 0.7771056293024924,
+      "stored_macro_f1": 0.7771056293024924,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_AB_eeg_plus_eog_plus_resp_seed45",
+      "recomputed_macro_f1": 0.7384280238208748,
+      "stored_macro_f1": 0.7384280238208748,
+      "exact_match": true
+    },
+    {
+      "run_id": "M_AB_eeg_plus_eog_plus_resp_seed46",
+      "recomputed_macro_f1": 0.7887410384590495,
+      "stored_macro_f1": 0.7887410384590495,
+      "exact_match": true
+    }
+  ]
+}
