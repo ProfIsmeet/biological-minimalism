@@ -27,6 +27,28 @@
       "results/dataset_fingerprint_manifest_day10.json"
     ]
   },
+  "day11_engineering_integration": {
+    "note": "Day-11 Part-2 engineering evidence (reference power / data-rate / mass tiers / BOM readiness) was re-evaluated against every gate below. It ENRICHES the burden_completeness dimension but did NOT change any decision: engineering cannot upgrade a CONDITIONAL to RETAIN, and a component-boundary power figure is not system power. System average power, system mass, and a full BOM remain NOT_READY, so the burden axis stays incomplete for all candidates.",
+    "sources": [
+      "results/day11_part3_engineering_inputs.json",
+      "results/reference_power_budget_day11_part2.json",
+      "results/reference_data_rate_budget_day11.json",
+      "results/reference_mass_readiness_day11_part2.json",
+      "results/reference_bom_readiness_day11_part2.json"
+    ],
+    "per_candidate_engineering": {
+      "wrist_imu": "Reference IMU operating point ~0.018 mW (band 0.018-0.378, accel-only, gyro OFF); 0 new body region / module / sensing contact in the colocated wrist reference; +1536 bps raw. Best-characterised power of all candidates but still component-boundary, not system power; mass Tier 0 (NOT_READY).",
+      "second_ppg_site": "+1 physical optical site, +1 contact region, highest raw data-rate increment (+28500 bps); reference component power NOT_READY (LED + 500 Hz sequencing dominate); module boundary OPEN. The aggregate-negative HR result does NOT zero this burden.",
+      "frontal_eog_horizontal": "+2 lateral-ocular sensing contacts, 0 new module in REFERENCE_SHARED_HEAD_MODULE (shared reference/bias, one spare ADS1299-class channel); +2400 bps raw. Head-AFE operating point NOT_READY; incremental power and mass NOT_READY. Materially higher contact burden than the IMU colocation case."
+    },
+    "decisions_changed": "NONE",
+    "system_state": {
+      "system_average_power": "SYSTEM_AVERAGE_POWER_NOT_READY",
+      "system_mass": "SYSTEM_MASS_NOT_READY",
+      "module_bom": "PARTIAL (reference component classes; final=false)",
+      "raw_data_rate": "PARTIAL lower bound ~48068 bps (not radio bandwidth)"
+    }
+  },
   "entries": [
     {
       "target": "heart_rate_bpm",
@@ -111,6 +133,6 @@
     "DEPRIORITIZE_FOR_TARGET": ["heart_rate_bpm / PTT-PPG / second physical PPG site"],
     "REMOVAL_CANDIDATE_FOR_TARGET": [],
     "FUTURE_EVIDENCE_REQUIRED": [],
-    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence is now PARTIAL (one controlled EEG x EOG x Resp pair tested, approximately additive/unresolved) but not global; operational burden still incomplete (EOG contact/module burden now modeled but power/mass NOT_READY; IMU mass/power/latency partial); cross-dataset ranking prohibited. Day-10 frozen-checkpoint reproduction (SCIENTIFIC_REPRODUCTION_PASS) strengthens confidence in the underlying evidence but did NOT upgrade any decision. Sleep/EOG remains CONDITIONAL_FOR_TARGET; the global status remains UNRESOLVED."
+    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence is now PARTIAL (one controlled EEG x EOG x Resp pair tested, approximately additive/unresolved) but not global; operational burden still incomplete (EOG contact/module burden now modeled but power/mass NOT_READY; IMU mass/power/latency partial); cross-dataset ranking prohibited. Day-10 frozen-checkpoint reproduction (SCIENTIFIC_REPRODUCTION_PASS) strengthens confidence in the underlying evidence but did NOT upgrade any decision. Day-11 Part-2 engineering evidence (reference power/data-rate/mass tiers/BOM readiness) was integrated (see day11_engineering_integration) and likewise did NOT upgrade any decision: SYSTEM_AVERAGE_POWER_NOT_READY, SYSTEM_MASS_NOT_READY, module BOM PARTIAL, and benefit axes remain cross-target incomparable. Sleep/EOG remains CONDITIONAL_FOR_TARGET; the global status remains UNRESOLVED."
   }
 }

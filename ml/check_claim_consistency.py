@@ -65,6 +65,16 @@ FORBIDDEN = [
     (re.compile(r"\bsystem\s+mass\s+(is\s+)?(known|quantified|determined|ready)\b", re.IGNORECASE), "'system mass known' claim (SYSTEM_MASS_NOT_READY)"),
     (re.compile(r"\bpareto\s+(frontier\s+)?(is\s+)?ready\b", re.IGNORECASE), "'Pareto ready' claim (FORMAL_PARETO_NOT_READY)"),
     (re.compile(r"scientific\s+freeze\b[^.\n]{0,25}\b(=|equals|is|means)\b[^.\n]{0,25}\b(final|product|project)\s+freeze", re.IGNORECASE), "'scientific freeze = final/project freeze' conflation"),
+    # Day-11 (§19) forbidden bald engineering claims. Each is exempt when the line
+    # carries a negation marker (NOT_READY, not, no, without, ...), so legitimate
+    # "system average power is NOT_READY" and "EOG burden is NOT zero" copy passes.
+    (re.compile(r"\b(system|total\s+wearable)\s+(average\s+)?power\s*(=|:|is|of)\s*[~<>]?\s*\d", re.IGNORECASE), "bald 'system/total power = <number>' claim (SYSTEM_AVERAGE_POWER_NOT_READY)"),
+    (re.compile(r"\bsystem\s+mass\s*(=|:|is|of)\s*[~<>]?\s*\d", re.IGNORECASE), "bald 'system mass = <number>' claim (SYSTEM_MASS_NOT_READY)"),
+    (re.compile(r"\bfinal\s+BOM\s+(is\s+)?(selected|chosen|frozen|complete|ready)\b", re.IGNORECASE), "'final BOM selected' claim (only reference BOM readiness exists)"),
+    (re.compile(r"\b(EOG|IMU|second[- ]?PPG)\b[^.\n]{0,40}\b(adds?|add|=)\b[^.\n]{0,20}\bzero\s+burden\b", re.IGNORECASE), "'<sensor> adds zero burden' claim (burden is never zeroed)"),
+    (re.compile(r"\bzero\s+(added\s+)?burden\b", re.IGNORECASE), "'zero burden' claim (incremental burden is never zeroed)"),
+    (re.compile(r"\bpareto[- ]?(optimized|optimised|optimal)\b", re.IGNORECASE), "'Pareto optimized/optimal' claim (FORMAL_PARETO_NOT_READY)"),
+    (re.compile(r"\boptimal\s+sensor\s+(set|subset|architecture|selection)\b", re.IGNORECASE), "'optimal sensor set' claim (architecture is UNRESOLVED)"),
 ]
 
 # Bare "robust" as an adjective claim (word boundary excludes "robustness").

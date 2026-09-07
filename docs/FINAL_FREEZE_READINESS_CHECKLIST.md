@@ -64,3 +64,26 @@ rehearsal/freeze, not science integration. Status: ☐ open · ◐ partial · �
 4. ☐ **Final paper freeze** and **final dashboard freeze**.
 5. ☐ **Final jury rehearsal** (full live walkthrough + Q&A dry run).
 6. ☐ Capture final environment pins (node + python lockfiles) at freeze time; then tag `vX.Y-final-freeze`.
+
+## Day 11 — Engineering evidence integrated (Parts 1–4)
+Part-1 audited engineering evidence and froze calc inputs; Part-2 produced reference power/data-rate/mass/BOM readiness; Part-3+4 integrated that evidence into the decision gate, Pareto readiness, Research Mode, traceability, and this checklist.
+- ☑ **Reference power** — component/AFE boundaries quantified (IMU ~0.018 mW band 0.018–0.378; ECG AFE 0.67 mW; TMP117 0.01155 mW; OPT3001 0.00594 mW; MAX86141 AFE floor ≤0.018 mW LED-excluded; wrist sensing-electronics LED-excluded lower bound). `results/reference_power_budget_day11_part2.json`.
+- ☑ **Raw data-rate** — partial lower bound ~48.068 kbps (not radio bandwidth; RADIO_DATA_RATE NOT_READY). `results/reference_data_rate_budget_day11.json`.
+- ◐ **Module BOM** — PARTIAL: MCU/radio/regulator/battery MISSING → REFERENCE_SELECTED (class, final=false); electrodes/PCB/enclosure/attachment MISSING. `results/reference_bom_readiness_day11_part2.json`.
+- ◐ **Mass** — Tier-0..4 framework only; all modules Tier 0; no mass number. `results/reference_mass_readiness_day11_part2.json`.
+- ☑ **Decision gate re-run** — IMU + EOG remain `CONDITIONAL_FOR_TARGET`, second PPG `DEPRIORITIZE_FOR_TARGET`, final architecture `UNRESOLVED`; engineering evidence did NOT upgrade any decision (`results/architecture_decision_matrix.json` → `day11_engineering_integration`).
+- ☑ **Pareto re-run** — `FORMAL_PARETO_NOT_READY`; no blocker downgraded (`results/pareto_readiness_blockers.json` → `day11_part2_updates`).
+- ☑ **Research Mode** — new `/research/engineering-readiness` endpoint + Engineering readiness panel; unknowns render as “Not ready”, never 0.
+- ☑ **Claim traceability + checker** — 9 engineering claims added; checker extended for bald system-power/mass/BOM/zero-burden/Pareto-optimal claims.
+
+**Engineering freeze status (open blockers):**
+- ☐ **System average power** — `SYSTEM_AVERAGE_POWER_NOT_READY` (LED timing, EEG/BioZ operating points, MCU/radio, regulator efficiency, deployable duty, battery).
+- ☐ **System mass** — `SYSTEM_MASS_NOT_READY` (no mechanical reference design).
+- ☐ **Full BOM** — PARTIAL (no final component/enclosure/electrode selection).
+- ☐ **Final mechanical architecture** — unresolved.
+- ☐ **Formal Pareto** — NOT_READY (benefit axes not comparable; burden incomplete).
+
+**Scientific freeze status:** `READY_WITH_KNOWN_LIMITATIONS` (unchanged by Day-11 engineering work).
+**Engineering freeze status:** `NOT_READY` (system power/mass/full BOM/mechanical architecture/formal Pareto open — do not conflate with scientific validity).
+**Project freeze status:** `NOT_READY_FOR_FINAL_PROJECT_FREEZE`.
+Power/mass do NOT need to be solved for Day-11 completion; their unresolved state intentionally carries into Day-12.

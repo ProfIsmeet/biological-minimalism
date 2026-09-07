@@ -63,5 +63,19 @@
     "reference_bom_readiness": "results/reference_bom_readiness_day10.json (datasheet-backed component classes; SYSTEM_AVERAGE_POWER_NOT_READY / SYSTEM_MASS_NOT_READY / FINAL_BOM_NOT_SELECTED)",
     "scientific_reproduction": "SCIENTIFIC_REPRODUCTION_PASS (results/day10_scientific_reproduction.json)",
     "pareto_status_unchanged": "NOT_READY — cross-dataset incomparability, missing system power/mass, incomplete module BOM, and incomplete global interaction coverage remain."
+  },
+  "day11_part2_updates": {
+    "source": "results/pareto_blocker_progress_day11_part2.json (Part-2 engineering evidence, integrated in Day-11 Part-3)",
+    "blocker_deltas": {
+      "cross_dataset_incomparability": "BLOCKER, unchanged. Engineering cannot address scientific incomparability; MUST NOT be downgraded.",
+      "power_partial": "HIGH (PARTIAL_IMPROVED). Added reference points: IMU ~0.018 mW (band 0.018-0.378), TMP117 0.01155 mW, OPT3001 0.00594 mW, ECG AFE 0.67 mW, MAX86141 AFE floor <=0.018 mW (LED-excluded), wrist sensing-electronics LED-excluded lower bound, and reference MCU/radio/regulator classes. Still HIGH: LED power, EEG/EOG head-AFE point, thoracic+leg BioZ point, deployable duty, regulator efficiency, battery, and the system average power all remain open.",
+      "mass_missing": "HIGH, unchanged. Only the Tier-0..4 framework + per-module contributor classification were formalised (all Tier 0). No mass number exists (no material model / board design / cell).",
+      "module_bom_unresolved": "HIGH (PARTIALLY_ADDRESSED). MCU/radio/regulator/battery MISSING -> REFERENCE_SELECTED (class, final=false). NOT downgraded to MEDIUM: enclosure/PCB/electrode materials/attachment and the 2nd-PPG module boundary are still unselected, and REFERENCE_SELECTED != final component.",
+      "interaction_evidence_incomplete": "MEDIUM, unchanged (no new scientific interaction evidence in Part-2).",
+      "sleep_single_dataset_scope": "MEDIUM, unchanged (no new dataset).",
+      "targets_incomplete": "MEDIUM, unchanged (no new target experiments)."
+    },
+    "data_compute_axis": "Not a blocker; strengthened by explicit raw payloads (results/reference_data_rate_budget_day11.json; PARTIAL system raw total ~48068 bps, radio rate NOT_READY).",
+    "pareto_status_unchanged": "NOT_READY / FORMAL_PARETO_NOT_READY. No severity was downgraded; benefit axes remain cross-target incomparable and system power/mass remain incomplete, so no formal frontier is computed."
   }
 }

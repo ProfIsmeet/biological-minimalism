@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { api } from "@/lib/api";
 import type {
   OperationalCostCatalog,
+  EngineeringReadiness,
   HardwareTopologyContract,
   ParetoDecisionInputs,
   ParetoReadinessDay6,
@@ -22,6 +23,8 @@ interface ResearchState {
   hardwareTopologyError: string | null;
   paretoReadiness: ParetoReadinessDay6 | null;
   paretoReadinessError: string | null;
+  engineeringReadiness: EngineeringReadiness | null;
+  engineeringReadinessError: string | null;
   experiments: Record<string, ResearchExperiment>;
   selectedExperimentId: string | null;
   loading: boolean;
@@ -41,6 +44,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
   hardwareTopologyError: null,
   paretoReadiness: null,
   paretoReadinessError: null,
+  engineeringReadiness: null,
+  engineeringReadinessError: null,
   experiments: {},
   selectedExperimentId: null,
   loading: false,
@@ -48,13 +53,14 @@ export const useResearchStore = create<ResearchState>((set) => ({
   load: async () => {
     set({ loading: true, error: null });
     try {
-      const [summaries, projectSummary, operationalCosts, decisionInputEnvelope, topologyEnvelope, readinessEnvelope] = await Promise.all([
+      const [summaries, projectSummary, operationalCosts, decisionInputEnvelope, topologyEnvelope, readinessEnvelope, engineeringEnvelope] = await Promise.all([
         api.getResearchExperiments(),
         api.getResearchSummary(),
         api.getOperationalCosts(),
         api.getDecisionInputs(),
         api.getHardwareTopology(),
         api.getParetoReadiness(),
+        api.getEngineeringReadiness(),
       ]);
       const availableIds = summaries
         .filter((item) => item.availability === "available")
@@ -87,6 +93,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
         hardwareTopologyError: topologyEnvelope.availability === "unavailable" ? topologyEnvelope.error ?? "Hardware topology unavailable." : null,
         paretoReadiness: readinessEnvelope.readiness,
         paretoReadinessError: readinessEnvelope.availability === "unavailable" ? readinessEnvelope.error ?? "Pareto readiness unavailable." : null,
+        engineeringReadiness: engineeringEnvelope.readiness,
+        engineeringReadinessError: engineeringEnvelope.availability === "unavailable" ? engineeringEnvelope.error ?? "Engineering readiness unavailable." : null,
         experiments,
         selectedExperimentId:
           state.selectedExperimentId && experiments[state.selectedExperimentId]
@@ -109,6 +117,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
         hardwareTopologyError: error instanceof Error ? error.message : "Hardware topology could not be loaded.",
         paretoReadiness: null,
         paretoReadinessError: error instanceof Error ? error.message : "Pareto readiness could not be loaded.",
+        engineeringReadiness: null,
+        engineeringReadinessError: error instanceof Error ? error.message : "Engineering readiness could not be loaded.",
       });
     }
   },

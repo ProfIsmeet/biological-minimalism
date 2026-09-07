@@ -18,6 +18,7 @@ import {
 import { Panel } from "@/components/ui/Panel";
 import { OperationalCostView } from "@/components/research/OperationalCostView";
 import { DecisionInputsView } from "@/components/research/DecisionInputsView";
+import { EngineeringReadinessView } from "@/components/research/EngineeringReadinessView";
 import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
 import type {
   ResearchBreakdown,
@@ -451,6 +452,8 @@ export function ResearchMode() {
     hardwareTopologyError,
     paretoReadiness,
     paretoReadinessError,
+    engineeringReadiness,
+    engineeringReadinessError,
     experiments,
     selectedExperimentId,
     loading,
@@ -526,6 +529,8 @@ export function ResearchMode() {
         </div>
       )}
 
+      {engineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Engineering readiness unavailable: {engineeringReadinessError}</p> : null}
+      {engineeringReadiness ? <EngineeringReadinessView readiness={engineeringReadiness} /> : null}
       {experimentList.length ? <MarginalValueTable experiments={experimentList} /> : null}
       {hardwareTopologyError || paretoReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Hardware architecture unavailable: {hardwareTopologyError ?? paretoReadinessError}</p> : null}
       {hardwareTopology && paretoReadiness && operationalCostCatalog ? <HardwareArchitectureView topology={hardwareTopology} catalog={operationalCostCatalog} readiness={paretoReadiness} /> : null}

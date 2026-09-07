@@ -258,6 +258,138 @@
         28
       ],
       "status": "frozen"
+    },
+    {
+      "claim_id": "day11-imu-reference-power",
+      "claim_text": "The wrist IMU reference operating point is ~0.018 mW (band 0.018-0.378 mW, BMI270 accel-only, gyro OFF) at the documented 25 Hz point for the 32 Hz scientific requirement. This is a component-boundary reference power, NOT wrist-module or system power.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/reference_power_budget_day11_part2.json",
+      "source_field": "reference_operating_points.wrist_imu",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness > IMU candidate",
+      "paper_section": "Engineering Results (reference power)",
+      "jury_question_ids": [
+        31,
+        34
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-wrist-sensor-electronics-lower-bound",
+      "claim_text": "The wrist sensor-electronics reference power is an LED-excluded LOWER BOUND (~0.048-0.413 mW across wrist-light/cabin cases), excluding LED, MCU, radio, regulator, and battery. It is not wrist-module power and must never be summed into a system total.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/reference_power_budget_day11_part2.json",
+      "source_field": "WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (Power)",
+      "paper_section": "Engineering Results (sensing-electronics lower bound)",
+      "jury_question_ids": [
+        31,
+        34
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-ecg-afe-power",
+      "claim_text": "The chest ECG AFE reference power is 0.67 mW (2 channels x 335 uW/ch, ADS1292R at 250 s/s). This is an AFE-only boundary, not chest-module or system power.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/reference_power_budget_day11_part2.json",
+      "source_field": "reference_operating_points.ecg_chest",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (Power)",
+      "paper_section": "Engineering Results (ECG AFE boundary)",
+      "jury_question_ids": [
+        31,
+        34
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-eog-shared-contacts",
+      "claim_text": "In the REFERENCE_SHARED_HEAD_MODULE case, EOG adds +2 lateral-ocular sensing contacts and 0 new module (shared reference/bias on a spare ADS1299-class channel). Incremental head-AFE power and mass remain NOT_READY. The shared case is not asserted as the final wearable architecture.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/day11_part3_engineering_inputs.json",
+      "source_field": "candidates[?(@.candidate=='frontal_eog_horizontal')].incremental_sensing_contacts",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness > EOG candidate",
+      "paper_section": "Engineering Results (EOG contact increment)",
+      "jury_question_ids": [
+        36,
+        37,
+        38
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-raw-data-rate-lower-bound",
+      "claim_text": "The partial system RAW data-rate lower bound is ~48.068 kbps (scientific-use-case head), excluding light and thoracic+leg BioZ, protocol overhead, and compression. It is a raw payload lower bound, NOT radio bandwidth; RADIO_DATA_RATE is NOT_READY.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/reference_data_rate_budget_day11.json",
+      "source_field": "system_raw_total.value_bps",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (Raw data rate)",
+      "paper_section": "Engineering Results (data-rate lower bound)",
+      "jury_question_ids": [
+        39
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-system-power-not-ready",
+      "claim_text": "System average power is NOT_READY. Component/AFE and sensing-electronics reference boundaries exist, but a defensible system-average power requires LED timing, EEG/BioZ operating points, MCU/radio behavior, regulator efficiency, and deployable duty schedules; no total is fabricated.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/reference_power_budget_day11_part2.json",
+      "source_field": "system_average_power_status",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (System average power)",
+      "paper_section": "Engineering Results (system power NOT_READY)",
+      "jury_question_ids": [
+        30
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-system-mass-not-ready",
+      "claim_text": "System mass is NOT_READY. All modules are Tier 0; package dimensions are not wearable mass (PCB, battery, enclosure, electrodes, attachments, and wiring dominate and are unquantified). No mass number is asserted.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/reference_mass_readiness_day11_part2.json",
+      "source_field": "system_mass_status",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (System mass)",
+      "paper_section": "Engineering Results (system mass NOT_READY)",
+      "jury_question_ids": [
+        32
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-bom-partial",
+      "claim_text": "Module BOM readiness is PARTIAL: MCU/radio/regulator/battery advanced MISSING -> REFERENCE_SELECTED (class level, final=false); electrodes/PCB/enclosure/attachment/wiring remain MISSING. REFERENCE_SELECTED is not a final component and there is no final BOM.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/reference_bom_readiness_day11_part2.json",
+      "source_field": "bom_status",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (Module BOM)",
+      "paper_section": "Engineering Results (BOM PARTIAL)",
+      "jury_question_ids": [
+        30
+      ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "day11-pareto-not-ready",
+      "claim_text": "Formal Pareto is NOT_READY. Benefit axes are not comparable across targets (HR MAE vs sleep macro-F1) and system power/mass are incomplete; no frontier is computed. Day-11 Part-2 engineering evidence did not downgrade any Pareto blocker.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/pareto_readiness_blockers.json",
+      "source_field": "day11_part2_updates.pareto_status_unchanged",
+      "api_surface": "GET /research/engineering-readiness",
+      "frontend_surface": "Research Mode > Engineering readiness panel (Formal Pareto)",
+      "paper_section": "Discussion (Pareto NOT_READY)",
+      "jury_question_ids": [
+        33,
+        40
+      ],
+      "status": "frozen"
     }
   ]
 }

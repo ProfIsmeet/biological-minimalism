@@ -9,6 +9,7 @@ import type {
   OperationalCostCatalogEnvelope,
   OperationalCostComponentEnvelope,
   ParetoDecisionInputsEnvelope,
+  EngineeringReadinessEnvelope,
   HardwareTopologyEnvelope,
   ParetoReadinessDay6Envelope,
   ReplayFaultConfig,
@@ -112,4 +113,7 @@ export const api = {
   getHardwareTopology: () => request<HardwareTopologyEnvelope>("/research/hardware-topology"),
 
   getParetoReadiness: () => request<ParetoReadinessDay6Envelope>("/research/pareto-readiness"),
+
+  getEngineeringReadiness: () =>
+    request<EngineeringReadinessEnvelope>("/research/engineering-readiness"),
 };

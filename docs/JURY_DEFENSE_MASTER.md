@@ -191,3 +191,37 @@ Descriptively: in the secondary cohort aligned EOG raises N3 recall (0.853→0.8
 
 **Q30: "Why is Pareto still NOT_READY after all this work?"**
 Because reproducibility strengthens confidence but does not supply the missing engineering axes: cross-target metrics remain incomparable (HR MAE vs sleep macro-F1), system average power and system mass are unquantified, the full module BOM/allocation is unselected, and interaction coverage is only partial. `FORMAL_PARETO_NOT_READY` is the honest status.
+
+## Day 11 — Engineering evidence Q&A
+
+Throughout this section we distinguish three levels and never conflate them: **reference component/AFE values** (a single IC's datasheet-derived power), **module values** (a whole sensing module, including LEDs/electrodes/wiring), and **system values** (the whole wearable, including MCU/radio/regulator/battery and a deployable duty schedule).
+
+**Q31: "Why don't you have total system power yet?"**
+We can quantify several component and sensing-electronics boundaries — e.g. IMU ~0.018 mW (accel-only), ECG AFE 0.67 mW, TMP117 0.01155 mW, and a wrist sensing-electronics **LED-excluded lower bound**. But a defensible **system-average** power requires LED timing, EEG/BioZ operating points, MCU/radio behaviour, regulator efficiency, and deployable duty schedules — none of which are frozen. So we report `SYSTEM_AVERAGE_POWER_NOT_READY` rather than a fabricated total. Refusing to invent that number is a strength, not a gap in rigor.
+
+**Q32: "Why isn't mass calculated?"**
+Because package dimensions are not wearable mass. PCB, battery, enclosure, electrodes, attachments, and wiring dominate most module masses, and we have no mechanical reference design. Every module is Tier 0 on our 0–4 mass-readiness scale, so system mass stays `SYSTEM_MASS_NOT_READY` — unquantified, not zero.
+
+**Q33: "Why do you still call the architecture unresolved?"**
+No target reached a RETAIN outcome; benefits across targets are not comparable (HR MAE vs sleep macro-F1); interaction coverage is only one controlled pair; and system power/mass/full BOM are incomplete. Any "final four sensors" claim would be manufactured. `UNRESOLVED` is the honest state.
+
+**Q34: "If the IMU costs only ~0.018 mW, why not simply keep it?"**
+That 0.018 mW is a **component-boundary** reference figure (accel-only, gyro off), not the IMU's system cost. The IMU is attractive — 0 new body region/module/contact when co-located on the wrist — but its mass is Tier 0 (NOT_READY), its system power contribution is unknown, and interaction membership in a minimal set is untested. So it is `CONDITIONAL_FOR_TARGET`, not automatically retained.
+
+**Q35: "Why not drop the second PPG immediately?"**
+Because the aggregate-negative HR result is heterogeneous and dominated by one out-of-distribution subject (s2); 2/4 held-out subjects actually favour it, and we never remove s2 to change the headline. It is `DEPRIORITIZE_FOR_TARGET` for routine HR — not a global removal or a universal-uselessness claim. Its engineering burden (+1 optical site, +1 contact region, +28.5 kbps raw, optical power NOT_READY) is also not zeroed by the negative result.
+
+**Q36: "How much physical burden does EOG add?"**
++2 lateral-ocular sensing electrodes (interpretation-independent) and a new peri-ocular sensing site. That is materially more human-contact burden than the IMU colocation case, which is exactly why EOG stays CONDITIONAL despite strong within-dataset science. Incremental power and mass are NOT_READY.
+
+**Q37: "Why doesn't EOG need another module in your reference case?"**
+In the `REFERENCE_SHARED_HEAD_MODULE` case EOG rides a spare channel of the existing ADS1299-class head AFE and reuses its reference/bias — so +0 new module and +0 new reference/bias, only +2 sensing electrodes. That is a **reference** allocation, not a fabricated saving.
+
+**Q38: "Is the shared EOG architecture final?"**
+No. It is a reference case chosen to bound the burden defensibly. A standalone EOG interpretation would add 3–4 contacts and possibly +1 module. We do not present the shared case as the final wearable architecture.
+
+**Q39: "What does the 48 kbps number mean?"**
+It is a **partial raw payload lower bound** (~48.068 kbps) for the scientific-use-case channel head — channels × sample-rate × bits. It excludes light and thoracic/leg BioZ, protocol overhead, and compression, and it is **not** radio bandwidth (`RADIO_DATA_RATE` is NOT_READY). It bounds the raw data budget; it does not size a link.
+
+**Q40: "Why can't you do Pareto yet?"**
+Pareto optimization is not meaningful until the benefit and burden axes are actually comparable and sufficiently complete. We have target-specific scientific effects but not one common benefit scale, and system power and mass are incomplete. We therefore refuse to compute a formal frontier: `FORMAL_PARETO_NOT_READY`.

@@ -55,3 +55,36 @@ Poster caption (approved framing): *"Aligned EOG showed positive within-dataset 
 with matched-control and prospective secondary-holdout support."* Do NOT show a single pooled
 score or an "n=11" test. Spaceflight remains motivation, not a validated claim; no astronaut
 validation. Global architecture panel stays **UNRESOLVED / NOT_READY**.
+
+---
+
+## Day 11 Update — The burden half of minimalism
+
+Storyline segment (one clean paragraph):
+
+> Scientific value is only half of minimalism. We then ask what physical burden the candidate
+> actually adds. A sensor with real marginal value but a new body-worn contact is not the same as
+> one that rides along for free.
+
+The narrative triangle (three concrete examples, deliberately *not* ranked into one score):
+
+- **IMU:** small scientific gain, almost no new physical contact burden **if co-located** on the wrist
+  (0 new region / module / contact; reference power ~0.018 mW). Attractive but CONDITIONAL.
+- **EOG:** clearer sleep value (matched-control + secondary support), but **+2 ocular sensing
+  contacts** and a new peri-ocular site. Value is real; burden is real. CONDITIONAL.
+- **Second PPG:** heterogeneous/negative scientific value **plus** a new physical optical site
+  (+1 site, +1 contact region, highest raw data-rate). DEPRIORITIZED for HR, not globally removed.
+
+### Poster / slide engineering comparison panel
+
+Single descriptive table — **no global ranking, no total score, no formal Pareto**:
+
+| Candidate | Target | Scientific direction | New body region | New module | New contacts | Reference component power | Readiness |
+|---|---|---|---|---|---|---|---|
+| Wrist IMU | Heart rate | Modest positive (capacity-controlled) | 0 | 0 | 0 | ~0.018 mW (band 0.018–0.378) | CONDITIONAL |
+| Horizontal EOG | Sleep stage | Positive w/ control + secondary | 0 or 1 | 0 (shared head) | +2 | Not ready (shared AFE) | CONDITIONAL |
+| Second PPG site | Heart rate | Aggregate negative / heterogeneous | 1 | OPEN | +1 | Not ready (LED-dominated) | DEPRIORITIZE |
+
+Panel footer (required): *System average power, system mass, and full BOM remain **Not ready**;
+the raw data-rate figure (~48.068 kbps) is a partial lower bound, not radio bandwidth. Unknowns are
+shown as "Not ready", never 0. Global architecture stays **UNRESOLVED**, formal Pareto **NOT_READY**.*

@@ -825,6 +825,64 @@ export interface ParetoDecisionInputsEnvelope {
   error: string | null;
 }
 
+export type EngineeringReadinessLevel = "AVAILABLE" | "PARTIAL" | "NOT_READY" | "MISSING";
+
+export interface EngineeringPanelRow {
+  dimension: string;
+  value_display: string;
+  status: EngineeringReadinessLevel;
+  note: string;
+}
+
+export interface EngineeringRawDataRate {
+  partial_lower_bound_bps: number;
+  partial_lower_bound_kbps: number;
+  status: string;
+  radio_data_rate_status: string;
+  note: string;
+}
+
+export interface EngineeringCandidate {
+  candidate: string;
+  label: string;
+  scientific_target: string;
+  scientific_direction: string;
+  gate_status: string;
+  incremental_body_region: string;
+  incremental_module: string;
+  incremental_sensing_contacts: number;
+  reference_component_power_display: string;
+  reference_component_power_status: EngineeringReadinessLevel;
+  raw_data_rate_increment_bps: number;
+  mass_tier: string;
+  bom_readiness: string;
+  engineering_summary: string;
+  caveat: string;
+}
+
+export interface EngineeringReadiness {
+  artifact_id: string;
+  part: string;
+  source_head_commit: string;
+  statement: string;
+  system_average_power_status: string;
+  system_mass_status: string;
+  bom_status: string;
+  formal_pareto_status: string;
+  final_architecture_status: string;
+  raw_data_rate: EngineeringRawDataRate;
+  panel: EngineeringPanelRow[];
+  candidates: EngineeringCandidate[];
+  boundaries: string[];
+  source_artifacts: string[];
+}
+
+export interface EngineeringReadinessEnvelope {
+  availability: ResearchAvailability;
+  readiness: EngineeringReadiness | null;
+  error: string | null;
+}
+
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [
   { value: "earth_orbit", label: "Earth Orbit" },
   { value: "lunar_surface", label: "Lunar Surface" },
