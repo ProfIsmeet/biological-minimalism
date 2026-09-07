@@ -1,0 +1,99 @@
+{
+  "artifact_id": "biological-minimalism-architecture-decision-matrix-v1",
+  "schema_version": "1.0.0",
+  "generated_role": "systems/integration lead (day8-9-systems-readiness)",
+  "statement": "Per (target, candidate) architecture-gate decisions synthesized from frozen committed evidence only. This applies docs/FINAL_ARCHITECTURE_DECISION_RULE.md as a transparent admissibility gate; it does NOT invent thresholds, does NOT rank candidates across datasets/targets, and does NOT declare a final or global architecture.",
+  "decision_vocabulary": {
+    "RETAIN_FOR_TARGET": "Sufficient target-specific value AND no disqualifying operational/robustness burden AND gate preconditions met.",
+    "CONDITIONAL_FOR_TARGET": "Target-specific value is real but context/subject/schedule-dependent, or burden completeness is partial.",
+    "DEPRIORITIZE_FOR_TARGET": "Current evidence does not justify integration priority; not a permanent-irrelevance claim.",
+    "REMOVAL_CANDIDATE_FOR_TARGET": "Only when target-specific evidence AND burden are sufficiently complete and preconditions met; never from a single negative marginal alone.",
+    "FUTURE_EVIDENCE_REQUIRED": "Incomplete or non-comparable evidence on a decision-critical dimension prevents any decision."
+  },
+  "global_preconditions": {
+    "interaction_evidence_status": "unavailable",
+    "interaction_note": "All evidence is one-component-at-a-time. A global minimal subset is NOT provable from independent single-sensor experiments; greedy accumulation of marginals is prohibited (see FINAL_ARCHITECTURE_DECISION_RULE.md interaction precondition).",
+    "cross_dataset_comparability": "PROHIBITED (MAE vs macro-F1 and different populations are not rankable)",
+    "final_architecture_status": "UNRESOLVED"
+  },
+  "entries": [
+    {
+      "target": "heart_rate_bpm",
+      "dataset": "PPG-DaLiA",
+      "candidate": "synchronized wrist IMU",
+      "component_id": "wrist_imu",
+      "source_experiment": "ppg-dalia-imu-ablation",
+      "reasoning": {
+        "1_scientific_evidence": "Positive marginal value; A_cap->B ~0.605 bpm and capacity-matched C->B ~0.776 bpm MAE improvement, 5/5 seeds. Raw A->B ~20.6% is capacity-confounded and must not be read as pure IMU value.",
+        "2_evidence_strength": "strongly_replicated (5 seeds; 3/3 held-out subjects; 4/4 motion quartiles) but capacity-confounded at the raw level and capacity-controlled effect is modest.",
+        "3_heterogeneity": "Direction consistent across subjects and motion quartiles; magnitude non-monotonic with motion; one activity (table_soccer) worse.",
+        "4_burden_completeness": "PARTIAL. Contact/module/compute burden AVAILABLE (zero new body region/module/contact in the colocated wrist reference). Power PARTIAL (IC operating points only). Mass MISSING. Latency MISSING.",
+        "5_interaction_limitation": "No interaction evidence; cannot prove membership in a globally minimal set.",
+        "6_decision": "CONDITIONAL_FOR_TARGET"
+      },
+      "decision": "CONDITIONAL_FOR_TARGET",
+      "decision_basis": "Real capacity-controlled value with near-zero incremental human burden in the colocated wrist reference context; but mass/power/latency incomplete and interaction untested, so retention is conditional, not final.",
+      "prohibited_upgrades": [
+        "Do not upgrade to RETAIN or 'final architecture includes IMU'.",
+        "Do not cite the ~20.6% raw figure as pure IMU sensor value."
+      ]
+    },
+    {
+      "target": "heart_rate_bpm",
+      "dataset": "PTT-PPG",
+      "candidate": "second physical PPG site",
+      "component_id": "second_ppg_site",
+      "source_experiment": "ptt-ppg-site-ablation",
+      "reasoning": {
+        "1_scientific_evidence": "Aggregate negative marginal (candidate worse), 5/5 optimization seeds; but heterogeneous: 2/4 held-out subjects favor the candidate.",
+        "2_evidence_strength": "replicated_but_variable; aggregate direction dominated by out-of-distribution subject s2; descriptively removing s2 flips the aggregate.",
+        "3_heterogeneity": "High. Subject-level MIXED; activity-level MIXED (walk favors candidate).",
+        "4_burden_completeness": "PARTIAL/MISSING. Adds >=1 physical + optical sensing site (AVAILABLE), but module boundary MISSING, contact-region allocation PARTIAL, mass MISSING, power PARTIAL, robustness evidence MISSING.",
+        "5_interaction_limitation": "No interaction evidence.",
+        "6_decision": "DEPRIORITIZE_FOR_TARGET"
+      },
+      "decision": "DEPRIORITIZE_FOR_TARGET",
+      "decision_basis": "For routine HR under current evidence the second site adds a physical sensing site without consistent benefit, so it is deprioritized for HR — but the evidence is heterogeneous and burden is incomplete, so this is NOT a global removal or a universal-uselessness claim.",
+      "prohibited_upgrades": [
+        "Do not upgrade to REMOVAL_CANDIDATE (burden incomplete; heterogeneous; no interaction evidence).",
+        "Do not claim the second site is globally useless.",
+        "Do not remove s2 to change the headline."
+      ]
+    },
+    {
+      "target": "sleep_stage_5class",
+      "dataset": "Sleep-EDF",
+      "candidate": "horizontal EOG added to EEG",
+      "component_id": "frontal_eog_horizontal",
+      "source_experiment": "sleep-edf-eeg-eog-ablation",
+      "reasoning": {
+        "1_scientific_evidence": "Positive, modest: macro-F1 0.7473->0.7693 (delta ~0.022) on this branch; candidate better in 4/5 training seeds; balanced accuracy 5/5; largest class gains N1/REM.",
+        "2_evidence_strength": "replicated_but_variable; mean effect comparable in magnitude to seed-to-seed SD; PRELIMINARY (first experiment for this target/dataset).",
+        "3_heterogeneity": "Only 3 held-out subjects. On THIS branch: per-subject decomposition NOT computed and NO shuffled-EOG negative control. Both exist on Ismet's unmerged day8-sleep-strengthening-ml branch and are PENDING_SCIENTIFIC_INTEGRATION.",
+        "4_burden_completeness": "MISSING. EEG/EOG components not linked into the HR-focused pareto_decision_inputs; ocular/electrode burden unresolved.",
+        "5_interaction_limitation": "No interaction evidence.",
+        "6_decision": "FUTURE_EVIDENCE_REQUIRED"
+      },
+      "decision": "FUTURE_EVIDENCE_REQUIRED",
+      "decision_basis": "A modest positive signal on a different target and modality that demonstrates the method transfers, but with 3 subjects, preliminary strength, missing negative control and per-subject breakdown ON THIS BRANCH, and no operational burden linkage, the gate returns Future-evidence-required. The pending shuffled control and per-subject analysis (and the prospective secondary holdout) are the specified next evidence.",
+      "pending_integration": {
+        "shuffled_eog_control": "PENDING_SCIENTIFIC_INTEGRATION",
+        "per_subject_decomposition": "PENDING_SCIENTIFIC_INTEGRATION",
+        "secondary_holdout": "PENDING_EXTERNAL_SCIENTIFIC_INTEGRATION"
+      },
+      "prohibited_upgrades": [
+        "Do not claim EOG is necessary or that the final architecture should contain EOG.",
+        "Do not display shuffled-control or per-subject numbers as frozen on this branch.",
+        "Do not compare macro-F1 to the HR-MAE experiments."
+      ]
+    }
+  ],
+  "summary": {
+    "RETAIN_FOR_TARGET": [],
+    "CONDITIONAL_FOR_TARGET": ["heart_rate_bpm / PPG-DaLiA / synchronized wrist IMU"],
+    "DEPRIORITIZE_FOR_TARGET": ["heart_rate_bpm / PTT-PPG / second physical PPG site"],
+    "REMOVAL_CANDIDATE_FOR_TARGET": [],
+    "FUTURE_EVIDENCE_REQUIRED": ["sleep_stage_5class / Sleep-EDF / horizontal EOG"],
+    "final_architecture": "UNRESOLVED — no target has a RETAIN outcome; interaction evidence unavailable; burden incomplete; cross-dataset ranking prohibited."
+  }
+}
