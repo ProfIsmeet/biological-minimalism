@@ -1,0 +1,139 @@
+{
+  "artifact_id": "biological-minimalism-day11-part3-engineering-inputs-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "role": "PRIMARY handoff to Part-3 (architecture/Pareto integration). Part-2 does NOT decide architecture.",
+  "part1_head_commit": "a43b7aa8e65349d703a0eb1ef34307e3a00ab4c1",
+  "consumes": [
+    "results/reference_power_budget_day11_part2.json",
+    "results/reference_data_rate_budget_day11.json",
+    "results/reference_mass_readiness_day11_part2.json",
+    "results/reference_bom_readiness_day11_part2.json",
+    "results/reference_shared_electronics_day11.json",
+    "results/pareto_blocker_progress_day11_part2.json"
+  ],
+  "candidates": [
+    {
+      "candidate": "wrist_imu",
+      "scientific_target": "heart_rate (VALIDATED_POSITIVE, within-dataset)",
+      "gate_status": "CONDITIONAL_FOR_TARGET",
+      "reference_module": "wrist_module (colocated)",
+      "incremental_body_region": 0,
+      "incremental_sensing_contacts": 0,
+      "incremental_module": 0,
+      "reference_component_power_mW": {
+        "reference_point": 0.018,
+        "band": [
+          0.018,
+          0.378
+        ]
+      },
+      "reference_module_boundary_power": "included in WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER (LED-excluded lower bound)",
+      "mass_tier": "Tier0",
+      "raw_data_rate_increment_bps": 1536,
+      "bom_readiness": "REFERENCE_SELECTED (BMI270)",
+      "uncertainty": "exact 32 Hz-compatible mode current within 10-210 uA band; deployable duty open",
+      "architecture_decision_implications": "Near-zero incremental human contact burden; power is the best-characterised of all candidates.",
+      "pareto_readiness_implications": "Power PARTIAL, mass MISSING \u2014 cannot be a full Pareto coordinate yet."
+    },
+    {
+      "candidate": "frontal_eog_horizontal",
+      "scientific_target": "sleep_stage_5class (within-dataset, primary n=3 + secondary n=8, never pooled)",
+      "gate_status": "CONDITIONAL_FOR_TARGET",
+      "reference_module": "head_module (REFERENCE_SHARED_HEAD_MODULE)",
+      "incremental_body_region": "0 or 1 (peri-ocular adjacency; framing-dependent, not forced)",
+      "incremental_sensing_contacts": 2,
+      "incremental_module": 0,
+      "reference_component_power_mW": {
+        "status": "NOT_READY",
+        "note": "one channel on shared head AFE; head AFE operating point NOT_READY"
+      },
+      "reference_module_boundary_power": "NOT_READY",
+      "mass_tier": "Tier0",
+      "raw_data_rate_increment_bps": 2400,
+      "bom_readiness": "electrodes PARTIAL (contact increment=2 defensible), power/mass MISSING",
+      "uncertainty": "standalone-vs-shared wiring (2 vs up to 4 contacts, +0 vs +1 module); head-AFE power fully open",
+      "architecture_decision_implications": "Materially higher contact burden than IMU (>=2 new ocular electrodes + new peri-ocular site); this is why EOG stays CONDITIONAL despite strong within-dataset science.",
+      "pareto_readiness_implications": "Power + mass MISSING; contact/module/data-rate PARTIAL/AVAILABLE."
+    },
+    {
+      "candidate": "second_ppg_site",
+      "scientific_target": "heart_rate (VALIDATED_NEGATIVE aggregate, s2-driven, heterogeneous)",
+      "gate_status": "DEPRIORITIZE_FOR_TARGET",
+      "reference_module": "optical_site_evaluation_branch (OPEN_BOUNDARY)",
+      "incremental_body_region": 1,
+      "incremental_sensing_contacts": 1,
+      "incremental_module": "OPEN (shared/tethered/standalone)",
+      "reference_component_power_mW": {
+        "status": "NOT_READY",
+        "note": "LED power + 500 Hz sequencing + boundary open"
+      },
+      "reference_module_boundary_power": "NOT_READY",
+      "mass_tier": "Tier0",
+      "raw_data_rate_increment_bps": 28500,
+      "bom_readiness": "MISSING (module boundary open)",
+      "uncertainty": "highest raw data-rate increment of all candidates (28.5 kbps); LED power dominant + unquantified",
+      "architecture_decision_implications": "Do NOT let the negative HR result zero the engineering burden: +1 optical site, +1 contact region, highest data rate.",
+      "pareto_readiness_implications": "Power/mass/module-boundary all MISSING; robustness evidence MISSING."
+    }
+  ],
+  "reference_baseline_components": [
+    {
+      "component": "wrist_ppg (MAX86141)",
+      "power": "AFE floor <=0.018 mW (LED-excluded); reference total NOT_READY",
+      "raw_data_rate_bps": 1216,
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    },
+    {
+      "component": "skin_temperature (TMP117)",
+      "power_mW": 0.01155,
+      "raw_data_rate_bps": 16,
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    },
+    {
+      "component": "light_sensor (OPT3001)",
+      "power_mW": 0.00594,
+      "placement": "LOCATION_UNRESOLVED",
+      "raw_data_rate_bps": "NOT_READY (cadence open)",
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    },
+    {
+      "component": "ecg_chest (ADS1292R)",
+      "power_mW": 0.67,
+      "raw_data_rate_bps": 12000,
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    },
+    {
+      "component": "frontal_eeg (ADS1299-4)",
+      "power": "NOT_READY (operating config specified; per-channel power unverified)",
+      "raw_data_rate_bps": 2400,
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    },
+    {
+      "component": "thoracic_bioz (AD5940)",
+      "power": "NOT_READY",
+      "raw_data_rate_bps": "NOT_READY",
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    },
+    {
+      "component": "leg_bioz (AD5940 sep.)",
+      "power": "NOT_READY",
+      "raw_data_rate_bps": "NOT_READY",
+      "bom": "REFERENCE_SELECTED",
+      "mass_tier": "Tier0"
+    }
+  ],
+  "warnings": [
+    "Do NOT sum these into a system power or mass number.",
+    "Do NOT rank cross-target benefits (HR MAE vs sleep macro-F1).",
+    "Do NOT upgrade CONDITIONAL/DEPRIORITIZE gate decisions \u2014 that is Part-3 architecture, out of Part-2 scope.",
+    "REFERENCE_SELECTED != final component. final_part = false everywhere.",
+    "System average power NOT_READY; system mass NOT_READY; formal Pareto NOT_READY."
+  ]
+}
