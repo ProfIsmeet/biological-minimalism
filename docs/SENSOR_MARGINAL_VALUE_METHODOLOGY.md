@@ -114,6 +114,23 @@ presence, and known caveats. Categories used in the contract:
 
 These carry no clinical, regulatory, or population-generalization meaning.
 
+**Prospective secondary holdout supplement (added Day 9).** A prospective
+secondary holdout — a genuinely untouched subject cohort, frozen and
+predeclared before any prediction is made, evaluated with existing frozen
+checkpoints (no retraining) — is evidence about **generalization within the
+same dataset's broader population**, not independent-dataset replication. It
+does **not** by itself justify inventing or auto-assigning a stronger
+taxonomy category. Instead, when a secondary holdout is run, the experiment
+record appends a qualifier tag to its existing evidence-strength rationale:
+`prospective_secondary_holdout_supported` (the direction and control-relative
+pattern generalize to the new cohort) or
+`prospective_secondary_holdout_not_fully_supported` (it does not, or is
+weaker) — see the Sleep-EDF EOG experiment (`prospective_secondary_holdout`
+field in `results/sensor_marginal_value_contract.json`) for the first use.
+`replicated-with-control` + a supported secondary holdout is still one
+dataset/population's evidence, not "population-level independent
+replication," and must never be described as such.
+
 ## 9. Why there is no universal sensor score
 
 **Recommendation: against.** A bounded 0–1 (or similar) score would require

@@ -37,11 +37,14 @@ tasks; see `docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md` SS10.
 | Aggregate (5 seeds) | Baseline 0.7473±0.0244, Aligned candidate 0.7693±0.0132, **Shuffled-EOG control 0.7420±0.0138** macro-F1 |
 | Seed stability | Aligned beats baseline 4/5 seeds; **aligned beats shuffled control 5/5 seeds** |
 | **Temporal-alignment control (Day 8)** | Shuffled EOG ≈ baseline (mean Δ −0.005, only 1/5 seeds favor it) — **the benefit does not survive shuffling** (Outcome 1: aligned timing matters) |
-| **Per-subject decomposition (Day 8)** | SC4011 IMPROVES (4/5 seeds, dominant effect); SC4081 and SC4131 MIXED (3/5, small deltas) — aggregate is not uniform across subjects |
-| Class heterogeneity | Every class improves or is flat; largest gains in N1, REM; none regresses |
+| **Per-subject decomposition (Day 8, primary n=3)** | SC4011 IMPROVES (4/5 seeds, dominant effect); SC4081 and SC4131 MIXED (3/5, small deltas) — aggregate is not uniform across subjects |
+| **Prospective secondary holdout (Day 9, n=8 untouched subjects, SC4181–SC4251)** | A 0.6530±0.0154, B 0.6858±0.0272, C 0.6556±0.0141 macro-F1 (sample SD). A→B favors B 5/5 seeds (mean +0.0328); C→B favors B 5/5 seeds (mean +0.0302); A→C ≈ neutral (mean +0.0026, 3/5) — **same Outcome-1 pattern as the primary control, reproduced on an independent cohort using the same frozen checkpoints (no retraining)** |
+| **Secondary-holdout subject-level generalization** | 6/8 subjects favor B over A, 7/8 favor B over C, 6/8 win both; largest single-subject share of the summed B−A effect is 41% (SC4221) — **no single subject dominates**, unlike the primary n=3 result |
+| **Secondary-holdout class-level pattern** | REM (+0.150 macro-F1 mean B−A) and N1 (+0.026) show the largest gains, consistent with the primary cohort's N1/REM pattern; N3 is the one class that regresses under B (−0.043) — disclosed, not smoothed over |
+| Class heterogeneity (primary) | Every class improves or is flat; largest gains in N1, REM; none regresses |
 | Capacity | Avoided by design (1.35% parameter difference); shuffled control uses the identical architecture/parameter count as the aligned candidate |
-| Evidence strength | **`replicated-with-control`** (upgraded Day 8 from `preliminary`, per the matched negative control + coherent subject-level pattern) |
-| Prohibited claims | Astronaut/microgravity sleep validation; EOG necessity; any macro-F1-vs-MAE numeric comparison |
+| Evidence strength | **`replicated-with-control`**, tagged **`prospective_secondary_holdout_supported`** (Day 9) — taxonomy category itself was NOT auto-upgraded; the secondary holdout is documented as same-dataset generalization evidence, not independent-dataset replication |
+| Prohibited claims | Astronaut/microgravity sleep validation; EOG necessity; any macro-F1-vs-MAE numeric comparison; treating the secondary holdout as proof of population-level/independent-dataset replication; pooling the primary n=3 and secondary n=8 into one headline n=11 test set |
 
 ## Cross-target observations (descriptive only, not a ranking)
 
