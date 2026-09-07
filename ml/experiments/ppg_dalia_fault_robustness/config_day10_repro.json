@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "experiment_id": "ppg_dalia_s14_fault_robustness_v1",
+  "protocol_status": "frozen_before_results",
+  "dataset": {
+    "name": "PPG-DaLiA",
+    "source": "UCI Machine Learning Repository C53890",
+    "license": "CC BY 4.0",
+    "archive_path": "datasets/ppg-dalia/raw_uci/ppg_dalia_uci.zip",
+    "subjects": [
+      "S14"
+    ],
+    "held_out_subjects": [
+      "S14"
+    ],
+    "expected_eligible_windows_per_subject": 4476,
+    "ground_truth": "raw['label'][window_index], real ECG-derived heart rate in bpm"
+  },
+  "model": {
+    "name": "PPG-DaLiA Model B: PPG plus wrist IMU",
+    "embedding_dim": 32,
+    "checkpoint_path": "ml/checkpoints/model_b_ppg_plus_imu_ppg_dalia.pt",
+    "checkpoint_size_bytes": 138086,
+    "checkpoint_sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
+    "hr_mean": 86.34466552734375,
+    "hr_std": 21.048254013061523,
+    "uncertainty": null
+  },
+  "window": {
+    "duration_seconds": 8.0,
+    "stride_seconds": 2.0,
+    "ppg_sample_rate_hz": 64.0,
+    "imu_sample_rate_hz": 32.0,
+    "ppg_samples": 512,
+    "imu_axes": [
+      "x",
+      "y",
+      "z"
+    ],
+    "imu_samples_per_axis": 256,
+    "fault_application_batch_seconds": 8.0,
+    "preprocessing": "canonical per-window PPG z-score and per-axis IMU z-score"
+  },
+  "clean_reference": {
+    "eligible_windows": 4476,
+    "mae_bpm": 5.0838541984558105,
+    "rmse_bpm": 7.492855072021484,
+    "absolute_tolerance_bpm": 0.001,
+    "golden_reference_path": "results/ppg_dalia_integration_reference.json"
+  },
+  "stochastic_seeds": [
+    2026,
+    2027,
+    2028,
+    2029,
+    2030
+  ],
+  "faults": [
+    {
+      "fault_type": "modality_dropout",
+      "targets": [
+        "ppg",
+        "imu",
+        "both"
+      ],
+      "severities": [
+        1.0
+      ],
+      "stochastic": false
+    },
+    {
+      "fault_type": "frozen_sensor",
+      "targets": [
+        "ppg",
+        "imu"
+      ],
+      "severities": [
+        1.0
+      ],
+      "stochastic": false
+    },
+    {
+      "fault_type": "additive_noise",
+      "targets": [
+        "ppg",
+        "imu"
+      ],
+      "severities": [
+        0.1,
+        0.25,
+        0.5,
+        1.0
+      ],
+      "stochastic": true
+    },
+    {
+      "fault_type": "saturation",
+      "targets": [
+        "ppg",
+        "imu"
+      ],
+      "severities": [
+        0.1,
+        0.25,
+        0.5,
+        1.0
+      ],
+      "stochastic": false
+    },
+    {
+      "fault_type": "packet_loss",
+      "targets": [
+        "ppg",
+        "imu",
+        "both"
+      ],
+      "severities": [
+        0.01,
+        0.05,
+        0.1,
+        0.2
+      ],
+      "stochastic": true
+    }
+  ],
+  "failure_categories": [
+    "input_unavailable",
+    "canonical_invalid_input",
+    "inference_error"
+  ],
+  "metrics": {
+    "accuracy": [
+      "mae_bpm_valid_only",
+      "rmse_bpm_valid_only",
+      "valid_prediction_count"
+    ],
+    "availability": [
+      "eligible_window_count",
+      "prediction_availability_rate",
+      "failure_counts",
+      "failure_rates"
+    ],
+    "clean_deltas": [
+      "mae_bpm",
+      "rmse_bpm",
+      "availability"
+    ],
+    "stochastic_aggregation": "arithmetic mean and population standard deviation across seeds"
+  },
+  "policies": {
+    "invalid_windows_remain_in_availability_denominator": true,
+    "accuracy_uses_only_valid_predictions": true,
+    "missing_sample_fill": false,
+    "interpolation": false,
+    "fallback_prediction": false,
+    "output_clipping": false,
+    "retraining": false,
+    "ground_truth_is_model_input": false
+  },
+  "output": {
+    "json_path": "results/day10_ppg_dalia_fault_robustness_reproduction.json",
+    "report_path": "results/day10_ppg_dalia_fault_robustness_reproduction_REPORT.md",
+    "json_indent": 2,
+    "sort_keys": true
+  }
+}

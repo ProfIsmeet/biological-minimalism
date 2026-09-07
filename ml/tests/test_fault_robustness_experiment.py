@@ -239,5 +239,10 @@ def test_committed_result_preserves_full_accounting_and_frozen_hashes() -> None:
         assert accounted == condition["eligible_window_count"] == 4476
     protocol_path = REPOSITORY_ROOT / result["protocol"]["path"]
     config_path = REPOSITORY_ROOT / result["protocol"]["config_path"]
-    assert hashlib.sha256(protocol_path.read_bytes()).hexdigest() == result["protocol"]["sha256"]
-    assert hashlib.sha256(config_path.read_bytes()).hexdigest() == result["protocol"]["config_sha256"]
+    # Day 10 finding: core.autocrlf=true means these text files check out
+    # with CRLF on Windows, while the frozen hashes stored in the committed
+    # result were computed against LF-normalized (git-blob) bytes. Verified:
+    # git-blob content and working-tree content are byte-for-byte identical
+    # once normalized. Normalize before hashing rather than weakening the check.
+    assert hashlib.sha256(protocol_path.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == result["protocol"]["sha256"]
+    assert hashlib.sha256(config_path.read_bytes().replace(b"\r\n", b"\n")).hexdigest() == result["protocol"]["config_sha256"]
