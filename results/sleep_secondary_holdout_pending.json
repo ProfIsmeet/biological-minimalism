@@ -1,0 +1,57 @@
+{
+  "artifact_id": "biological-minimalism-sleep-secondary-holdout-pending-v1",
+  "schema_version": "1.0.0",
+  "purpose": "Receiving schema for Ismet's prospective Sleep-EDF secondary holdout AND the day8 shuffled-EOG control + per-subject decomposition. Every value is 'pending' until the corresponding Ismet branch is integrated and re-verified. NO future numbers are fabricated here.",
+  "primary_cohort_reference": {
+    "experiment_id": "sleep-edf-eeg-eog-ablation",
+    "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
+    "held_out_test_subjects": ["SC4011", "SC4081", "SC4131"],
+    "n_held_out": 3,
+    "baseline_macro_f1_mean": 0.7472525334607252,
+    "candidate_macro_f1_mean": 0.7692599394037367,
+    "delta_mean": 0.022007405943011628,
+    "n_seeds_candidate_better": 4,
+    "n_seeds_total": 5,
+    "status": "FROZEN_ON_THIS_BRANCH"
+  },
+  "pending_items": {
+    "shuffled_eog_control": {
+      "status": "PENDING_SCIENTIFIC_INTEGRATION",
+      "description": "Model C = EEG + within-epoch shuffled EOG (matched negative control).",
+      "lives_on_branch": "origin/day8-sleep-strengthening-ml",
+      "source_artifact_when_merged": "results/sleep_edf_eeg_eog_control_analysis.json",
+      "control_macro_f1_mean": null,
+      "b_gt_c_seeds": null,
+      "b_gt_c_seeds_total": null,
+      "outcome": "pending"
+    },
+    "per_subject_decomposition": {
+      "status": "PENDING_SCIENTIFIC_INTEGRATION",
+      "description": "Per-held-out-subject delta (candidate - baseline); expected SC4011 dominance.",
+      "lives_on_branch": "origin/day8-sleep-strengthening-ml",
+      "source_artifact_when_merged": "results/sleep_edf_per_subject_analysis.json",
+      "per_subject_delta": {"SC4011": null, "SC4081": null, "SC4131": null},
+      "dominant_subject": null,
+      "outcome": "pending"
+    },
+    "secondary_holdout": {
+      "status": "PENDING_EXTERNAL_SCIENTIFIC_INTEGRATION",
+      "description": "Prospective secondary held-out cohort, subject-disjoint from the primary 3.",
+      "lives_on_branch": "origin/day9-sleep-secondary-holdout-ml",
+      "secondary_cohort_subjects": null,
+      "n_secondary_held_out": null,
+      "secondary_baseline_macro_f1_mean": null,
+      "secondary_candidate_macro_f1_mean": null,
+      "secondary_delta_mean": null,
+      "secondary_per_subject_delta": null,
+      "relationship_to_primary": {
+        "vocabulary": ["support", "weaken", "contradict", "pending"],
+        "outcome": "pending"
+      }
+    }
+  },
+  "display_rules": {
+    "case3_research_mode": "Show baseline A and aligned B as frozen. Show shuffled C, per-subject, and secondary as explicit PENDING cards; never render null as 0.",
+    "on_integration": "See docs/DAY8_9_INTEGRATION_STATE.md section 3 checklist."
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "artifact_id": "biological-minimalism-claim-traceability-v1",
+  "schema_version": "1.0.0",
+  "statement": "One source-of-truth mapping for every key claim: artifact -> API -> frontend -> paper -> jury. Enables consistent propagation and is audited by ml/check_claim_consistency.py.",
+  "evidence_levels": ["tier1_replicated_controlled", "tier2_supported_limited", "tier3_software_demo", "tier4_proposed"],
+  "claims": [
+    {
+      "claim_id": "hr-imu-capacity-controlled-benefit",
+      "claim_text": "After capacity control, synchronized wrist IMU still gives a small HR MAE benefit (A_cap->B ~0.605 bpm, C->B ~0.776 bpm, 5/5 seeds).",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/ppg_dalia_capacity_control.json",
+      "source_field": "primary_comparisons.baseline_Acap_candidate_B.mean",
+      "api_surface": "GET /research/experiments/ppg-dalia-imu-ablation",
+      "frontend_surface": "Research Mode > Case 1 (IMU->HR)",
+      "paper_section": "Results 4.1 (PPG-DaLiA capacity control)",
+      "jury_question_ids": [4, 5],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "hr-imu-raw-not-pure",
+      "claim_text": "The raw A->B ~20.6% is capacity-confounded and must NOT be presented as pure IMU sensor value.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/target_evidence_matrix.json",
+      "source_field": "entries[0].prohibited_claims",
+      "api_surface": "GET /research/target-evidence-matrix",
+      "frontend_surface": "Research Mode > Case 1 caveat",
+      "paper_section": "Results 4.1 + Limitations",
+      "jury_question_ids": [4, 5],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "hr-imu-shuffled-helps",
+      "claim_text": "Shuffled-IMU control also improves over PPG-only, so synchronization explains only part of the gain.",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/ppg_dalia_imu_multiseed_replication.json",
+      "source_field": "aggregate.shuffled_context_like_benefit_mae_A_minus_C",
+      "api_surface": "GET /research/experiments/ppg-dalia-imu-ablation",
+      "frontend_surface": "Research Mode > Case 1 (shuffled control)",
+      "paper_section": "Results 4.1 (negative control)",
+      "jury_question_ids": [6],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "ptt-second-site-heterogeneous-negative",
+      "claim_text": "Second PPG site is aggregate-negative for HR but heterogeneous (2/4 subjects better) and s2-dominated; not globally useless.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/ptt_sensitivity_analysis.json",
+      "source_field": "s2_dependence.magnitude_of_s2_influence_on_delta",
+      "api_surface": "GET /research/experiments/ptt-ppg-site-ablation",
+      "frontend_surface": "Research Mode > Case 2 (2nd PPG->HR)",
+      "paper_section": "Results 4.2 (PTT)",
+      "jury_question_ids": [7, 8],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "sleep-eog-modest-positive",
+      "claim_text": "Adding horizontal EOG to EEG gives a modest positive sleep-staging result (macro-F1 0.7473->0.7693, 4/5 seeds on this branch).",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
+      "source_field": "aggregate.delta_candidate_minus_baseline.mean",
+      "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
+      "frontend_surface": "Research Mode > Case 3 (EOG->sleep)",
+      "paper_section": "Results 4.3 (Sleep-EDF)",
+      "jury_question_ids": [9, 10, 11, 12],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "sleep-eog-shuffled-control",
+      "claim_text": "Sleep-EDF shuffled-EOG negative control (B>C) and per-subject SC4011 decomposition.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/sleep_secondary_holdout_pending.json",
+      "source_field": "pending_items.shuffled_eog_control.outcome",
+      "api_surface": "PENDING",
+      "frontend_surface": "Research Mode > Case 3 PENDING card",
+      "paper_section": "Results 4.3 (pending)",
+      "jury_question_ids": [11],
+      "status": "pending_scientific_integration"
+    },
+    {
+      "claim_id": "sleep-secondary-holdout",
+      "claim_text": "Prospective Sleep-EDF secondary holdout outcome (support/weaken/contradict primary).",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/sleep_secondary_holdout_pending.json",
+      "source_field": "pending_items.secondary_holdout.relationship_to_primary.outcome",
+      "api_surface": "PENDING",
+      "frontend_surface": "Research Mode > Case 3 PENDING card",
+      "paper_section": "Results 4.3 (pending)",
+      "jury_question_ids": [9],
+      "status": "pending_external_scientific_integration"
+    },
+    {
+      "claim_id": "architecture-not-ready",
+      "claim_text": "The final/global architecture is UNRESOLVED and Pareto readiness is NOT_READY (honest).",
+      "evidence_level": "tier1_replicated_controlled",
+      "source_artifact": "results/pareto_decision_inputs.json",
+      "source_field": "readiness.pareto_status",
+      "api_surface": "GET /research/decision-inputs",
+      "frontend_surface": "Research Mode > Architecture Status + Global Readiness",
+      "paper_section": "Discussion (NOT_READY)",
+      "jury_question_ids": [2, 18, 20],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "digital-twin-untrained",
+      "claim_text": "The Biological Digital Twin is architecture-only, untrained, unvalidated (a synthetic demo exists).",
+      "evidence_level": "tier4_proposed",
+      "source_artifact": "results/digital_twin_architecture_footprint.json",
+      "source_field": "validation_status",
+      "api_surface": "GET /digital-twin (footprint)",
+      "frontend_surface": "Digital Twin page (synthetic/untrained label)",
+      "paper_section": "Future work (Digital Twin)",
+      "jury_question_ids": [13],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "no-microgravity-validation",
+      "claim_text": "Spaceflight/microgravity is motivation only; no astronaut or microgravity data validates anything.",
+      "evidence_level": "tier4_proposed",
+      "source_artifact": "results/target_evidence_matrix.json",
+      "source_field": "entries[*].prohibited_claims",
+      "api_surface": "GET /research/target-evidence-matrix",
+      "frontend_surface": "Research Mode caveats",
+      "paper_section": "Scope & Limitations",
+      "jury_question_ids": [14],
+      "status": "frozen"
+    }
+  ]
+}
