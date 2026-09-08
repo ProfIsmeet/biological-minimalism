@@ -58,7 +58,11 @@ CANONICAL_FILES = [
 
 
 def sha256_of(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Audit M2/§21-§22: every file in CANONICAL_FILES is a text (JSON) artifact,
+    # so use the canonical LF-normalized text hash (see docs/HASH_PROVENANCE_POLICY.md).
+    # Raw-byte hashing here made the manifest platform-dependent (CRLF on Windows vs
+    # LF elsewhere), which failed the freeze-hash test on any LF checkout.
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def main() -> None:
