@@ -1,0 +1,70 @@
+{
+  "purpose": "Maps each scientific marginal-value candidate to what Claude's architecture/Pareto track may and may not infer from it. Read-only synthesis of already-frozen scientific artifacts - no new experiments, no engineering decisions.",
+  "candidates": [
+    {
+      "candidate": "wrist_imu",
+      "scientific_target": "heart_rate_bpm (PPG-DaLiA)",
+      "canonical_effect": "A_cap->B +0.605 bpm MAE improvement; C->B +0.776 bpm",
+      "uncertainty": "sample SD (ddof=1) 0.310 bpm across 5 seeds (SEED_VARIABILITY, not population CI)",
+      "subject_count": 3,
+      "seed_count": 5,
+      "evidence_strength": "replicated-within-dataset (capacity-controlled)",
+      "heterogeneity": "no single subject or activity dominates (results/ppg_dalia_sensitivity_day11.json)",
+      "control": "capacity-matched baseline (A_cap) + shuffled-IMU negative control (C)",
+      "sensitivity": "results/ppg_dalia_sensitivity_day11.json",
+      "major_limitation": "single dataset, small (3-subject) capacity-matched evaluation, modest absolute magnitude (~0.6 bpm)",
+      "architecture_relevance": "supports IMU inclusion as informative for HR estimation under motion, at modest magnitude",
+      "claude_may_use": ["direction (positive)", "magnitude (~0.6 bpm, capacity-controlled)", "evidence strength label", "single-dataset caveat"],
+      "claude_must_not_infer": ["IMU necessity", "population-level generalization", "that the ORIGINAL uncontrolled ~1.88bpm/20.6% figure is valid", "that this justifies a specific IMU sampling rate/duty cycle for hardware"]
+    },
+    {
+      "candidate": "second_ppg_site",
+      "scientific_target": "heart_rate_bpm (PTT dataset)",
+      "canonical_effect": "aggregate A->B +1.462 bpm (candidate WORSE)",
+      "uncertainty": "n=4 subjects - NO_DEFENSIBLE_POPULATION_CI",
+      "subject_count": 4,
+      "seed_count": 5,
+      "evidence_strength": "replicated-within-dataset (seed-level only); subject-level MIXED/fragile",
+      "heterogeneity": "2/4 subjects favor candidate; excluding s2 alone flips the aggregate sign",
+      "control": "none",
+      "sensitivity": "results/ptt_sensitivity_day11.json",
+      "major_limitation": "n=4 is too small for any population inference; single most fragile result in the project",
+      "architecture_relevance": "supports DEPRIORITIZING a second PPG site for this target - but the evidence is weak enough that this should be read as 'no support found', not 'proven harmful'",
+      "claude_may_use": ["aggregate negative direction, seed-consistent", "explicit disclosure that it is n=4/s2-sensitive"],
+      "claude_must_not_infer": ["second PPG site is globally useless", "population-level negative effect", "that removing it is scientifically mandated (it is only unsupported, not disproven for all uses)"]
+    },
+    {
+      "candidate": "eog_horizontal",
+      "scientific_target": "sleep_stage_5class (Sleep-EDF)",
+      "canonical_effect": "primary A->B +0.0220 macro-F1; secondary holdout A->B +0.0328; both C->B positive (5/5 and 5/5)",
+      "uncertainty": "sample SD (ddof=1), n=3 (primary) and n=8 (secondary) subjects, kept separate",
+      "subject_count": "3 (primary) + 8 (secondary, same dataset)",
+      "seed_count": 5,
+      "evidence_strength": "replicated-with-control, prospective_secondary_holdout_supported",
+      "heterogeneity": "primary: concentrated in SC4011; secondary: distributed (max subject share 41%)",
+      "control": "shuffled-EOG negative control (identical architecture/capacity)",
+      "sensitivity": "results/sleep_edf_sensitivity_day11.json, results/sleep_n3_extended_diagnostic_day11.json",
+      "major_limitation": "single dataset/recording protocol throughout; N3 class regresses (precision 0.499->0.430) even as overall macro-F1 improves",
+      "architecture_relevance": "the most rigorously validated positive result in the project - supports EOG inclusion for sleep-stage classification specifically, with a known N3 tradeoff",
+      "claude_may_use": ["direction and magnitude for BOTH cohorts, kept separate", "the N3 regression as an explicit, disclosed tradeoff", "the control result as evidence the effect is alignment-specific, not just channel-presence"],
+      "claude_must_not_infer": ["EOG necessity", "independent-dataset replication", "that N3 performance is unaffected", "that a shared head-module AFE channel budget for EOG is scientifically mandated by this result (that's an engineering/BOM decision, not implied by the science)"]
+    },
+    {
+      "candidate": "resp_oro_nasal (interaction context)",
+      "scientific_target": "sleep_stage_5class (Sleep-EDF, interaction with EOG)",
+      "canonical_effect": "interaction term +0.0031 +- 0.0434 (2/5 seeds positive, 3/5 negative); Resp alone (M_B) mean -0.0140 vs. EEG-only",
+      "uncertainty": "n=5 seeds, n=3 subjects; SD ~14x the mean",
+      "subject_count": 3,
+      "seed_count": 5,
+      "evidence_strength": "preliminary / unresolved",
+      "heterogeneity": "heterogeneous across both seeds and subjects (results/sleep_interaction_sensitivity_day11.json)",
+      "control": "capacity-fairness safeguard (constant per-channel parameter cost), no negative control for Resp itself",
+      "sensitivity": "results/sleep_interaction_sensitivity_day11.json",
+      "major_limitation": "single interaction pair tested; Resp alone shows no clear benefit; result is genuinely noisy, not just 'small'",
+      "architecture_relevance": "does NOT support adding a respiratory channel for this target based on current evidence; does not rule it out either",
+      "claude_may_use": ["the fact that a clean interaction feasibility audit and one experiment were completed", "the unresolved classification exactly as stated"],
+      "claude_must_not_infer": ["synergy between EOG and Resp", "interaction absence", "that respiratory sensing is validated or invalidated for any target - this experiment is sleep-stage-specific"]
+    }
+  ],
+  "cross_cutting_rule": "Every 'claude_may_use' entry is a scientific finding, not an engineering conclusion. Sensor inclusion/exclusion, sampling rate, duty cycle, and BOM decisions remain Claude's/the architecture-gate's to make, informed by but not dictated by this map."
+}

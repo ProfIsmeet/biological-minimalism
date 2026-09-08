@@ -1,0 +1,61 @@
+{
+  "canonical_source_commit": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+  "canonical_source_branch": "origin/day10-canonical-integration",
+  "scientific_branch": "day11-14-scientific-parallel",
+  "environment": {
+    "status": "EXACT_FROZEN_ENVIRONMENT",
+    "source": "results/day10_frozen_environment_verification.json"
+  },
+  "dataset_fingerprints": {
+    "n_records": 266,
+    "n_present": 266,
+    "n_committed_to_git": 0,
+    "source": "results/dataset_fingerprint_manifest_day10.json"
+  },
+  "checkpoint_archive": {
+    "n_total": 60,
+    "n_externally_archived": 60,
+    "archives": {
+      "day8": {
+        "tag": "day8-checkpoint-archive-v1",
+        "n_checkpoints": 50,
+        "sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4"
+      },
+      "day14": {
+        "tag": "day14-checkpoint-archive-v1",
+        "n_checkpoints": 10,
+        "sha256": "9ad647ee76fd1bb7d1200b2d8479c1d13d66d0aeaa3cadcb8accb990bd77e83a"
+      }
+    }
+  },
+  "canonical_experiments": [
+    "ppg_dalia_imu_hr",
+    "ptt_second_ppg_site_hr",
+    "sleep_edf_eeg_eog_sleep_stage_primary",
+    "sleep_edf_eeg_eog_shuffled_control",
+    "sleep_edf_secondary_holdout",
+    "ppg_dalia_fault_robustness",
+    "sleep_edf_interaction_eeg_eog_resp"
+  ],
+  "reproduction_status": "SCIENTIFIC_REPRODUCTION_PASS",
+  "table_package": "results/paper_tables/ (5 tables, CSV+JSON)",
+  "figure_sources": "results/figure_sources/ (9 figures)",
+  "sensitivity_package": [
+    "results/ppg_dalia_sensitivity_day11.json",
+    "results/ptt_sensitivity_day11.json",
+    "results/sleep_edf_sensitivity_day11.json",
+    "results/sleep_n3_extended_diagnostic_day11.json",
+    "results/sleep_interaction_sensitivity_day11.json"
+  ],
+  "interaction_status": "approximately_additive_or_unresolved (one candidate pair run, two deferred)",
+  "clean_clone_result": "CLEAN_CLONE_PASS_WITH_MANUAL_DATA_SETUP",
+  "open_scientific_limitations": [
+    "Interaction evidence covers exactly one candidate pair (Sleep EOGxResp); two other audited candidates remain deferred.",
+    "PTT evidence is n=4 subjects, s2-sensitive - the most fragile subject-level result in the project.",
+    "Sleep primary/secondary/interaction all use the same single dataset/recording protocol - no cross-dataset replication anywhere.",
+    "Robustness testing covers a single subject (S14) and 114 specific fault conditions - not a general robustness claim.",
+    "Clean-clone raw-dataset acquisition was verified via hash-matched file copy, not a second live network re-download in this session.",
+    "N3 regression's underlying cause is undiagnosed (descriptive confusion-matrix account only, by design)."
+  ],
+  "freeze_candidate_status": "SCIENTIFIC_FREEZE_CANDIDATE_READY_WITH_LIMITATIONS"
+}

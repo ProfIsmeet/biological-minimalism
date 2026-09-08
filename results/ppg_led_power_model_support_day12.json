@@ -1,0 +1,23 @@
+{
+  "purpose": "Parameterized PPG LED average-power calculator (Day 12 support). Implements exactly the formula already frozen in results/reference_power_budget_day11_part2.json's wrist_ppg.led_contribution block. Does NOT choose a final LED count/current/wavelength schedule.",
+  "implementation": "ml/engineering/ppg_led_power.py",
+  "formula": "P_LED_avg = N_active_LEDs * I_LED_peak * V_LED_forward * (t_pulse_seconds * f_pulse_hz)",
+  "current_repository_state": {
+    "status": "NOT_READY",
+    "missing_inputs": ["n_active_leds", "i_led_peak_ma", "v_led_forward_v", "t_pulse_seconds", "f_pulse_hz"],
+    "note": "Matches results/reference_power_budget_day11_part2.json exactly - none of these 5 inputs are frozen yet. This support artifact does not resolve them; it only confirms the formula computes correctly once they are."
+  },
+  "illustrative_example_NOT_CANONICAL": {
+    "label": "HYPOTHETICAL_INPUT_DEMONSTRATION_ONLY - these numbers are not a proposal, selection, or estimate for this project's actual LED stack",
+    "inputs": {"n_active_leds": 3, "i_led_peak_ma": 20.0, "v_led_forward_v": 2.0, "t_pulse_seconds": 0.0002, "f_pulse_hz": 64},
+    "outputs": {"duty_factor": 0.0128, "per_led_average_power_mw": 0.512, "total_average_power_mw": 1.536},
+    "purpose_of_example": "demonstrates the calculator is dimensionally correct and produces a sane order-of-magnitude result (low-duty-cycle pulsed PPG LEDs typically average well under their peak power) - not an engineering recommendation"
+  },
+  "unit_safety": {
+    "current_unit": "mA (not uA - inconsistent with the AFE current fields elsewhere which use uA; caller must convert)",
+    "voltage_unit": "V",
+    "power_unit": "mW (mA*V=mW)",
+    "duty_factor_range_check": "raises ValueError if t_pulse*f_pulse falls outside [0,1] - catches a common ms/seconds or Hz/kHz unit-mixing mistake"
+  },
+  "how_claude_should_use_this": "Once LED count/current/forward-voltage/pulse-width/pulse-rate are frozen (from datasheet + selected optical sequencing), call compute_led_power() with those values. Do not hand-compute this arithmetic separately - reuse this function so the formula stays in exactly one place."
+}

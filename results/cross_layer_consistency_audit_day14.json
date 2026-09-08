@@ -1,0 +1,79 @@
+{
+  "purpose": "Cross-layer consistency check: for each major fact, compare code/result-artifact/architecture-matrix/frontend-copy values. Built by manual inspection (Day 12-14 audit), not a builder - re-verify manually if any layer changes.",
+  "facts": [
+    {
+      "fact": "Sleep primary test subject count",
+      "code_or_artifact": "3 (ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json)",
+      "architecture_matrix": "not directly restated",
+      "frontend_research_mode": "sourced live from backend/app/research/catalog.py which reads the same artifact",
+      "paper_docs": "3 (docs/FURKAN_SCIENTIFIC_SOURCE_PACKAGE_DAY13.md)",
+      "consistent": true
+    },
+    {
+      "fact": "Sleep secondary holdout subject count",
+      "code_or_artifact": "8 (ml/experiments/sleep_edf_secondary_holdout/cohort.json)",
+      "frontend_research_mode": "sourced live from the same evaluation artifact",
+      "paper_docs": "8, always reported separately from primary",
+      "consistent": true
+    },
+    {
+      "fact": "Checkpoint total count",
+      "code_or_artifact": "60 (results/final_checkpoint_inventory_day14.json)",
+      "note": "results/checkpoint_inventory.json (Claude's Mac-side audit) still says 46 - this predates the Day-10 interaction checkpoints AND predates full Windows-side checkpoint presence; it is explicitly scoped as a per-machine snapshot, not a global claim, so this is NOT a contradiction as long as no document cites '46' as the current global total.",
+      "consistent": true,
+      "caveat": "Verified no current-facing document (docs, frontend, architecture matrix) cites 46 as a present-tense global total; if one is added later, it would be a real contradiction against the 60-checkpoint inventory."
+    },
+    {
+      "fact": "EOG architecture-gate status",
+      "code_or_artifact": "CONDITIONAL_FOR_TARGET (results/architecture_decision_matrix.json)",
+      "frontend_research_mode": "EngineeringReadinessView.tsx renders gate_status directly from the same source data (backend/app/research/engineering_readiness.py candidate.gate_status)",
+      "consistent": true
+    },
+    {
+      "fact": "Second-PPG-site architecture-gate status",
+      "code_or_artifact": "DEPRIORITIZE_FOR_TARGET",
+      "consistent": true
+    },
+    {
+      "fact": "Final architecture status",
+      "code_or_artifact": "UNRESOLVED (results/architecture_decision_matrix.json summary.final_architecture)",
+      "paper_docs": "no document claims a final architecture has been selected (verified via ml/check_claim_consistency.py FORBIDDEN pattern list AND manual grep)",
+      "consistent": true
+    },
+    {
+      "fact": "Formal Pareto status",
+      "code_or_artifact": "FORMAL_PARETO_NOT_READY",
+      "frontend": "backend/tests/test_engineering_readiness.py asserts r.formal_pareto_status == 'FORMAL_PARETO_NOT_READY'",
+      "consistent": true
+    },
+    {
+      "fact": "System average power",
+      "code_or_artifact": "NOT_READY everywhere checked (results/reference_power_budget_day11_part2.json system_total_calculated: false; backend test asserts SYSTEM_AVERAGE_POWER_NOT_READY)",
+      "consistent": true
+    },
+    {
+      "fact": "48.068 kbps raw data-rate lower bound",
+      "code_or_artifact": "results/reference_data_rate_budget_day11.json system_raw_total.value_bps = 48068, independently recomputed exact in results/independent_engineering_arithmetic_check_day12.json",
+      "backend": "backend/app/research/engineering_readiness.py line 111 hardcodes a FALLBACK default of 48068 if 'value_bps' key is missing from the source JSON - a latent duplicate-constant risk (see audit finding ENG-1), not a currently-active contradiction since the key IS present",
+      "consistent": "currently yes; fragile (see finding)"
+    },
+    {
+      "fact": "Interaction result classification",
+      "code_or_artifact": "approximately_additive_or_unresolved (results/sleep_edf_interaction_resp_day10.json)",
+      "architecture_matrix": "'approximately additive/unresolved' restated in global_preconditions.interaction_note",
+      "paper_docs": "same phrase throughout docs/FURKAN_SCIENTIFIC_SOURCE_PACKAGE_DAY13.md and docs/INTERACTION_EXPERIMENT_RESULTS_DAY10.md",
+      "consistent": true
+    },
+    {
+      "fact": "Digital Twin validation status",
+      "code_or_artifact": "no training/validation artifact exists for a Digital Twin anywhere in results/",
+      "frontend": "Digital Twin panel is described as a conceptual/mock-data-driven UI feature, not backed by a trained model (backend/app/ml/models.py DigitalTwinNet class exists but is never trained or loaded in any inference path)",
+      "consistent": true,
+      "caveat": "Class name 'DigitalTwinNet' existing in code could itself read as an implicit claim if surfaced without context - verified it is not surfaced in any current-facing document as 'trained' or 'validated'."
+    }
+  ],
+  "n_facts_checked": 11,
+  "n_contradictions_found": 0,
+  "n_fragile_but_currently_consistent": 1,
+  "overall_status": "NO_ACTIVE_CROSS_LAYER_CONTRADICTIONS_FOUND"
+}

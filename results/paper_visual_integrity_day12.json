@@ -1,0 +1,24 @@
+{
+  "purpose": "Audit of every scientific figure-source and paper-table artifact for value provenance, primary/secondary separation, cross-metric ranking, correct n, and visibility of negative/fragile results.",
+  "figure_source_checks": {
+    "n_files": 9,
+    "all_have_sample_unit": true,
+    "all_have_claim_boundary": true,
+    "all_have_provenance": true,
+    "primary_secondary_pooling_found": false,
+    "mae_macro_f1_mixed_in_one_series": false,
+    "ptt_fragility_visible": "yes - figure_C explicitly includes s2_with_without and leave_one_subject_out, with claim_boundary requiring individual subject points (no mean+CI bar)",
+    "n3_regression_visible": "yes - figure_G includes n3_false_positive_breakdown and an explicit claim_boundary stating N3 regresses and must not be omitted",
+    "interaction_unresolved_visible": "yes - figure_I's claim_boundary explicitly forbids captioning as 'no interaction' or 'synergy found'",
+    "seed_vs_population_variability_labeled": "yes in every figure's uncertainty_meaning field"
+  },
+  "paper_table_checks": {
+    "n_tables": 5,
+    "all_have_provenance_field": true,
+    "table2_no_cross_metric_ranking_column": true,
+    "table2_verified_note": "header is [experiment_id, metric, baseline_value, candidate_value, effect, effect_direction, evidence_strength] - each row keeps its own metric label, no combined rank/score column",
+    "values_traced_to_canonical_source": "yes - every table built by ml/build_paper_science_tables.py directly from results/*.json, no hand-typed duplicate constants found on inspection"
+  },
+  "n_issues_found": 0,
+  "overall_status": "PAPER_VISUALS_INTEGRITY_OK"
+}

@@ -1,0 +1,41 @@
+{
+  "title": "PPG-DaLiA: capacity-controlled IMU marginal value",
+  "metric": "MAE (bpm), lower is better",
+  "sample_unit": "training seed (n=5); each point is one independently-initialized model on the SAME held-out subjects",
+  "series": {
+    "A_cap (capacity-matched PPG-only)": {
+      "seed42": 7.558364391326904,
+      "seed43": 7.838508129119873,
+      "seed44": 7.554868698120117,
+      "seed45": 7.574195861816406,
+      "seed46": 8.538811683654785
+    },
+    "A_original_uncontrolled (recomputed)": {
+      "seed42": 8.969229698181152,
+      "seed43": 9.468905448913574,
+      "seed44": 8.968219757080078,
+      "seed45": 8.811178207397461,
+      "seed46": 9.21359920501709
+    },
+    "B (PPG+IMU)": {
+      "seed42": 7.0128560066223145,
+      "seed43": 7.109114646911621,
+      "seed44": 7.282139778137207,
+      "seed45": 7.1660990715026855,
+      "seed46": 7.46796178817749
+    },
+    "C (PPG+shuffled IMU)": {
+      "seed42": 7.882018566131592,
+      "seed43": 8.215158462524414,
+      "seed44": 8.142921447753906,
+      "seed45": 7.641919136047363,
+      "seed46": 8.03761100769043
+    }
+  },
+  "uncertainty_meaning": "error bars = sample SD (ddof=1) across the 5 seeds, NOT a population confidence interval",
+  "claim_boundary": "A_cap vs B is the capacity-fair comparison; do not visually emphasize the original uncontrolled A vs B gap as the headline.",
+  "provenance": [
+    "results/ppg_dalia_capacity_control.json",
+    "results/ppg_dalia_imu_multiseed_replication.json"
+  ]
+}
