@@ -1,0 +1,30 @@
+{
+  "dataset": "QDE (existing file, new experiment: QDE V2 = leg BioZ)",
+  "source": "datasets/qde-bioimpedance/raw/dehydration_estimation.csv (already present in repo from an earlier sprint)",
+  "verification_method": "Direct read of the actual CSV header and rows this sprint (python csv.DictReader), not re-derived from documentation alone.",
+  "historical_experiment_reconstruction": {
+    "loader": "ml/datasets/qde_bioimpedance.py",
+    "trainer": "ml/train_bioimpedance.py",
+    "old_target": "total body water using InBody 720 [l] (absolute TBW, liters)",
+    "old_features": "5 segmental bio-impedance (right arm, left arm, trunk, right leg, left leg, all at 1000 kHz) + 11 skin temperature sites = 16 features",
+    "old_split_evaluation": "Leave-one-subject-out CV (10 subjects), small MLP (16->32->16->1)",
+    "old_result_location": "No archived results/*.json exists for this historical run - the result is documented narratively in ml/train_bioimpedance.py's docstring and datasets/qde-bioimpedance/README.md ('a small MLP trained with leave-one-subject-out cross-validation, reframed to predict each subject's fluid change from their own baseline'), reconstructed from source this sprint rather than from a missing artifact.",
+    "known_limitations_documented": "10 subjects is explicitly called out as small in the trainer's own docstring; result explicitly framed as 'the real signal carries real information,' not a production accuracy estimate.",
+    "not_overwritten_or_reinterpreted": true
+  },
+  "actual_file_facts": {
+    "exact_columns_verified": ["id", "age [years]", "height [cm]", "running speed [km/h]", "running interval", "weight measured using Kern DE 150K2D [kg]", "weight measured using InBody 720 [kg]", "total body water using InBody 720 [l]", "impedance right arm at 1000kHz [Ohm]", "impedance left arm at 1000kHz [Ohm]", "impedance trunk at 1000kHz [Ohm]", "impedance right leg at 1000kHz [Ohm]", "impedance left leg at 1000kHz [Ohm]", "temperature ear/hand/foot/chest/back/upper-lower arm/upper-lower leg [degree C] (11 sites)", "sweat chloride/osmolality", "salivary amylase/chloride/cortisol/cortisone/osmolality/potassium/protein"],
+    "subject_count": 10,
+    "rows_per_subject": 9,
+    "total_rows": 90,
+    "missing_kern_weight_rows": 0,
+    "missing_tbw_rows": 0,
+    "excitation_frequency": "1000 kHz (1 MHz) - single-frequency BIA, verified from the exact column name, NOT a spectroscopy sweep (unlike LBNP's 100-frequency EIS)",
+    "no_explicit_elapsed_time_column": "There is no literal 'elapsed time [min]' column; 'running interval' (0-8) and 'running speed [km/h]' are the actual protocol-progression fields present, verified directly from the header. Treated as the master prompt's 'elapsed time'/'exercise interval'/'treadmill speed' exclusions."
+  },
+  "eligibility": {
+    "rule": "Require both Kern weight and InBody TBW present at every interval for LOSO to have a complete per-subject trajectory",
+    "n_eligible": 10,
+    "excluded": "None - all 10 subjects have complete data for all 9 points, directly confirmed by row-count and null-check this sprint."
+  }
+}

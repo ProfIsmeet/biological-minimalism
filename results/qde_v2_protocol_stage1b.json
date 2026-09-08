@@ -1,0 +1,59 @@
+{
+  "dataset_id": "QDE_V2_leg_bioz",
+  "dataset_version": "PhysioNet QDE 1.0.0 (same file), new experiment",
+  "target": "Baseline-relative Kern-scale body-mass change (delta_weight_kg = weight_at_interval_i - weight_at_baseline), treated explicitly as a body-mass-loss/dehydration proxy under this specific controlled-exercise protocol, NOT as an estimate of total body water or a general hydration biomarker.",
+  "target_limitation": "Acute mass loss during 120 minutes of running without fluid intake is dominated by sweat/water loss but is not purely water - some contribution from respiratory water loss and substrate metabolism is physiologically plausible and not separable from this dataset alone. Disclosed explicitly, not assumed away.",
+  "reference": "Kern DE 150K2D precision scale (not InBody)",
+  "explicit_exclusions_from_predictors": [
+    "weight measured using Kern DE 150K2D [kg] (the target itself)",
+    "weight measured using InBody 720 [kg] (EXCLUDE_CIRCULARITY - same BIA-family device as the impedance features)",
+    "total body water using InBody 720 [l] (EXCLUDE_CIRCULARITY - the OLD target; excluding it from the NEW target's inputs avoids leakage between the two experiments)",
+    "running interval (EXCLUDE_LEAKAGE - protocol progression)",
+    "running speed [km/h] (EXCLUDE_LEAKAGE - protocol progression / treadmill speed)"
+  ],
+  "feature_sets": {
+    "A": ["impedance right arm at 1000kHz [Ohm] (as baseline-relative delta)", "impedance left arm at 1000kHz [Ohm] (delta)", "impedance trunk at 1000kHz [Ohm] (delta)"],
+    "B": "A + impedance right leg at 1000kHz [Ohm] (delta) + impedance left leg at 1000kHz [Ohm] (delta)",
+    "C": {
+      "architecture": "identical dimensionality to B",
+      "derangement": "post-baseline leg-impedance-delta correspondence destroyed WITHIN subject (drawn from a different interval of the same subject's real leg-impedance trajectory)",
+      "bilateral_choice": "Both legs deranged JOINTLY (using the same donor interval for right+left leg together), not independently - preserving plausible bilateral physiological structure (real legs do not develop uncorrelated fluid-loss impedance changes at the same instant), per the master prompt's stated preference.",
+      "frozen_before_training": true
+    }
+  },
+  "baseline_normalization": {
+    "personal_baseline": "interval 0 (pre-exercise) impedance/weight value per subject",
+    "delta_calculation": "value_at_interval_i minus value_at_interval_0, per subject, per channel",
+    "baseline_point_treatment": "Interval 0 itself is retained as a training point with delta=0 by definition (not dropped), consistent with treating it as real data rather than a special case.",
+    "scaling": "Per-feature z-score using ONLY the training folds' statistics (never the held-out subject's own values) - explicit anti-leakage rule for the LOSO normalization.",
+    "leakage_guard": "No held-out subject's measurements (including its own baseline) ever contribute to any training-fold normalization statistic."
+  },
+  "evaluation": {
+    "outer_scheme": "LOSO (n=10)",
+    "inner_validation": "Nested leave-one-subject-out WITHIN the 9 training subjects for any hyperparameter choice (e.g. ridge alpha) - chosen over a fixed held-out validation subject because n=9 training subjects is too small to sacrifice one permanently to validation; nested LOSO reuses all 9 for both roles across the inner loop, standard practice for small-n regression.",
+    "model_class_constraint": "Small model family only, frozen before training: ridge regression (elastic-net as an alternative if L1 sparsity is later motivated) is the PRIMARY model class for A/B/C, given n=90 rows across 10 subjects. A small MLP is NOT planned given this project's OWN prior QDE trainer already found a bigger network unnecessary/inappropriate at this scale (ml/train_bioimpedance.py's own docstring reasoning, reused here rather than re-litigated) - keeping A/B/C on the SAME simple model class keeps the comparison capacity-fair by construction (ridge is not more flexible for more features unless features are more predictive)."
+  },
+  "circularity_analysis": {
+    "old_target_inbody_tbw": "InBody TBW is computed by the InBody 720 device using ITS OWN bio-impedance measurement internally - training a BIA-feature model to predict a BIA-DERIVED target is close to definitionally circular (the target is a transformed version of a highly correlated measurement of the same underlying quantity via the same technique).",
+    "new_target_kern_scale_delta_weight": "Kern DE 150K2D is a mechanical/strain-gauge precision scale - a physically independent measurement principle from bio-impedance. Body-mass change is a real, externally-measurable physical quantity that bio-impedance may or may not usefully predict, without the target itself being derived from impedance.",
+    "residual_dependency_disclosed": "Body mass change and body-water-related impedance change share a common physiological CAUSE (dehydration), so some correlation is expected and desired - this is NOT the same as circularity (target computed from the input), but the two are not fully independent phenomena either. This is stated explicitly, not claimed as zero physiological dependence, per the master prompt's explicit instruction."
+  },
+  "primary_metric": "MAE (kg, baseline-relative body-mass change)",
+  "secondary_metrics": ["RMSE (kg)"],
+  "capacity_control": "A and B use the same ridge-regression model class; B's larger input dimensionality (5 vs 3 features) is disclosed, not hidden - ridge's effective capacity scales with regularization strength (tuned identically via the nested LOSO inner loop for both), not raw parameter count, so the A-vs-B comparison is about information content of the added leg channels, not raw capacity.",
+  "eligibility_rules": ["Kern weight present at every interval for the subject", "InBody TBW present at every interval (for old-target compatibility checks only, not a B/C requirement)"],
+  "leakage_exclusions": ["kern_scale_weight (target)", "inbody_weight", "inbody_tbw", "running_interval", "running_speed_kmh"],
+  "subject_sensitivity": "Report per-subject A-vs-B delta for all 10 subjects (LOSO gives every subject a held-out evaluation), favorable-direction count out of 10, dominance/concentration - defined the same way as this project's existing PTT/Sleep-EDF small-N subject reporting, given the shared n<=10ish scale.",
+  "negative_result_policy": {
+    "if_candidate_helps": "Report as: 'bilateral leg bio-impedance added information about exercise-induced, baseline-relative body-mass change beyond arm+trunk impedance alone, in this n=10 cohort.'",
+    "if_candidate_does_not_help": "Report as a real negative result: legs did not add information beyond arm+trunk in this protocol/cohort.",
+    "if_shuffled_control_equals_candidate": "Apparent leg-impedance benefit attributable to added feature-count/regularization-tuning freedom, not genuine temporal correspondence between leg impedance and mass loss.",
+    "if_subject_heterogeneity_dominates": "Report the dominant subject(s) explicitly; QDE's n=10 makes this especially likely and must not be averaged away."
+  },
+  "forbidden_claims": ["Leg BioZ measures microgravity fluid shift.", "QDE V2 proves total-body-water estimation.", "This experiment is independent of the historical QDE TBW result (both use the same underlying file and subjects - not a second dataset)."],
+  "implementation_cost": "LOW (data already local, tabular, tiny)",
+  "workflow_dependency": "None",
+  "status": "PROTOCOL_FROZEN",
+  "classification": "GO_WITH_LIMITATIONS",
+  "classification_reason": "All fields verified directly from the actual CSV; complete data for all 10 subjects; genuine (if not zero) reduction in circularity vs. the old InBody-TBW target; frozen small-model-class LOSO design appropriate to n=10. Classified WITH_LIMITATIONS (not plain GO) because n=10 is inherently a small-N cohort where any single-experiment finding carries limited statistical weight, exactly as already disclosed for this project's existing QDE and PTT (n=4) work - not a new limitation, but one that must be carried forward explicitly for this new experiment too."
+}
