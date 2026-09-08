@@ -98,6 +98,16 @@ Evidence-backed answers. Every answer distinguishes **proven** / **supported-wit
 
 ## Day 8/9 Canonical Integration — Updated Sleep Answers
 
+> **Stage 1A update (Day 12, H1/H2 remediation):** the primary A/B macro-F1
+> numbers quoted below are historical (pre-seedfix). A corrected,
+> seed-controlled rerun exists for Primary A/B only (0.7365/0.7647, +0.0282,
+> 4/5 seeds, SC4011 still dominant) — cite that for the headline going
+> forward. See `docs/SLEEP_V1_V2_CITATION_MAPPING_STAGE1A.md`. The
+> shuffled-EOG control and secondary-holdout numbers below have **not** been
+> rerun under the corrected protocol and remain historical evidence; do not
+> present them as if they were measured under the same protocol as the
+> corrected Primary A/B headline.
+
 After merging Ismet's shuffled-EOG control, per-subject decomposition, and prospective
 secondary holdout, the strongest defensible answers to the sleep line of attack are:
 

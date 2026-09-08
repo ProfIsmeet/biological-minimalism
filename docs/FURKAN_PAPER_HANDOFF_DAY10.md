@@ -4,6 +4,17 @@ Extends `docs/FURKAN_PAPER_HANDOFF_CANONICAL_DAY9.md`. Day 10 adds reproducibili
 evidence and one interaction experiment. **No canonical metric changed.** Nothing
 below upgrades a prior claim.
 
+> **Stage 1A update (Day 12, H1/H2 remediation):** the Sleep-EDF Primary A/B
+> macro-F1 values below (0.7473 / 0.7693, from this doc's shared M0/M_A
+> baseline) are the **historical (pre-seedfix)** numbers. A corrected,
+> seed-controlled rerun exists for Primary A/B only — **cite the corrected
+> V2 numbers (0.7365 / 0.7647, +0.0282) for the headline going forward**; see
+> `docs/SLEEP_V1_V2_CITATION_MAPPING_STAGE1A.md` for the full mapping. The
+> interaction experiment (M0/M_A/M_B/M_AB) below has **not** been rerun under
+> the corrected protocol and remains historical-protocol evidence only —
+> do not combine its M_A/M_B/M_AB legs with the corrected V2 Primary A/B
+> values in any derived comparison.
+
 ## New writable sections (Day 10)
 
 ### Methods — Reproducibility (new, writable)
