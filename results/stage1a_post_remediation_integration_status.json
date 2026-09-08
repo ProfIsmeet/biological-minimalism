@@ -1,0 +1,61 @@
+{
+  "stage": "STAGE_1A_POST_REMEDIATION_INTEGRATION",
+  "source_refs": {
+    "canonical": {"branch": "origin/day11-canonical-integration", "sha": "169f99df2d0e2d4b44fdcfdc7b8da7b1a8768d30", "verified": true},
+    "claude_audit_remediation": {"branch": "origin/day12-audit-remediation", "sha": "45d99a4a521d0c97eab4273ed662a8ae8f9a37d3", "verified": true},
+    "ismet_h1_h2_remediation": {"branch": "origin/day12-sleep-scientific-remediation", "sha": "0e03c63729ce7a1e374edd978ef55f9edd45f435", "verified": true},
+    "support_base": {"branch": "origin/day12-14-ismet-support-audit", "sha": "f2d895ebc32307c8d8dee23c559c2b8f15ccbddc", "verified": true, "role": "shared merge-base of the two remediation branches"},
+    "scientific_parallel_historical": {"branch": "origin/day11-14-scientific-parallel", "sha": "983720dc2c629f18e64ad6e86bbad2070b947e97", "verified": true, "role": "historical only, not merged this stage"},
+    "out_of_scope_parallel_branch": {"branch": "origin/stage1b-dataset-expansion-prep", "sha": "cd92836c6f3353d4c1a5b6754bee34d7054c2333", "role": "intentional parallel Stage 1B track, confirmed by Emir; NOT merged, NOT inspected beyond ancestry check"}
+  },
+  "integration_branch": "day12-post-remediation-integration",
+  "integration_head": "4bcfd1a7b2c404e106c1d23c94fb9ebff0bcbf29",
+  "merge_strategy": "clean git merge --no-ff of 0e03c63 onto 45d99a4; zero file overlap between the two branches (verified via git-merge-tree dry run before merging), so no manual conflict resolution was required",
+  "h1_status": "H1_CLOSED_WITH_UPDATED_NUMBERS",
+  "h1_scope": "Primary A/B only (10 seedfix_v2 checkpoints, 5 seeds x 2 configs). Shuffled-EOG control C and interaction M_B/M_AB are PENDING_FOLLOWUP.",
+  "h2_status": "H2_CLOSED_METADATA_ONLY",
+  "sleep_v1_status": "HISTORICAL_PRESERVED_NOT_DEPRECATED",
+  "sleep_v2_primary_ab_status": "V2_AVAILABLE_AND_PREFERRED",
+  "sleep_v2_control_status": "V2_PENDING_FOLLOWUP",
+  "sleep_v2_interaction_status": "V2_PENDING_FOLLOWUP",
+  "ppg_headline_status": "UNCHANGED_CAPACITY_CONTROLLED_A_cap_TO_B_0.605_BPM_5_OF_5_SEEDS",
+  "checkpoint_historical_external_count": 60,
+  "checkpoint_v2_local_count": 10,
+  "checkpoint_v2_external_status": "NOT_YET_ARCHIVED_EXTERNALLY",
+  "science_candidate_status": "SCIENTIFIC_FREEZE_CANDIDATE_READY_WITH_LIMITATIONS",
+  "project_final_freeze_status": "NOT_YET_COMPLETE",
+  "project_final_freeze_blockers": [
+    "corrected shuffled-EOG control (V2 C) and corrected interaction (V2 M_B/M_AB) remain PENDING_FOLLOWUP",
+    "independent Codex re-audit of this integration branch has not yet occurred",
+    "final architecture selection remains UNRESOLVED",
+    "formal Pareto frontier remains NOT_READY",
+    "system average power and system mass remain NOT_READY",
+    "remaining Day-13/14 packaging work not started"
+  ],
+  "architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY",
+  "system_power_status": "NOT_READY",
+  "system_mass_status": "NOT_READY",
+  "codex_reaudit_ready": true,
+  "codex_reaudit_handoff": "docs/CODEX_STAGE1A_POST_REMEDIATION_REAUDIT_HANDOFF.md",
+  "tests": {
+    "backend": {"passed": 158, "failed": 0, "skipped": 0, "command": "cd backend && .venv/bin/python -m pytest -q", "note": "145 pre-existing + 13 new adversarial Sleep-version-guard tests"},
+    "ml": {"passed": 285, "failed": 0, "skipped": 24, "command": ".venv-integration/bin/python -m pytest ml/tests -q", "note": "mne/pandas/scikit-learn/tqdm/wfdb were installed into .venv-integration this sprint (were missing at session start); 285/24 vs. the pre-integration 273/21 reflects Ismet's +15 new H1/H2 seeding-protocol tests, all passing; skips are dataset-dependent tests requiring raw data not committed to the repo"},
+    "claim_consistency": {"result": "STRUCTURED_TRACEABILITY_AND_FORBIDDEN_PATTERN_CHECK_PASS", "command": ".venv-integration/bin/python ml/check_claim_consistency.py"},
+    "decision_inputs": {"result": "PASS_NO_DRIFT", "command": "cd backend && .venv/bin/python -m app.research.decision_inputs", "note": "regenerated results/pareto_decision_inputs.json is byte-identical (no git diff) -- confirms Sleep V1/V2 integration did not perturb the decision-inputs pipeline"},
+    "frontend_typecheck": {"result": "PASS", "command": "cd frontend && npx tsc --noEmit"},
+    "frontend_lint": {"result": "PASS", "command": "cd frontend && npx eslint src/components/research/ResearchMode.tsx src/lib/types.ts"},
+    "frontend_build": {"result": "PASS", "command": "cd frontend && npm run build"},
+    "api_live_validation": {"result": "PASS", "note": "backend started on :8000, GET /research/experiments/sleep-edf-eeg-eog-ablation returned 200 with correct V1/V2 controlled_comparisons and sleep_v1_v2_version_state breakdown over real HTTP; /research/summary, /research/decision-inputs, /research/engineering-readiness all 200"},
+    "browser_validation": {"result": "PASS", "note": "chrome-devtools MCP against a disposable frontend dev server (localhost:3098, CORS temporarily allow-listed then reverted before commit). /research page rendered zero console errors; expanded Sleep-EDF card confirmed HEADLINE/HISTORICAL(V1)/PENDING badges, the sleep_v1_v2_version_state table, and the forbidden-mixed-version note text, all matching the API JSON exactly. /digital-twin and /mission-overview were NOT independently re-verified live this session (unchanged by this integration; covered only by the static stale-string search)."}
+  },
+  "remaining_risks": [
+    {"severity": "MEDIUM", "risk": "Corrected seedfix_v2 still missing for shuffled-EOG C, M_B, M_AB -- fully corrected B-C and interaction remain unavailable by design (blocked, not silently derived)."},
+    {"severity": "MEDIUM", "risk": "PTT cache provenance may remain unstamped (carried forward from the prior Claude remediation sprint, not addressed this stage -- out of Stage 1A's disclosed scope)."},
+    {"severity": "LOW", "risk": "10 corrected V2 checkpoints not externally archived; only local JSON manifest with recorded hashes exists on this clone (the .pt binaries themselves are gitignored and were never present on this machine)."},
+    {"severity": "LOW", "risk": "sleep_edf_primary_seedfix_v2.json::checkpoint_manifest paths use Windows-style backslash separators, inconsistent with the historical inventory's forward-slash convention. Cosmetic only; not corrected to avoid editing Ismet's committed science artifact outside disclosed scope."},
+    {"severity": "LOW", "risk": "CUDA determinism not configured for any future GPU-based V2 retraining of C/M_B/M_AB."},
+    {"severity": "LOW", "risk": "No automated frontend test runner exists in this repo (only tsc/eslint/build); the V1/V2 UI was verified via live browser + accessibility-tree inspection this session, not an automated test."}
+  ],
+  "final_verdict": "STAGE1A_COMPLETE_WITH_LIMITATIONS_READY_FOR_CODEX_REAUDIT"
+}
