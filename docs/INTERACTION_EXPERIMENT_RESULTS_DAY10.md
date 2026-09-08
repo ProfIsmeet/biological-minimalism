@@ -57,6 +57,22 @@ The new information is entirely about M_B and M_AB, and about Resp/EOG
 interaction - it does not change the EOG marginal-value finding, its
 control, or its secondary-holdout support.
 
+## H2 correction (Day 12): Resp channel bandwidth caveat
+
+The Resp oro-nasal channel used here is natively sampled at **1 Hz**, not
+100 Hz as originally stated in the Day-10 feasibility audit (corrected in
+`docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md`). It is represented on
+the same 100 Hz tensor grid as EEG/EOG via MNE's FFT-based upsampling on
+load - the training arrays themselves are unchanged by this correction
+(the loader has always used `preload=True` and has always produced this
+exact resampled representation). The scientific consequence: despite equal
+tensor length, the Resp channel cannot carry information above ~0.5 Hz
+(its native Nyquist limit), unlike the genuinely-100-Hz EEG/EOG channels.
+This is a plausible contributing explanation for Candidate B (Resp alone)
+showing no clear benefit, and is now an explicit limitation of this
+experiment - it does **not** strengthen the interaction claim in either
+direction.
+
 ## What this experiment does NOT establish
 
 - No claim of physiological synergy or redundancy between EOG and

@@ -1,5 +1,17 @@
 # Interaction Experiment Feasibility Audit (Day 10)
 
+> **H2 CORRECTION (Day 12)**: the "same 100 Hz sample rate as EEG/EOG" claim
+> in the Candidate B row below is **wrong**. Verified directly from the EDF
+> file header: Resp oro-nasal is natively **1 Hz** (30 samples per 30s
+> record), not 100 Hz (EEG/EOG are natively 100 Hz - 3000 samples per 30s
+> record). MNE's `raw.info['sfreq']` reports a single common-grid rate for
+> all channels in the file, which obscures this - it does not mean Resp was
+> actually recorded at 100 Hz. See
+> `docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md` for the full correction.
+> The original (incorrect) sentence is left below, struck through, rather
+> than silently edited, to preserve what this audit actually said at the
+> time it gated the interaction experiment's design.
+
 Formal audit of whether a scientifically legitimate interaction experiment
 (baseline, Candidate A, Candidate B, Candidate A+B, same subjects/target/
 split, no leakage, capacity-controllable, no new dataset) exists using data
@@ -82,13 +94,13 @@ reference channel that must never be reused as a candidate predictor:
 | Target | 5-class sleep stage, human hypnogram-scored |
 | Baseline | EEG Fpz-Cz only - **existing frozen Model A** (`sleep_edf_baseline_eeg_only_seed{42-46}.pt`) |
 | Candidate A | EOG horizontal - **existing frozen Model B** (`sleep_edf_candidate_eeg_plus_eog_seed{42-46}.pt`), already validated with a matched shuffled-EOG negative control (Day 8) AND a prospective secondary holdout (Day 9) - the single most rigorously validated effect in this project |
-| Candidate B | Resp oro-nasal - **confirmed present** in every Sleep-EDFx cassette recording used by this project, same 100 Hz sample rate as EEG/EOG, genuinely measured, never used by any script in this project to date |
+| Candidate B | Resp oro-nasal - **confirmed present** in every Sleep-EDFx cassette recording used by this project, ~~same 100 Hz sample rate as EEG/EOG~~ **[H2 CORRECTION: natively 1 Hz, upsampled to the 100 Hz common grid by MNE's FFT-based resampling on load - see docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md]**, genuinely measured, never used by any script in this project to date |
 | A+B availability | Yes - EEG, EOG, and Resp all co-exist in the same PSG file for every subject |
 | Same subjects? | Yes - same frozen 12/3/3 primary split (`ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json`) |
 | Same timing? | Yes - same recording, same 30s epoch windowing |
 | Same splits? | Yes |
 | Candidate target leakage? | No - the label is a categorical stage assigned by a human expert, not a transform of any one channel. Softer concern: Resp oro-nasal is **not** one of the official AASM/R&K sleep-staging scoring channels (those are EEG+EOG+chin EMG) - unlike EOG, which legitimately was part of the official scoring protocol, Resp is a genuinely orthogonal information source with respect to how the ground-truth labels were originally produced. This makes it, if anything, the more scientifically interesting and less "expected" candidate. |
-| Preprocessing ready? | **Yes, fully** - `ml/datasets/sleep_edf.py`'s `load_dataset_windows_multi(channels=...)` already accepts an arbitrary channel tuple; passing `(EEG_CHANNEL, RESP_CHANNEL)` or `(EEG_CHANNEL, EOG_CHANNEL, RESP_CHANNEL)` requires zero loader changes. |
+| Preprocessing ready? | **Yes, fully** - `ml/datasets/sleep_edf.py`'s `load_dataset_windows_multi(channels=...)` already accepts an arbitrary channel tuple; passing `(EEG_CHANNEL, RESP_CHANNEL)` or `(EEG_CHANNEL, EOG_CHANNEL, RESP_CHANNEL)` requires zero loader changes. "Zero loader changes" is about code, not signal bandwidth - MNE's `read_raw_edf` transparently upsamples Resp's native 1 Hz to the 100 Hz common grid (see H2 correction above); this is what the interaction experiment's models were actually trained on. |
 | Architecture capacity fairness achievable? | **Yes, cleanly** - identical `SleepStageClassifier(in_channels=N)` class already used for the 1-channel and 2-channel configs; a 3-channel config is the same class, same convention, already-established capacity-fairness discipline (`capacity_confound_status: AVOIDED_BY_DESIGN` for the existing EEG/EOG pair). |
 | Checkpoint reuse possible? | **Yes, half the design is already frozen** - M0 and M_A require zero new training; only M_B (EEG+Resp) and M_AB (EEG+EOG+Resp) need new checkpoints. |
 | New training required? | Yes - 2 new configs x 5 seeds = 10 runs, reusing `train_one`/`evaluate_full` from `ml/train_sleep_edf_eeg_eog_ablation.py` unmodified. |
