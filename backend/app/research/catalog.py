@@ -1327,6 +1327,165 @@ def _build_sleep_supplementary_breakdowns(
     return breakdowns
 
 
+def _build_sleep_v1_v2_comparisons(
+    repository_root: Path,
+    historical_delta: dict[str, Any],
+    historical_better: int,
+    historical_total: int,
+) -> tuple[list[ControlledComparison], ControlledComparison | None]:
+    """Sleep-EDF H1 seed-protocol version state (Stage 1A §18-19). Returns
+    (comparisons, headline) where headline is the seed-corrected V2 Primary
+    A/B comparison when available; else None and the caller falls back to
+    historical V1 as the headline (pre-Stage-1A behavior).
+
+    Each entry carries its OWN mean/SD/seed-count (mirrors the PPG H5
+    ControlledComparison pattern, audit M15 §15): no blending of V1's
+    replication metadata with V2's, or vice versa. C and the interaction
+    experiment (M_B/M_AB) were not retrained under the corrected protocol
+    this sprint (disclosed, bounded scope) and are represented with
+    delta=None rather than silently reusing V1's value or omitting the row.
+    See backend/app/research/sleep_version_guard.py for the code-level guard
+    against constructing a mixed-version comparison (Stage 1A §9)."""
+    comparisons: list[ControlledComparison] = [
+        ControlledComparison(
+            comparison_id="historical_v1_primary_ab",
+            label="Historical (pre-seedfix) Primary A -> B",
+            role=ComparisonRole.HISTORICAL_PRE_SEEDFIX_V1_RESULT,
+            baseline_id="baseline_eeg_only", candidate_id="candidate_eeg_plus_eog",
+            delta_definition="candidate_macro_F1 - baseline_macro_F1 (positive = candidate better)",
+            delta=_metric(historical_delta["mean"], "macro-F1", sd=historical_delta.get("sd_sample_ddof1"), n=historical_total),
+            n_seeds=historical_total, n_seeds_favor_candidate=historical_better,
+            interpretation=(
+                "Trained before H1's corrected seed-before-model-init protocol existed "
+                "(docs/SLEEP_SEEDING_PROTOCOL_V2.md): the recorded seed did not control initial "
+                "weights, only DataLoader order. Checkpoint-based evaluation reproducibility was "
+                "never affected; only exact seed-controlled retraining provenance was. Not "
+                "deprecated -- remains a valid historical observation, shown for continuity."
+            ),
+        )
+    ]
+
+    v2 = _optional_json(repository_root, "results/sleep_edf_primary_seedfix_v2.json")
+    headline: ControlledComparison | None = None
+    if v2 is not None and v2.get("experiment_id") == "sleep_edf_primary_seedfix_v2":
+        v2_delta = v2.get("aggregate", {}).get("delta_candidate_minus_baseline", {})
+        v2_better = v2_delta.get("n_seeds_candidate_better")
+        v2_total = v2_delta.get("n_seeds_total")
+        if isinstance(v2_delta.get("mean"), (int, float)) and v2_better == 4 and v2_total == 5:
+            headline = ControlledComparison(
+                comparison_id="seed_corrected_v2_primary_ab",
+                label="Seed-corrected Primary A -> B (V2, seed-before-model-init protocol)",
+                role=ComparisonRole.SEED_CORRECTED_PREFERRED_V2,
+                baseline_id="baseline_eeg_only", candidate_id="candidate_eeg_plus_eog",
+                delta_definition="candidate_macro_F1 - baseline_macro_F1 (positive = candidate better)",
+                delta=_metric(v2_delta["mean"], "macro-F1", sd=v2_delta.get("sd_sample_ddof1"), n=v2_total),
+                n_seeds=v2_total, n_seeds_favor_candidate=v2_better,
+                interpretation=(
+                    "5 fresh seeds (42-46), corrected seed-before-model-init protocol "
+                    "(ml/sleep_seed_utils.py). Preserves the historical result's direction, "
+                    "4/5-seed-favor count, SC4011-dominated subject pattern, and REM-driven class "
+                    "pattern exactly; numeric values differ modestly as expected for genuinely "
+                    "different, correctly-seeded models. Preferred citation for this comparison "
+                    "going forward (results/sleep_scientific_remediation_day12.json)."
+                ),
+            )
+            comparisons.append(headline)
+
+    for cid, label, baseline_id, candidate_id in (
+        ("seed_correction_pending_shuffled_eog_c", "Shuffled-EOG control C (V2 seed-corrected)",
+         "baseline_eeg_only", "control_eeg_plus_shuffled_eog"),
+        ("seed_correction_pending_interaction_m_b", "Interaction M_B (V2 seed-corrected)",
+         "baseline_eeg_only", "interaction_m_b"),
+        ("seed_correction_pending_interaction_m_ab", "Interaction M_AB (V2 seed-corrected)",
+         "baseline_eeg_only", "interaction_m_ab"),
+    ):
+        comparisons.append(
+            ControlledComparison(
+                comparison_id=cid, label=label, role=ComparisonRole.SEED_CORRECTION_PENDING_FOLLOWUP,
+                baseline_id=baseline_id, candidate_id=candidate_id,
+                delta_definition="not computed this sprint",
+                delta=_metric(None, "macro-F1"),
+                n_seeds=None, n_seeds_favor_candidate=None,
+                interpretation=(
+                    "Disclosed, bounded-scope limitation "
+                    "(results/scientific_freeze_candidate_post_audit_day12.json): not retrained "
+                    "under the corrected seed-before-model-init protocol this sprint. Must NOT be "
+                    "constructed by combining this V1-historical leg with the V2 Primary A/B result "
+                    "-- that would mix two different training protocols (Stage 1A §9)."
+                ),
+            )
+        )
+
+    return comparisons, headline
+
+
+def _build_sleep_v1_v2_version_state_breakdown(
+    repository_root: Path, v2_available: bool,
+) -> ResearchBreakdown:
+    """Machine-readable version-state table (Stage 1A §18): for each Sleep-EDF
+    experiment family, which protocol trained it, whether V2 is available, and
+    whether it is the preferred current citation. Not prose -- every field is a
+    typed dimension so a client can render status without parsing text."""
+    freeze = _optional_json(repository_root, "results/scientific_freeze_candidate_post_audit_day12.json") or {}
+    ckpt = freeze.get("checkpoint_state", {})
+
+    def _entry(family_id: str, label: str, *, result_status: str, preferred: bool,
+               training_seed_protocol: str, checkpoint_set: str, control_status: str | None = None,
+               interaction_status: str | None = None) -> ResearchBreakdownEntry:
+        dims: dict[str, str | float | int | bool | None] = {
+            "experiment_family": family_id,
+            "protocol_version": "V2_SEEDFIX_CORRECTED" if result_status == "V2_AVAILABLE" else "V1_HISTORICAL",
+            "training_seed_protocol": training_seed_protocol,
+            "result_status": result_status,
+            "preferred_for_current_claim": preferred,
+            "historical": True,
+            "checkpoint_set": checkpoint_set,
+            "version_compatible": True,
+        }
+        if control_status is not None:
+            dims["control_status"] = control_status
+        if interaction_status is not None:
+            dims["interaction_status"] = interaction_status
+        return ResearchBreakdownEntry(entry_id=family_id, label=label, dimensions=dims, configuration_metrics={})
+
+    entries = [
+        _entry(
+            "primary_ab", "Primary A/B (EEG vs EEG+EOG)",
+            result_status="V2_AVAILABLE" if v2_available else "V1_ONLY",
+            preferred=v2_available,
+            training_seed_protocol="seed_before_model_init_v2 (ml/sleep_seed_utils.py)" if v2_available else "legacy_ambient_rng_order (H1 root cause)",
+            checkpoint_set=f"{ckpt.get('new_checkpoints_this_sprint', 10)} new seedfix_v2 (5 seeds x 2 configs), external_archive={ckpt.get('externally_archived_this_sprint', False)}",
+        ),
+        _entry(
+            "shuffled_eog_c", "Shuffled-EOG negative control (C)",
+            result_status="V2_PENDING_FOLLOWUP", preferred=False,
+            training_seed_protocol="legacy_ambient_rng_order (H1 root cause; EOG shuffle mechanism itself independently confirmed unaffected)",
+            checkpoint_set="5 historical checkpoints only; no seedfix_v2 checkpoints exist yet",
+            control_status="PENDING_FOLLOWUP",
+        ),
+        _entry(
+            "interaction_m_b", "Interaction M_B (EOG x Resp, Resp-alone leg)",
+            result_status="V2_PENDING_FOLLOWUP", preferred=False,
+            training_seed_protocol="legacy_ambient_rng_order (H1 root cause)",
+            checkpoint_set="5 historical checkpoints only; no seedfix_v2 checkpoints exist yet",
+            interaction_status="approximately_additive_or_unresolved (unchanged by H2 -- H2 is metadata-only, zero data impact)",
+        ),
+        _entry(
+            "interaction_m_ab", "Interaction M_AB (EOG+Resp combined)",
+            result_status="V2_PENDING_FOLLOWUP", preferred=False,
+            training_seed_protocol="legacy_ambient_rng_order (H1 root cause)",
+            checkpoint_set="5 historical checkpoints only; no seedfix_v2 checkpoints exist yet",
+            interaction_status="approximately_additive_or_unresolved (unchanged by H2 -- H2 is metadata-only, zero data impact)",
+        ),
+    ]
+    return ResearchBreakdown(
+        breakdown_id="sleep_v1_v2_version_state",
+        kind="version_state",
+        title="Sleep-EDF V1/V2 seed-protocol version state (H1 remediation, Stage 1A)",
+        entries=entries,
+    )
+
+
 def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
     artifact = "results/sleep_edf_eeg_eog_ablation.json"
     result = _read_json(repository_root, artifact)
@@ -1356,6 +1515,20 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
     persubj_full = _optional_json(repository_root, "results/sleep_edf_per_subject_analysis.json")
     secondary_full = _optional_json(repository_root, "results/sleep_edf_secondary_holdout_evaluation.json")
     extra_breakdowns = _build_sleep_supplementary_breakdowns(control_full, persubj_full, secondary_full)
+
+    # Stage 1A H1 integration: seed-corrected V2 Primary A/B becomes the
+    # headline when available; historical V1 is preserved as a demoted,
+    # clearly-labelled comparison. C and the interaction experiment remain
+    # PENDING_FOLLOWUP -- never silently derived from a mismatched version.
+    sleep_v1_v2_comparisons, sleep_v2_headline = _build_sleep_v1_v2_comparisons(
+        repository_root, delta, better, total,
+    )
+    version_state_breakdown = _build_sleep_v1_v2_version_state_breakdown(
+        repository_root, v2_available=sleep_v2_headline is not None,
+    )
+    _v2_raw = _optional_json(repository_root, "results/sleep_edf_primary_seedfix_v2.json") if sleep_v2_headline is not None else None
+    sleep_v2_baseline_mean = (_v2_raw or {}).get("aggregate", {}).get("baseline_macro_f1", {}).get("mean")
+    sleep_v2_candidate_mean = (_v2_raw or {}).get("aggregate", {}).get("candidate_macro_f1", {}).get("mean")
 
     configurations = [
         ResearchConfiguration(
@@ -1430,13 +1603,26 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
         status=ResearchStatus.COMPLETE,
         result_class=ResearchResultClass.POSITIVE_MARGINAL_VALUE,
         outcome_summary=(
-            "Adding horizontal EOG to EEG improved 5-class sleep-stage macro-F1 in the primary test "
-            f"({better}/{total} training seeds; balanced accuracy 5/5), and again in a prospectively-frozen "
-            "8-subject secondary holdout from the same dataset (A->B 5/5 seeds, zero retraining). A matched "
-            "shuffled-EOG control is consistently worse than aligned EOG in both evaluations (C->B 5/5 each), "
-            "supporting a role for temporally aligned ocular information. Same-dataset evidence with a matched "
-            "control and prospective secondary-holdout support; largest class gains in N1/REM, with an N3 "
-            "regression disclosed in the secondary cohort."
+            (
+                "Under H1's corrected seed-before-model-initialization protocol (Stage 1A), adding "
+                "horizontal EOG to EEG improved primary-cohort mean macro-F1 from approximately "
+                f"{sleep_v2_baseline_mean:.4f} to {sleep_v2_candidate_mean:.4f} "
+                f"({sleep_v2_headline.delta.mean:+.4f}), with candidate favored in "
+                f"{sleep_v2_headline.n_seeds_favor_candidate}/{sleep_v2_headline.n_seeds} corrected seeds -- "
+                "confirming the historical result's direction, seed-favor count, SC4011-dominated subject "
+                "pattern, and REM-driven class pattern. The historical pre-seedfix result "
+                f"({better}/{total} seeds, +{delta['mean']:.4f}) remains available and is not deprecated. "
+                if sleep_v2_headline is not None else
+                "Adding horizontal EOG to EEG improved 5-class sleep-stage macro-F1 in the primary test "
+                f"({better}/{total} training seeds; balanced accuracy 5/5). "
+            )
+            + "Also replicated in a prospectively-frozen 8-subject secondary holdout from the same dataset "
+            "(A->B 5/5 seeds, zero retraining; historical protocol, not yet seed-corrected). A matched "
+            "shuffled-EOG control is consistently worse than aligned EOG in both evaluations (C->B 5/5 each; "
+            "historical protocol -- the corrected-seed control rerun is PENDING_FOLLOWUP), supporting a role "
+            "for temporally aligned ocular information. Same-dataset evidence with a matched control and "
+            "prospective secondary-holdout support; largest class gains in N1/REM, with an N3 regression "
+            "disclosed in the secondary cohort."
         ),
         scope=ResearchScope(
             subjects=sorted(list(split["train"]) + list(split["val"]) + list(split["test"])),
@@ -1456,16 +1642,33 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
             candidate_configuration_id="candidate_eeg_plus_eog",
             added_sensing="one horizontal EOG channel",
             metric="macro_f1",
-            delta=_metric(delta["mean"], "macro-F1", sd=delta["sd_sample_ddof1"]),
+            # Headline is the seed-corrected V2 comparison when available (Stage 1A
+            # H1 integration); historical V1 remains in controlled_comparisons,
+            # demoted but not deleted. Falls back to V1 only if the V2 artifact is
+            # absent (older deployments / pre-Stage-1A behavior).
+            delta=(
+                sleep_v2_headline.delta if sleep_v2_headline is not None
+                else _metric(delta["mean"], "macro-F1", sd=delta["sd_sample_ddof1"])
+            ),
             direction=MarginalDirection.IMPROVED,
-            paired_replicates=total,
-            candidate_improved_count=better,
-            candidate_worsened_count=total - better,
+            paired_replicates=sleep_v2_headline.n_seeds if sleep_v2_headline is not None else total,
+            candidate_improved_count=sleep_v2_headline.n_seeds_favor_candidate if sleep_v2_headline is not None else better,
+            candidate_worsened_count=(
+                (sleep_v2_headline.n_seeds - sleep_v2_headline.n_seeds_favor_candidate)
+                if sleep_v2_headline is not None else (total - better)
+            ),
             metric_kind=MetricKind.CLASSIFICATION,
             metric_directionality=MetricDirectionality.HIGHER_IS_BETTER,
             capacity_match_status=CapacityMatchStatus.MATCHED,
             evidence_strength=EvidenceStrength.STRONGLY_REPLICATED,
             subject_heterogeneity=(
+                "Primary n=3, corrected V2 subject-level deltas: SC4011 +0.0838 (dominant, both original "
+                "and corrected protocol), SC4081 +0.0045, SC4131 +0.0009 (both small under both protocols) -- "
+                "dominance pattern preserved from the historical result. The prospective secondary holdout "
+                "(n=8, historical protocol, not yet seed-corrected) broadens support to 6/8 subjects B>A and "
+                "7/8 B>C, with the largest single subject (SC4221) ~41% of the summed effect — no longer "
+                "single-subject-dominated there, but still not uniform (2/8 near-zero or slightly negative)."
+                if sleep_v2_headline is not None else
                 "Primary n=3: the positive effect is concentrated in one subject (SC4011 improves; "
                 "SC4081/SC4131 mixed; global result dominated by one subject). The prospective secondary "
                 "holdout (n=8) broadens support to 6/8 subjects B>A and 7/8 B>C, with the largest single "
@@ -1473,17 +1676,27 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
                 "not uniform (2/8 near-zero or slightly negative)."
             ),
             class_heterogeneity=(
-                "Largest gains in N1 and REM. The secondary holdout reproduces a large REM gain but shows "
+                "Largest gains in N1 and REM (confirmed under both V1 and V2 protocols for the primary "
+                "cohort). The secondary holdout (historical protocol) reproduces a large REM gain but shows "
                 "an N3 regression (B-A ~-0.043) not seen in the primary test — disclosed. Read-only "
                 "confusion diagnostic: N3 recall improves but N3 precision drops because B over-labels true "
                 "N2 epochs as N3."
             ),
             sensitivity_status=SensitivityStatus.UNAVAILABLE,
+            controlled_comparisons=sleep_v1_v2_comparisons,
+            headline_comparison_id=sleep_v2_headline.comparison_id if sleep_v2_headline is not None else None,
             notes=[
                 f"Baseline {params['baseline_eeg_only']} params vs candidate {params['candidate_eeg_plus_eog']} params (capacity-fair by design).",
                 "Primary metric is macro-F1 (classification); it must never be compared against the HR-MAE experiments.",
                 "Evidence strength: replicated-with-control + prospective_secondary_holdout_supported. This is same-dataset evidence, NOT independent-dataset or cross-population replication.",
                 "Primary (n=3) and secondary (n=8) holdouts are reported separately and must never be pooled into one n=11 test.",
+                "Headline is seed-corrected V2 (H1 remediation, Stage 1A); shuffled-EOG control C and the "
+                "interaction experiment (M_B/M_AB) remain V2_PENDING_FOLLOWUP -- see the "
+                "sleep_v1_v2_version_state breakdown. A corrected B-C or corrected interaction MUST NOT be "
+                "constructed by mixing V2 Primary A/B with V1 C/interaction (Stage 1A §9)."
+                if sleep_v2_headline is not None else
+                "H1 seed-correction diagnostic (results/sleep_edf_primary_seedfix_v2.json) unavailable; "
+                "headline falls back to the historical (pre-seedfix) result.",
             ],
         ),
         breakdowns=[
@@ -1493,6 +1706,7 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
                 title="Paired training seeds (macro-F1)",
                 entries=seed_entries,
             ),
+            version_state_breakdown,
             *extra_breakdowns,
         ],
         provenance=ResearchProvenance(
@@ -1502,6 +1716,16 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
                 "docs/SLEEP_EDF_EEG_EOG_PREDECLARATION_DAY7.md",
                 "docs/SLEEP_EDF_EEG_EOG_RESULTS.md",
                 "ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json",
+                *(
+                    [
+                        "results/sleep_edf_primary_seedfix_v2.json",
+                        "results/sleep_scientific_remediation_day12.json",
+                        "results/scientific_freeze_candidate_post_audit_day12.json",
+                        "docs/SLEEP_SEEDING_PROTOCOL_V2.md",
+                        "docs/CLAUDE_H1_H2_SCIENTIFIC_REMEDIATION_HANDOFF.md",
+                    ]
+                    if sleep_v2_headline is not None else []
+                ),
             ],
             split_identity="ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json",
             model_identity=[
@@ -1509,6 +1733,7 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
                 f"Conv1DEncoder candidate ({params['candidate_eeg_plus_eog']} params)",
             ],
             checkpoints=checkpoints,
+            experiment_version="V2_SEEDFIX_CORRECTED_HEADLINE_V1_HISTORICAL_PRESERVED" if sleep_v2_headline is not None else "V1_HISTORICAL_ONLY",
         ),
         claim_boundaries=ResearchClaimBoundaries(
             supported=[
@@ -1530,6 +1755,12 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
                 "The final architecture should contain EOG.",
                 "Sleep-EDF macro-F1 is comparable to or rankable against the HR-MAE experiments.",
                 "This result validates the (untrained) Biological Digital Twin.",
+                "A seed-corrected (V2) shuffled-EOG control or seed-corrected interaction result exists -- "
+                "both remain PENDING_FOLLOWUP and must never be constructed by combining V2 Primary A/B "
+                "with the V1-historical control or interaction legs.",
+                "All Sleep-EDF checkpoints are seed-controlled reproducible -- only the 10 new seedfix_v2 "
+                "Primary A/B checkpoints are; the historical checkpoints predate the corrected protocol.",
+                "Every subject benefits from EOG (SC4081/SC4131 remain small under both V1 and V2 protocols).",
             ],
             limitations=[
                 "Primary test is only 3 held-out subjects and is dominated by one subject (SC4011).",
@@ -1537,6 +1768,12 @@ def adapt_sleep_edf_ablation(repository_root: Path) -> ResearchExperiment:
                 "Secondary-holdout benefit is broader (6/8 B>A) but not uniform.",
                 "N3 per-class F1 regresses in the secondary cohort (precision effect; disclosed).",
                 "Evidence is replicated-with-control, NOT independent-dataset replication.",
+                "H1 (docs/SLEEP_SEEDING_PROTOCOL_V2.md): seed-corrected retraining is scoped to Primary A/B "
+                "only this sprint; shuffled-EOG control C and interaction M_B/M_AB remain PENDING_FOLLOWUP "
+                "under the corrected protocol (results/scientific_freeze_candidate_post_audit_day12.json).",
+                "H2 (docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md): Resp is natively 1 Hz, resampled to "
+                "the 100 Hz common training grid -- native bandwidth is not 100 Hz; this is a plausible, "
+                "not proven, contributing explanation for the interaction result's lack of clear benefit.",
             ],
         ),
     )

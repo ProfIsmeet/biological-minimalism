@@ -91,11 +91,18 @@ class ResearchMetricEstimate(BaseModel):
 
 
 class ComparisonRole(StrEnum):
-    """Role of a controlled comparison in the PPG headline (audit H5 §12-15)."""
+    """Role of a controlled comparison. Originated for the PPG headline
+    (audit H5 §12-15); reused for the Sleep-EDF V1/V2 seeding-protocol
+    version state (Stage 1A, Day 12 §18) since both describe a self-contained
+    comparison that must never blend statistics from a different comparison."""
 
     PRIMARY_CONTROLLED = "PRIMARY_CONTROLLED"
     MATCHED_SHUFFLED_CONTROL = "MATCHED_SHUFFLED_CONTROL"
     HISTORICAL_CAPACITY_CONFOUNDED_RESULT = "HISTORICAL_CAPACITY_CONFOUNDED_RESULT"
+    # Sleep-EDF H1 seed-protocol versioning (Stage 1A §18-19).
+    SEED_CORRECTED_PREFERRED_V2 = "SEED_CORRECTED_PREFERRED_V2"
+    HISTORICAL_PRE_SEEDFIX_V1_RESULT = "HISTORICAL_PRE_SEEDFIX_V1_RESULT"
+    SEED_CORRECTION_PENDING_FOLLOWUP = "SEED_CORRECTION_PENDING_FOLLOWUP"
 
 
 class ControlledComparison(BaseModel):
