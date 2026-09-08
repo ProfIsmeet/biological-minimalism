@@ -43,9 +43,23 @@ halting the branch.
    - Disposition: **disclosed in the hostile review (Dimension C), not
      fixable within this dataset's size — inherent to n=10.**
 
+4. **`mne.io.read_raw_eeglab` cannot read ds003838's real `.set` files**
+   (MATLAB v7.3/HDF5 format) — found via a real `NotImplementedError` when
+   first run against the actual downloaded file, not anticipated in the
+   Stage 1B protocol design.
+   - Disposition: **FIXED** — `ml/datasets/ds003838_eeg.py` now reads the
+     file directly via `h5py` after inspecting the real HDF5 structure.
+5. **`sklearn.linear_model.LogisticRegression(multi_class=...)`** — this
+   keyword was removed in the installed scikit-learn 1.9.0 (deprecated in
+   favor of always using multinomial for solvers that support it) — found
+   via a real `TypeError` on first run.
+   - Disposition: **FIXED** — the keyword argument was removed; behavior is
+     unchanged (multinomial was already the intended and now-default
+     behavior).
+
 ## LOW
 
-4. **ds003838 loader assumes uniform montage/preprocessing across subjects**
+6. **ds003838 loader assumes uniform montage/preprocessing across subjects**
    based on one representative subject's (sub-032) BIDS sidecar (Stage 1B)
    — this sprint's `main()` DOES assert montage equality across whichever
    subjects were actually downloaded (`assert channel_names ==
@@ -55,7 +69,7 @@ halting the branch.
      65-subject uniformity still unverified (Stage 1B's own disclosed
      limitation, unchanged).**
 
-5. **QDE V2 alpha grid is a fixed, hand-picked list** (`[0.001 ... 1000.0]`)
+7. **QDE V2 alpha grid is a fixed, hand-picked list** (`[0.001 ... 1000.0]`)
    rather than a continuous search — a reasonable, common practice, but
    worth naming as a design choice rather than an exhaustively justified
    optimum.
@@ -63,13 +77,13 @@ halting the branch.
 
 ## INFO
 
-6. GalaxyPPG and LBNP access blocks are both specific to `zenodo.org` (not
+8. GalaxyPPG and LBNP access blocks are both specific to `zenodo.org` (not
    a general network failure) — reproduced independently via curl (direct
    + API) and WebFetch, with successful same-sprint control access to
    PhysioNet, GitHub, and OpenNeuro's S3 bucket. Worth investigating from a
    different network environment in a future session.
 
-7. Real per-file access to ds003838 was proven end-to-end this sprint
+9. Real per-file access to ds003838 was proven end-to-end this sprint
    (byte-exact MD5 match against the dataset's own git-annex hash for two
    real files) — this is a genuinely positive, verified feasibility signal
    for that dataset specifically, distinct from GalaxyPPG/LBNP's situation.

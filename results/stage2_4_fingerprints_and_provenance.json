@@ -19,11 +19,27 @@
     },
     {
       "dataset": "ds003838", "version": "openneuro.ds003838.v1.0.6",
-      "file": "sub-032_task-memory_eeg.set (bounded-diagnostic subject)",
+      "file": "sub-032_task-memory_eeg.set (bounded-diagnostic subject 1/3)",
       "byte_size": 1541437462,
       "md5": "f589e83435f7f9edca345c6b89afbe32",
       "source_verification": "downloaded MD5 matches the real git-annex object hash exactly - genuine byte-perfect real file",
       "source": "s3.amazonaws.com/openneuro.org/ds003838/sub-032/eeg/sub-032_task-memory_eeg.set"
+    },
+    {
+      "dataset": "ds003838", "version": "openneuro.ds003838.v1.0.6",
+      "file": "sub-033_task-memory_eeg.set (bounded-diagnostic subject 2/3)",
+      "byte_size": 1774673538,
+      "md5": "01269258ed5b4135ef840568b01764fa",
+      "source_verification": "downloaded MD5 matches the real git-annex object hash exactly - genuine byte-perfect real file",
+      "source": "s3.amazonaws.com/openneuro.org/ds003838/sub-033/eeg/sub-033_task-memory_eeg.set"
+    },
+    {
+      "dataset": "ds003838", "version": "openneuro.ds003838.v1.0.6",
+      "file": "sub-034_task-memory_eeg.set (bounded-diagnostic subject 3/3)",
+      "byte_size": 1494254561,
+      "md5": "019c28c2878fb148a2ed0dfb5b82122a",
+      "source_verification": "downloaded MD5 matches the real git-annex object hash exactly - genuine byte-perfect real file",
+      "source": "s3.amazonaws.com/openneuro.org/ds003838/sub-034/eeg/sub-034_task-memory_eeg.set"
     }
   ],
   "not_fingerprinted_this_sprint": "GalaxyPPG and LBNP raw files - Zenodo access blocked. ds003838 subjects beyond the bounded-diagnostic subset - not downloaded (see docs/DS003838_STAGE3_BOUNDED_DIAGNOSTIC.md).",

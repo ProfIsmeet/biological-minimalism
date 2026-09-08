@@ -33,7 +33,7 @@ import csv
 import re
 from pathlib import Path
 
-import mne
+import h5py
 import numpy as np
 
 SPARSE_CHANNELS = ["AF7", "AF8", "TP9", "TP10"]  # frozen, Muse-headband-matched (results/ds003838_protocol_stage1b.json)
@@ -56,17 +56,37 @@ def parse_trial_type(trial_type: str) -> tuple[str, int] | None:
     return condition, int(m.group(1))
 
 
-def load_subject_epochs(set_path: Path, events_tsv_path: Path, memory_only: bool = True) -> tuple[np.ndarray, np.ndarray, list[str]]:
+def _load_channel_names(channels_tsv_path: Path) -> list[str]:
+    with open(channels_tsv_path, newline="", encoding="utf-8") as f:
+        return [row["name"] for row in csv.DictReader(f, delimiter="\t")]
+
+
+def load_subject_epochs(set_path: Path, events_tsv_path: Path, channels_tsv_path: Path | None = None, memory_only: bool = True) -> tuple[np.ndarray, np.ndarray, list[str]]:
     """Return (epochs, labels, channel_names) for one real subject.
 
     `epochs`: float32, shape (n_epochs, n_channels, n_samples) - real raw EEG,
     no synthetic data.
     `labels`: int64, shape (n_epochs,) - digit-sequence length (5/9/13),
     memory-condition trials only if memory_only=True.
+
+    ds003838's real .set files are MATLAB v7.3 (HDF5) - EEGLAB's struct is
+    saved with a top-level `data` dataset of real shape
+    (n_samples, n_channels) float32 and a `srate` scalar, verified directly
+    by inspecting a real file's HDF5 tree this sprint. This is read directly
+    via h5py rather than mne.io.read_raw_eeglab, which does not support the
+    v7.3/HDF5 MAT format (confirmed by a real NotImplementedError this
+    sprint: "Please use HDF reader for matlab v7.3 files").
     """
-    raw = mne.io.read_raw_eeglab(str(set_path), preload=True, verbose="ERROR")
-    sfreq = raw.info["sfreq"]
-    channel_names = raw.ch_names
+    if channels_tsv_path is None:
+        channels_tsv_path = set_path.parent / (set_path.name.split("_eeg.set")[0] + "_channels.tsv")
+    channel_names = _load_channel_names(channels_tsv_path)
+
+    with h5py.File(set_path, "r") as f:
+        sfreq = float(f["srate"][0, 0])
+        data = f["data"][()]  # (n_samples, n_channels), real float32 EEG, verified shape this sprint
+    n_samples_total, n_channels = data.shape
+    assert n_channels == len(channel_names), f"{set_path}: data has {n_channels} channels but channels.tsv lists {len(channel_names)}"
+    data = data.T  # -> (n_channels, n_samples)
 
     epochs: list[np.ndarray] = []
     labels: list[int] = []
@@ -82,10 +102,9 @@ def load_subject_epochs(set_path: Path, events_tsv_path: Path, memory_only: bool
             start_sample = int(round(onset_s * sfreq))
             n_samples = int(round(EPOCH_TMAX * sfreq))
             end_sample = start_sample + n_samples
-            if end_sample > raw.n_times:
+            if end_sample > n_samples_total:
                 continue  # real edge case near recording end - skipped, not padded
-            data = raw.get_data(start=start_sample, stop=end_sample)  # (n_channels, n_samples), real volts
-            epochs.append(data.astype(np.float32))
+            epochs.append(data[:, start_sample:end_sample].astype(np.float32))
             labels.append(length)
 
     return np.stack(epochs), np.array(labels, dtype=np.int64), channel_names

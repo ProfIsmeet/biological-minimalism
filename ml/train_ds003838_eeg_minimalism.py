@@ -143,7 +143,7 @@ def main() -> None:
             y_te = per_subject_data[test_sid]["labels"]
             mu, sd = X_tr.mean(axis=0), X_tr.std(axis=0)
             sd[sd == 0] = 1.0
-            clf = LogisticRegression(max_iter=2000, multi_class="multinomial")
+            clf = LogisticRegression(max_iter=2000)
             clf.fit((X_tr - mu) / sd, y_tr)
             pred = clf.predict((X_te - mu) / sd)
             from sklearn.metrics import f1_score

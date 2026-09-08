@@ -1,0 +1,7 @@
+{
+  "purpose": "Stage 3 gate verdict per Section 64.",
+  "lbnp": {"status": "BLOCKED_BY_ACCESS", "detail": "results/lbnp_stage3_access_attempt.json", "protocol_unaffected": true},
+  "ds003838": {"status": "BOUNDED_DIAGNOSTIC_COMPLETE", "result": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json", "n_subjects": 3, "finding": "inconclusive at this n by design/disclosure - negative control (C) behaves exactly at chance level as expected; A vs B question remains open pending full n=65 cohort"},
+  "verdict": "STAGE3_PASS_WITH_LIMITATIONS",
+  "rationale": "ds003838's real-file access path is now proven working end-to-end (3 subjects byte-verified against real git-annex hashes) and a real, deterministic, correctly-behaving bounded diagnostic was run and disclosed as non-conclusive by design. LBNP remains genuinely access-blocked (Zenodo unreachable, reproduced across 2 sprints via 3 independent methods) - not fabricated, not worked around. Per Section 64, it is acceptable for Stage 3 to pass with limitations when ds003838 completes (even at bounded scale, honestly disclosed) and LBNP remains legitimately access-blocked."
+}
