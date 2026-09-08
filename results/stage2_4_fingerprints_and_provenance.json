@@ -1,0 +1,39 @@
+{
+  "purpose": "Dataset fingerprints, cache provenance, and checkpoint inventory for Stage 2-4 (Sections 74-76).",
+  "dataset_fingerprints": [
+    {
+      "dataset": "QDE", "version": "1.0.0",
+      "file": "datasets/qde-bioimpedance/raw/dehydration_estimation.csv",
+      "byte_size": 14419,
+      "sha256": "186f24f567eee623e475f6556217344a9cc3a522d969d76df02ffe5820628074",
+      "source": "https://physionet.org/files/qde/1.0.0/dehydration_estimation.csv",
+      "retrieval_state": "already present, re-verified this sprint"
+    },
+    {
+      "dataset": "ds003838", "version": "openneuro.ds003838.v1.0.6",
+      "file": "sub-032_task-rest_eeg.set (representative small file, full download)",
+      "byte_size": 47511267,
+      "md5": "1094cdcc2162461e26addedf71c1baa5",
+      "source_verification": "downloaded MD5 matches the real git-annex object hash exactly - genuine byte-perfect real file",
+      "source": "s3.amazonaws.com/openneuro.org/ds003838/sub-032/eeg/sub-032_task-rest_eeg.set"
+    },
+    {
+      "dataset": "ds003838", "version": "openneuro.ds003838.v1.0.6",
+      "file": "sub-032_task-memory_eeg.set (bounded-diagnostic subject)",
+      "byte_size": 1541437462,
+      "md5": "f589e83435f7f9edca345c6b89afbe32",
+      "source_verification": "downloaded MD5 matches the real git-annex object hash exactly - genuine byte-perfect real file",
+      "source": "s3.amazonaws.com/openneuro.org/ds003838/sub-032/eeg/sub-032_task-memory_eeg.set"
+    }
+  ],
+  "not_fingerprinted_this_sprint": "GalaxyPPG and LBNP raw files - Zenodo access blocked. ds003838 subjects beyond the bounded-diagnostic subset - not downloaded (see docs/DS003838_STAGE3_BOUNDED_DIAGNOSTIC.md).",
+  "cache_provenance": {
+    "note": "No new preprocessing CACHE (as distinct from a one-shot result artifact) was created this sprint - QDE V2 and ds003838 both compute features fresh from raw files on each run (verified deterministic/reproducible instead, see reproducibility section below). ml/datasets/cache_provenance.py's schema (Stage 1B) remains the reference for any future cache this project adds.",
+    "ambiguous_legacy_cache_accepted": false
+  },
+  "checkpoint_inventory": {
+    "qde_v2": "No checkpoint files - ridge regression coefficients are not scientifically necessary to serialize as a checkpoint artifact (same convention frozen in Stage 1B's implementation handoff), the deterministic trainer script IS the reproducibility guarantee.",
+    "ds003838_bounded_diagnostic": "No checkpoint files - logistic regression, same reasoning as QDE V2; the bounded diagnostic's own scope disclosure (docs/DS003838_STAGE3_BOUNDED_DIAGNOSTIC.md) already prevents this from being mistaken for a durable Stage-2 model artifact."
+  },
+  "external_durability": "LOCAL_VERIFIED_NOT_EXTERNALLY_ARCHIVED - no new GitHub Release or external archive was created this sprint for QDE V2 or ds003838 outputs (both are small, deterministic, and fully reproducible from the tracked trainer scripts + already-fingerprinted raw files, so external archival is lower-priority than for large trained-checkpoint artifacts like Sleep-EDF's)."
+}

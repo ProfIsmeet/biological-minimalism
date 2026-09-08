@@ -129,7 +129,8 @@ def main() -> None:
         d = per_subject_data[sid]
         results["A"][sid] = pooled_features(d["epochs"], channel_names_ref, SPARSE_CHANNELS)
         results["B"][sid] = pooled_features(d["epochs"], channel_names_ref, None)
-        deranged = deranged_full_channel_epochs(d["epochs"], channel_names_ref, SPARSE_CHANNELS, CONTROL_SHUFFLE_SEED_BASE + hash(sid) % 10000)
+        subject_numeric_id = int(sid.split("-")[1])  # "sub-032" -> 32, stable across processes/machines (unlike hash())
+        deranged = deranged_full_channel_epochs(d["epochs"], channel_names_ref, SPARSE_CHANNELS, CONTROL_SHUFFLE_SEED_BASE + subject_numeric_id)
         results["C"][sid] = pooled_features(deranged, channel_names_ref, None)
 
     def run_loso(key: str) -> dict:

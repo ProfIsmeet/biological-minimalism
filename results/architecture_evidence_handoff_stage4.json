@@ -1,0 +1,66 @@
+{
+  "purpose": "Machine-readable architecture evidence package - NOT a final architecture decision. final_architecture_status is explicitly UNRESOLVED per Section 70.",
+  "final_architecture_status": "UNRESOLVED",
+  "candidates": [
+    {
+      "sensor_site": "wrist PPG + wrist IMU (wristband module)",
+      "demonstrated_targets": ["HR (bpm)"],
+      "positive_evidence": ["PPG-DaLiA: IMU cut HR MAE ~23% vs capacity-controlled PPG-only baseline"],
+      "negative_evidence": [],
+      "replication": "ATTEMPTED_BLOCKED (GalaxyPPG, independent device family - blocked by data access this sprint, protocol frozen and ready)",
+      "biological_n": "15 (PPG-DaLiA, inherited)",
+      "burden_known": "IMU co-located with PPG in the same wristband - near-zero marginal burden (established)",
+      "body_region": "wrist",
+      "contact_module_impact": "single wristband module already assumed for PPG; IMU adds no new contact region",
+      "key_uncertainty": "Whether the effect reproduces on an independent device/subject family (GalaxyPPG) - currently unresolved, not negative"
+    },
+    {
+      "sensor_site": "chest/frontal EEG + EOG (sleep module)",
+      "demonstrated_targets": ["5-class sleep stage"],
+      "positive_evidence": ["Sleep-EDF: EOG added macro-F1 beyond EEG alone, confirmed under both original and H1-corrected seeding"],
+      "negative_evidence": [],
+      "replication": "OUT_OF_SCOPE_THIS_BRANCH (HMC belongs to Claude's Sleep/external-replication line per Section 47)",
+      "biological_n": "primary Sleep-EDF cohort (inherited)",
+      "burden_known": "EOG requires separate electrodes from EEG - real added contact burden (established, not zero)",
+      "body_region": "head/face",
+      "contact_module_impact": "frontal headband module would need to add EOG-capable electrode placement beyond EEG-only",
+      "key_uncertainty": "Cross-dataset (HMC) replication status - being handled on Claude's line, not resolved here"
+    },
+    {
+      "sensor_site": "upper-body (arm+trunk) BioZ + leg BioZ (bio-impedance module)",
+      "demonstrated_targets": ["absolute TBW (historical, circular target - see limitation)", "baseline-relative body-mass change (this sprint's new experiment)"],
+      "positive_evidence": [],
+      "negative_evidence": ["QDE V2: leg BioZ did not show a robust, subject-consistent improvement over arm+trunk BioZ alone for baseline-relative body-mass change; aggregate mean dominated by one outlier subject (n=10)"],
+      "replication": "N/A (single dataset, new experiment not a replication)",
+      "biological_n": 10,
+      "burden_known": "leg BioZ is a real added contact-region burden beyond arm+trunk (established)",
+      "body_region": "arms, trunk, legs",
+      "contact_module_impact": "adding leg BioZ would require additional electrode placement on the legs - a real burden cost with, per this sprint's evidence, unclear benefit",
+      "key_uncertainty": "Whether a larger cohort would resolve the single-subject-dominated ambiguity - not established either way"
+    },
+    {
+      "sensor_site": "thoracic bio-impedance spectroscopy (EIS)",
+      "demonstrated_targets": ["LBNP-induced central hypovolemic stress stage (planned, not yet trained)"],
+      "positive_evidence": [],
+      "negative_evidence": [],
+      "replication": "N/A - not yet trained (blocked by data access)",
+      "biological_n": "16 usable per metadata, not actual-file-verified",
+      "burden_known": "distinct module/contact-region from ECG/pleth - real added burden if adopted (established)",
+      "body_region": "thorax (also abdomen/arm sites available but out of frozen scope)",
+      "contact_module_impact": "would require a dedicated EIS acquisition module distinct from this project's existing PPG/ECG modules",
+      "key_uncertainty": "Entirely unresolved - blocked by data access, not evidence of any kind yet"
+    },
+    {
+      "sensor_site": "sparse frontal+mastoid EEG (AF7/AF8/TP9/TP10, Muse-matched) vs full montage",
+      "demonstrated_targets": ["3-class digit-span memory load (bounded diagnostic only)"],
+      "positive_evidence": [],
+      "negative_evidence": [],
+      "replication": "N/A (new target/domain)",
+      "biological_n": "bounded diagnostic subset only (see ds003838_eeg_minimalism_stage3_bounded_diagnostic.json) - not the full n=65",
+      "burden_known": "sparse 4-channel set matches an existing real shipping consumer product's electrode geometry (Muse) - if validated, would confirm a minimal-burden wearable path for cognitive-load sensing",
+      "body_region": "head (frontal + posterior-temporal/mastoid-adjacent)",
+      "contact_module_impact": "would determine whether a full research-grade EEG cap or a minimal 4-electrode headband suffices for this specific cognitive-load task - entirely unresolved at current n",
+      "key_uncertainty": "Full-cohort result not yet available (resource/time-bounded this session) - the central minimalism question for this candidate is open"
+    }
+  ]
+}
