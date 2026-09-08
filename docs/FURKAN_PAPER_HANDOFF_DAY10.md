@@ -10,7 +10,7 @@ below upgrades a prior claim.
 - **Frozen environment.** The scientific training/evaluation stack was verified
   field-by-field against the frozen manifest (Python 3.13.0, PyTorch 2.6.0+cpu, no
   CUDA, NumPy 2.5.2, SciPy 1.18.1, scikit-learn 1.9.0, MNE 1.12.1, WFDB 4.3.1,
-  pandas 3.0.5) → `EXACT_FROZEN_ENVIRONMENT`. No package was changed to force a match.
+  pandas 3.0.5, torch threads=4) → `RECORDED_ENVIRONMENT_MATCH_FOR_CHECKED_FIELDS` (scoped per audit §48: interpreter/backend versions + thread setting are checked; CPU model and full env vars are not, so this is not a bit-for-bit "EXACT" claim). No package was changed to force a match.
 - **Dataset fingerprinting.** All 266 raw input records used by the canonical
   experiments (PPG-DaLiA 16, PTT 198, Sleep primary 36, Sleep secondary 16) are
   fingerprinted; 266/266 present; **0 raw files committed to git**.

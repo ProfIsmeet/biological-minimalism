@@ -29,7 +29,7 @@ Source: `results/pareto_readiness_blockers.json` → new `day11_part2_updates` b
 - interaction / sleep-scope / targets — MEDIUM (unchanged).
 
 ## 3. Engineering power/mass/BOM/data-rate state
-- **System average power:** `SYSTEM_AVERAGE_POWER_NOT_READY`. Component/AFE boundaries exist (IMU ~0.018 mW; ECG AFE 0.67 mW; TMP117 0.01155 mW; OPT3001 0.00594 mW; MAX86141 AFE floor ≤0.018 mW LED-excluded; wrist sensing-electronics LED-excluded lower bound ~0.048–0.413 mW). No system total.
+- **System average power:** `SYSTEM_AVERAGE_POWER_NOT_READY`. Component/AFE boundaries exist (IMU ~0.018 mW; ECG AFE 0.67 mW; TMP117 0.01155 mW; OPT3001 0.00594 mW; MAX86141 AFE floor ≤0.018 mW LED-excluded; wrist sensing-electronics LED-excluded reference scenario ~0.048–0.413 mW, datasheet-typical, not a guaranteed bound). No system total.
 - **System mass:** `SYSTEM_MASS_NOT_READY`. All modules Tier 0.
 - **Module BOM:** `PARTIAL`. MCU/radio/regulator/battery MISSING → REFERENCE_SELECTED (class, final=false); electrodes/PCB/enclosure/attachment MISSING.
 - **Raw data-rate:** PARTIAL lower bound ~48.068 kbps (not radio bandwidth; `RADIO_DATA_RATE` NOT_READY).

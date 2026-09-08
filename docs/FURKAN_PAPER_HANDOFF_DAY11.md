@@ -28,7 +28,7 @@
 ### Engineering Results (all reference/component-boundary — label them as such)
 - **IMU reference power:** ~0.018 mW (band 0.018–0.378 mW), BMI270 accel-only, gyro OFF, documented
   25 Hz point for the 32 Hz scientific requirement.
-- **Wrist sensing-electronics lower bound:** LED-excluded lower bound (~0.048–0.413 mW across
+- **Wrist sensing-electronics reference scenario:** LED-excluded calculated reference scenario from datasheet-typical values — NOT a guaranteed lower bound (~0.048–0.413 mW across
   wrist-light/cabin cases); excludes LED, MCU, radio, regulator, battery. Not wrist-module power.
 - **ECG AFE boundary:** 0.67 mW (2 ch × 335 µW/ch, ADS1292R, 250 s/s). AFE only, not chest-module power.
 - **Other component references:** TMP117 0.01155 mW @1 Hz; OPT3001 0.00594 mW continuous (wrist) / 0

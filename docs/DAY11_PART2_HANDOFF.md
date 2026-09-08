@@ -27,7 +27,7 @@ Converted Part-1's audited evidence into the **maximum defensible reference calc
 | Second PPG (MAX86141-cl) | 3-λ @500 Hz (dataset rate, not a frozen protocol) | **NOT_READY** (LED + 500 Hz seq + boundary OPEN) | — |
 
 ## 3. Exact power values & exclusions
-- **WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER** (Level-3 partial, **LED-excluded LOWER BOUND**; excludes MCU/radio/regulator/battery/storage):
+- **WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED** (Level-3 partial, **LED-excluded CALCULATED REFERENCE SCENARIO** from datasheet-typical values — NOT a guaranteed lower bound; excludes MCU/radio/regulator/battery/storage):
   - wrist-light case: **0.05349 mW** (reference point) → **0.41349 mW** (BMI270 normal upper)
   - cabin case (no light): **0.04755 mW** → **0.40755 mW**
 - **CHEST_SENSOR_ELECTRONICS_REFERENCE_POWER**: ECG AFE only = **0.67 mW**; module boundary **NOT_READY** (thoracic BioZ open).
@@ -52,7 +52,7 @@ Tier framework (0 unknown … 4 measured) + per-module contributor classificatio
 Vocabulary `REFERENCE_SELECTED · AVAILABLE · PARTIAL · MISSING · NOT_APPLICABLE`. **Advance vs Day-10:** MCU/radio/regulator/battery **MISSING → REFERENCE_SELECTED** (class level, `final=false`). Sensing ICs/AFEs stay REFERENCE_SELECTED. Electrodes/PCB/enclosure/attachment/wiring stay MISSING. Head electrodes/wiring **PARTIAL** (EOG contact increment = 2 defensible). `REFERENCE_SELECTED ≠ final component`.
 
 ## 8. System average power status (§34): **NO — SYSTEM_AVERAGE_POWER_NOT_READY**
-Highest defensible level reached: `REFERENCE_SENSOR_ELECTRONICS_POWER_AVAILABLE_FOR_WRIST (LED-excluded lower bound) + ECG_AFE_REFERENCE_POWER_FOR_CHEST`. Blockers: LED power, EEG/EOG head-AFE point, thoracic+leg BioZ point, MCU/radio/regulator identity+power, deployable duty, regulator efficiency, battery. **This is a successful, honest outcome.**
+Highest defensible level reached: `REFERENCE_SENSOR_ELECTRONICS_POWER_AVAILABLE_FOR_WRIST (LED-excluded reference scenario) + ECG_AFE_REFERENCE_POWER_FOR_CHEST`. Blockers: LED power, EEG/EOG head-AFE point, thoracic+leg BioZ point, MCU/radio/regulator identity+power, deployable duty, regulator efficiency, battery. **This is a successful, honest outcome.**
 
 ## 9. Pareto blocker progress (§33) — canonical Pareto still **NOT_READY**
 - `cross_dataset_incomparability` — **BLOCKER, unchanged, MUST NOT downgrade** (engineering cannot fix it).
@@ -77,7 +77,7 @@ Highest defensible level reached: `REFERENCE_SENSOR_ELECTRONICS_POWER_AVAILABLE_
 None required. Refinements only: (a) IMU band → one frozen `REFERENCE_IMU_OPERATING_POINT` (0.018 mW, gyro off) with band retained; (b) head EEG use case pinned to **2 enabled channels** (1 EEG + 1 EOG, 2 spare) at 100 Hz→250 SPS; (c) EOG data-rate reconciled to the frozen burden artifact (2400 bps).
 
 ## 12. WARNINGS for Part-3
-- Do **NOT** sum component/AFE powers into a system number; the wrist boundary is an **LED-excluded lower bound**, not module power.
+- Do **NOT** sum component/AFE powers into a system number; the wrist boundary is an **LED-excluded reference scenario** (datasheet-typical, not a guaranteed bound), not module power.
 - Do **NOT** treat the ADS1299 AVDD/ODR facts as a head power number — power is **NOT_READY**.
 - Do **NOT** use the AD5940 6.5 µA potentiostat point as BioZ power.
 - Do **NOT** zero EOG/second-PPG burden on favorable/negative science.
