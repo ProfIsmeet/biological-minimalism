@@ -31,7 +31,7 @@ OUT_PATH = REPO_ROOT / "results" / "sleep_edf_interaction_resp_day10_reproducibi
 SEEDS = (42, 43, 44, 45, 46)
 
 
-def main() -> None:
+def main() -> int:
     data = json.loads(RESULTS_PATH.read_text())
     split = data["frozen_protocol"]["subject_split"]
 
@@ -56,7 +56,9 @@ def main() -> None:
     OUT_PATH.write_text(json.dumps(out, indent=2))
     print("\nWrote", OUT_PATH)
     print("ALL OK" if all_ok else "MISMATCH DETECTED")
+    # Audit M9/§38: a printed MISMATCH must exit nonzero so CI/reproduction fails.
+    return 0 if all_ok else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

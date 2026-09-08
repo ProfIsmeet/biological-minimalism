@@ -31,18 +31,51 @@ ARCHIVAL_DIR = REPO_ROOT / "archival" / "checkpoints_day8"
 VERIFICATION_OUT = REPO_ROOT / "results" / "checkpoint_archival_verification.json"
 
 
-def main() -> None:
+def main() -> int:
+    import os
+
     manifest = json.loads(MANIFEST_PATH.read_text())
     present_unique = [e for e in manifest["entries"] if e["current_machine_present"] and e["unique_file"]]
 
+    # Audit M9/§37: empty selection is a failure, not a silent empty archive.
+    if not present_unique:
+        print("ERROR: no present, unique checkpoints selected from manifest — nothing to archive.")
+        return 1
+
+    # Audit M9/§37: do not clobber an existing historical archive by accident.
+    archive_path = ARCHIVAL_DIR.parent / "biological_minimalism_checkpoints_day8.tar.gz"
+    if archive_path.exists() and os.environ.get("BIOMIN_ARCHIVE_OVERWRITE") != "1":
+        print(f"ERROR: {archive_path} already exists (historical archive). "
+              f"Set BIOMIN_ARCHIVE_OVERWRITE=1 to intentionally regenerate.")
+        return 1
+
+    # Audit M9/§37: uniqueness — two entries must not collide on staged filename.
+    seen_names: dict[str, str] = {}
+    for entry in present_unique:
+        name = (REPO_ROOT / entry["file_path"]).name
+        if name in seen_names:
+            print(f"ERROR: duplicate staged filename {name!r} from {entry['path']!r} "
+                  f"and {seen_names[name]!r}; archive would be ambiguous.")
+            return 1
+        seen_names[name] = entry["path"]
+
+    # Audit M9/§37: staging cleanup — remove any stale files from a prior run so
+    # the archive contains exactly this run's selection.
     ARCHIVAL_DIR.mkdir(parents=True, exist_ok=True)
     staging_ckpt_dir = ARCHIVAL_DIR / "checkpoints"
-    staging_ckpt_dir.mkdir(exist_ok=True)
+    if staging_ckpt_dir.exists():
+        shutil.rmtree(staging_ckpt_dir)
+    staging_ckpt_dir.mkdir()
 
     sha256sums_lines = []
     copied = []
     for entry in present_unique:
         src = REPO_ROOT / entry["file_path"]
+        # Audit M9/§37: a missing source checkpoint is a hard failure (never
+        # silently skipped or regenerated).
+        if not src.is_file():
+            print(f"ERROR: manifest marks {entry['path']!r} present but {src} is missing.")
+            return 1
         dst = staging_ckpt_dir / src.name
         shutil.copy2(src, dst)
         copied.append(entry["path"])
@@ -80,8 +113,7 @@ performed): `sha256sum -c SHA256SUMS.txt`
 """
     (ARCHIVAL_DIR / "README.md").write_text(readme)
 
-    # Build the compressed archive
-    archive_path = ARCHIVAL_DIR.parent / "biological_minimalism_checkpoints_day8.tar.gz"
+    # Build the compressed archive (archive_path defined above)
     with tarfile.open(archive_path, "w:gz") as tar:
         tar.add(ARCHIVAL_DIR, arcname="checkpoints_day8")
 
@@ -112,14 +144,29 @@ performed): `sha256sum -c SHA256SUMS.txt`
         "checkpoint_details": verification_entries,
     }
 
+    # Audit M9/§37: expected membership — every selected checkpoint must be in
+    # the archive and verified, else the package is incomplete.
+    n_verified_ok = sum(1 for e in verification_entries if e["matches_manifest"])
+    membership_complete = n_verified_ok == len(present_unique)
+    verification["n_selected"] = len(present_unique)
+    verification["membership_complete"] = membership_complete
+
     VERIFICATION_OUT.write_text(json.dumps(verification, indent=2))
 
     print(f"Packaged {len(copied)} checkpoints into {archive_path}")
     print(f"Archive size: {archive_path.stat().st_size / 1e6:.1f} MB")
     print(f"All verified OK: {all_ok}")
+    print(f"Membership complete: {membership_complete} ({n_verified_ok}/{len(present_unique)})")
     print(f"Raw dataset files found: {raw_dataset_hits}")
     print(f"Wrote {VERIFICATION_OUT}")
 
+    # Audit M9/§38: a verification mismatch, an incomplete package, or any leaked
+    # raw dataset file must exit nonzero — a printed failure with exit 0 is not OK.
+    if not all_ok or not membership_complete or raw_dataset_hits:
+        print("ARCHIVE VERIFICATION FAILED")
+        return 1
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

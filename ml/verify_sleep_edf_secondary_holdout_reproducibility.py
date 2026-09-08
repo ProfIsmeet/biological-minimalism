@@ -48,7 +48,7 @@ def load_model(ckpt_name: str, in_channels: int):
     return model
 
 
-def main() -> None:
+def main() -> int:
     cohort = json.loads(COHORT_PATH.read_text())
     subject_ids = [c["subject_prefix"] for c in cohort["cohort"]]
     stored = json.loads(RESULTS_PATH.read_text())
@@ -83,7 +83,9 @@ def main() -> None:
     OUT_PATH.write_text(json.dumps(out, indent=2))
     print("\nWrote", OUT_PATH)
     print("ALL OK" if all_ok else "MISMATCH DETECTED")
+    # Audit M9/§38: a printed MISMATCH must exit nonzero so CI/reproduction fails.
+    return 0 if all_ok else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
