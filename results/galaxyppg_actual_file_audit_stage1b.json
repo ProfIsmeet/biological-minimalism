@@ -1,0 +1,38 @@
+{
+  "dataset": "GalaxyPPG",
+  "source": "Zenodo 10.5281/zenodo.14635823; Scientific Data paper https://www.nature.com/articles/s41597-025-05152-z (PMC12119839)",
+  "verification_method": "PARTIAL_FILE_AUDIT - direct Zenodo file browsing was blocked this sprint (curl to zenodo.org timed out twice, ~15-20s each, from this sandbox's network egress). Verification instead used the peer-reviewed paper's own directly-fetched text, which reports MEASURED (not nominal/advertised) per-signal sample rates and a per-participant completeness table - i.e. the authors' own actual-file audit, reused rather than re-derived blind from an abstract.",
+  "official_facts": {
+    "n_participants": 24,
+    "demographics": "12 female, mean age 23.3 (SD 2.0), range 20-29",
+    "devices": ["Galaxy Watch 5 (PPG 25 Hz, ACC 25 Hz, temp 1/60 Hz)", "Empatica E4 (BVP 64 Hz, ACC 32 Hz, temp 4 Hz)", "Polar H10 (ECG 130 Hz)"]
+  },
+  "actual_file_facts": {
+    "measured_rates": {
+      "galaxy_watch_ppg_acc_hz": "24.90 +/- 0.06 (measured, vs 25 Hz nominal)",
+      "e4_bvp_hz": "64.00 +/- 0.01 (measured, matches nominal)",
+      "e4_acc_hz": "32.00 +/- 0.01 (measured, matches nominal)",
+      "polar_ecg_hz": "130.49 +/- 0.10 (measured, close to 130 Hz nominal)"
+    },
+    "per_device_completeness": {
+      "galaxy_watch5_ppg": "23/24 (P01 excluded - device configuration setup error)",
+      "galaxy_watch5_hr_derived": "21/24 (P07, P08 also missing HR - NOT relevant to this project's use, since Galaxy Watch derived HR is EXCLUDE_LEAKAGE and never a candidate input)",
+      "e4_bvp": "24/24 (complete)",
+      "e4_acc": "24/24 (complete, no completeness caveat reported)",
+      "polar_h10_ecg": "24/24 (complete) - the reference signal this project actually needs",
+      "e4_skin_temperature": "23/24 (P02 missing) - out of scope, not used"
+    },
+    "file_format": "CSV, hierarchical by participant ID and device",
+    "license_access": "CC BY 4.0, open access (no credentialing) per the paper text"
+  },
+  "usable_cohort_for_this_projects_experiment": {
+    "eligibility_rule": "Require E4 BVP present AND E4 ACC present AND Polar H10 ECG present (data-quality rule only, not outcome-based)",
+    "n_eligible": 24,
+    "excluded": "None - all three signals this project actually needs (E4 BVP, E4 ACC, Polar ECG) are reported complete for all 24 participants. The two data-quality issues in the source (P01 Galaxy Watch config error, P02 E4 temp missing) do not affect this project's candidate signals.",
+    "caveat": "This 'all 24 usable' conclusion is derived from the paper's stated per-signal completeness, not from this session directly opening and checking all 24 participants' raw CSV files (blocked - see verification_method). Stage 2 must re-verify file-by-file before finalizing the eligibility table, per this project's actual-file-over-secondary-source discipline."
+  },
+  "synchronization": {
+    "verified_this_sprint": false,
+    "note": "Cross-device timestamp synchronization method (shared clock, manual alignment marker, etc.) was not confirmed from source text retrieved this sprint. FLAGGED as a mandatory Stage-2 pre-training check before treating E4 BVP, E4 ACC, and Polar ECG as truly time-aligned at the sample level - do not assume alignment from file co-location alone."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "dataset_id": "GalaxyPPG",
+  "dataset_version": "Zenodo 14635823",
+  "target": "Heart rate (bpm), ECG-derived",
+  "reference": "Polar H10 raw ECG, R-peak extraction (Pan-Tompkins-family QRS detector, exact library/parameters to be frozen at Stage-2 implementation time, applied identically across A/B/C - not tuned per condition)",
+  "reference_quality_policy": "Reject a window if fewer than N clean R-peaks are detected or RR-interval physiological-range checks fail (N and range to be frozen alongside the QRS detector choice at Stage-2 implementation, before any training) - a data-integrity rule, never an outcome-based exclusion.",
+  "experiment_type": "A/B/C sensor marginal-value ablation, replicating this project's own PPG-DaLiA IMU-value question on an independent dataset/device family",
+  "baseline_A": "Capacity-controlled PPG-only: E4 BVP waveform, single-branch 1D-CNN encoder",
+  "candidate_B": "E4 BVP + E4 ACC (3-axis), dual-branch 1D-CNN encoder, fused representation",
+  "control_C": "Same architecture as B; E4 ACC segment replaced by a within-subject temporally-deranged ACC segment (drawn from a different window of the SAME subject's real ACC recording, never a different subject, never label-informed) - exact derangement algorithm and RNG seed strategy to be frozen at Stage-2 implementation using this project's own derive-sub-seeds-from-one-run-seed convention (ml/sleep_seed_utils.py pattern), not reused verbatim since GalaxyPPG's window/subject structure differs from Sleep-EDF's.",
+  "subject_unit": "participant_id (24 total, all eligible per galaxyppg_actual_file_audit_stage1b.json)",
+  "split_strategy": {
+    "decision": "Grouped subject-wise outer cross-validation (all of one participant's windows in exactly one fold), not a single fixed train/val/test split.",
+    "justification": "With only 24 subjects, a single fixed 3-way split would leave very few subjects (e.g. 4-5) in the test fold, making the primary metric highly sensitive to which specific subjects land in test - the same small-N sensitivity problem this project already documented for PTT (n=4) and QDE (n=10). Grouped outer CV (matching the prior research audit's own recommendation) uses every subject exactly once as held-out, giving a per-subject delta for all 24 rather than a fixed subset of ~5 - directly enabling Section 25's mandatory subject-level reporting plan.",
+    "fold_count": "TBD at Stage-2 implementation (e.g. 6 folds of 4 subjects each) - to be frozen and recorded in the Stage-2 result artifact's frozen_protocol block before training, never chosen after seeing fold-level results.",
+    "inner_validation": "A fixed subset of the training folds' subjects, chosen by a neutral rule (e.g. lowest subject_id modulo fold count) before any training - not a nested LOSO given 24 subjects makes a 3-level nested CV impractically small per fold."
+  },
+  "windowing": {
+    "candidate": "8 s windows / 2 s stride (matching PPG-DaLiA convention, per the master prompt's suggestion)",
+    "audit_result": "PROVISIONALLY_VALID - the measured sample rates (BVP 64 Hz, ACC 32 Hz) support 8 s windows without resampling artifacts (512 BVP samples, 256 ACC samples per window). Full validity (i.e. that activity segments are long enough to yield multiple independent windows without excessive overlap-driven pseudo-replication) cannot be finally confirmed without the actual per-session durations, which requires the raw files (blocked this sprint - see access manifest). FLAGGED for Stage-2 to re-confirm from real files before finalizing.",
+    "deviation_note": "No deviation from PPG-DaLiA windowing is currently planned; if actual session durations force a change, the reason will be documented in the Stage-2 result artifact, not silently substituted."
+  },
+  "capacity_control": {
+    "method": "Architecture-matched dual encoder",
+    "detail": "A and B/C use the identical per-modality 1D-CNN encoder architecture (same layer count, channel widths, kernel sizes) already established in this project's Conv1DEncoder convention. A's ACC branch is entirely absent (not zero-masked) so A's total parameter count is genuinely smaller than B/C's; the comparison is then interpreted as 'does the added ACC branch's real information help,' with the parameter-count difference disclosed explicitly in the result artifact (frozen_protocol.parameter_counts), matching this project's own historical PPG-DaLiA capacity-confound lesson (do not claim a fair comparison while silently hiding a parameter-count gap - disclose it)."
+  },
+  "primary_metric": "MAE (bpm)",
+  "secondary_metrics": ["RMSE (bpm)"],
+  "eligibility_rules": [
+    "E4 BVP present",
+    "E4 ACC present",
+    "Polar H10 ECG present",
+    "Minimum N clean R-peaks per window (data-integrity rule, threshold frozen at Stage-2 implementation)"
+  ],
+  "leakage_exclusions": ["polar_h10_device_hr", "galaxy_watch5_device_hr", "galaxy_watch5_acc (out of scope, not excluded for leakage but simply unused)"],
+  "subject_sensitivity": "Report per-subject A-vs-B delta for all 24 subjects (grouped-CV gives every subject a held-out evaluation), favorable-direction count, and dominance/concentration per Section 25 - dominance threshold to be defined identically to this project's existing PPG-DaLiA/Sleep-EDF convention (a small number of subjects driving most of the effect) unless dataset-specific evidence argues otherwise.",
+  "negative_result_policy": {
+    "if_candidate_helps": "Report as: 'aligned wrist IMU added HR-estimation information under a capacity-controlled comparison on an independent device/subject family (GalaxyPPG), consistent with (not proof duplicating) the PPG-DaLiA finding.'",
+    "if_candidate_does_not_help": "Report as: 'the previously observed IMU benefit did not reproduce under the GalaxyPPG protocol' - retained, not discarded or reframed.",
+    "if_shuffled_control_equals_candidate": "Interpretation: any B-vs-A gain is attributable to added capacity/context, not genuine temporal IMU-motion correspondence - report explicitly, do not claim IMU value.",
+    "if_subject_heterogeneity_dominates": "Report the dominant subject(s) by ID and effect size; do not average over heterogeneity silently.",
+    "if_effect_sign_flips_vs_ppg_dalia": "Report as an explicit disagreement between datasets - do not average the two studies' numbers into one combined claim; state both findings side by side."
+  },
+  "forbidden_claims": ["IMU always improves HR.", "GalaxyPPG replicates PPG-DaLiA (use 'reproduced under an independent protocol' / 'did not reproduce', never 'replicated and confirmed').", "Galaxy Watch5 device HR is a valid input feature."],
+  "implementation_cost": "LOW-MEDIUM (24 subjects, CSV format, small per-file size, no waveform resampling required)",
+  "prerequisites": "None (independent of Claude's Stage 1A Sleep V2 work)",
+  "status": "PROTOCOL_FROZEN_PENDING_STAGE2_FILE_ACCESS",
+  "classification": "GO",
+  "classification_reason": "All required signals verified present and complete for all 24 subjects (via the paper's own measured/actual statistics); target/reference is genuinely independent of the candidate sensor (raw ECG R-peaks, not any device-derived HR); no hard feasibility gate is failed. Two open items (cross-device synchronization method, exact session durations) are flagged for direct Stage-2 file verification, not treated as resolved - hence GO, not GO_WITH_LIMITATIONS-for-a-blocking-reason (these are pre-training verification steps every dataset in this project already goes through, not unusual risk)."
+}
