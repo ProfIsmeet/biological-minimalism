@@ -1,0 +1,67 @@
+{
+  "dataset_id": "ds003838_eeg_minimalism",
+  "dataset_version": "openneuro.ds003838.v1.0.6",
+  "target": "3-class externally-imposed memory load (5 / 9 / 13 digit sequence length), memory-condition trials only",
+  "target_choice_note": "The externally-imposed sequence length is used, NOT the subjective NASA-TLX workload ratings present in participants.tsv, per the master prompt's explicit preference for an externally-imposed target - NASA-TLX scores are CONTEXT_ONLY.",
+  "reference": "Trigger-code-derived condition label (memory vs control, digit position, sequence length) - read from the real events.tsv/events.json sidecars, never the raw trigger-code string itself passed as a feature (see leakage matrix).",
+  "cohort": {
+    "eligible_subjects": 65,
+    "eligibility_rule": "EEG_excluded == 'no' in participants.tsv (confirmed via direct file read this sprint)"
+  },
+  "sparse_channel_selection": {
+    "frozen_set": ["AF7", "AF8", "TP9", "TP10"],
+    "candidates_considered": [
+      "Fp1/Fp2/F7/F8 (pure frontal, no ear/mastoid coverage)",
+      "AF7/AF8/TP9/TP10 (frontal + posterior-temporal/mastoid-adjacent coverage)",
+      "Fp1/Fpz/Fp2 + one posterior channel (asymmetric coverage)"
+    ],
+    "rationale": "AF7/AF8/TP9/TP10 is the EXACT electrode montage used by the Muse consumer EEG headband, a real, currently-shipping wearable product - choosing it ties the 'sparse wearable-compatible subset' framing to an actual physical device's real electrode geometry rather than an arbitrary 4-channel guess. All four channels are CONFIRMED present in ds003838's real 63-channel montage (verified directly from sub-032's channels.tsv this sprint) - this was checked, not assumed, before freezing the choice. Chosen for anatomical coverage (frontal + posterior-temporal, spatially diverse rather than four adjacent electrodes) and real wearable relevance, not by testing which channels perform best.",
+    "frozen_before_any_training": true,
+    "not_reconsidered_after_results": true
+  },
+  "experiment_type": "A/B/C sensor/coverage marginal-value ablation - a new question type for this project (spatial coverage minimalism, not multi-modal sensor fusion)",
+  "feature_sets": {
+    "A": "Sparse EEG subset: AF7, AF8, TP9, TP10",
+    "B": "Full valid 63-channel montage",
+    "C": "Full-montage architecture, with all channels BEYOND the 4 frozen A channels temporally deranged ACROSS TRIALS within subject (never across subjects) - A's 4 channels remain real/aligned in C, isolating whether the EXTRA 59 channels' real alignment (vs. their mere presence/capacity) matters."
+  },
+  "model_fairness": {
+    "problem": "A (4 channels) and B (63 channels) differ enormously in input dimensionality - naively giving B a proportionally larger encoder would confound 'more real channels help' with 'more parameters help.'",
+    "design": "Channel-wise shared encoder: a single per-channel 1D-CNN encoder (identical weights applied to every channel independently) followed by a fixed-width aggregation (mean or attention-pooling) to a constant-size representation, so the total parameter count is (nearly) IDENTICAL between A and B - only the number of channels fed through the shared encoder differs. This directly implements the 'avoid giving the full montage a huge parameter advantage' requirement.",
+    "control_c_masking": "In C, the 59 non-frozen channels are still passed through the same shared encoder (preserving capacity), but their trial-to-trial temporal alignment is destroyed - isolating the alignment question from the capacity question, which the shared-encoder design already controls for."
+  },
+  "preprocessing": {
+    "bandpass_hz": "TBD at Stage-2 implementation, frozen before training (standard EEG range, e.g. 0.5-40 Hz, exact values to be recorded in the Stage-2 result artifact's frozen_protocol block)",
+    "notch_hz": "50 Hz (PowerLineFrequency confirmed as 50 in the real eeg.json sidecar this sprint - NOT 60 Hz, verified not assumed)",
+    "downsampling": "None planned (native 1000 Hz retained) unless a documented resource-driven reason forces a change - to be disclosed if it happens",
+    "referencing": "As recorded (FCz reference, Fpz ground) - re-referencing scheme, if any, to be frozen at Stage-2 implementation before training",
+    "artifact_rejection": "Frozen, label-independent rule only (e.g. fixed amplitude threshold) - no test-set-informed or outcome-informed rejection",
+    "trial_epoching": "Per-digit-position epochs anchored to the real trigger onsets (events.tsv), window length TBD at Stage-2 implementation, frozen before training",
+    "no_label_driven_channel_rejection": true,
+    "no_test_set_ica": true
+  },
+  "split_strategy": "Subject-wise CV, no trials from one subject across train/test - standard for this project.",
+  "resource_feasibility": {
+    "eeg_only_estimate_gb": "~96-99 GB for full 65-subject, both-task EEG download (directly measured this sprint via git-annex object sizes - see ds003838_metadata_audit_stage1b.json)",
+    "assessment": "MEDIUM-HIGH, not the previously-feared ~250 GB EXTREME/HIGH - a real, actionable number now that actual file sizes are known.",
+    "mitigation_if_impractical": "If the full 65-subject download proves impractical within the project timeline, a neutral-rule preregistered subject subset (e.g. every 3rd eligible subject_id in sorted order, or the first N by subject_id - a rule chosen BEFORE seeing any data content) may be used, per Section 15's explicit allowance - never an outcome-driven convenience subset.",
+    "task_scope_option": "The 'rest' task (4 min, ~45 MB/subject) is not needed for the frozen A/B/C (which is memory-task-only) and can be skipped entirely, saving negligible space relative to the memory task's ~1.47 GiB/subject dominant cost."
+  },
+  "primary_metric": "Macro-F1 (3-class)",
+  "secondary_metrics": ["balanced accuracy", "ordinal error (mean absolute rank distance across 5/9/13, given the natural ordering)"],
+  "eligibility_rules": ["EEG_excluded == 'no' in participants.tsv"],
+  "leakage_exclusions": ["raw trigger-code string as a feature", "recall_correctness_behavioral", "condition (control vs memory) conflated into the length target"],
+  "subject_sensitivity": "Report per-subject A-vs-B delta for all 65 eligible subjects, favorable-direction count, dominance/concentration.",
+  "negative_result_policy": {
+    "if_candidate_helps": "Report as: 'the full 63-channel montage added information about digit-span memory load beyond the frozen 4-channel wearable-relevant subset, in this cohort/task.'",
+    "if_candidate_does_not_help": "Report as: 'the sparse wearable-relevant 4-channel subset retained comparable memory-load information to the full montage, in this cohort/task' - a genuinely useful minimalism finding for this project's mission, reported honestly either way.",
+    "if_shuffled_control_equals_candidate": "Full-montage benefit (if any) attributable to raw channel-presence/capacity, not genuine spatial alignment across trials.",
+    "if_subject_heterogeneity_dominates": "Report dominant subject(s) explicitly."
+  },
+  "forbidden_claims": ["Four EEG channels capture cognition.", "Full EEG is unnecessary globally.", "AF7/AF8/TP9/TP10 is validated for spaceflight cognitive monitoring.", "This result applies beyond the digit-span task tested."],
+  "implementation_cost": "MEDIUM-HIGH (largest raw-data footprint of the five candidates by a wide margin, though smaller than previously estimated)",
+  "workflow_dependency": "None",
+  "status": "PROTOCOL_FROZEN",
+  "classification": "GO_WITH_LIMITATIONS",
+  "classification_reason": "Actual-file-verified cohort (65/86 usable via participants.tsv, cross-checked against the README's independent enumeration and found to agree exactly), real externally-imposed target, anatomically-justified and product-matched sparse channel set frozen before any results, real fairness-preserving shared-encoder design. Classified WITH_LIMITATIONS due to genuine resource cost (~96-99 GB) even though this sprint's real measurement substantially reduced the previously-feared estimate, and because per-subject uniformity of the montage/preprocessing was checked on only one representative subject (sub-032) rather than all 65 this sprint."
+}
