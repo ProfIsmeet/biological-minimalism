@@ -1,0 +1,188 @@
+{
+  "artifact_id": "biological-minimalism-audit-remediation-status-day12",
+  "schema_version": "1.0.0",
+  "purpose": "Audit §52. Per-finding closure status for the Day-12 Codex audit remediation. Branch day12-audit-remediation is a REMEDIATION CANDIDATE — not merged to main/final; scientific freeze is SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2.",
+  "base_commit": "169f99d (origin/day11-canonical-integration)",
+  "ismet_support_integrated": "f2d895e (origin/day12-14-ismet-support-audit) via --no-ff merge 2ce0989 (additive-only)",
+  "owner_split": "H1 (Sleep seed-before-init) and H2 (respiration native rate) are Ismet's dedicated scientific-remediation branch. All rows below are Claude-owned unless marked DEFERRED_TO_ISMET_H1_H2.",
+  "findings": [
+    {
+      "id": "H3", "severity": "high", "owner": "claude", "status": "FIXED",
+      "title": "Reproduction API must be artifact-driven",
+      "fix_commit": "3192a54",
+      "summary": "catalog._reproducibility rebuilt with typed ReproComponent/ReproComponentStatus (PASS/PARTIAL/FAIL/UNAVAILABLE/MALFORMED). overall computed worst-of, never defaults to SCIENTIFIC_REPRODUCTION_PASS. All numbers derived from artifact; no hardcoded 50/266/114/+0.0031/zero-diff. Env scoped to RECORDED_ENVIRONMENT_MATCH_FOR_CHECKED_FIELDS.",
+      "tests": "backend/tests/test_reproducibility_panel.py (12 adversarial cases)",
+      "limitation": null
+    },
+    {
+      "id": "H4", "severity": "high", "owner": "claude", "status": "FIXED",
+      "title": "Engineering unknown must never become zero",
+      "fix_commit": "3192a54",
+      "summary": "engineering_readiness typed Quantity/QuantityStatus. Removed 48068 total fallback and two int(...,0) candidate fallbacks. Missing/null/non-numeric -> UNKNOWN(value=None); genuine present 0 stays AVAILABLE 0. Malformed artifact normalized (no uncaught TypeError).",
+      "tests": "backend/tests/test_engineering_readiness.py (missing/null/malformed -> UNKNOWN)",
+      "limitation": null
+    },
+    {
+      "id": "H5", "severity": "high", "owner": "claude", "status": "FIXED",
+      "title": "Retire old uncontrolled PPG headline",
+      "fix_commit": "4845ea7",
+      "summary": "Headline marginal_result.delta is now capacity-controlled A_cap->B (~0.605 bpm, 5/5), read from ppg_dalia_capacity_control.json. Shuffled control C->B (~0.776) surfaced. Uncontrolled A->B kept only as HISTORICAL_CAPACITY_CONFOUNDED_RESULT. New ControlledComparison schema carries per-comparison operands + own stats (M15).",
+      "tests": "backend/tests/test_research_api.py (capacity-controlled headline + demote-historical)",
+      "limitation": null
+    },
+    {
+      "id": "H7", "severity": "high", "owner": "claude", "status": "FIXED",
+      "title": "Remove unsupported power guaranteed lower bound",
+      "fix_commit": "6b8bebe",
+      "summary": "Wrist sensing-electronics power renamed WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED; is_lower_bound=False; power_semantic_class=CALCULATED_REFERENCE_SCENARIO_LED_EXCLUDED; component_value_basis=DATASHEET_TYPICAL_REFERENCE. Fixed at builder + regenerated; propagated to backend/paper/jury/traceability.",
+      "tests": "ml/tests/test_day11_part2_engineering.py (semantic class asserts)",
+      "limitation": null
+    },
+    {
+      "id": "M1", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Metric direction must be explicit",
+      "fix_commit": "d6770c2",
+      "summary": "Contract sign_convention is now metric-specific: lower_is_better (MAE/RMSE: baseline-candidate) vs higher_is_better (macro-F1: candidate-baseline); favorable_direction_rule states NO universal implicit subtraction. UI marginal_result carries metric_directionality. decision_inputs guard + join regenerated.",
+      "tests": "ml/tests/test_sensor_marginal_value_contract.py; backend suite",
+      "limitation": "Contract records are all lower-is-better; higher-is-better applies to classification artifacts elsewhere (documented in scope_note)."
+    },
+    {
+      "id": "M2", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Unify CRLF hash semantics",
+      "fix_commit": "68a279b, 6a06d22",
+      "summary": "docs/HASH_PROVENANCE_POLICY.md: binary->raw_sha256, text->canonical_text_sha256 (LF-normalized). Fixed a PRE-EXISTING red test: build_scientific_freeze_day14.py hashed 37 JSON artifacts raw-byte (CRLF-platform-dependent) -> now canonical LF, platform-stable.",
+      "tests": "ml/tests/test_hash_provenance_policy.py (CRLF/LF equivalence + two-impl agreement); test_day11_14_scientific_parallel freeze hashes",
+      "limitation": "Historical stored `sha256` fields are not renamed to typed names (would cascade the frozen provenance chain); disambiguated by the policy doc."
+    },
+    {
+      "id": "M4", "severity": "medium", "owner": "claude", "status": "FIXED_WITH_LIMITATION",
+      "title": "Claim checker is not semantic certification",
+      "fix_commit": "d09ab09",
+      "summary": "Checker OK renamed STRUCTURED_TRACEABILITY_AND_FORBIDDEN_PATTERN_CHECK_PASS + explicit limitation. Added mechanical source_field resolution + api_surface route validation. Fixed 12 broken traceability references (robustness/interaction/wrist-power/system-power/BOM fields, nonexistent /research/reproducibility route x3, EOG JSONPath, digital-twin route).",
+      "tests": "ml/tests/test_claim_consistency_traceability.py",
+      "limitation": "Lexical forbidden-pattern rules can still be bypassed by paraphrase; field/route checks verify existence, not numerical correctness. General semantic verification is explicitly out of scope."
+    },
+    {
+      "id": "M5", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "EOG / head rate semantics",
+      "fix_commit": "7bab4c7",
+      "summary": "Data-rate budget EEG/EOG rows carry rate_class=SCIENTIFIC_MODEL_STREAM_RATE + hardware_acquisition_rate_sps=250; statement separates HARDWARE_ACQUISITION_RATE vs SCIENTIFIC_MODEL_STREAM_RATE. 100 Hz no longer implied as raw hardware acquisition.",
+      "tests": "ml/tests/test_day11_part2_engineering.py (data-rate arithmetic)",
+      "limitation": "Resp native/loaded/model rate left to Ismet H2 (§28); no Resp modality in this budget."
+    },
+    {
+      "id": "M6", "severity": "medium", "owner": "claude", "status": "FIXED_WITH_LIMITATION",
+      "title": "Comparison operand labels (B-C control display)",
+      "fix_commit": "4845ea7",
+      "summary": "PPG comparisons now expose explicit baseline_id/candidate_id/delta_definition per ControlledComparison (semantic labels, not a blanket candidate-baseline). Breakdown color is metric-directionality-aware (M30).",
+      "tests": "backend/tests/test_research_api.py",
+      "limitation": "Structured operands were added for the PPG headline case; other breakdowns rely on per-adapter delta computation with metric_directionality rather than a per-entry operand pair."
+    },
+    {
+      "id": "M7", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Cache provenance",
+      "fix_commit": "7cecb41",
+      "summary": "ppg_dalia cache writer embeds _provenance (schema_version/subject_id/modality_config); reader rejects subject mismatch and warns LEGACY_CACHE_UNVERIFIED on legacy caches instead of silent trust. Existing caches not rebuilt (§35).",
+      "tests": "ml/tests/test_ppg_dalia_cache_provenance.py (valid/mismatch/legacy)",
+      "limitation": "PTT cache loader not yet stamped (same pattern applies); existing caches load as legacy-unverified until re-stamped."
+    },
+    {
+      "id": "M8", "severity": "medium", "owner": "claude", "status": "FIXED_WITH_LIMITATION",
+      "title": "Predeclaration wording",
+      "fix_commit": "7cecb41",
+      "summary": "Added evidence-basis note to SENSOR_MARGINAL_VALUE_METHODOLOGY.md: 'predeclared' rests on commit-history ancestry, not an external registry. Genuine Day-8/9 predeclarations committed before results retain stronger wording (not downgraded, per §40).",
+      "tests": "n/a (doc)",
+      "limitation": "Per-claim git ancestry/timing was not exhaustively forensically re-verified; the note scopes the claim rather than auditing each timestamp."
+    },
+    {
+      "id": "M9", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Archive builder + reproduction CLI exit codes",
+      "fix_commit": "d5f0c81",
+      "summary": "Two verifiers that printed MISMATCH with exit 0 now exit nonzero. Checkpoint-archive builder: empty-selection/collision/missing-checkpoint/verification-mismatch/leaked-dataset -> exit 1; staging cleanup; membership completeness; refuses to overwrite historical archive without BIOMIN_ARCHIVE_OVERWRITE=1.",
+      "tests": "ml/tests/test_checkpoint_archive_guards.py (6 cases)",
+      "limitation": "Day-14 archive builder (build_checkpoint_archive_day14.py) not hardened in this pass; the Day-8 builder is the canonical one."
+    },
+    {
+      "id": "M10", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "TorchInferenceEngine / Digital Twin honesty",
+      "fix_commit": "ebe4d97",
+      "summary": "TorchInferenceEngine documented to run NO forward pass (returns mock snapshot values); name=torch_v1_mock_passthrough; runs_real_inference=False (Option B). Digital Twin page present-tense 'learns/tracks' -> 'would learn / simulated, not learned'.",
+      "tests": "backend/tests/test_inference_engine_honesty.py",
+      "limitation": "Real forward-pass inference is intentionally NOT implemented (would expand scope)."
+    },
+    {
+      "id": "M11", "severity": "medium", "owner": "claude", "status": "FIXED_WITH_LIMITATION",
+      "title": "Source-of-truth duplication",
+      "fix_commit": "n/a (assessment)",
+      "summary": "Engineering numeric burdens flow source artifact -> builder -> API (engineering_readiness reads day11_part3_engineering_inputs.json; no numeric constants duplicated in the adapter). PPG headline reads capacity_control.json live. Presentation copy strings remain in the adapter but carry no numbers that also live in an artifact.",
+      "tests": "existing adapter tests read live artifacts",
+      "limitation": "A full de-duplication audit of every hand-maintained canonical JSON (§34) was not exhaustively converted to builders; the three engineering reference JSONs are builder-generated (build_day11_part2_engineering.py). Any remaining hand-maintained narrative artifacts are historical and left as-is."
+    },
+    {
+      "id": "M12", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Research load resilience (optional panel isolation)",
+      "fix_commit": "02604be",
+      "summary": "researchStore.load refactored: core scientific data (experiments + summary) in try/catch; optional panels (engineering/operational/decision/topology/pareto) each settled via optional() so a 404/500/malformed on an optional endpoint cannot abort the core scientific panels.",
+      "tests": "tsc + frontend build; structural (no configured frontend test runner, §42)",
+      "limitation": "No automated frontend test runner is configured; isolation verified by types + live browser validation."
+    },
+    {
+      "id": "M15", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Replication metadata matched to the correct estimate",
+      "fix_commit": "4845ea7",
+      "summary": "Each ControlledComparison carries its OWN n_seeds/mean/SD/sign-count; no blending of a single-run magnitude with another comparison's five-seed consistency.",
+      "tests": "backend/tests/test_research_api.py",
+      "limitation": null
+    },
+    {
+      "id": "M20", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Interaction metadata",
+      "fix_commit": "d6770c2",
+      "summary": "contract.interaction_effects: interaction_evidence=partial_one_controlled_pair, controlled_pairs_tested=1, global_interaction_coverage=partial, interpretation=approximately_additive_or_unresolved. SENSOR_INTERACTION_LIMITATION.md gets a Day-10 update banner.",
+      "tests": "ml/tests/test_sensor_marginal_value_contract.py",
+      "limitation": null
+    },
+    {
+      "id": "M30", "severity": "medium", "owner": "claude", "status": "FIXED",
+      "title": "Metric-specific display rules",
+      "fix_commit": "4845ea7",
+      "summary": "Removed the single global 0.05 magnitude color threshold across bpm and macro-F1; deltaClass colors by direction only (exact 0 neutral).",
+      "tests": "tsc",
+      "limitation": null
+    },
+    {
+      "id": "M3", "severity": "medium", "owner": "claude", "status": "FIXED_WITH_LIMITATION",
+      "title": "Test language (artifact-consistency vs executable-reproduction)",
+      "fix_commit": "see handoff",
+      "summary": "Documented the test taxonomy in docs/TEST_TAXONOMY.md: stored-JSON assertion tests are artifact-consistency tests; ml/verify_*.py + archive-guard tests are executable-reproduction tests.",
+      "tests": "n/a (doc)",
+      "limitation": "Existing test files were not en-masse renamed; the taxonomy doc classifies them instead."
+    },
+    {
+      "id": "L1", "severity": "low", "owner": "claude", "status": "FIXED_WITH_LIMITATION",
+      "title": "Stale doc cleanup",
+      "fix_commit": "55ef469, d6770c2",
+      "summary": "Interaction limitation banner (Day-10); power reference-scenario wording in paper/jury/canonical handoffs; scoped environment wording.",
+      "tests": "claim checker (no stale forbidden patterns on live surfaces)",
+      "limitation": "Doc cleanup targeted the audit-named surfaces; a full sweep of every historical doc was not performed (historical artifacts preserved and marked superseded where touched)."
+    },
+    {
+      "id": "H1", "severity": "high", "owner": "ismet", "status": "DEFERRED_TO_ISMET_H1_H2",
+      "title": "Sleep seed-before-initialization reproducibility",
+      "fix_commit": null,
+      "summary": "Owned by Ismet's dedicated scientific-remediation branch; not touched here.",
+      "tests": "n/a",
+      "limitation": "SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2."
+    },
+    {
+      "id": "H2", "severity": "high", "owner": "ismet", "status": "DEFERRED_TO_ISMET_H1_H2",
+      "title": "Respiration native-rate / resampling provenance",
+      "fix_commit": null,
+      "summary": "Owned by Ismet; Claude added rate-class schema support (M5) but left Resp values to Ismet.",
+      "tests": "n/a",
+      "limitation": "SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2."
+    }
+  ],
+  "scientific_freeze_status": "SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2",
+  "branch_status": "REMEDIATION_CANDIDATE_NOT_MERGED"
+}
