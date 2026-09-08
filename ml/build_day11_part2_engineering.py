@@ -15,7 +15,7 @@ Discipline (inherited from Part-1, docs/DAY11_PART1_HANDOFF.md):
   * Every numeric value carries a source class; unknowns are null/status, never 0.
   * Component/AFE-boundary powers are NOT summed into a system power number.
   * A sensor-electronics BOUNDARY (explicitly LED/MCU/radio/regulator/battery
-    excluded, explicitly a lower bound) is a labelled partial, not system power.
+    excluded, a calculated reference scenario) is a labelled partial, not system power.
   * REFERENCE selections are representative classes, final_part = false.
 
 Run:  python ml/build_day11_part2_engineering.py
@@ -67,7 +67,7 @@ ADS1292R_ECG = 2 * 0.335           # 0.67 mW = 2 x 335 uW/ch @250 s/s
 
 
 def build_power_budget() -> dict:
-    # Wrist sensing-electronics reference boundary (LED-excluded lower bound).
+    # Wrist sensing-electronics reference boundary (LED-excluded reference scenario, not a bound).
     # reference-point uses BMI270 low-power point; upper uses BMI270 normal.
     wrist_with_light_ref = MAX86141_AFE_CEIL + BMI270_LP + TMP117_P + OPT3001_P
     wrist_with_light_up = MAX86141_AFE_CEIL + BMI270_NORMAL + TMP117_P + OPT3001_P
@@ -263,9 +263,11 @@ def build_power_budget() -> dict:
             },
         },
         "module_sensor_electronics_boundaries": {
-            "note": "Level-3 partials. LED, MCU, radio, regulator loss, battery, storage ALL excluded. These are LED-excluded LOWER BOUNDS, not module system power.",
+            "note": ("Level-3 partials. LED, MCU, radio, regulator loss, battery, storage ALL excluded. "
+                     "These are LED-excluded CALCULATED REFERENCE SCENARIOS built from datasheet-typical "
+                     "operating points, NOT module system power and NOT guaranteed bounds (audit H7)."),
             "wrist_sensor_electronics_reference_power": {
-                "id": "WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER",
+                "id": "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED",
                 "includes": ["MAX86141 AFE floor (LED-excluded)", "BMI270 reference operating point (accel-only low-power)",
                              "TMP117", "OPT3001 (wrist case only)"],
                 "wrist_light_case_band_mW": {"reference_point": _round(wrist_with_light_ref),
@@ -275,10 +277,18 @@ def build_power_budget() -> dict:
                                              "upper_bound_bmi270_normal": _round(wrist_no_light_up),
                                              "class": "DATASHEET_CALCULATED",
                                              "note": "light excluded (cabin placement)"},
-                "is_lower_bound": True,
-                "lower_bound_reason": "Dominant MAX86141 LED average power is excluded; true sensing power is strictly higher.",
+                # Audit H7: NOT a guaranteed lower bound. The included AFE/IMU numbers are
+                # datasheet-typical (DATASHEET_TYPICAL_REFERENCE), which are not guaranteed
+                # minima, so the aggregate is a calculated reference scenario, not a bound.
+                "power_semantic_class": "CALCULATED_REFERENCE_SCENARIO_LED_EXCLUDED",
+                "is_lower_bound": False,
+                "component_value_basis": "DATASHEET_TYPICAL_REFERENCE",
+                "directional_note": ("Excluding the dominant MAX86141 LED average power means realized "
+                                     "sensing-electronics power is DIRECTIONALLY higher than this reference; "
+                                     "however, because the included AFE/IMU values are datasheet-typical "
+                                     "(not guaranteed minima), this figure is NOT a guaranteed lower bound."),
                 "excludes": ["all LED/emitter power", "MCU", "radio", "regulator loss", "battery", "storage"],
-                "readiness": "PARTIAL_LED_EXCLUDED_LOWER_BOUND",
+                "readiness": "PARTIAL_LED_EXCLUDED_REFERENCE_SCENARIO",
             },
             "chest_sensor_electronics_reference_power": {
                 "id": "CHEST_SENSOR_ELECTRONICS_REFERENCE_POWER",
@@ -300,7 +310,7 @@ def build_power_budget() -> dict:
         },
         "system_average_power": {
             "status": "SYSTEM_AVERAGE_POWER_NOT_READY",
-            "highest_defensible_level": ("REFERENCE_SENSOR_ELECTRONICS_POWER_AVAILABLE_FOR_WRIST (LED-excluded lower bound) "
+            "highest_defensible_level": ("REFERENCE_SENSOR_ELECTRONICS_POWER_AVAILABLE_FOR_WRIST (LED-excluded reference scenario) "
                                          "+ ECG_AFE_REFERENCE_POWER_FOR_CHEST; SYSTEM_AVERAGE_POWER_NOT_READY"),
             "blockers": ["LED optical power (wrist + 2nd PPG)", "EEG/EOG head-AFE operating point", "thoracic + leg BioZ operating point",
                          "MCU/radio/regulator identity + power", "deployable duty cycles", "regulator efficiency", "battery architecture"],
@@ -610,7 +620,7 @@ def build_pareto_blocker_progress() -> dict:
              "evidence_added": ["Frozen REFERENCE_IMU_OPERATING_POINT (0.018 mW ref, 0.018-0.378 band)",
                                 "TMP117 0.01155 mW + OPT3001 0.00594 mW component reference powers",
                                 "REFERENCE_ECG_AFE_POWER 0.67 mW", "MAX86141 AFE floor <=0.018 mW (LED-excluded)",
-                                "WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER band (LED-excluded lower bound)",
+                                "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED band (LED-excluded reference scenario, not a bound)",
                                 "Reference MCU/radio/regulator CLASSES"],
              "after_part2_readiness": "HIGH (PARTIAL_IMPROVED)",
              "still_unresolved": ["LED optical power", "EEG/EOG head-AFE operating point", "thoracic + leg BioZ operating point",
@@ -653,7 +663,7 @@ def build_part3_inputs() -> dict:
              "gate_status": "CONDITIONAL_FOR_TARGET", "reference_module": "wrist_module (colocated)",
              "incremental_body_region": 0, "incremental_sensing_contacts": 0, "incremental_module": 0,
              "reference_component_power_mW": {"reference_point": _round(BMI270_LP), "band": [_round(BMI270_LP), _round(BMI270_NORMAL)]},
-             "reference_module_boundary_power": "included in WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER (LED-excluded lower bound)",
+             "reference_module_boundary_power": "included in WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED (LED-excluded reference scenario, not a bound)",
              "mass_tier": "Tier0", "raw_data_rate_increment_bps": 1536, "bom_readiness": "REFERENCE_SELECTED (BMI270)",
              "uncertainty": "exact 32 Hz-compatible mode current within 10-210 uA band; deployable duty open",
              "architecture_decision_implications": "Near-zero incremental human contact burden; power is the best-characterised of all candidates.",

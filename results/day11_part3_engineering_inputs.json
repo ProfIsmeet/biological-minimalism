@@ -28,7 +28,7 @@
           0.378
         ]
       },
-      "reference_module_boundary_power": "included in WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER (LED-excluded lower bound)",
+      "reference_module_boundary_power": "included in WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED (LED-excluded reference scenario, not a bound)",
       "mass_tier": "Tier0",
       "raw_data_rate_increment_bps": 1536,
       "bom_readiness": "REFERENCE_SELECTED (BMI270)",

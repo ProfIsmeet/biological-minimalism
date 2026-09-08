@@ -23,7 +23,7 @@
         "TMP117 0.01155 mW + OPT3001 0.00594 mW component reference powers",
         "REFERENCE_ECG_AFE_POWER 0.67 mW",
         "MAX86141 AFE floor <=0.018 mW (LED-excluded)",
-        "WRIST_SENSOR_ELECTRONICS_REFERENCE_POWER band (LED-excluded lower bound)",
+        "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED band (LED-excluded reference scenario, not a bound)",
         "Reference MCU/radio/regulator CLASSES"
       ],
       "after_part2_readiness": "HIGH (PARTIAL_IMPROVED)",

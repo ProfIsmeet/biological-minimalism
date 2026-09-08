@@ -95,7 +95,13 @@ def test_wrist_boundary_is_sum_of_parts_and_band_ordered(power):
     # band lower <= upper for both
     assert light["reference_point"] <= light["upper_bound_bmi270_normal"]
     assert cabin["reference_point"] <= cabin["upper_bound_bmi270_normal"]
-    assert b["is_lower_bound"] is True
+    # Audit H7: this is a calculated reference scenario from datasheet-typical
+    # values, NOT a guaranteed lower bound.
+    assert b["is_lower_bound"] is False
+    assert b["power_semantic_class"] == "CALCULATED_REFERENCE_SCENARIO_LED_EXCLUDED"
+    assert b["component_value_basis"] == "DATASHEET_TYPICAL_REFERENCE"
+    assert b["id"] == "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED"
+    assert b["readiness"] == "PARTIAL_LED_EXCLUDED_REFERENCE_SCENARIO"
 
 
 # 2. data-rate arithmetic: raw = channels x hz x bits ------------------------

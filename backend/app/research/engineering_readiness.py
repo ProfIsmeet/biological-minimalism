@@ -195,7 +195,7 @@ class EngineeringReadinessReader:
                 status=ReadinessLevel.NOT_READY,
                 note=(
                     "Partial component/reference values exist (e.g. IMU ~0.018 mW, ECG AFE 0.67 mW, "
-                    "wrist sensing-electronics LED-excluded lower bound). No defensible system total."
+                    "wrist sensing-electronics LED-excluded reference scenario). No defensible system total."
                 ),
             ),
             EngineeringPanelRow(
