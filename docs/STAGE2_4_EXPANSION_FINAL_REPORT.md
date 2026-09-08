@@ -8,7 +8,10 @@
   start — matched the expected value exactly; no `STAGE2_BLOCKED_REF_
   MISMATCH` triggered)
 - Stage 2→4 branch: `stage2-4-expansion-science`
-- Final full SHA: `ff3a189e869bbf9a107a502751d29b64f2bdc188`
+- Final full SHA: `8e5cf901fe1e311f66335e1660fada6b49854aa2` (this commit
+  itself — the report necessarily commits after its own content is
+  written; `ff3a189` was the last SHA that existed while writing this
+  report's body, referenced in Section 61's commit list)
 - Remote SHA: matches exactly after push (Section 62)
 - Pushed: yes
 - Clean: yes (`git status --short` empty at every commit boundary)
