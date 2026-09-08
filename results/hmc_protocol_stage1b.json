@@ -1,0 +1,57 @@
+{
+  "dataset_id": "HMC_sleep_staging",
+  "dataset_version": "1.1",
+  "target": "5-class sleep stage (W, N1, N2, N3, REM), from the technician-scored hypnogram",
+  "reference": "HMC hypnogram annotations (sleep technician scoring), not model-derived",
+  "experiment_type": "A/B/C sensor marginal-value ablation, independent-family replication of this project's Sleep-EDF EEG-vs-EEG+EOG finding",
+  "eeg_channel_selection": {
+    "candidates_considered": ["F4/M1", "C4/M1", "O2/M1", "C3/M2"],
+    "frozen_choice": "C4/M1",
+    "rationale": "C4/M1 is the central-derivation channel, the closest anatomical/montage analog to Sleep-EDF's Fpz-Cz/Pz-Oz central placement among HMC's four options, and central EEG is the most commonly retained derivation in wearable-relevant sleep-staging literature when only one channel is available. F4 (frontal) and O2 (occipital) are single-region alternatives; C3/M2 is the redundant contralateral pair to C4/M1 and was not chosen only to avoid an arbitrary tie-break with no anatomical reason to prefer one hemisphere. Frozen before any training; will not be changed based on results.",
+    "not_reconsidered_after_results": true
+  },
+  "eog_derivation": {
+    "channels": ["E1/M2", "E2/M2"],
+    "derived_horizontal_eog": "E1/M2 minus E2/M2",
+    "polarity": "E1 minus E2, fixed (not sign-flipped per subject)",
+    "missing_channel_behavior": "If either E1/M2 or E2/M2 is absent for a given recording, that recording is excluded from B/C (data-integrity rule, not imputed)."
+  },
+  "control_C": {
+    "destroys": "temporal correspondence between EEG and EOG within an epoch",
+    "preserves": ["subject identity", "partition assignment", "realistic EOG signal distribution (drawn from a different epoch of the SAME subject's real EOG recording)"],
+    "labels_shuffled": false,
+    "cross_subject_mixing": false,
+    "rng": "Independent, isolated RNG role (control_shuffle_seed) derived per ml/sleep_seed_utils.py's sub-seed convention, generated independently of hypnogram labels."
+  },
+  "seed_protocol": {
+    "uses_h1_corrected_order": true,
+    "sub_seeds": ["model_init_seed", "data_order_seed", "control_shuffle_seed"],
+    "note": "Historical Sleep-EDF trainers' buggy order (seed applied after model construction) is NOT reused for HMC - HMC is a brand-new trainer to be written, so it starts from the corrected protocol directly rather than needing a later fix."
+  },
+  "split_strategy": {
+    "unit": "recording_id (== subject, confirmed 1:1 this sprint)",
+    "method": "Subject-wise (== recording-wise) k-fold, no epoch-level split, no repeated-night grouping logic needed (confirmed no repeat nights exist in this database)."
+  },
+  "stage_mapping": {
+    "frozen_classes": ["W", "N1", "N2", "N3", "REM"],
+    "unknown_movement_unscored_handling": "Epochs labeled unknown/movement/unscored in the hypnogram are excluded from both training and evaluation (data-integrity exclusion, applied identically to A/B/C, frozen before training, never revisited based on results)."
+  },
+  "primary_metric": "Macro-F1",
+  "secondary_metrics": ["balanced accuracy", "per-class F1"],
+  "eligibility_rules": ["C4/M1 present", "E1/M2 and E2/M2 present (for B/C)", "valid non-empty hypnogram present"],
+  "leakage_exclusions": ["chin EMG", "ECG lead II", "F4/O2/C3 (unused derivations, out of scope not leakage)"],
+  "subject_sensitivity": "Report per-subject A-vs-B delta across all eligible subjects (151 candidate), favorable-direction count, dominance/concentration, matching this project's existing Sleep-EDF per-subject reporting convention.",
+  "capacity_control": "Architecture-matched dual-channel-input Conv1D encoder identical in width/depth to this project's existing Sleep-EDF SleepStageClassifier convention, adapted for HMC's 256 Hz input rate.",
+  "negative_result_policy": {
+    "if_candidate_helps": "Report as: 'EOG added sleep-staging information under an independent replication (HMC), on a clinically heterogeneous cohort distinct from Sleep-EDF's healthy-volunteer population.'",
+    "if_candidate_does_not_help": "Report as: 'the Sleep-EDF EOG benefit did not reproduce on HMC's clinical cohort' - a real, retained negative result, not discarded.",
+    "if_shuffled_control_equals_candidate": "Report: apparent EOG benefit attributable to capacity/context, not temporal correspondence.",
+    "if_effect_sign_flips_vs_sleep_edf": "Report both findings side by side; consider (but do not assume) that population heterogeneity (clinical referrals vs. healthy volunteers) is a plausible contributing factor, offered as a hypothesis not a proven mechanism."
+  },
+  "forbidden_claims": ["EOG is necessary for sleep staging.", "HMC replicates Sleep-EDF (use 'independent-family reproduction attempt', not 'replication').", "Chin EMG or ECG lead II are safe staging inputs."],
+  "implementation_cost": "MEDIUM-HIGH (15.7 GB total, 151 EDF files, largest of the currently-in-repo sleep datasets by file count)",
+  "workflow_dependency": "GO_WITH_DEPENDENCY - full HMC Stage-2 training should not begin until Claude/Emir's Stage 1A Sleep V2 protocol/state is frozen, per Section 29's explicit instruction. The dataset itself has no scientific blocker; the dependency is purely about not building on a Sleep protocol that may still change under Claude's parallel integration work.",
+  "status": "PROTOCOL_FROZEN",
+  "classification": "GO_WITH_DEPENDENCY",
+  "classification_reason": "All required facts verified directly (RECORDS index, PhysioNet page): confirmed 1-recording-per-subject (no repeat-night grouping trap), confirmed uniform 256 Hz across all channels (no H2-style per-channel mismatch), clean CC-BY open access. The only limiting factor is the workflow dependency on Claude's Stage 1A Sleep V2 freeze, not a data or design flaw - hence GO_WITH_DEPENDENCY rather than plain GO or a limitation-driven GO_WITH_LIMITATIONS."
+}

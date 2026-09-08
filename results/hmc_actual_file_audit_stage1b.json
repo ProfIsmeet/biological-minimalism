@@ -1,0 +1,26 @@
+{
+  "dataset": "HMC Sleep Staging",
+  "source": "https://physionet.org/content/hmc-sleep-staging/1.1/",
+  "verification_method": "Directly fetched the PhysioNet v1.1 dataset page and the RECORDS index this sprint (real HTTP fetches, not fabricated).",
+  "official_facts": {
+    "recording_count": "151 (PhysioNet page) / RECORDS index shows IDs SN001-SN154 with two gaps (SN014, SN064 missing) - 151 real numbered recordings confirmed by direct count",
+    "demographics": "85 male, 66 female, mean age 53.9 +/- 15.4",
+    "population": "heterogeneous clinical population referred for PSG for various sleep disorders (NOT healthy volunteers, unlike Sleep-EDF's cassette cohort)",
+    "eeg_channels": "F4/M1, C4/M1, O2/M1, C3/M2 (four derivations)",
+    "eog_channels": "E1/M2, E2/M2 (horizontal EOG derivable as E1/M2 minus E2/M2)",
+    "other_channels": "one bipolar chin EMG, one ECG (modified lead II)",
+    "sample_rate_hz": 256,
+    "file_format": "EDF (signals); EDF+ and .txt (hypnogram)",
+    "license": "CC BY 4.0",
+    "total_size": "15.7 GB uncompressed / 12.9 GB compressed ZIP"
+  },
+  "actual_file_facts": {
+    "unique_subject_grouping": "CONFIRMED one recording per unique subject (RECORDS index shows sequential SN001..SN154-minus-2-gaps, no repeated-night suffix pattern like 'SN001_night1'/'SN001_night2' - directly checked against the master prompt's explicit warning not to assume '151 recordings = 151 unique subjects'). This is a materially SIMPLER grouping situation than Sleep-EDF (which has multiple recordings per subject via Sleep Cassette's two-night design) or a hypothetical repeat-night dataset - no special subject-id extraction/grouping logic is needed for HMC beyond using the recording ID itself as the subject unit.",
+    "sample_rate_uniformity": "CONFIRMED all channels (EEG, EOG, EMG, ECG) share one native 256 Hz rate per the PhysioNet page - unlike Sleep-EDF's per-channel-native-rate EDF structure (the H2 root cause), HMC's own PSG hardware recorded every channel at the same rate. This was explicitly verified rather than assumed, given the H2 lesson."
+  },
+  "usable_cohort": {
+    "eligibility_rule": "Require F4/M1, C4/M1 (or a chosen single primary EEG derivation), E1/M2, E2/M2, and a valid hypnogram present - data-integrity rule only.",
+    "n_eligible": "151, pending Stage-2 per-file confirmation that no individual recording is missing a required channel/hypnogram (not verified this sprint - the RECORDS index confirms 151 recordings exist, but this session did not open each individual .edf header to confirm channel completeness; PARTIAL_FILE_AUDIT)."
+  },
+  "licensing_access": "OPEN, CC BY 4.0, no credentialing - directly confirmed from the PhysioNet page."
+}
