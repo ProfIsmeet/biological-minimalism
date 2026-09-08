@@ -422,8 +422,41 @@ function Provenance({ experiment }: { experiment: ResearchExperiment }) {
   );
 }
 
+function VersionStateTable({ breakdown }: { breakdown: ResearchBreakdown }) {
+  return (
+    <div className="mt-3 overflow-hidden rounded-lg border border-white/5">
+      <div className="border-b border-white/5 bg-white/[0.025] px-3 py-2.5">
+        <h4 className="text-xs font-semibold text-slate-300">{breakdown.title}</h4>
+      </div>
+      <div className="divide-y divide-white/5">
+        {breakdown.entries.map((entry) => {
+          const preferred = entry.dimensions.preferred_for_current_claim === true;
+          const pending = entry.dimensions.result_status === "V2_PENDING_FOLLOWUP";
+          return (
+            <div key={entry.entry_id} className="px-3 py-2.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-xs font-medium text-slate-300">{entry.label}</span>
+                <span className={clsx("rounded-full border px-1.5 py-px text-[9px] font-semibold", preferred ? "border-emerald-400/30 text-emerald-300" : pending ? "border-amber-400/30 text-amber-300" : "border-slate-500/40 text-slate-400")}>
+                  {String(entry.dimensions.result_status ?? "")}
+                </span>
+                <span className="rounded-full border border-white/10 px-1.5 py-px text-[9px] font-semibold text-slate-500">{String(entry.dimensions.protocol_version ?? "")}</span>
+              </div>
+              <p className="mt-1 text-[10px] leading-relaxed text-slate-500">
+                {String(entry.dimensions.training_seed_protocol ?? "")} · {String(entry.dimensions.checkpoint_set ?? "")}
+                {entry.dimensions.control_status ? ` · control: ${entry.dimensions.control_status}` : ""}
+                {entry.dimensions.interaction_status ? ` · interaction: ${entry.dimensions.interaction_status}` : ""}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
-  const regularBreakdowns = experiment.breakdowns.filter((breakdown) => !["fault_condition", "fault_aggregate"].includes(breakdown.kind));
+  const regularBreakdowns = experiment.breakdowns.filter((breakdown) => !["fault_condition", "fault_aggregate", "version_state"].includes(breakdown.kind));
+  const versionState = experiment.breakdowns.find((breakdown) => breakdown.kind === "version_state");
   return (
     <Panel
       title={experiment.title}
@@ -458,11 +491,13 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
               <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Controlled comparisons</p>
               {experiment.marginal_result.controlled_comparisons.map((comparison) => {
                 const isHeadline = comparison.comparison_id === experiment.marginal_result?.headline_comparison_id;
-                const isHistorical = comparison.role === "HISTORICAL_CAPACITY_CONFOUNDED_RESULT";
+                const isHistorical = comparison.role === "HISTORICAL_CAPACITY_CONFOUNDED_RESULT" || comparison.role === "HISTORICAL_PRE_SEEDFIX_V1_RESULT";
+                const isPending = comparison.role === "SEED_CORRECTION_PENDING_FOLLOWUP";
+                const historicalBadgeLabel = comparison.role === "HISTORICAL_PRE_SEEDFIX_V1_RESULT" ? "HISTORICAL — pre-seedfix (V1)" : "HISTORICAL — capacity-confounded";
                 return (
-                  <div key={comparison.comparison_id} className={clsx("rounded border px-2.5 py-1.5 text-[11px]", isHistorical ? "border-slate-600/40 bg-slate-500/[0.04] opacity-70" : isHeadline ? "border-emerald-400/25 bg-emerald-400/[0.05]" : "border-white/10 bg-white/[0.02]")}>
+                  <div key={comparison.comparison_id} className={clsx("rounded border px-2.5 py-1.5 text-[11px]", isPending ? "border-amber-400/25 bg-amber-400/[0.04]" : isHistorical ? "border-slate-600/40 bg-slate-500/[0.04] opacity-70" : isHeadline ? "border-emerald-400/25 bg-emerald-400/[0.05]" : "border-white/10 bg-white/[0.02]")}>
                     <div className="flex flex-wrap items-center justify-between gap-1.5">
-                      <span className="text-slate-300">{comparison.label}{isHeadline ? <span className="ml-1 rounded-full border border-emerald-400/30 px-1.5 py-px text-[9px] font-semibold text-emerald-300">HEADLINE</span> : null}{isHistorical ? <span className="ml-1 rounded-full border border-slate-500/40 px-1.5 py-px text-[9px] font-semibold text-slate-400">HISTORICAL — capacity-confounded</span> : null}</span>
+                      <span className="text-slate-300">{comparison.label}{isHeadline ? <span className="ml-1 rounded-full border border-emerald-400/30 px-1.5 py-px text-[9px] font-semibold text-emerald-300">HEADLINE</span> : null}{isHistorical ? <span className="ml-1 rounded-full border border-slate-500/40 px-1.5 py-px text-[9px] font-semibold text-slate-400">{historicalBadgeLabel}</span> : null}{isPending ? <span className="ml-1 rounded-full border border-amber-400/30 px-1.5 py-px text-[9px] font-semibold text-amber-300">PENDING — not retrained under corrected protocol</span> : null}</span>
                       <span className="tabular-nums-mono font-semibold text-slate-100">{signedMetric(comparison.delta)}{comparison.n_seeds !== null ? ` · ${comparison.n_seeds_favor_candidate}/${comparison.n_seeds} seeds` : ""}</span>
                     </div>
                     <p className="mt-0.5 text-[10px] text-slate-500">{comparison.delta_definition}. {comparison.interpretation}</p>
@@ -471,6 +506,7 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
               })}
             </div>
           ) : null}
+          {versionState ? <VersionStateTable breakdown={versionState} /> : null}
           <ul className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-slate-400">{experiment.marginal_result.notes.map((note) => <li key={note}>• {note}</li>)}</ul>
         </div>
       ) : null}

@@ -293,7 +293,10 @@ export interface ResearchMarginalResult {
 export type ComparisonRole =
   | "PRIMARY_CONTROLLED"
   | "MATCHED_SHUFFLED_CONTROL"
-  | "HISTORICAL_CAPACITY_CONFOUNDED_RESULT";
+  | "HISTORICAL_CAPACITY_CONFOUNDED_RESULT"
+  | "SEED_CORRECTED_PREFERRED_V2"
+  | "HISTORICAL_PRE_SEEDFIX_V1_RESULT"
+  | "SEED_CORRECTION_PENDING_FOLLOWUP";
 
 export interface ControlledComparison {
   comparison_id: string;
