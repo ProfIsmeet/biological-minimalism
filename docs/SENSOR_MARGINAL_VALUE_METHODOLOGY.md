@@ -118,7 +118,18 @@ These carry no clinical, regulatory, or population-generalization meaning.
 secondary holdout — a genuinely untouched subject cohort, frozen and
 predeclared before any prediction is made, evaluated with existing frozen
 checkpoints (no retraining) — is evidence about **generalization within the
-same dataset's broader population**, not independent-dataset replication. It
+same dataset's broader population**, not independent-dataset replication.
+
+> **Evidence basis for the "predeclared" claim (audit M8/§40):** the strength of
+> "predeclared before execution" rests on **commit-history ancestry** — the
+> predeclaration/protocol commit precedes the results commit on this branch — not
+> on an external timestamped registry. Where that ancestry is the evidence, read
+> the claim as "protocol recorded in commit history before the result commit."
+> Genuine Day-8/9 predeclarations that were separately committed before their
+> results retain the stronger wording; we do not assert prospective registration
+> beyond what commit ancestry supports.
+
+It
 does **not** by itself justify inventing or auto-assigning a stronger
 taxonomy category. Instead, when a secondary holdout is run, the experiment
 record appends a qualifier tag to its existing evidence-strength rationale:

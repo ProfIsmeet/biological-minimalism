@@ -35,6 +35,8 @@ into this exact shape is skipped with a warning, not padded or guessed.
 
 from __future__ import annotations
 
+import json
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -45,6 +47,8 @@ from backend.app.data.ppg_dalia import (
     load_subject_payload,
     list_available_subjects,
 )
+
+CACHE_SCHEMA_VERSION = "ppg_dalia_cache.v1"  # audit M7/§35 cache provenance
 
 PPG_FS = 64.0
 ACC_FS = 32.0
@@ -215,6 +219,18 @@ def preprocess_subject(zip_path: str | Path, subject_id: str, cache_dir: str | P
     )
     windows = _windowize(raw, subject_id)
 
+    # Audit M7/§35: embed cache provenance metadata so a loader can reject a
+    # mislabeled or stale cache instead of silently trusting it. Existing caches
+    # without this key are tolerated as LEGACY_CACHE_UNVERIFIED (§36).
+    meta = {
+        "cache_schema_version": CACHE_SCHEMA_VERSION,
+        "subject_id": subject_id,
+        "modality_config": {
+            "ppg_fs": PPG_FS, "acc_fs": ACC_FS,
+            "window_seconds": WINDOW_SECONDS, "step_seconds": STEP_SECONDS,
+        },
+        "preprocessing": "ml/datasets/ppg_dalia.py::_windowize (deterministic)",
+    }
     np.savez_compressed(
         cache_path,
         ppg=windows.ppg,
@@ -222,6 +238,7 @@ def preprocess_subject(zip_path: str | Path, subject_id: str, cache_dir: str | P
         hr=windows.hr,
         activity=windows.activity,
         motion_energy=windows.motion_energy,
+        _provenance=np.array(json.dumps(meta)),
     )
     return cache_path
 
@@ -234,6 +251,28 @@ def load_cached_subject(cache_dir: str | Path, subject_id: str) -> SubjectWindow
             "ml/preprocess_ppg_dalia.py first."
         )
     with np.load(cache_path) as data:
+        # Audit M7/§35-§36: verify embedded provenance; reject a cache whose
+        # recorded subject/schema does not match, but tolerate legacy caches
+        # (no provenance) as LEGACY_CACHE_UNVERIFIED rather than silently trusting.
+        if "_provenance" in data:
+            meta = json.loads(str(data["_provenance"]))
+            if meta.get("subject_id") != subject_id:
+                raise ValueError(
+                    f"Cache provenance mismatch: {cache_path} records subject "
+                    f"{meta.get('subject_id')!r} but {subject_id!r} was requested."
+                )
+            if meta.get("cache_schema_version") != CACHE_SCHEMA_VERSION:
+                warnings.warn(
+                    f"Cache {cache_path} schema {meta.get('cache_schema_version')!r} != "
+                    f"{CACHE_SCHEMA_VERSION!r}; treating as LEGACY_CACHE_UNVERIFIED.",
+                    stacklevel=2,
+                )
+        else:
+            warnings.warn(
+                f"Cache {cache_path} has no provenance metadata "
+                "(LEGACY_CACHE_UNVERIFIED): re-run ml/preprocess_ppg_dalia.py to stamp it.",
+                stacklevel=2,
+            )
         return SubjectWindows(
             subject_id=subject_id,
             ppg=data["ppg"],
