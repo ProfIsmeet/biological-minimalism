@@ -1,0 +1,96 @@
+{
+  "purpose": "Fingerprint manifest for actual files directly accessed this sprint. Coverage is PARTIAL_FILE_AUDIT for every dataset except QDE V2 (already fully local) - no raw waveform data was bulk-downloaded this sprint per Section 9's scope boundary (feasibility verification, not Stage-2 training data acquisition).",
+  "coverage_status": "PARTIAL_FILE_AUDIT",
+  "files": [
+    {
+      "dataset": "QDE_V2",
+      "version": "1.0.0",
+      "relative_path": "datasets/qde-bioimpedance/raw/dehydration_estimation.csv",
+      "subject_session": "all 10 subjects, all 9 intervals (single file)",
+      "byte_size": 14419,
+      "sha256": "186f24f567eee623e475f6556217344a9cc3a522d969d76df02ffe5820628074",
+      "retrieval_date": "already present in repo from a prior sprint; re-verified this sprint",
+      "source_url": "https://physionet.org/files/qde/1.0.0/dehydration_estimation.csv",
+      "role": "raw"
+    },
+    {
+      "dataset": "HMC",
+      "version": "1.1",
+      "relative_path": "N/A - RECORDS index only, no individual .edf downloaded",
+      "subject_session": "all 151 (index-level only)",
+      "byte_size": "N/A (index text, not measured)",
+      "retrieval_date": "2026-09-08",
+      "source_url": "https://physionet.org/content/hmc-sleep-staging/1.1/RECORDS",
+      "role": "metadata"
+    },
+    {
+      "dataset": "ds003838",
+      "version": "openneuro.ds003838.v1.0.6",
+      "relative_path": "participants.tsv",
+      "subject_session": "all 86 recruited participants",
+      "byte_size": 7123,
+      "retrieval_date": "2026-09-08",
+      "source_url": "https://raw.githubusercontent.com/OpenNeuroDatasets/ds003838/main/participants.tsv",
+      "role": "metadata"
+    },
+    {
+      "dataset": "ds003838",
+      "version": "openneuro.ds003838.v1.0.6",
+      "relative_path": "sub-032/eeg/sub-032_task-memory_eeg.json",
+      "subject_session": "sub-032, memory task",
+      "byte_size": 743,
+      "retrieval_date": "2026-09-08",
+      "source_url": "https://raw.githubusercontent.com/OpenNeuroDatasets/ds003838/main/sub-032/eeg/sub-032_task-memory_eeg.json",
+      "role": "metadata"
+    },
+    {
+      "dataset": "ds003838",
+      "version": "openneuro.ds003838.v1.0.6",
+      "relative_path": "sub-032/eeg/sub-032_task-memory_channels.tsv",
+      "subject_session": "sub-032, memory task",
+      "byte_size": 933,
+      "retrieval_date": "2026-09-08",
+      "source_url": "https://raw.githubusercontent.com/OpenNeuroDatasets/ds003838/main/sub-032/eeg/sub-032_task-memory_channels.tsv",
+      "role": "annotation"
+    },
+    {
+      "dataset": "ds003838",
+      "version": "openneuro.ds003838.v1.0.6",
+      "relative_path": "sub-032/eeg/sub-032_task-memory_eeg.set",
+      "subject_session": "sub-032, memory task",
+      "byte_size": "1541437462 (real object size, read from the git-annex pointer filename - binary content not downloaded)",
+      "retrieval_date": "2026-09-08",
+      "source_url": "https://raw.githubusercontent.com/OpenNeuroDatasets/ds003838/main/sub-032/eeg/sub-032_task-memory_eeg.set",
+      "role": "raw"
+    },
+    {
+      "dataset": "ds003838",
+      "version": "openneuro.ds003838.v1.0.6",
+      "relative_path": "sub-032/eeg/sub-032_task-rest_eeg.set",
+      "subject_session": "sub-032, rest task",
+      "byte_size": "47511267 (real object size, read from the git-annex pointer filename - binary content not downloaded)",
+      "retrieval_date": "2026-09-08",
+      "source_url": "https://raw.githubusercontent.com/OpenNeuroDatasets/ds003838/main/sub-032/eeg/sub-032_task-rest_eeg.set",
+      "role": "raw"
+    },
+    {
+      "dataset": "GalaxyPPG",
+      "version": "Zenodo 14635823",
+      "relative_path": "N/A - direct file access blocked this sprint",
+      "byte_size": "N/A",
+      "retrieval_date": "attempted 2026-09-08, timed out",
+      "source_url": "https://zenodo.org/records/14635823",
+      "role": "N/A - fact sourced from peer-reviewed paper text instead (PMC12119839)"
+    },
+    {
+      "dataset": "LBNP",
+      "version": "Zenodo 10119427",
+      "relative_path": "N/A - direct file access blocked this sprint",
+      "byte_size": "N/A",
+      "retrieval_date": "attempted 2026-09-08, timed out",
+      "source_url": "https://zenodo.org/records/10119427",
+      "role": "N/A - fact sourced from peer-reviewed paper text instead (PMC11018605)"
+    }
+  ],
+  "not_fully_fingerprinted_disclosure": "This manifest does NOT claim full-dataset fingerprinting for any of the five candidates. QDE V2 is the only dataset with its full (and only) raw file already fingerprinted. HMC and ds003838 have real, directly-fetched metadata/pointer-level facts for a representative subset (RECORDS index; one of 65 eligible ds003838 subjects). GalaxyPPG and LBNP have ZERO direct file access this sprint due to a Zenodo network-egress timeout in this sandbox - their facts come entirely from directly-fetched peer-reviewed paper text, a real and authoritative but one-level-removed source."
+}

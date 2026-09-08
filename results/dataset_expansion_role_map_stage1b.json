@@ -1,0 +1,8 @@
+{
+  "purpose": "Clarify that the five Stage 1B programs serve different scientific roles - relevant for the eventual paper's structure.",
+  "GalaxyPPG": {"role_type": "Type 1", "role_description": "Independent replication - same scientific question (wrist IMU value for HR) as PPG-DaLiA, different dataset/device/subject family."},
+  "HMC": {"role_type": "Type 1", "role_description": "Independent replication - same scientific question (EOG value for sleep staging) as Sleep-EDF, different institution/population/hardware."},
+  "QDE_V2": {"role_type": "Type 3", "role_description": "New sensor-value experiment on an existing dataset family already held by this project (bilateral leg impedance, not a new dataset)."},
+  "LBNP": {"role_type": "Type 3 + new family", "role_description": "New sensor-value experiment (thoracic EIS value for LBNP-stage) AND a new independent dataset family simultaneously - a novel physiological-challenge paradigm not previously in this project."},
+  "ds003838": {"role_type": "Type 2", "role_description": "New target/domain - cognitive/working-memory load, not cardiovascular or sleep, using a new EEG montage and a spatial-coverage-minimalism question distinct from the modality-fusion questions the other four programs ask."}
+}

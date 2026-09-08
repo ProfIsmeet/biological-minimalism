@@ -1,0 +1,29 @@
+{
+  "purpose": "Science-expansion readiness matrix - per-dataset checklist status across the dimensions the master prompt specifies.",
+  "columns": ["data_access", "actual_file_verification", "same_subject_validity", "target_validity", "leakage_audit", "split_frozen", "A_frozen", "B_frozen", "C_frozen", "capacity_control_frozen", "metric_frozen", "subject_reporting_frozen", "reproducibility_plan", "stage2_readiness"],
+  "GalaxyPPG": {
+    "data_access": "READY", "actual_file_verification": "READY_WITH_LIMITATION (Zenodo blocked; paper-measured stats used)", "same_subject_validity": "READY", "target_validity": "READY", "leakage_audit": "READY",
+    "split_frozen": "READY", "A_frozen": "READY", "B_frozen": "READY", "C_frozen": "READY_WITH_LIMITATION (exact derangement algorithm TBD at Stage-2 implementation)",
+    "capacity_control_frozen": "READY", "metric_frozen": "READY", "subject_reporting_frozen": "READY", "reproducibility_plan": "READY", "stage2_readiness": "READY"
+  },
+  "HMC": {
+    "data_access": "READY", "actual_file_verification": "READY_WITH_LIMITATION (index-level only, no individual EDFs opened)", "same_subject_validity": "READY", "target_validity": "READY", "leakage_audit": "READY",
+    "split_frozen": "READY", "A_frozen": "READY", "B_frozen": "READY", "C_frozen": "READY",
+    "capacity_control_frozen": "READY", "metric_frozen": "READY", "subject_reporting_frozen": "READY", "reproducibility_plan": "READY", "stage2_readiness": "BLOCKED (workflow dependency on Claude/Emir Stage 1A Sleep V2 freeze, not a data issue)"
+  },
+  "QDE_V2": {
+    "data_access": "READY", "actual_file_verification": "READY", "same_subject_validity": "READY", "target_validity": "READY_WITH_LIMITATION (residual physiological, non-circular dependency disclosed)", "leakage_audit": "READY",
+    "split_frozen": "READY", "A_frozen": "READY", "B_frozen": "READY", "C_frozen": "READY",
+    "capacity_control_frozen": "READY", "metric_frozen": "READY", "subject_reporting_frozen": "READY_WITH_LIMITATION (n=10 inherently small)", "reproducibility_plan": "READY", "stage2_readiness": "READY"
+  },
+  "LBNP": {
+    "data_access": "READY_WITH_LIMITATION (access implied, license/file-count unverified)", "actual_file_verification": "READY_WITH_LIMITATION (paper-level only)", "same_subject_validity": "READY_WITH_LIMITATION (16 vs 18 file-count not directly confirmed)", "target_validity": "READY", "leakage_audit": "READY_WITH_LIMITATION (mitigation designed, not yet applied to real files)",
+    "split_frozen": "READY", "A_frozen": "READY", "B_frozen": "READY", "C_frozen": "READY",
+    "capacity_control_frozen": "READY", "metric_frozen": "READY", "subject_reporting_frozen": "READY", "reproducibility_plan": "READY_WITH_LIMITATION (several native rates unverified)", "stage2_readiness": "BLOCKED (pending direct Zenodo access)"
+  },
+  "ds003838": {
+    "data_access": "READY", "actual_file_verification": "READY (real sidecars/participants.tsv/tree fetched; 1-of-65-subject montage sample)", "same_subject_validity": "READY", "target_validity": "READY", "leakage_audit": "READY",
+    "split_frozen": "READY", "A_frozen": "READY", "B_frozen": "READY", "C_frozen": "READY",
+    "capacity_control_frozen": "READY", "metric_frozen": "READY", "subject_reporting_frozen": "READY", "reproducibility_plan": "READY_WITH_LIMITATION (resource cost, single-subject montage confirmation)", "stage2_readiness": "READY"
+  }
+}
