@@ -1,0 +1,58 @@
+{
+  "purpose": "Target leakage matrix for the five Stage 1B candidates, predeclared before any Stage-2 training.",
+  "statuses_legend": ["SAFE_INPUT", "TARGET_ONLY", "EXCLUDE_LEAKAGE", "EXCLUDE_CIRCULARITY", "CONTEXT_ONLY", "GROUPING_ONLY", "TARGET_REFERENCE_ONLY", "UNKNOWN_REQUIRES_REVIEW"],
+  "GalaxyPPG_HR": {
+    "polar_h10_raw_ecg": "TARGET_REFERENCE_ONLY",
+    "polar_h10_device_hr": "EXCLUDE_LEAKAGE",
+    "galaxy_watch5_device_hr": "EXCLUDE_LEAKAGE",
+    "e4_bvp_waveform": "SAFE_INPUT",
+    "e4_acc_waveform": "SAFE_INPUT",
+    "galaxy_watch5_acc": "CONTEXT_ONLY (not part of the frozen A/B/C; could motivate a future ablation but is not in scope)",
+    "activity_label": "CONTEXT_ONLY (used for subgroup/activity-sensitivity reporting, Section 25, never as a model input feature)",
+    "participant_id": "GROUPING_ONLY",
+    "skin_temperature": "UNKNOWN_REQUIRES_REVIEW (not part of the frozen A/B/C; P02 missing this signal per the paper - excluded from scope entirely rather than reviewed further)"
+  },
+  "HMC_sleep": {
+    "eeg_derivations_F4C4O2C3": "SAFE_INPUT",
+    "eog_e1_e2": "SAFE_INPUT",
+    "emg_chin": "EXCLUDE_LEAKAGE (chin EMG can directly encode REM atonia / arousal - would make the sleep-stage target partially circular if included; excluded from the frozen A/B/C exactly as this project's Sleep-EDF experiments already exclude non-EEG/EOG channels)",
+    "ecg_lead_ii": "EXCLUDE_LEAKAGE (same reasoning - cardiac-rate variation correlates with sleep stage and is not the signal under test)",
+    "hypnogram_stage_label": "TARGET_ONLY",
+    "subject_id_recording_id": "GROUPING_ONLY (151 unique subjects, one recording each - confirmed no repeat-night grouping issue exists for this database, unlike the master prompt's generic warning)",
+    "age_sex": "CONTEXT_ONLY (subgroup reporting only)"
+  },
+  "QDE_bodymass_change": {
+    "kern_scale_weight": "TARGET_ONLY",
+    "inbody_weight": "EXCLUDE_CIRCULARITY (same BIA device family as the impedance features - see qde_v2_protocol_stage1b.json for the full circularity analysis)",
+    "inbody_tbw": "EXCLUDE_CIRCULARITY (this was the OLD target; now explicitly excluded as an input to the NEW target to avoid target leakage between the historical and new experiments)",
+    "running_interval_0_to_8": "EXCLUDE_LEAKAGE (directly encodes elapsed protocol time - equivalent to the master prompt's 'elapsed time' / 'exercise interval' exclusion)",
+    "running_speed_kmh": "EXCLUDE_LEAKAGE (treadmill speed - protocol-progression proxy)",
+    "arm_trunk_impedance_1000khz": "SAFE_INPUT",
+    "leg_impedance_1000khz": "SAFE_INPUT (candidate signal, B/C)",
+    "skin_temperature_11_sites": "SAFE_INPUT (available but NOT part of the frozen A/B/C feature set - out of scope, not excluded for leakage reasons)",
+    "sweat_saliva_biomarkers": "CONTEXT_ONLY (not part of the frozen A/B/C; a real but out-of-scope modality in the same file)",
+    "subject_id": "GROUPING_ONLY",
+    "age_height": "CONTEXT_ONLY"
+  },
+  "LBNP_stage": {
+    "lbnp_pressure_level_mmhg": "TARGET_ONLY",
+    "elapsed_time_within_session": "EXCLUDE_LEAKAGE",
+    "stage_sequence_index_trial_order": "EXCLUDE_LEAKAGE",
+    "filename_or_recording_timestamp": "EXCLUDE_LEAKAGE (must be verified absent from the feature array once raw files are actually accessed in Stage 2 - flagged as a mandatory Stage-2 pre-training check, since this sprint could not directly inspect the raw filenames - Zenodo access blocked)",
+    "ecg_waveform": "SAFE_INPUT",
+    "pleth_waveform": "SAFE_INPUT",
+    "thoracic_eis_spectrum": "SAFE_INPUT (candidate signal, B/C)",
+    "abdominal_arm_eis_spectrum": "CONTEXT_ONLY (not part of the frozen A/B/C - only the thoracic site is used, per Section 13's single-site focus to keep A/B/C a single-variable comparison)",
+    "map_invasive": "EXCLUDE_LEAKAGE from the PRIMARY experiment (LBNP-stage target); usable ONLY as a separate, preregistered SECONDARY target per Section 13, in which case pressure-level itself must then be excluded from that secondary experiment's inputs",
+    "subject_id": "GROUPING_ONLY"
+  },
+  "ds003838_memory_load": {
+    "digit_sequence_length_5_9_13": "TARGET_ONLY",
+    "condition_control_vs_memory": "CONTEXT_ONLY (a real, separate axis from sequence length; not conflated with the length target - could motivate a secondary/interaction analysis but is out of scope for the frozen primary A/B/C)",
+    "eeg_63_channels": "SAFE_INPUT (sparse subset = A, full montage = B, per the frozen channel selection)",
+    "recall_correctness_behavioral": "CONTEXT_ONLY (post-hoc performance measure, not part of the input feature set - could trivially leak load-dependent difficulty, excluded from inputs)",
+    "trigger_code_per_digit_position": "EXCLUDE_LEAKAGE if used naively (the trigger code strings directly encode the sequence length digit-by-digit, e.g. 'x500105' vs 'x500113' - the LOADER must extract only the windowed EEG epoch and the associated condition label, never pass the raw trigger-code string as a feature)",
+    "subject_id": "GROUPING_ONLY",
+    "nasa_tlx_scores": "CONTEXT_ONLY (subjective workload ratings in participants.tsv; not the primary target per Section 14's instruction to prefer the externally-imposed condition)"
+  }
+}

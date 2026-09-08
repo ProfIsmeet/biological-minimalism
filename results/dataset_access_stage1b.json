@@ -1,0 +1,68 @@
+{
+  "purpose": "Stage 1B access/license manifest for the five candidate datasets. No credentials stored anywhere in this file or repository.",
+  "programs": {
+    "GalaxyPPG": {
+      "access_type": "OPEN",
+      "license": "CC BY 4.0 (Creative Commons Attribution 4.0 International), per Zenodo record and Scientific Data paper",
+      "authentication_required": false,
+      "source_location": "Zenodo DOI 10.5281/zenodo.14635823",
+      "file_format": "CSV, organized per-participant/per-device",
+      "download_state": "NOT_DOWNLOADED_THIS_SPRINT",
+      "download_note": "Direct curl/HTTP access to zenodo.org timed out repeatedly from this sandbox's network egress during this sprint (verified: two independent 15-20s timeouts to zenodo.org/records/* and zenodo.org/api/records/*). Dataset facts were instead verified via the peer-reviewed Scientific Data paper's own reported MEASURED (not nominal) sample rates and per-participant completeness table (PMC12119839), which is authoritative-source verification per Section 8's priority order, but is not the same as this session directly listing/hashing the Zenodo files.",
+      "redistribution_limits": "CC BY permits redistribution with attribution; raw files still should not be committed to this repo (size, license-attribution-per-file bookkeeping burden) - same policy as every other dataset in this project.",
+      "raw_data_may_be_committed": false,
+      "fingerprints_may_be_committed": true,
+      "total_size_estimate": "Not stated in source; 24 participants x multiple ~10-15 min sessions x 3 CSV streams each - LOW-to-MEDIUM by file count, small by bytes (CSV, not raw waveform binary)."
+    },
+    "HMC": {
+      "access_type": "OPEN",
+      "license": "CC BY 4.0 (Creative Commons Attribution 4.0 International)",
+      "authentication_required": false,
+      "source_location": "https://physionet.org/content/hmc-sleep-staging/1.1/",
+      "file_format": "EDF (signals), EDF+ and .txt (hypnogram annotations)",
+      "download_state": "PARTIAL - RECORDS index and dataset description fetched and read this sprint; individual .edf recordings not downloaded (151 recordings x ~100MB would be a multi-GB fetch, deferred to Stage 2 per Section 9's 'representative subset' allowance).",
+      "redistribution_limits": "CC BY permits redistribution with attribution.",
+      "raw_data_may_be_committed": false,
+      "fingerprints_may_be_committed": true,
+      "total_size_estimate": "15.7 GB uncompressed / 12.9 GB compressed ZIP, per PhysioNet's own stated total (authoritative source, not inferred)."
+    },
+    "QDE_V2": {
+      "access_type": "OPEN",
+      "license": "Open Data Commons Attribution License v1.0",
+      "authentication_required": false,
+      "source_location": "https://physionet.org/content/qde/1.0.0/ (already downloaded in a prior sprint: datasets/qde-bioimpedance/raw/dehydration_estimation.csv)",
+      "file_format": "single CSV",
+      "download_state": "ALREADY_PRESENT_IN_REPO",
+      "redistribution_limits": "ODC-BY permits redistribution with attribution.",
+      "raw_data_may_be_committed": false,
+      "raw_data_committed_note": "The CSV already exists locally under datasets/qde-bioimpedance/raw/ (gitignored per project convention, same as every other raw dataset file) - not newly added by this sprint.",
+      "fingerprints_may_be_committed": true,
+      "total_size_estimate": "~14 KB, 90 rows - directly measured this sprint (`ls -la`)."
+    },
+    "LBNP": {
+      "access_type": "OPEN",
+      "license": "Not explicitly stated in the PMC data-availability text retrieved this sprint - Zenodo record metadata (license field) could not be read this sprint (see download_note); treat as UNVERIFIED pending direct Zenodo access.",
+      "authentication_required": "UNVERIFIED (paper states data 'have been made into an open-source data set', implying no authentication, but this session could not directly confirm via the Zenodo page itself)",
+      "source_location": "Zenodo DOI 10.5281/zenodo.10119427 (per the paper's own Data Availability statement, PMC11018605)",
+      "file_format": "UNVERIFIED (not directly browsed this sprint)",
+      "download_state": "NOT_DOWNLOADED_THIS_SPRINT",
+      "download_note": "Same zenodo.org network-egress timeout as GalaxyPPG (see above) prevented this session from directly browsing/downloading the LBNP raw files or reading the Zenodo record's own license/access metadata. All LBNP facts in this sprint's audit come from the peer-reviewed paper's Methods and Data Availability sections (PMC11018605), which is a real, authoritative, directly-fetched source - but is one level removed from the raw files themselves.",
+      "redistribution_limits": "UNVERIFIED",
+      "raw_data_may_be_committed": false,
+      "fingerprints_may_be_committed": "BLOCKED_PENDING_DIRECT_ZENODO_ACCESS",
+      "total_size_estimate": "UNVERIFIED (18 enrolled / 16 usable subjects, multi-modal continuous recording of unspecified individual file sizes)"
+    },
+    "ds003838": {
+      "access_type": "OPEN",
+      "license": "CC0, per dataset_description.json (directly fetched and read this sprint)",
+      "authentication_required": false,
+      "source_location": "https://openneuro.org/datasets/ds003838 (GitHub mirror directly fetched this sprint: https://github.com/OpenNeuroDatasets/ds003838, a DataLad/git-annex repository)",
+      "file_format": "BIDS; EEG stored as single-file .set (EEGLAB, raw continuous data embedded, not split into companion .fdt - confirmed by directly fetching one real channels.tsv/eeg.json/participants.tsv and the git-annex object size for one representative subject's .set files this sprint)",
+      "download_state": "PARTIAL - participants.tsv, dataset_description.json, one representative subject's (sub-032) channels.tsv/eeg.json/events.json, and the full repository file tree (2696 entries) were directly fetched and read this sprint. No actual EEG waveform bytes were downloaded (git-annex pointer files only - the real binary content lives in an annex remote, not directly fetchable via raw.githubusercontent.com).",
+      "redistribution_limits": "CC0 - no restriction.",
+      "raw_data_may_be_committed": false,
+      "fingerprints_may_be_committed": true,
+      "total_size_estimate": "Directly measured via git-annex object pointer sizes this sprint: sub-032 memory-task .set = 1,541,437,462 bytes (~1.47 GiB), rest-task .set = 47,511,267 bytes (~45 MiB). 65 usable-EEG subjects x (~1.47 GiB + ~45 MiB) is approximately 96-99 GB for full EEG-only download (both tasks) - real, measured, not the prior audit's ~250 GB guess (that figure likely included non-EEG modalities/other file types or was a rough overestimate; this sprint's number is the directly-measured EEG-only figure)."
+    }
+  }
+}

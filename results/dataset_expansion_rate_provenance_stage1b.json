@@ -1,0 +1,54 @@
+{
+  "purpose": "Rate/timing provenance manifest for the five Stage 1B candidate datasets, following the post-H2 discipline of never conflating native recorded rate, device-native rate, loaded/common-grid rate, model-input rate, or (for spectroscopy) excitation-frequency axis with temporal sampling rate.",
+  "GalaxyPPG": {
+    "signals": {
+      "galaxy_watch5_ppg": {"native_rate_hz": 25, "measured_rate_hz": "24.90 +/- 0.06 (directly measured by the dataset authors, per PMC12119839)", "loaded_rate_hz": "same as native (CSV, no resampling)", "model_input_rate_hz": "TBD Stage 2 (windowing decision), planned unchanged from native", "role": "not used - Galaxy Watch5 HR is EXCLUDE_LEAKAGE if used as a target; PPG waveform itself not the primary candidate signal here"},
+      "e4_bvp": {"native_rate_hz": 64, "measured_rate_hz": "64.00 +/- 0.01", "loaded_rate_hz": 64, "model_input_rate_hz": "TBD Stage 2, planned unchanged", "role": "candidate signal (A/B input)"},
+      "e4_acc": {"native_rate_hz": 32, "measured_rate_hz": "32.00 +/- 0.01", "loaded_rate_hz": 32, "model_input_rate_hz": "TBD Stage 2, likely upsampled/aligned to BVP's 64 Hz grid for joint windowing - method to be frozen in Stage 2 implementation, not yet decided", "role": "candidate signal (B input)"},
+      "polar_h10_ecg": {"native_rate_hz": 130, "measured_rate_hz": "130.49 +/- 0.10", "loaded_rate_hz": 130, "model_input_rate_hz": "not model input - reference only", "role": "REFERENCE (R-peak extraction for ground-truth HR), not a feature"}
+    },
+    "timing_source": "Each device's own internal clock/timestamps; synchronization method not directly verified this sprint (Zenodo access blocked - see dataset_access_stage1b.json) - FLAGGED for Stage 2 to verify from the actual downloaded files before training, not assumed from the paper alone.",
+    "bandwidth_caveat": "None of these three signals have a native-rate/bandwidth mismatch comparable to H2 (Resp 1 Hz vs 100 Hz grid) - all three are already at their own genuine native rates with no resampling reported."
+  },
+  "HMC": {
+    "signals": {
+      "eeg_all_derivations": {"native_rate_hz": 256, "loaded_rate_hz": 256, "model_input_rate_hz": "TBD Stage 2, planned unchanged (matches this project's own Sleep-EDF windowing philosophy of not resampling unless necessary)", "role": "candidate signal (A/B input)"},
+      "eog_e1_e2": {"native_rate_hz": 256, "loaded_rate_hz": 256, "model_input_rate_hz": "TBD Stage 2, planned unchanged", "role": "candidate signal (B input)"},
+      "emg_chin": {"native_rate_hz": 256, "loaded_rate_hz": 256, "role": "not used in A/B/C (out of scope for this replication)"},
+      "ecg": {"native_rate_hz": 256, "loaded_rate_hz": 256, "role": "not used in A/B/C (out of scope for this replication)"}
+    },
+    "timing_source": "Single EDF file per subject, one shared native sample rate (256 Hz) across ALL channels per the PhysioNet page - unlike Sleep-EDF, there is NO H2-style per-channel native-rate mismatch to resolve here, because HMC's own PSG hardware recorded every channel at a common 256 Hz. This was explicitly checked (not assumed) precisely because H2 taught this project not to trust a dataset's advertised single sfreq without checking - PhysioNet's own page states all channels share 256 Hz, and this is a different (and simpler) situation than Sleep-EDF's per-channel-native-rate EDF structure.",
+    "bandwidth_caveat": "None identified - EEG/EOG/EMG/ECG all directly recorded at 256 Hz, no upsampling involved."
+  },
+  "QDE_V2": {
+    "signals": {
+      "segmental_bioimpedance": {"native_rate_hz": "N/A - not a waveform; one measurement per subject per 15-minute interval (9 points/subject)", "excitation_frequency_hz": 1000, "temporal_acquisition_cadence": "one spot-measurement per ~15-minute running interval, per anatomical segment", "role": "candidate signal (A/B/C input)"}
+    },
+    "note": "Deliberately using separate `excitation_frequency_hz` (the 1000 kHz per the CSV column '...at 1000kHz [Ohm]' - actually 1000 kHz = 1 MHz single-frequency BIA, not 1000 Hz; column name verified directly from the CSV header this sprint) and `temporal_acquisition_cadence` fields per Section 22's explicit instruction, exactly the class of conflation H2 was about.",
+    "correction": "The CSV column name is 'impedance right arm at 1000kHz [Ohm]' - i.e. the excitation frequency is 1000 kHz (1 MHz), a single-frequency bio-impedance analysis (BIA) measurement, NOT a spectroscopy sweep like LBNP's 100 Hz-1MHz EIS. Verified directly from the raw CSV header (see qde_v2_actual_file_audit_stage1b.json)."
+  },
+  "LBNP": {
+    "signals": {
+      "ecg": {"native_rate_hz": "UNVERIFIED (LabChart 7.0 acquisition, specific rate not stated in the PMC-retrieved text this sprint)", "role": "candidate signal (A/B input)"},
+      "pleth": {"native_rate_hz": "UNVERIFIED, same source limitation", "role": "candidate signal (A/B input)"},
+      "map_invasive": {"native_rate_hz": "UNVERIFIED", "role": "secondary target only, per Section 13's instruction, never a primary-experiment input"},
+      "eis_thoracic_abdominal_arm": {
+        "excitation_frequency_axis": "100 logarithmically-spaced frequencies, 100 Hz to 1 MHz - THIS IS THE SPECTROSCOPY FREQUENCY AXIS, NOT A TEMPORAL SAMPLE RATE",
+        "temporal_acquisition_cadence": "approximately 1 full spectrum per minute, per anatomical site, per the paper's own Methods text (PMC11018605) - i.e. one 100-frequency-point spectrum roughly every 60 seconds, not a continuously-sampled waveform",
+        "role": "candidate signal (B input), stage-averaged not continuous"
+      },
+      "eit_thorax_abdomen": {"native_rate_hz": "UNVERIFIED (paper states 'continuous collection' via dual 16-electrode belts, exact frame rate not retrieved this sprint)", "role": "not used in the frozen A/B/C (out of scope; EIT is a distinct modality from EIS and mixing them would violate Gate 4's single-variable-at-a-time rule)"}
+    },
+    "bandwidth_caveat": "The EIS 'sample' available roughly once per minute per LBNP stage (each stage held ~5 minutes) means at most ~5 EIS spectra per stage per subject, not a fine temporal signal - this materially limits any claim about EIS as a real-time monitoring signal versus a per-stage snapshot; this caveat is carried into the frozen protocol doc and the forbidden-claims list.",
+    "residual_unverified_facts": ["ECG native rate", "pleth native rate", "MAP native rate", "EIT frame rate"],
+    "reason_unverified": "Zenodo raw-file access blocked this sprint (network egress timeout) - only the peer-reviewed paper's Methods text was directly retrievable, and it did not state these specific numbers in the excerpt this session was able to fetch."
+  },
+  "ds003838": {
+    "signals": {
+      "eeg_63ch_actichamp": {"native_rate_hz": 1000, "loaded_rate_hz": 1000, "model_input_rate_hz": "TBD Stage 2, planned unchanged", "role": "candidate signal (A/B/C input)"}
+    },
+    "verification_method": "Directly fetched and read sub-032's real *_eeg.json BIDS sidecar this sprint: {\"SamplingFrequency\": 1000, \"EEGChannelCount\": 63, \"EOGChannelCount\": 0, ...} - a real, actual-file fact, not a web-search inference.",
+    "timing_source": "Single continuous EDF-equivalent (EEGLAB .set) recording per subject per task; event onsets given in seconds relative to recording start (events.tsv, directly fetched for sub-032).",
+    "bandwidth_caveat": "None identified for EEG itself. No ECG/PPG timing was directly file-verified this sprint (out of scope for the frozen A/B/C, which uses EEG channels only)."
+  }
+}
