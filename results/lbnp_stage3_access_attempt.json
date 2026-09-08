@@ -1,0 +1,14 @@
+{
+  "purpose": "Stage 3A re-attempt at legitimate LBNP raw-file access, per Section 48's requirement not to reuse Stage 1B's access-blocked status without re-attempting.",
+  "attempts_this_sprint": [
+    {"method": "curl direct HTTPS to zenodo.org/records/10119427", "result": "TIMEOUT after 20000ms, 0 bytes received"},
+    {"method": "curl to zenodo.org/api/records/10119427 (REST API)", "result": "TIMEOUT after 20000ms, 0 bytes received"},
+    {"method": "WebFetch tool to zenodo.org/records/14635823 (GalaxyPPG, same host, used as a same-host connectivity control)", "result": "HTTP 504 Gateway Timeout"}
+  ],
+  "control_evidence": "physionet.org and github.com/raw.githubusercontent.com were both directly reachable and successfully used this sprint (HMC PhysioNet page, ds003838 GitHub mirror + real S3 file download - see ds003838_stage3_actual_file_audit.json) - the failure is specific to zenodo.org, not a general network outage in this sandbox.",
+  "conclusion": "LBNP raw files remain genuinely inaccessible from this sandbox's network egress. This is NOT a credential/authorization barrier (the paper describes the data as open) - it is a host-specific connectivity failure, reproduced 2 sprints in a row with 3 independent methods.",
+  "status": "LBNP_STAGE3_BLOCKED_BY_ACCESS",
+  "metadata_still_verified": "All Stage 1B paper-level facts (18 enrolled/16 usable, 0-100mmHg stages, EIS acquisition cadence, anatomical sites) remain valid as metadata - see results/lbnp_actual_file_audit_stage1b.json. Nothing new was verified this sprint beyond confirming the access block persists.",
+  "actual_file_facts_still_unknown": ["exact raw file structure/naming", "whether 16 or 18 subjects' files are present in the public release", "ECG/pleth/MAP/EIT native sample rates", "presence/format of timestamp or sequence-index fields (relevant to the leakage audit)"],
+  "recommendation": "Retry from an unrestricted network environment, or via an alternative access path (e.g. Zenodo's OAI-PMH endpoint or a mirror), in a future session - do not synthesize replacement data."
+}
