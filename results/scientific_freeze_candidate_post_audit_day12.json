@@ -1,0 +1,40 @@
+{
+  "purpose": "Versioned scientific freeze candidate, post H1/H2 remediation (Day 12). Does not overwrite results/scientific_freeze_candidate_day14.json - a new, remediation-aware artifact.",
+  "predecessor_freeze_artifact": "results/scientific_freeze_candidate_day14.json (status was SCIENTIFIC_FREEZE_CANDIDATE_READY_WITH_LIMITATIONS)",
+  "freeze_status_during_this_sprint": "HOLD_PENDING_H1_H2 (set at sprint start per instruction, not silently retained as READY)",
+  "h1_status": "H1_CLOSED_WITH_UPDATED_NUMBERS",
+  "h2_status": "H2_CLOSED_METADATA_ONLY",
+  "h1_scope_note": "Closed for Primary A/B only (the headline comparison). Shuffled-EOG control C and interaction M_B/M_AB remain PENDING_FOLLOWUP for seed-controlled retraining diagnosis - see results/sleep_scientific_remediation_day12.json h1.retraining_performed.not_retrained_this_sprint. This is a disclosed, bounded scope decision, not a silent gap.",
+  "canonical_results_unchanged": [
+    "results/sleep_edf_eeg_eog_ablation.json",
+    "results/sleep_edf_eeg_eog_control_analysis.json",
+    "results/sleep_edf_secondary_holdout_evaluation.json",
+    "results/sleep_edf_interaction_resp_day10.json",
+    "results/sensor_marginal_value_contract.json"
+  ],
+  "new_versioned_artifacts_this_sprint": [
+    "results/sleep_seed_initialization_audit_day12.json",
+    "results/sleep_edf_primary_seedfix_v2.json",
+    "results/sleep_scientific_remediation_day12.json",
+    "ml/sleep_seed_utils.py",
+    "ml/train_sleep_edf_primary_seedfix_v2.py",
+    "ml/diagnostics/sleep_seed_initialization_probe.py"
+  ],
+  "checkpoint_state": {
+    "historical_60_preserved": true,
+    "new_checkpoints_this_sprint": 10,
+    "new_checkpoint_paths": "ml/checkpoints/sleep_edf_{baseline_eeg_only,candidate_eeg_plus_eog}_seedfix_v2_seed{42-46}.pt",
+    "externally_archived_this_sprint": false,
+    "archival_note": "10 new checkpoints exist locally, gitignored, not yet pushed to an external archive/release. Following the same pattern as the Day-8/Day-14 archives (a durable external copy should be created before these are relied upon from a fresh clone) - flagged as a follow-up item, not done in this sprint due to time; see Claude handoff."
+  },
+  "open_scientific_limitations_carried_forward": [
+    "Interaction evidence covers exactly one candidate pair (Sleep EOGxResp); two other audited candidates remain deferred.",
+    "PTT evidence is n=4 subjects, s2-sensitive - the most fragile subject-level evidence in the project.",
+    "Sleep primary/secondary/interaction all use the same single dataset/recording protocol - no cross-dataset replication anywhere.",
+    "Robustness testing covers a single subject (S14) and 114 specific fault conditions - not a general robustness claim.",
+    "The claim-consistency checker is regex-based and confirmed bypassable by paraphrase (CLAIM-1, Day 12-14 audit) - not re-litigated this sprint.",
+    "H1 seed-controlled retraining diagnosis is scoped to Primary A/B only - C and interaction M_B/M_AB remain PENDING_FOLLOWUP (new this sprint)."
+  ],
+  "final_status": "SCIENTIFIC_FREEZE_CANDIDATE_READY_WITH_LIMITATIONS",
+  "rationale": "H2 is fully closed with zero data/retraining impact. H1 is closed for the headline Primary A/B comparison with a real, seed-controlled retraining diagnostic that preserves every qualitative conclusion (direction, seed-favor count, subject dominance, class pattern) - only modest numerical differences, expected from genuinely different (correctly-seeded) trained models. The bounded scope (C and interaction not yet re-diagnosed) is a disclosed limitation, not a blocking gap, since neither H1 nor H2 provided any evidence suggesting C or the interaction result would behave differently - the EOG shuffle was independently confirmed unaffected by H1's root cause, and H2 has zero data impact on the interaction result. Freeze is restored to READY_WITH_LIMITATIONS, with two new limitations added to the existing list rather than any canonical number changing."
+}

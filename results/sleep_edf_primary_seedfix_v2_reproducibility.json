@@ -1,0 +1,46 @@
+{
+  "all_checkpoints_exact_match": true,
+  "n_checkpoints_checked": 10,
+  "results": [
+    {
+      "seed": 42,
+      "recomputed_A": 0.7583523560273976,
+      "stored_A": 0.7583523560273976,
+      "recomputed_B": 0.7794365004499049,
+      "stored_B": 0.7794365004499049,
+      "exact_match": true
+    },
+    {
+      "seed": 43,
+      "recomputed_A": 0.7463286717943326,
+      "stored_A": 0.7463286717943326,
+      "recomputed_B": 0.7677209768042014,
+      "stored_B": 0.7677209768042014,
+      "exact_match": true
+    },
+    {
+      "seed": 44,
+      "recomputed_A": 0.691059931536046,
+      "stored_A": 0.691059931536046,
+      "recomputed_B": 0.7665801993426723,
+      "stored_B": 0.7665801993426723,
+      "exact_match": true
+    },
+    {
+      "seed": 45,
+      "recomputed_A": 0.7296048187305253,
+      "stored_A": 0.7296048187305253,
+      "recomputed_B": 0.7622703291254722,
+      "stored_B": 0.7622703291254722,
+      "exact_match": true
+    },
+    {
+      "seed": 46,
+      "recomputed_A": 0.7570875630561076,
+      "stored_A": 0.7570875630561076,
+      "recomputed_B": 0.7474382129088321,
+      "stored_B": 0.7474382129088321,
+      "exact_match": true
+    }
+  ]
+}

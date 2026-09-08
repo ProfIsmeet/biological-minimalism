@@ -150,12 +150,33 @@ def load_dataset_windows(dataset_dir: str | Path) -> tuple[np.ndarray, np.ndarra
 EOG_CHANNEL = "EOG horizontal"
 
 # Day 10: interaction-experiment candidate channel. Real, genuinely measured,
-# same 100 Hz sample rate as EEG_CHANNEL/EOG_CHANNEL, present in the same PSG
-# files. Not one of the official AASM/R&K sleep-staging scoring channels
-# (those are EEG+EOG+chin EMG) - a genuinely independent information source
-# relative to how the hypnogram ground truth was originally produced. See
-# docs/INTERACTION_EXPERIMENT_FEASIBILITY_DAY10.md.
+# present in the same PSG files. Not one of the official AASM/R&K sleep-staging
+# scoring channels (those are EEG+EOG+chin EMG) - a genuinely independent
+# information source relative to how the hypnogram ground truth was
+# originally produced. See docs/INTERACTION_EXPERIMENT_FEASIBILITY_DAY10.md.
+#
+# H2 CORRECTION (Day 12, see docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md):
+# Resp oro-nasal is NOT natively 100 Hz. Verified directly from the EDF file
+# header (n_samps_per_record / record_length, not MNE's raw.info['sfreq']
+# which reports one global rate for all channels): EEG/EOG are natively
+# 100 Hz (3000 samples/30s record); Resp oro-nasal is natively 1 Hz (30
+# samples/30s record). When this loader's mne.io.read_raw_edf() call reads
+# multiple channels with different native rates together, MNE upsamples the
+# lower-rate channel(s) to the highest native rate present (100 Hz) via
+# mne.io.edf.edf._read_segment_file()'s FFT-based `resample()` call - not a
+# simple repeat/sample-and-hold, not true 100 Hz acquisition. A 1 Hz-sampled
+# signal cannot carry information above ~0.5 Hz (Nyquist) regardless of the
+# grid it is later represented on. RESP_NATIVE_SFREQ_HZ / RESP_LOADED_SFREQ_HZ
+# below record this explicitly; the training arrays themselves are UNCHANGED
+# by this correction (this loader has always called read_raw_edf with
+# preload=True, so the FFT-resampled values it has always produced are
+# exactly what results/sleep_edf_interaction_resp_day10.json's models were
+# trained on - this is a provenance/wording fix, not a data fix).
 RESP_CHANNEL = "Resp oro-nasal"
+RESP_NATIVE_SFREQ_HZ = 1.0
+RESP_LOADED_SFREQ_HZ = 100.0  # common grid after MNE's FFT-based upsampling
+RESP_RESAMPLING_METHOD = "FFT-based (mne.io.edf.edf._read_segment_file -> mne.filter.resample, npad=0)"
+EEG_EOG_NATIVE_SFREQ_HZ = 100.0
 
 
 def load_subject_windows_multi(psg_path: Path, hypnogram_path: Path, channels: tuple[str, ...]) -> tuple[np.ndarray, np.ndarray]:

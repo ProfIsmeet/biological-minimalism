@@ -1,0 +1,86 @@
+{
+  "purpose": "H1 (seed initialization) + H2 (respiration native rate) remediation outcome, Day 12.",
+  "h1": {
+    "status": "H1_CLOSED_WITH_UPDATED_NUMBERS",
+    "root_cause": "Every Sleep-EDF trainer constructs SleepStageClassifier(...) BEFORE calling torch.manual_seed(seed) (which happens inside train_one(), only after construction). Model weight initialization consumes torch's global RNG at construction time, so the recorded seed does not control initial weights - only DataLoader shuffle order (correct) and the already-independently-seeded EOG shuffle (correct, uses its own np.random.default_rng) are actually seed-controlled.",
+    "affected_trainers": [
+      "ml/train_sleep_edf_eeg_eog_ablation.py (primary A/B, 10 checkpoints)",
+      "ml/train_sleep_edf_shuffled_eog_control.py (control C, 5 checkpoints)",
+      "ml/train_sleep_edf_interaction_resp.py (M_B/M_AB, 10 checkpoints)"
+    ],
+    "affected_claims": "Exact seed-controlled-retraining reproducibility claims (i.e. 'rerunning seed42 from a fresh process reproduces the exact same initial weights') were unsupported. Existing checkpoint-based EVALUATION reproducibility (reload a saved checkpoint, re-evaluate, compare metrics) was NEVER affected - that only depends on the saved weights being read correctly, not on how they were originally initialized.",
+    "reproduction_probe": {
+      "artifact": "results/sleep_seed_initialization_audit_day12.json",
+      "method": "Real test: constructs the actual SleepStageClassifier and reads its actual initial Conv1d weights under the buggy order (bug reproduced) and the corrected order (fix confirmed), across different simulated ambient RNG states.",
+      "overall_h1_confirmed": true
+    },
+    "corrected_protocol": {
+      "module": "ml/sleep_seed_utils.py",
+      "doc": "docs/SLEEP_SEEDING_PROTOCOL_V2.md",
+      "sub_seeds": ["model_init_seed", "data_order_seed", "control_shuffle_seed"],
+      "historical_trainers_modified": false,
+      "rationale_for_not_modifying_historical_trainers": "Editing them in place would itself be a form of rewriting the historical record of what actually produced the existing checkpoints. The corrected protocol lives only in the new module/script; any future Sleep-EDF training should use it."
+    },
+    "retraining_performed": {
+      "scope": "Bounded diagnostic: Primary A (EEG-only) and B (EEG+EOG), 5 seeds each (42-46), same split/architecture/preprocessing/epochs/optimizer/hyperparameters as the original - only seeding order changed.",
+      "script": "ml/train_sleep_edf_primary_seedfix_v2.py",
+      "output_artifact": "results/sleep_edf_primary_seedfix_v2.json",
+      "checkpoints": "ml/checkpoints/sleep_edf_{baseline_eeg_only,candidate_eeg_plus_eog}_seedfix_v2_seed{42-46}.pt (10 new files, NEVER overwrite the original 10)",
+      "not_retrained_this_sprint": [
+        "Shuffled-EOG control C (5 checkpoints) - PENDING_FOLLOWUP, not diagnosed this sprint due to time constraints. The EOG shuffle mechanism itself (np.random.default_rng) was NEVER affected by H1 - only C's model initialization is unverified under the corrected protocol.",
+        "Interaction M_B/M_AB (10 checkpoints) - PENDING_FOLLOWUP, same reasoning; the interaction result's capacity-fairness and Resp-bandwidth findings are unaffected by H1 (those depend on parameter counts and data content, not initialization), but exact seed-controlled reproducibility for M_B/M_AB specifically remains unverified."
+      ]
+    },
+    "corrected_vs_original_comparison": {
+      "primary_seed_level": {
+        "original_baseline_macro_f1_mean": 0.7472525334607252,
+        "corrected_baseline_macro_f1_mean": 0.7364866682288819,
+        "original_candidate_macro_f1_mean": 0.7692599394037367,
+        "corrected_candidate_macro_f1_mean": 0.7646892437262166,
+        "original_delta_mean": 0.022007405943011628,
+        "corrected_delta_mean": 0.028202575497334757,
+        "original_n_seeds_favor_candidate": 4,
+        "corrected_n_seeds_favor_candidate": 4,
+        "same_direction": true
+      },
+      "primary_subject_level": {
+        "SC4011_mean_delta": {"original": 0.0489, "corrected": 0.0838, "both_dominant_and_positive": true},
+        "SC4081_mean_delta": {"original": 0.0080, "corrected": 0.0045, "both_small": true},
+        "SC4131_mean_delta": {"original": 0.0091, "corrected": 0.0009, "both_small": true},
+        "dominance_pattern_preserved": true,
+        "note": "SC4011 remains the dominant, most consistently favorable subject under both the original and corrected protocol; SC4081/SC4131 remain small/mixed under both."
+      },
+      "primary_class_level": {
+        "REM_pattern": "Largest class-level gain under both protocols (4/5 seeds improve under corrected protocol, matching the original's REM-dominant pattern).",
+        "N3_pattern": "Flat-to-slightly-improving in the PRIMARY cohort under both protocols (N3 regression was only ever observed in the SECONDARY holdout cohort, not primary - unaffected by this diagnostic's scope)."
+      },
+      "conclusion": "The corrected-seed protocol preserves the qualitative scientific conclusion (positive EOG effect, 4/5-seed-consistent, SC4011-dominated, REM-driven) exactly. Numerical values differ modestly (as expected - these are now genuinely different, correctly-seeded trained models, not a re-derivation of the same numbers) but do not change direction, seed-favor count, subject dominance pattern, or class pattern."
+    },
+    "canonical_migration": "Historical results/sleep_edf_eeg_eog_ablation.json REMAINS the canonical, cited artifact - not deprecated, not deleted. results/sleep_edf_primary_seedfix_v2.json is ADDED as confirmatory, fully-seed-controlled evidence. Future citations MAY prefer the seedfix_v2 numbers as the more rigorously provenanced version; this is a recommendation, not a mandate, since both currently show the same qualitative finding."
+  },
+  "h2": {
+    "status": "H2_CLOSED_METADATA_ONLY",
+    "root_cause": "Resp oro-nasal is natively 1 Hz (confirmed via EDF header: 30 samples/30s record), not 100 Hz as originally stated. EEG/EOG are genuinely natively 100 Hz (3000 samples/30s record). MNE's raw.info['sfreq'] reports one global common-grid rate (100 Hz) for the whole file regardless of per-channel native rate - conflating LOADED_COMMON_GRID_RATE with NATIVE_SIGNAL_RATE caused the original error.",
+    "mne_behavior": "mne.io.edf.edf._read_segment_file upsamples any channel whose native sample count is below the file's maximum, via mne.filter.resample (FFT-based, npad=0), after all chunks are loaded (avoiding preload=False edge artifacts - this project's loader always uses preload=True).",
+    "data_impact": {
+      "arrays_changed": false,
+      "retraining_needed": false,
+      "why": "The interaction training script has always called load_dataset_windows_multi(..., preload=True), which has always produced exactly this FFT-upsampled 100 Hz Resp representation. The fix is metadata/documentation only - new constants (RESP_NATIVE_SFREQ_HZ=1.0, RESP_LOADED_SFREQ_HZ=100.0, RESP_RESAMPLING_METHOD, EEG_EOG_NATIVE_SFREQ_HZ=100.0) added to ml/datasets/sleep_edf.py are purely additive; no function body was touched (verified by direct code review of the diff and by re-running the loader post-edit, producing a correctly-shaped array with no errors)."
+    },
+    "corrected_provenance": {
+      "doc": "docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md",
+      "native_rate_hz": 1.0,
+      "loaded_common_grid_rate_hz": 100.0,
+      "model_input_rate_hz": 100.0,
+      "resampling_method": "FFT-based (mne.filter.resample)"
+    },
+    "fixed_documents": [
+      "ml/datasets/sleep_edf.py (code comment + new metadata constants)",
+      "docs/INTERACTION_EXPERIMENT_FEASIBILITY_DAY10.md (struck-through correction, original text preserved visibly, not silently edited)",
+      "docs/INTERACTION_EXPERIMENT_RESULTS_DAY10.md (new H2 bandwidth-caveat section)"
+    ],
+    "interpretation_impact": "approximately_additive_or_unresolved is UNCHANGED - not strengthened by this correction. New disclosed limitation: Resp's 1 Hz native bandwidth is a plausible contributing explanation for Candidate B (Resp alone) showing no clear benefit, offered as a plausible explanation, not a proven mechanism."
+  },
+  "freeze_impact": "See results/scientific_freeze_candidate_post_audit_day12.json for the formal freeze-status determination.",
+  "required_canonical_migration": "None mandatory. Optional: prefer results/sleep_edf_primary_seedfix_v2.json for future citations of the primary EEG-vs-EEG+EOG comparison, since it carries fully-verified seed provenance; the original results/sleep_edf_eeg_eog_ablation.json remains valid and is not deprecated."
+}
