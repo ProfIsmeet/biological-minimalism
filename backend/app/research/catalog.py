@@ -29,6 +29,8 @@ from app.schemas.research import (
     ResearchExperimentSummaryEnvelope,
     ResearchMarginalResult,
     ResearchMetricEstimate,
+    ReproComponent,
+    ReproComponentStatus,
     ReproducibilityInteraction,
     ReproducibilitySummary,
     ResearchProjectSummary,
@@ -730,6 +732,344 @@ def _optional_json(repository_root: Path, relative_path: str) -> dict[str, Any] 
         return None
 
 
+# --- Reproducibility panel helpers (audit H3 §3-§7) --------------------------
+# Each helper validates one subcomponent and returns a typed ReproComponent.
+# Rules enforced: (a) a subcomponent missing from the artifact is UNAVAILABLE,
+# never PASS; (b) a present-but-wrong-typed field is MALFORMED, never PASS;
+# (c) an explicit failure flag is FAIL; (d) every displayed number is read from
+# the artifact, never hardcoded. The overall verdict is computed worst-of over
+# the reproduction components (interaction is informational and excluded).
+
+_REPRO_SEVERITY = {
+    ReproComponentStatus.PASS: 0,
+    ReproComponentStatus.PARTIAL: 1,
+    ReproComponentStatus.UNAVAILABLE: 2,
+    ReproComponentStatus.MALFORMED: 3,
+    ReproComponentStatus.FAIL: 4,
+}
+
+
+def _as_number(value: Any) -> float | None:
+    """Return value as float only if it is a real number (bool excluded)."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    return float(value)
+
+
+def _subdict(repro: dict[str, Any], key: str) -> tuple[dict[str, Any] | None, ReproComponentStatus | None]:
+    """Fetch a subcomponent dict, classifying absence vs. wrong-type."""
+    if key not in repro:
+        return None, ReproComponentStatus.UNAVAILABLE
+    value = repro[key]
+    if not isinstance(value, dict):
+        return None, ReproComponentStatus.MALFORMED
+    return value, None
+
+
+def _repro_environment(repro: dict[str, Any], provenance: str) -> ReproComponent:
+    env, missing = _subdict(repro, "environment")
+    label = "Environment verification"
+    if missing is not None:
+        return ReproComponent(
+            key="environment", label=label, status=missing,
+            detail="Frozen-environment sub-artifact absent or malformed.",
+            provenance=provenance,
+            reason_if_unavailable="environment block missing from reproduction artifact",
+        )
+    verified = env.get("frozen_stack_verified")
+    src = env.get("source") if isinstance(env.get("source"), str) else provenance
+    if verified is True:
+        return ReproComponent(
+            key="environment", label=label, status=ReproComponentStatus.PASS,
+            detail=(
+                "Recorded interpreter/backend versions and deterministic thread settings match for the "
+                "checked fields (python, os, torch, numpy, scipy, scikit-learn, thread count). Scope is "
+                "RECORDED_ENVIRONMENT_MATCH_FOR_CHECKED_FIELDS, not full CPU/env-var capture."
+            ),
+            value_display="checked fields match", provenance=src,
+        )
+    if verified is False:
+        return ReproComponent(
+            key="environment", label=label, status=ReproComponentStatus.FAIL,
+            detail="Frozen-stack verification reported a mismatch.",
+            value_display="stack mismatch", provenance=src,
+        )
+    return ReproComponent(
+        key="environment", label=label, status=ReproComponentStatus.MALFORMED,
+        detail="`frozen_stack_verified` is missing or not a boolean.",
+        provenance=src,
+    )
+
+
+def _repro_datasets(repro: dict[str, Any], provenance: str) -> ReproComponent:
+    ds, missing = _subdict(repro, "dataset_fingerprints")
+    label = "Dataset fingerprints"
+    if missing is not None:
+        return ReproComponent(
+            key="datasets", label=label, status=missing,
+            detail="Dataset-fingerprint sub-artifact absent or malformed.",
+            provenance=provenance,
+            reason_if_unavailable="dataset_fingerprints block missing",
+        )
+    total = _as_number(ds.get("n_records_total"))
+    present = _as_number(ds.get("n_present"))
+    missing_n = _as_number(ds.get("n_missing"))
+    if total is None or present is None or missing_n is None:
+        return ReproComponent(
+            key="datasets", label=label, status=ReproComponentStatus.MALFORMED,
+            detail="Fingerprint counts missing or non-numeric.", provenance=provenance,
+        )
+    disp = f"{int(present)}/{int(total)} records fingerprinted"
+    if total > 0 and present == total and missing_n == 0:
+        status = ReproComponentStatus.PASS
+        detail = "Every record present and fingerprinted; none missing."
+    else:
+        status = ReproComponentStatus.PARTIAL
+        detail = f"{int(missing_n)} record(s) missing; fingerprint coverage incomplete."
+    return ReproComponent(
+        key="datasets", label=label, status=status, detail=detail,
+        value_display=disp, provenance=provenance,
+    )
+
+
+def _repro_checkpoint_durability(repository_root: Path) -> ReproComponent:
+    """Derived from the integrated 60-checkpoint inventory (Day-14 support),
+    NOT a hardcoded '50 checkpoints' string."""
+    label = "Checkpoint durability"
+    inv = _optional_json(repository_root, "results/final_checkpoint_inventory_day14.json")
+    prov = "results/final_checkpoint_inventory_day14.json"
+    if inv is None:
+        return ReproComponent(
+            key="checkpoint_durability", label=label, status=ReproComponentStatus.UNAVAILABLE,
+            detail="Checkpoint inventory not integrated in this deployment.",
+            reason_if_unavailable="final_checkpoint_inventory_day14.json absent",
+        )
+    summary = inv.get("summary")
+    if not isinstance(summary, dict):
+        return ReproComponent(
+            key="checkpoint_durability", label=label, status=ReproComponentStatus.MALFORMED,
+            detail="Inventory present but `summary` missing or malformed.", provenance=prov,
+        )
+    total = _as_number(summary.get("n_total_referenced"))
+    archived = _as_number(summary.get("n_with_external_archival"))
+    if total is None or archived is None:
+        return ReproComponent(
+            key="checkpoint_durability", label=label, status=ReproComponentStatus.MALFORMED,
+            detail="Inventory counts missing or non-numeric.", provenance=prov,
+        )
+    disp = f"{int(archived)}/{int(total)} externally archived"
+    if total > 0 and archived == total:
+        return ReproComponent(
+            key="checkpoint_durability", label=label, status=ReproComponentStatus.PASS,
+            detail="All referenced checkpoints have an external archival location (GitHub Release tags).",
+            value_display=disp, provenance=prov,
+        )
+    return ReproComponent(
+        key="checkpoint_durability", label=label, status=ReproComponentStatus.PARTIAL,
+        detail="Some referenced checkpoints lack an external archival location.",
+        value_display=disp, provenance=prov,
+    )
+
+
+def _repro_canonical(repro: dict[str, Any], provenance: str) -> ReproComponent:
+    ppg, missing = _subdict(repro, "ppg_dalia")
+    label = "Canonical experiment reproduction"
+    if missing is not None:
+        return ReproComponent(
+            key="canonical", label=label, status=missing,
+            detail="Canonical reproduction sub-artifact absent or malformed.",
+            provenance=provenance, reason_if_unavailable="ppg_dalia block missing",
+        )
+    match = ppg.get("all_metrics_match")
+    n_ckpt = _as_number(ppg.get("checkpoints_verified"))
+    max_diff = _as_number(ppg.get("max_abs_difference"))
+    if match is None or n_ckpt is None or max_diff is None:
+        return ReproComponent(
+            key="canonical", label=label, status=ReproComponentStatus.MALFORMED,
+            detail="Reproduction match flag or counts missing/non-numeric.", provenance=provenance,
+        )
+    disp = f"{int(n_ckpt)} checkpoints re-evaluated, max abs diff {max_diff:g}"
+    if match is True:
+        return ReproComponent(
+            key="canonical", label=label, status=ReproComponentStatus.PASS,
+            detail="All metrics matched on re-evaluation from frozen checkpoints (max abs diff as shown).",
+            value_display=disp, provenance=provenance,
+        )
+    return ReproComponent(
+        key="canonical", label=label, status=ReproComponentStatus.FAIL,
+        detail="At least one metric did not match on re-evaluation.",
+        value_display=disp, provenance=provenance,
+    )
+
+
+def _repro_robustness(repro: dict[str, Any], provenance: str) -> ReproComponent:
+    rob, missing = _subdict(repro, "robustness")
+    label = "Robustness reproduction"
+    if missing is not None:
+        return ReproComponent(
+            key="robustness", label=label, status=missing,
+            detail="Robustness sub-artifact absent or malformed.",
+            provenance=provenance, reason_if_unavailable="robustness block missing",
+        )
+    n_can = _as_number(rob.get("n_conditions_canonical"))
+    n_rep = _as_number(rob.get("n_conditions_reproduced"))
+    match = rob.get("all_metrics_match")
+    max_diff = _as_number(rob.get("max_abs_difference_bpm"))
+    tol = _as_number(rob.get("tolerance_bpm"))
+    mismatches = _as_number(rob.get("n_mismatches_beyond_tolerance"))
+    if None in (n_can, n_rep, max_diff, tol) or match is None or mismatches is None:
+        return ReproComponent(
+            key="robustness", label=label, status=ReproComponentStatus.MALFORMED,
+            detail="Robustness counts/flags missing or non-numeric.", provenance=provenance,
+        )
+    disp = f"{int(n_rep)}/{int(n_can)} conditions, max diff {max_diff:g} bpm (tol {tol:g})"
+    if match is True and mismatches == 0 and n_rep == n_can and n_can > 0:
+        return ReproComponent(
+            key="robustness", label=label, status=ReproComponentStatus.PASS,
+            detail="Full condition sweep reproduced within the documented tolerance; no mismatches.",
+            value_display=disp, provenance=provenance,
+        )
+    if mismatches and mismatches > 0 or match is False:
+        return ReproComponent(
+            key="robustness", label=label, status=ReproComponentStatus.FAIL,
+            detail=f"{int(mismatches)} condition(s) exceeded tolerance.",
+            value_display=disp, provenance=provenance,
+        )
+    return ReproComponent(
+        key="robustness", label=label, status=ReproComponentStatus.PARTIAL,
+        detail="Only part of the condition sweep was reproduced.",
+        value_display=disp, provenance=provenance,
+    )
+
+
+def _repro_n3(repro: dict[str, Any], provenance: str) -> ReproComponent:
+    n3, missing = _subdict(repro, "n3_diagnostic")
+    label = "N3 diagnostic verification"
+    if missing is not None:
+        return ReproComponent(
+            key="n3", label=label, status=missing,
+            detail="N3 diagnostic sub-artifact absent or malformed.",
+            provenance=provenance, reason_if_unavailable="n3_diagnostic block missing",
+        )
+    verified = n3.get("verified")
+    if verified is True:
+        return ReproComponent(
+            key="n3", label=label, status=ReproComponentStatus.PASS,
+            detail="N3 recall up / precision down recomputed and matched the canonical Day-9 figures "
+                   "(disclosed regression, not smoothed).",
+            value_display="matches canonical", provenance=provenance,
+        )
+    if verified is False:
+        return ReproComponent(
+            key="n3", label=label, status=ReproComponentStatus.FAIL,
+            detail="N3 diagnostic recomputation did not match the canonical figures.",
+            provenance=provenance,
+        )
+    return ReproComponent(
+        key="n3", label=label, status=ReproComponentStatus.MALFORMED,
+        detail="`verified` flag missing or not a boolean.", provenance=provenance,
+    )
+
+
+def _repro_interaction(
+    repro: dict[str, Any], provenance: str
+) -> tuple[ReproComponent, ReproducibilityInteraction | None]:
+    """Interaction is NEW evidence, not a reproduction of a prior claim, so its
+    component is informational and excluded from the overall verdict. Numeric
+    values are derived from the artifact (audit H3 §6), never hardcoded."""
+    label = "Interaction experiment"
+    inter, missing = _subdict(repro, "interaction_experiment")
+    if missing is not None:
+        return (
+            ReproComponent(
+                key="interaction", label=label, status=missing,
+                detail="Interaction experiment sub-artifact absent or malformed.",
+                provenance=provenance, reason_if_unavailable="interaction_experiment block missing",
+            ),
+            None,
+        )
+    if inter.get("status") != "RUN":
+        return (
+            ReproComponent(
+                key="interaction", label=label, status=ReproComponentStatus.UNAVAILABLE,
+                detail="Interaction experiment not marked RUN.",
+                provenance=provenance, reason_if_unavailable="status is not RUN",
+            ),
+            None,
+        )
+    mean = _as_number(inter.get("interaction_term_mean"))
+    sd = _as_number(inter.get("interaction_term_sd_sample_ddof1"))
+    if mean is None or sd is None:
+        return (
+            ReproComponent(
+                key="interaction", label=label, status=ReproComponentStatus.MALFORMED,
+                detail="Interaction term mean/SD missing or non-numeric.", provenance=provenance,
+            ),
+            None,
+        )
+    estimate = f"{mean:+.4f} macro-F1"
+    uncertainty = f"sample SD {sd:.4f}"
+    classification = inter.get("classification")
+    interpretation = (
+        "approximately additive / unresolved"
+        if not isinstance(classification, str)
+        else classification.replace("_", " ")
+    )
+    interaction = ReproducibilityInteraction(
+        tested=True,
+        configs="M0 EEG / M_A EEG+EOG / M_B EEG+Resp / M_AB EEG+EOG+Resp (5 seeds)",
+        interaction_estimate=estimate,
+        uncertainty=uncertainty,
+        interpretation=interpretation,
+        plain_language=(
+            "Adding both EOG and respiration did not show a stable extra benefit beyond "
+            "their individual effects under this model and dataset."
+        ),
+        boundary="This does not prove that sensor interactions are absent in general; not a synergy claim.",
+    )
+    component = ReproComponent(
+        key="interaction", label=label, status=ReproComponentStatus.PASS,
+        detail="One controlled pair tested and honestly analyzed; global interaction coverage is partial.",
+        value_display=f"{estimate} ({uncertainty})", provenance=provenance,
+    )
+    return component, interaction
+
+
+def _overall_from_components(components: list[ReproComponent]) -> str:
+    """Compute the overall verdict worst-of over the REPRODUCTION components
+    (interaction excluded). Never defaults to PASS: an empty artifact whose
+    every component is UNAVAILABLE yields PARTIAL, not PASS."""
+    core = [c for c in components if c.key != "interaction"]
+    worst = max(
+        (_REPRO_SEVERITY[c.status] for c in core),
+        default=_REPRO_SEVERITY[ReproComponentStatus.UNAVAILABLE],
+    )
+    if worst == _REPRO_SEVERITY[ReproComponentStatus.PASS]:
+        return "SCIENTIFIC_REPRODUCTION_PASS"
+    if worst == _REPRO_SEVERITY[ReproComponentStatus.FAIL]:
+        return "SCIENTIFIC_REPRODUCTION_FAIL"
+    if worst == _REPRO_SEVERITY[ReproComponentStatus.MALFORMED]:
+        return "SCIENTIFIC_REPRODUCTION_MALFORMED"
+    return "SCIENTIFIC_REPRODUCTION_PARTIAL"
+
+
+def _malformed_repro_summary(reason: str) -> ReproducibilitySummary:
+    return ReproducibilitySummary(
+        overall_status="SCIENTIFIC_REPRODUCTION_MALFORMED",
+        overall_declared=None,
+        overall_matches_declared=False,
+        environment_scope="UNKNOWN",
+        independence_caveat="reproduction artifact could not be parsed",
+        components=[
+            ReproComponent(
+                key="artifact", label="Reproduction artifact",
+                status=ReproComponentStatus.MALFORMED, detail=reason,
+            )
+        ],
+        interaction=None,
+    )
+
+
 def _build_sleep_supplementary_breakdowns(
     control: dict[str, Any] | None,
     persubj: dict[str, Any] | None,
@@ -1142,38 +1482,50 @@ class ResearchCatalog:
         )
 
     def _reproducibility(self) -> ReproducibilitySummary | None:
-        """Day-10 concise reproducibility panel, read from frozen artifacts.
+        """Concise reproducibility panel, fully DERIVED from frozen artifacts
+        (audit H3 §3-§7).
 
-        Returns None (panel simply omitted) if the Day-10 artifacts are absent,
-        so older deployments degrade gracefully rather than erroring."""
+        Returns None (panel omitted, no claim made) only when the reproduction
+        artifact is entirely absent. When the artifact is PRESENT but empty,
+        malformed, partial, or failed, this emits typed component statuses and a
+        computed overall verdict that can never be PASS on missing/bad evidence.
+        No scientific number is hardcoded: every value_display is read from the
+        artifact, and `overall_status` is computed worst-of over the components,
+        not defaulted."""
         repro = _optional_json(self.repository_root, "results/day10_scientific_reproduction.json")
         if repro is None:
             return None
-        interaction = None
-        inter = repro.get("interaction_experiment", {})
-        if inter.get("status") == "RUN":
-            interaction = ReproducibilityInteraction(
-                tested=True,
-                configs="M0 EEG / M_A EEG+EOG / M_B EEG+Resp / M_AB EEG+EOG+Resp (5 seeds, 112 params/channel)",
-                interaction_estimate="+0.0031 macro-F1",
-                uncertainty="sample SD 0.0434 (2/5 seeds positive)",
-                interpretation="approximately additive / unresolved",
-                plain_language=(
-                    "Adding both EOG and respiration did not show a stable extra benefit beyond "
-                    "their individual effects under this model and dataset."
-                ),
-                boundary="This does not prove that sensor interactions are absent in general; not a synergy claim.",
-            )
+        if not isinstance(repro, dict):
+            # File present but not an object: report malformed, never PASS.
+            return _malformed_repro_summary("reproduction artifact is not a JSON object")
+
+        provenance = "results/day10_scientific_reproduction.json"
+        components: list[ReproComponent] = [
+            _repro_environment(repro, provenance),
+            _repro_datasets(repro, provenance),
+            _repro_checkpoint_durability(self.repository_root),
+            _repro_canonical(repro, provenance),
+            _repro_robustness(repro, provenance),
+            _repro_n3(repro, provenance),
+        ]
+        interaction_component, interaction = _repro_interaction(repro, provenance)
+        components.append(interaction_component)
+
+        overall_status = _overall_from_components(components)
+        declared = repro.get("overall")
+        declared_str = declared if isinstance(declared, str) else None
+        matches = declared_str == overall_status
+
         return ReproducibilitySummary(
-            frozen_environment="verified (EXACT_FROZEN_ENVIRONMENT)",
-            checkpoints="externally durable (50 checkpoints, GitHub Release)",
-            datasets="fingerprinted (266/266 records)",
-            canonical_results="reproduced from frozen weights (zero numerical difference)",
-            robustness="reproduced (114/114 conditions within 1e-4 bpm)",
-            raw_data_committed="no (0 raw files in git)",
-            n3_diagnostic="verified: N3 recall up, precision down (disclosed regression, not smoothed)",
-            independence_caveat="independent re-evaluation from frozen artifacts on the same stack; NOT independent-dataset replication",
-            overall_status=str(repro.get("overall", "SCIENTIFIC_REPRODUCTION_PASS")),
+            overall_status=overall_status,
+            overall_declared=declared_str,
+            overall_matches_declared=matches,
+            environment_scope="RECORDED_ENVIRONMENT_MATCH_FOR_CHECKED_FIELDS",
+            independence_caveat=(
+                "independent re-evaluation from frozen artifacts on the same recorded stack; "
+                "NOT independent-dataset replication"
+            ),
+            components=components,
             interaction=interaction,
         )
 

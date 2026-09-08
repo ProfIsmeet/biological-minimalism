@@ -4,9 +4,23 @@ import { AlertTriangle, Cpu, Gauge, Radio, Scale, ShieldQuestion } from "lucide-
 import { Panel } from "@/components/ui/Panel";
 import type {
   EngineeringCandidate,
+  EngineeringQuantity,
   EngineeringReadiness,
   EngineeringReadinessLevel,
 } from "@/lib/types";
+
+// Render a typed engineering quantity (audit H4/§9). An UNKNOWN quantity is
+// shown as "Unknown" in amber — never as a fabricated 0.
+function QuantityValue({ quantity, prefix = "" }: { quantity: EngineeringQuantity; prefix?: string }) {
+  if (quantity.status !== "AVAILABLE" || quantity.value === null) {
+    return (
+      <p className="mt-0.5 font-mono text-amber-300" title={quantity.reason_if_unavailable ?? undefined}>
+        {quantity.display}
+      </p>
+    );
+  }
+  return <p className="mt-0.5 font-mono text-slate-200">{prefix}{quantity.display}</p>;
+}
 
 const LEVEL_LABEL: Record<EngineeringReadinessLevel, string> = {
   AVAILABLE: "Available",
@@ -51,7 +65,7 @@ function CandidateCard({ candidate }: { candidate: EngineeringCandidate }) {
 
       <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
         <div><p className="text-slate-600">Scientific direction</p><p className="mt-0.5 text-slate-300">{candidate.scientific_direction}</p></div>
-        <div><p className="text-slate-600">New sensing contacts</p><p className="mt-0.5 font-mono text-slate-200">+{candidate.incremental_sensing_contacts}</p></div>
+        <div><p className="text-slate-600">New sensing contacts</p><QuantityValue quantity={candidate.incremental_sensing_contacts} prefix="+" /></div>
         <div><p className="text-slate-600">New body region</p><p className="mt-0.5 text-slate-300">{candidate.incremental_body_region}</p></div>
         <div><p className="text-slate-600">New module</p><p className="mt-0.5 text-slate-300">{candidate.incremental_module}</p></div>
         <div className="col-span-2">
@@ -61,7 +75,7 @@ function CandidateCard({ candidate }: { candidate: EngineeringCandidate }) {
             <LevelPill level={candidate.reference_component_power_status} />
           </p>
         </div>
-        <div><p className="text-slate-600">Raw data-rate increment</p><p className="mt-0.5 font-mono text-slate-200">{candidate.raw_data_rate_increment_bps.toLocaleString()} bps</p></div>
+        <div><p className="text-slate-600">Raw data-rate increment</p><QuantityValue quantity={candidate.raw_data_rate_increment} /></div>
         <div><p className="text-slate-600">Mass / BOM</p><p className="mt-0.5 text-slate-300">{candidate.mass_tier} · {candidate.bom_readiness}</p></div>
       </div>
 

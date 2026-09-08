@@ -12,16 +12,47 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from typing import Any
+
 from app.research.catalog import REPOSITORY_ROOT, ResearchArtifactError
 from app.schemas.engineering_readiness import (
     EngineeringCandidate,
     EngineeringPanelRow,
     EngineeringReadiness,
     EngineeringReadinessEnvelope,
+    Quantity,
+    QuantityStatus,
     RawDataRate,
     ReadinessLevel,
 )
 from app.schemas.research import ResearchAvailability
+
+
+def _quantity(source: dict, key: str, unit: str, provenance: str) -> Quantity:
+    """Project one numeric field into a typed Quantity (audit H4/§9).
+
+    Absent field -> UNKNOWN(value=None); present-but-non-numeric -> UNKNOWN
+    (malformed); present-and-numeric -> AVAILABLE. A genuine 0 in the artifact
+    (e.g. a colocated candidate with 0 new contacts) is preserved as an
+    AVAILABLE 0, but a MISSING field is NEVER coerced to 0."""
+    if key not in source:
+        return Quantity(
+            value=None, unit=unit, status=QuantityStatus.UNKNOWN, display="Unknown",
+            reason_if_unavailable=f"'{key}' absent from frozen artifact", provenance=provenance,
+        )
+    raw: Any = source[key]
+    if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+        return Quantity(
+            value=None, unit=unit, status=QuantityStatus.UNKNOWN, display="Unknown",
+            reason_if_unavailable=f"'{key}' present but non-numeric", provenance=provenance,
+        )
+    is_int = float(raw).is_integer()
+    value = float(raw)
+    display = f"{int(value):,} {unit}" if is_int else f"{value:g} {unit}"
+    return Quantity(
+        value=value, unit=unit, status=QuantityStatus.AVAILABLE,
+        display=display, provenance=provenance,
+    )
 
 PART3_INPUTS_PATH = "results/day11_part3_engineering_inputs.json"
 DATA_RATE_PATH = "results/reference_data_rate_budget_day11.json"
@@ -107,9 +138,24 @@ class EngineeringReadinessReader:
     def _build(self) -> EngineeringReadiness:
         inputs = self._read_json(PART3_INPUTS_PATH)
         data_rate = self._read_json(DATA_RATE_PATH)
-        system_total = data_rate.get("system_raw_total", {})
-        bps = int(system_total.get("value_bps", 48068))
-        kbps = round(bps / 1000.0, 3)
+        system_total = data_rate.get("system_raw_total")
+        if not isinstance(system_total, dict):
+            system_total = {}
+        # Typed system raw-total: UNKNOWN if the frozen budget lacks it, NEVER 48068.
+        total_rate = _quantity(system_total, "value_bps", "bps", DATA_RATE_PATH)
+        if total_rate.status == QuantityStatus.AVAILABLE and total_rate.value is not None:
+            bps = int(total_rate.value)
+            kbps = round(bps / 1000.0, 3)
+            total_rate.display = f"{bps:,} bps (~{kbps:g} kbps)"
+            data_rate_row_display = f"~{kbps:g} kbps (partial lower bound)"
+            data_rate_status = "PARTIAL_LOWER_BOUND"
+            data_rate_panel_status = ReadinessLevel.PARTIAL
+        else:
+            bps = None
+            kbps = None
+            data_rate_row_display = "Unknown (raw total not in frozen budget)"
+            data_rate_status = "UNKNOWN"
+            data_rate_panel_status = ReadinessLevel.NOT_READY
 
         candidates: list[EngineeringCandidate] = []
         for entry in inputs.get("candidates", []):
@@ -127,10 +173,14 @@ class EngineeringReadinessReader:
                     gate_status=str(entry.get("gate_status", "")),
                     incremental_body_region=copy["incremental_body_region"],
                     incremental_module=copy["incremental_module"],
-                    incremental_sensing_contacts=int(entry.get("incremental_sensing_contacts", 0)),
+                    incremental_sensing_contacts=_quantity(
+                        entry, "incremental_sensing_contacts", "contacts", PART3_INPUTS_PATH
+                    ),
                     reference_component_power_display=copy["reference_component_power_display"],
                     reference_component_power_status=copy["reference_component_power_status"],
-                    raw_data_rate_increment_bps=int(entry.get("raw_data_rate_increment_bps", 0)),
+                    raw_data_rate_increment=_quantity(
+                        entry, "raw_data_rate_increment_bps", "bps", PART3_INPUTS_PATH
+                    ),
                     mass_tier=str(entry.get("mass_tier", "Tier0")),
                     bom_readiness=str(entry.get("bom_readiness", "")),
                     engineering_summary=copy["engineering_summary"],
@@ -162,8 +212,8 @@ class EngineeringReadinessReader:
             ),
             EngineeringPanelRow(
                 dimension="Raw data rate",
-                value_display=f"~{kbps:g} kbps (partial lower bound)",
-                status=ReadinessLevel.PARTIAL,
+                value_display=data_rate_row_display,
+                status=data_rate_panel_status,
                 note="Scientific-use-case head; excludes light + thoracic/leg BioZ, overhead, compression. Not radio bandwidth.",
             ),
             EngineeringPanelRow(
@@ -195,9 +245,8 @@ class EngineeringReadinessReader:
             formal_pareto_status="FORMAL_PARETO_NOT_READY",
             final_architecture_status="UNRESOLVED",
             raw_data_rate=RawDataRate(
-                partial_lower_bound_bps=bps,
-                partial_lower_bound_kbps=kbps,
-                status="PARTIAL_LOWER_BOUND",
+                value=total_rate,
+                status=data_rate_status,
                 radio_data_rate_status="NOT_READY",
                 note=str(system_total.get("framing", "PARTIAL LOWER BOUND")),
             ),

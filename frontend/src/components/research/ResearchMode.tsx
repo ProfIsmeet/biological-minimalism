@@ -55,6 +55,38 @@ function humanize(value: string): string {
   return value.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+// Reproducibility status -> styling (audit H3 §7). PASS is the ONLY state that
+// gets a success (emerald) treatment; PARTIAL/UNAVAILABLE are neutral/amber,
+// FAIL/MALFORMED are error (red). Unknown/failure never looks like PASS.
+function reproSectionClass(overallStatus: string): string {
+  if (overallStatus.endsWith("_PASS")) return "border-emerald-400/15 bg-emerald-400/[0.03]";
+  if (overallStatus.endsWith("_FAIL") || overallStatus.endsWith("_MALFORMED")) return "border-red-400/25 bg-red-400/[0.04]";
+  return "border-amber-400/20 bg-amber-400/[0.03]";
+}
+function reproBadgeClass(overallStatus: string): string {
+  if (overallStatus.endsWith("_PASS")) return "border-emerald-400/25 bg-emerald-400/[0.06] text-emerald-200";
+  if (overallStatus.endsWith("_FAIL") || overallStatus.endsWith("_MALFORMED")) return "border-red-400/30 bg-red-400/[0.08] text-red-200";
+  return "border-amber-400/30 bg-amber-400/[0.06] text-amber-200";
+}
+function reproDotClass(status: string): string {
+  switch (status) {
+    case "PASS": return "bg-emerald-400";
+    case "PARTIAL": return "bg-amber-400";
+    case "FAIL": return "bg-red-400";
+    case "MALFORMED": return "bg-red-400";
+    default: return "bg-slate-500"; // UNAVAILABLE
+  }
+}
+function reproTextClass(status: string): string {
+  switch (status) {
+    case "PASS": return "text-emerald-300";
+    case "PARTIAL": return "text-amber-300";
+    case "FAIL": return "text-red-300";
+    case "MALFORMED": return "text-red-300";
+    default: return "text-slate-500"; // UNAVAILABLE
+  }
+}
+
 function metricText(metric: ResearchMetricEstimate | undefined, precision = 4): string {
   if (!metric || metric.mean === null) return "N/A";
   const scale = metric.unit === "fraction" ? 100 : 1;
@@ -488,21 +520,29 @@ export function ResearchMode() {
       </div>
 
       {projectSummary?.reproducibility ? (
-        <section aria-label="Reproducibility" className="rounded-lg border border-emerald-400/15 bg-emerald-400/[0.03] px-4 py-3">
+        <section aria-label="Reproducibility" className={`rounded-lg border px-4 py-3 ${reproSectionClass(projectSummary.reproducibility.overall_status)}`}>
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">Reproducibility</span>
-            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-2 py-0.5 text-[10px] font-semibold text-emerald-200">{projectSummary.reproducibility.overall_status}</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">Reproducibility</span>
+            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${reproBadgeClass(projectSummary.reproducibility.overall_status)}`}>{projectSummary.reproducibility.overall_status}</span>
+            {!projectSummary.reproducibility.overall_matches_declared && projectSummary.reproducibility.overall_declared ? (
+              <span className="rounded-full border border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[10px] font-semibold text-amber-200">artifact declared {projectSummary.reproducibility.overall_declared}</span>
+            ) : null}
             <span className="text-[10px] text-slate-500">— re-evaluated from frozen artifacts; this is not a final-architecture readiness signal.</span>
           </div>
-          <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-[11px] leading-relaxed text-slate-400 sm:grid-cols-2 lg:grid-cols-3">
-            <div><dt className="inline text-slate-500">Frozen environment: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.frozen_environment}</dd></div>
-            <div><dt className="inline text-slate-500">Checkpoints: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.checkpoints}</dd></div>
-            <div><dt className="inline text-slate-500">Datasets: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.datasets}</dd></div>
-            <div><dt className="inline text-slate-500">Canonical results: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.canonical_results}</dd></div>
-            <div><dt className="inline text-slate-500">Robustness: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.robustness}</dd></div>
-            <div><dt className="inline text-slate-500">Raw data committed: </dt><dd className="inline text-slate-300">{projectSummary.reproducibility.raw_data_committed}</dd></div>
-          </dl>
-          <p className="mt-2 text-[10px] leading-relaxed text-slate-500">N3 diagnostic — {projectSummary.reproducibility.n3_diagnostic}. {projectSummary.reproducibility.independence_caveat}.</p>
+          <ul className="grid grid-cols-1 gap-x-6 gap-y-1.5 text-[11px] leading-relaxed text-slate-400 sm:grid-cols-2 lg:grid-cols-3">
+            {projectSummary.reproducibility.components.map((component) => (
+              <li key={component.key} className="flex items-start gap-2">
+                <span className={`mt-[3px] inline-block h-2 w-2 shrink-0 rounded-full ${reproDotClass(component.status)}`} aria-hidden="true" />
+                <span>
+                  <span className="text-slate-300">{component.label}</span>
+                  <span className={`ml-1 text-[9px] font-semibold uppercase tracking-wide ${reproTextClass(component.status)}`}>{component.status}</span>
+                  {component.value_display ? <span className="ml-1 font-mono text-slate-400">{component.value_display}</span> : null}
+                  {component.status !== "PASS" && component.reason_if_unavailable ? <span className="ml-1 text-slate-500">({component.reason_if_unavailable})</span> : null}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-[10px] leading-relaxed text-slate-500">Environment scope — {projectSummary.reproducibility.environment_scope}. {projectSummary.reproducibility.independence_caveat}.</p>
           {projectSummary.reproducibility.interaction?.tested ? (
             <div className="mt-2 rounded border border-white/10 bg-white/[0.02] px-3 py-2">
               <p className="text-[11px] font-semibold text-slate-300">Interaction experiment (Sleep, EEG × EOG × Resp)</p>

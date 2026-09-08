@@ -225,7 +225,10 @@ class ResearchExperimentSummaryEnvelope(BaseModel):
 
 
 class ReproducibilityInteraction(BaseModel):
-    """Day-10 EEG x EOG x Resp interaction summary (conservative, bounded)."""
+    """Day-10 EEG x EOG x Resp interaction summary (conservative, bounded).
+
+    Every numeric field is DERIVED from the reproduction artifact, never
+    hardcoded (audit H3 / §6)."""
 
     tested: bool
     configs: str
@@ -236,19 +239,43 @@ class ReproducibilityInteraction(BaseModel):
     boundary: str
 
 
-class ReproducibilitySummary(BaseModel):
-    """Concise Day-10 reproducibility panel (§11). All fields are honest status
-    strings; nothing here upgrades a scientific claim."""
+class ReproComponentStatus(StrEnum):
+    """Per-subcomponent reproduction status (audit H3 §4). There is NO implicit
+    success: a missing/empty/failed/malformed artifact can never yield PASS."""
 
-    frozen_environment: str
-    checkpoints: str
-    datasets: str
-    canonical_results: str
-    robustness: str
-    raw_data_committed: str
-    n3_diagnostic: str
-    independence_caveat: str
+    PASS = "PASS"
+    PARTIAL = "PARTIAL"
+    FAIL = "FAIL"
+    UNAVAILABLE = "UNAVAILABLE"
+    MALFORMED = "MALFORMED"
+
+
+class ReproComponent(BaseModel):
+    """One validated reproduction subcomponent. `status` drives UI styling
+    (§7); `value_display` carries only artifact-derived numbers (§6)."""
+
+    key: str
+    label: str
+    status: ReproComponentStatus
+    detail: str
+    value_display: str | None = None
+    provenance: str | None = None
+    reason_if_unavailable: str | None = None
+
+
+class ReproducibilitySummary(BaseModel):
+    """Concise reproducibility panel (§4-§7). Every visible field derives from
+    validated artifact data; `overall_status` is COMPUTED from the component
+    statuses (worst-of), never defaulted to PASS. `overall_declared` echoes the
+    artifact's own self-declared verdict for cross-check, and
+    `overall_matches_declared` flags any divergence."""
+
     overall_status: str
+    overall_declared: str | None
+    overall_matches_declared: bool
+    environment_scope: str
+    independence_caveat: str
+    components: list[ReproComponent]
     interaction: ReproducibilityInteraction | None = None
 
 

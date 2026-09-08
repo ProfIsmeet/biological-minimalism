@@ -390,16 +390,25 @@ export interface ReproducibilityInteraction {
   boundary: string;
 }
 
+export type ReproComponentStatus = "PASS" | "PARTIAL" | "FAIL" | "UNAVAILABLE" | "MALFORMED";
+
+export interface ReproComponent {
+  key: string;
+  label: string;
+  status: ReproComponentStatus;
+  detail: string;
+  value_display: string | null;
+  provenance: string | null;
+  reason_if_unavailable: string | null;
+}
+
 export interface ReproducibilitySummary {
-  frozen_environment: string;
-  checkpoints: string;
-  datasets: string;
-  canonical_results: string;
-  robustness: string;
-  raw_data_committed: string;
-  n3_diagnostic: string;
-  independence_caveat: string;
   overall_status: string;
+  overall_declared: string | null;
+  overall_matches_declared: boolean;
+  environment_scope: string;
+  independence_caveat: string;
+  components: ReproComponent[];
   interaction: ReproducibilityInteraction | null;
 }
 
@@ -834,9 +843,19 @@ export interface EngineeringPanelRow {
   note: string;
 }
 
+export type EngineeringQuantityStatus = "AVAILABLE" | "NOT_READY" | "UNKNOWN";
+
+export interface EngineeringQuantity {
+  value: number | null;
+  unit: string;
+  status: EngineeringQuantityStatus;
+  display: string;
+  reason_if_unavailable: string | null;
+  provenance: string | null;
+}
+
 export interface EngineeringRawDataRate {
-  partial_lower_bound_bps: number;
-  partial_lower_bound_kbps: number;
+  value: EngineeringQuantity;
   status: string;
   radio_data_rate_status: string;
   note: string;
@@ -850,10 +869,10 @@ export interface EngineeringCandidate {
   gate_status: string;
   incremental_body_region: string;
   incremental_module: string;
-  incremental_sensing_contacts: number;
+  incremental_sensing_contacts: EngineeringQuantity;
   reference_component_power_display: string;
   reference_component_power_status: EngineeringReadinessLevel;
-  raw_data_rate_increment_bps: number;
+  raw_data_rate_increment: EngineeringQuantity;
   mass_tier: string;
   bom_readiness: string;
   engineering_summary: string;
