@@ -1,0 +1,4 @@
+{
+  "exact_match": true,
+  "coverage": "FULL_CLEAN_STATE_RERUN (deterministic ridge regression, no stochastic training component)"
+}
