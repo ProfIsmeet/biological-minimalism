@@ -227,7 +227,9 @@ def build_decision_inputs(repository_root: str | Path = REPOSITORY_ROOT) -> Pare
     if not audit_path.is_file():
         raise ResearchArtifactError(f"Robustness audit unavailable: {ROBUSTNESS_AUDIT_PATH}")
 
-    if scientific["sign_convention"]["absolute_benefit"].split("(", 1)[0].strip() != "baseline_metric - candidate_metric":
+    # Audit M1/§19: the convention is now metric-specific. This contract is
+    # lower-is-better (MAE/RMSE), so guard the lower-is-better absolute benefit.
+    if scientific["sign_convention"]["lower_is_better_absolute_benefit"].split("(", 1)[0].strip() != "baseline_metric - candidate_metric":
         raise ResearchArtifactError("Scientific benefit sign convention changed.")
     if scientific["comparability_rules"]["cross_dataset_raw_metric_comparison"] != "PROHIBITED":
         raise ResearchArtifactError("Cross-dataset raw-metric prohibition is missing.")

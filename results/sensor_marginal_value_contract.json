@@ -3,9 +3,11 @@
   "methodology_doc": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
   "generated_by": "ml/build_sensor_marginal_value_contract.py",
   "sign_convention": {
-    "absolute_benefit": "baseline_metric - candidate_metric (positive = candidate improves / lower error; negative = candidate worsens)",
-    "relative_improvement": "(baseline_metric - candidate_metric) / baseline_metric, as a fraction (positive = candidate improves)",
-    "note": "Applied identically to every experiment record in this file - never inverted per-experiment."
+    "lower_is_better_absolute_benefit": "baseline_metric - candidate_metric (positive = candidate improves; used for MAE/RMSE)",
+    "higher_is_better_absolute_benefit": "candidate_metric - baseline_metric (positive = candidate improves; used for macro-F1 and other higher-is-better metrics)",
+    "relative_improvement": "signed_absolute_benefit / baseline_metric, as a fraction (positive = candidate improves), using the metric-appropriate absolute_benefit above",
+    "favorable_direction_rule": "favorable_direction is determined per record by metric_directionality; there is NO universal implicit subtraction.",
+    "scope_note": "Every experiment record in THIS contract is lower-is-better (MAE/RMSE); the formula must be inverted for higher-is-better metrics used by classification targets recorded in other artifacts."
   },
   "metric_policy": {
     "primary_accuracy_metric": "mae",
@@ -38,10 +40,14 @@
   },
   "interaction_effects": {
     "additive_assumption_supported": false,
-    "note": "Value(component_A + component_B) is not assumed equal to Value(A) + Value(B). No experiment in this project has measured a genuine interaction effect between two candidate components.",
-    "interaction_evidence": "unavailable",
+    "note": "Value(component_A + component_B) is not assumed equal to Value(A) + Value(B). One controlled interaction pair has been tested (Day-10 Sleep-EDF EEG x EOG x Resp, capacity-fair, 5 seeds); its interaction term was approximately additive / unresolved. This is NOT global factorial evidence across all candidate pairs.",
+    "interaction_evidence": "partial_one_controlled_pair",
+    "controlled_pairs_tested": 1,
+    "global_interaction_coverage": "partial",
+    "interpretation": "approximately_additive_or_unresolved",
+    "interaction_experiment_artifact": "results/sleep_edf_interaction_resp_day10.json",
     "formal_limitation_doc": "docs/SENSOR_INTERACTION_LIMITATION.md",
-    "consequence": "One-at-a-time marginal-value evidence in this contract does NOT establish a globally minimal sensor subset for any target."
+    "consequence": "One-at-a-time marginal-value evidence in this contract, plus one partial interaction pair, does NOT establish a globally minimal sensor subset for any target."
   },
   "robustness_relationship": {
     "sensor_marginal_value_and_robustness_are_separate_axes": true,

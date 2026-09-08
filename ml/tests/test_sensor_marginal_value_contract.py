@@ -60,9 +60,12 @@ def test_source_results_load(ppg_source, ptt_source):
 
 
 def test_sign_convention_documented_and_consistent(contract):
+    # Audit M1/§19: the convention is metric-specific (lower vs higher is better),
+    # not a single universal subtraction rule.
     conv = contract["sign_convention"]
-    assert "baseline_metric - candidate_metric" in conv["absolute_benefit"]
-    assert "positive = candidate improves" in conv["absolute_benefit"].lower()
+    assert "baseline_metric - candidate_metric" in conv["lower_is_better_absolute_benefit"]
+    assert "candidate_metric - baseline_metric" in conv["higher_is_better_absolute_benefit"]
+    assert "no universal implicit subtraction" in conv["favorable_direction_rule"].lower()
 
 
 # 3. positive PPG-DaLiA IMU benefit calculated correctly ----------------------
@@ -303,8 +306,14 @@ def test_contract_rebuild_is_deterministic(tmp_path, contract):
 
 
 def test_interaction_effects_not_assumed(contract):
-    assert contract["interaction_effects"]["additive_assumption_supported"] is False
-    assert contract["interaction_effects"]["interaction_evidence"] == "unavailable"
+    # Audit M20/§20: additivity is still not assumed, but the contract now reflects
+    # that ONE controlled interaction pair was tested (partial), not zero evidence
+    # and not global factorial coverage.
+    ie = contract["interaction_effects"]
+    assert ie["additive_assumption_supported"] is False
+    assert ie["interaction_evidence"] == "partial_one_controlled_pair"
+    assert ie["controlled_pairs_tested"] == 1
+    assert ie["global_interaction_coverage"] == "partial"
 
 
 def test_positive_and_negative_interpretation_rules_present(contract):

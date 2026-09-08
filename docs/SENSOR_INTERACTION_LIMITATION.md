@@ -1,5 +1,15 @@
 # Sensor Interaction Limitation — Formal Documentation (Day 7)
 
+> **Day-10 update (audit M20/§20):** ONE controlled interaction pair has since
+> been tested — the Day-10 Sleep-EDF EEG × EOG × Resp capacity-fair factorial
+> (5 seeds), whose interaction term was approximately additive / unresolved
+> (`results/sleep_edf_interaction_resp_day10.json`). This does NOT overturn the
+> limitation below: a single controlled pair is **partial** interaction coverage,
+> not global factorial evidence across all candidate pairs. The wording further
+> down ("no time was spent", "not something one more experiment will resolve")
+> is preserved as the Day-7 historical framing; global interaction coverage
+> remains partial and the global-minimal-subset limitation stands.
+
 **Master-review finding (Reviews A and C):** one-at-a-time marginal sensor
 experiments do NOT prove a globally minimal sensor subset when sensor
 interactions may be non-additive. This document formally records that
