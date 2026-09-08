@@ -115,6 +115,55 @@ def _iter_files() -> list[Path]:
     return files
 
 
+# Known live research API routes (path templates, concrete ids -> {}). A claim's
+# api_surface must match one of these; a nonexistent route (audit M4 §26) fails.
+KNOWN_ROUTES = {
+    "GET /research/summary",
+    "GET /research/experiments",
+    "GET /research/experiments/{}",
+    "GET /research/target-evidence-matrix",
+    "GET /research/engineering-readiness",
+    "GET /research/pareto-readiness",
+    "GET /research/hardware-topology",
+    "GET /research/decision-inputs",
+    "GET /research/operational-costs",
+    "GET /research/operational-costs/{}",
+    "GET /digital-twin",
+}
+
+
+def _normalize_route(api_surface: str) -> str:
+    """Collapse a concrete trailing id segment to {} so routes match templates."""
+    try:
+        method, path = api_surface.split(" ", 1)
+    except ValueError:
+        return api_surface
+    segments = path.split("/")
+    # Replace a concrete experiment/component id in the last segment with {}.
+    if len(segments) > 3 and segments[-2] in {"experiments", "operational-costs"}:
+        segments[-1] = "{}"
+    return f"{method} {'/'.join(segments)}"
+
+
+def _resolve_field(obj, dotted: str) -> tuple[bool, str | None]:
+    """Resolve a simple dotted path with optional [n] list indices. Returns
+    (resolved, failing_segment). Mechanical existence check only (audit M4 §24)."""
+    cur = obj
+    for part in dotted.split("."):
+        m = re.match(r"^(.*?)\[(\d+)\]$", part)
+        key = m.group(1) if m else part
+        if key:
+            if not isinstance(cur, dict) or key not in cur:
+                return False, part
+            cur = cur[key]
+        if m:
+            idx = int(m.group(2))
+            if not isinstance(cur, list) or idx >= len(cur):
+                return False, part
+            cur = cur[idx]
+    return True, None
+
+
 def check_traceability() -> list[str]:
     problems: list[str] = []
     path = REPO / "results" / "claim_traceability.json"
@@ -129,8 +178,27 @@ def check_traceability() -> list[str]:
             if claim.get("api_surface") != "PENDING":
                 problems.append(f"[trace] {cid}: pending claim must have api_surface=PENDING")
             continue
+        # 1. source_artifact must exist.
         if not artifact or not (REPO / artifact).is_file():
             problems.append(f"[trace] {cid}: source_artifact missing -> {artifact!r}")
+            continue
+        # 2. source_field must resolve inside the artifact (audit M4 §24/§26).
+        field = claim.get("source_field", "")
+        if field:
+            try:
+                obj = json.loads((REPO / artifact).read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                problems.append(f"[trace] {cid}: source_artifact unreadable -> {exc}")
+                continue
+            resolved, where = _resolve_field(obj, field)
+            if not resolved:
+                problems.append(
+                    f"[trace] {cid}: source_field does not resolve -> {artifact}::{field} (at {where!r})"
+                )
+        # 3. api_surface must be a real live route (audit M4 §26 nonexistent route).
+        api = claim.get("api_surface", "")
+        if api and _normalize_route(api) not in KNOWN_ROUTES:
+            problems.append(f"[trace] {cid}: api_surface route does not exist -> {api!r}")
     return problems
 
 
@@ -167,7 +235,20 @@ def main() -> int:
         for p in problems:
             print("  -", p)
         return 1
-    print("CLAIM CONSISTENCY: OK — no stale/over-strong claims on live surfaces; traceability intact.")
+    # Audit M4/§25: this is NOT a semantic proof that all claims are scientifically
+    # valid. It is a structured traceability + forbidden-pattern guard. Semantic
+    # paraphrases can bypass the lexical FORBIDDEN rules, and the traceability check
+    # only verifies that artifact/field/route EXIST, not that the number is correct.
+    print("STRUCTURED_TRACEABILITY_AND_FORBIDDEN_PATTERN_CHECK_PASS")
+    print(
+        "  Scope: every non-pending claim resolves to an existing source artifact, an existing "
+        "JSON field path, and a live API route; and no forbidden bald-positive pattern appears on "
+        "live surfaces."
+    )
+    print(
+        "  Limitation: this is NOT comprehensive semantic claim certification. Lexical rules can be "
+        "bypassed by paraphrase, and field/route checks verify existence, not numerical correctness."
+    )
     return 0
 
 
