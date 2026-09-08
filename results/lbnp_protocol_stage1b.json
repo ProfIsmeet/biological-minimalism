@@ -1,0 +1,55 @@
+{
+  "dataset_id": "LBNP_thoracic_eis",
+  "dataset_version": "Zenodo 10.5281/zenodo.10119427",
+  "target": "Externally-imposed LBNP pressure stage (mmHg), focused on the 0-60 mmHg range per the paper's own clinically-occult-state focus",
+  "target_representation_decision": {
+    "chosen": "Ordinal/stage regression (predict the numeric mmHg level: 0/15/30/45/60), evaluated with MAE in mmHg",
+    "alternative_considered": "Categorical macro-F1 over the 5 discrete stages",
+    "rationale": "The stages are a genuinely ordered physiological progression (monotonically increasing hypovolemic stress), not unordered categories - an ordinal/regression framing respects that a 45-vs-60 mmHg confusion is a smaller error than a 0-vs-60 mmHg confusion, which macro-F1 would treat identically. Frozen before training; will not be switched to F1 after seeing results even if regression performs poorly."
+  },
+  "reference": "The LBNP chamber's own commanded pressure level (a controlled experimental variable, not a derived measurement) - the cleanest possible reference, not subject to measurement error.",
+  "major_leakage_threat_and_mitigation": {
+    "threat": "LBNP pressure increases sequentially and monotonically within a session, so elapsed time, sample index, or filename/timestamp could trivially encode the stage without the model learning anything about the actual EIS/ECG/pleth signal content.",
+    "mitigation": "A frozen feature-cleaning barrier excludes elapsed_time, stage_sequence_index, trial_order, and any filename/timestamp-derived field from the model INPUT array - enforced by an automated test (ml/tests/test_stage1b_lbnp.py) that fails if any such field name appears in the frozen feature list. This does not eliminate the fact that physiological signals themselves genuinely change monotonically WITH the protocol (that co-variation is the entire scientific phenomenon under study) - only the trivial non-physiological encoding (raw sequence/time) is excluded, per this project's standing distinction between removable metadata leakage and the real signal the study exists to measure."
+  },
+  "feature_sets": {
+    "A": ["ECG waveform", "pleth waveform"],
+    "B": "A + thoracic EIS spectrum",
+    "C": {
+      "architecture": "identical to B",
+      "derangement": "thoracic EIS spectrum's stage correspondence deranged WITHIN subject (drawn from a different stage's real EIS spectrum for the SAME subject), subject identity always preserved, cross-subject mixing forbidden."
+    }
+  },
+  "eis_representation": {
+    "frozen_choice": "Full spectrum (all 100 logarithmically-spaced frequency points, 100 Hz-1 MHz), thoracic site only",
+    "alternatives_considered": ["Predeclared physiologically-motivated frequency bands (e.g. low/mid/high tertiles)", "Summary features (magnitude/phase at a small fixed subset of frequencies)"],
+    "rationale": "With only ~1 spectrum/minute and ~16 usable subjects, the full 100-point spectrum is not so high-dimensional relative to sample count as to force dimensionality reduction, and using the full spectrum avoids an outcome-driven 'which frequencies matter' selection step entirely - the safest choice against Gate-9-adjacent outcome shopping. Frozen before training."
+  },
+  "capacity_control": "A and B/C use the same ECG+pleth encoder backbone; B/C's added EIS branch is a small fixed-width MLP over the 100-point spectrum (width frozen at Stage-2 implementation, sized to avoid dominating total model parameters) so that B is not simply 'a much bigger model.'",
+  "evaluation": {
+    "outer_scheme": "LOSO or grouped subject CV",
+    "frozen_choice": "LOSO (n=16)",
+    "rationale": "Consistent with this project's QDE (n=10) precedent - at n=16, LOSO gives maximal use of every subject as a held-out evaluation without requiring an arbitrary fold-count choice."
+  },
+  "secondary_target_map": {
+    "usage_rule": "MAP may be used ONLY as a separately preregistered secondary analysis (per Section 13). If used: MAP is removed from ALL inputs for that secondary run, LBNP pressure-level is then also excluded from that secondary run's inputs, and the secondary result is never merged into the primary LBNP-stage experiment's headline numbers.",
+    "reference_quality_caveat": "MAP is invasively measured via brachial arterial line per the paper - a strong reference in principle, but this project must not describe MAP-based results as 'direct blood volume measurement' (MAP is a pressure, not a volume)."
+  },
+  "primary_metric": "MAE (mmHg)",
+  "secondary_metrics": ["Macro-F1 (5-class, as a secondary/diagnostic view only, not primary)"],
+  "eligibility_rules": ["Not among the 2 impedance-instrumentation-excluded subjects", "ECG present", "pleth present", "thoracic EIS present"],
+  "leakage_exclusions": ["elapsed_time_within_session", "stage_sequence_index_trial_order", "filename_or_recording_timestamp", "abdominal_and_arm_eis (out of scope, single-site design)", "eit_thorax_abdomen (distinct modality, out of scope)", "map_invasive (excluded from PRIMARY experiment; secondary-only per the rule above)"],
+  "subject_sensitivity": "Report per-subject A-vs-B delta for all 16 eligible subjects, favorable-direction count, dominance/concentration.",
+  "negative_result_policy": {
+    "if_candidate_helps": "Report as: 'thoracic EIS added information about progressive LBNP-induced hypovolemic stress beyond ECG+pleth alone, in this n=16 terrestrial cohort.'",
+    "if_candidate_does_not_help": "Report as a real negative result, retained.",
+    "if_shuffled_control_equals_candidate": "Apparent EIS benefit attributable to added branch capacity/context, not genuine stage-aligned spectral information.",
+    "if_effect_changes_sign_across_lbnp_stage_ranges": "Report per-stage-range breakdown explicitly (e.g. 0-30 vs 30-60 mmHg) rather than a single pooled number, since the paper itself found the 0-15 mmHg transition specifically informative for a DIFFERENT (EIT-based) metric - do not assume uniform behavior across the pressure range."
+  },
+  "forbidden_claims": ["LBNP validates astronaut hypovolemia monitoring.", "This EIS result establishes hemorrhage-volume estimation.", "This EIS result establishes dehydration liters.", "This EIS result establishes microgravity fluid shift.", "This EIS result establishes clinical diagnosis or astronaut validation.", "The EIS spectrum is a continuous real-time signal (it is a per-stage snapshot, ~1/minute)."],
+  "implementation_cost": "MEDIUM-HIGH (invasive-grade multimodal acquisition, spectroscopy representation, small-N LOSO)",
+  "workflow_dependency": "None",
+  "status": "PROTOCOL_FROZEN",
+  "classification": "GO_WITH_LIMITATIONS",
+  "classification_reason": "Real, accessible dataset (Zenodo DOI confirmed via the paper's own Data Availability statement); genuine externally-imposed target (LBNP is a controlled chamber pressure, not a derived measurement); the trivial-metadata leakage threat is real but fully mitigable by feature exclusion (not an unavoidable Gate-8 failure); EIS acquisition cadence is properly characterized as a snapshot, not continuous. Limitations: n=16 (not 18) usable subjects, several native rates (ECG/pleth/MAP/EIT) remain UNVERIFIED pending direct Zenodo file access (blocked this sprint by network egress), and full public-file cohort reconciliation (16 vs 18 files actually present) is not yet directly confirmed - these keep this at GO_WITH_LIMITATIONS rather than plain GO."
+}

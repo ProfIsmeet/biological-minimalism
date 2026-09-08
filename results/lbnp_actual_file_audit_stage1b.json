@@ -1,0 +1,35 @@
+{
+  "dataset": "LBNP impedance dataset",
+  "source": "Zenodo DOI 10.5281/zenodo.10119427 (per paper's Data Availability statement); paper: Scientific Reports 2024, https://pmc.ncbi.nlm.nih.gov/articles/PMC11018605/",
+  "verification_method": "PARTIAL - the peer-reviewed paper's Methods/Data-Availability text was directly fetched and read this sprint. Direct browsing of the actual Zenodo raw files was BLOCKED this sprint by a network-egress timeout to zenodo.org (two independent attempts, ~15-20s each, same failure mode as GalaxyPPG). This audit therefore relies on the paper's own reported subject/stage/acquisition facts rather than this session's own file listing/hashing.",
+  "public_vs_paper_cohort_reconciliation": {
+    "enrolled": 18,
+    "usable_final_analysis": 16,
+    "exclusion_reason_from_paper": "Two subjects had impedance instrumentation issues and were excluded.",
+    "resolution": "This project's Stage-2 eligibility table must use 16 as the analyzable cohort, NOT 18 - per Section 13's explicit instruction not to silently borrow the paper's enrollment count. This is recorded as the frozen eligibility number below.",
+    "further_caveat": "Whether the publicly-released Zenodo dataset itself contains exactly 16 subjects' worth of usable files (vs. 18 files with 2 flagged unusable, or some other structure) could NOT be confirmed this sprint (Zenodo access blocked). FLAGGED as a mandatory first Stage-2 step: open the actual Zenodo record and confirm which of the 16-vs-18 subjects' raw files are actually present before finalizing any eligibility table."
+  },
+  "lbnp_pressure_levels": {
+    "verified_stages_mmhg": [0, 15, 30, 45, 60, 70, 80, 90, 100],
+    "note": "The master prompt's example levels (0/15/30/45/60) are a SUBSET of the actual full protocol (which goes to 100 mmHg) - directly corrected via the paper text, not assumed.",
+    "stage_duration": "approximately 5 minutes stable per level, with ~48-second transition periods between levels",
+    "analysis_focus_in_paper": "0-60 mmHg specifically, to emphasize clinically occult (pre-symptomatic) states - this project's frozen target range should match this focus unless a reason to diverge is documented."
+  },
+  "eis_acquisition": {
+    "excitation_frequency_axis": "100 logarithmically-spaced frequencies, 100 Hz to 1 MHz",
+    "temporal_acquisition_cadence": "approximately 1 full spectrum per minute, per anatomical site",
+    "spectra_type": "per-stage measurements (roughly up to 5 per ~5-minute stage), not a continuously-sampled waveform",
+    "anatomical_sites": ["thorax", "abdomen", "arm"],
+    "site_selected_for_this_experiment": "thorax only (per Section 13's single-site focus, to keep A/B/C a single-variable comparison)"
+  },
+  "other_signals": {
+    "ecg_pleth": "Captured via LabChart 7.0; specific sample rates NOT stated in the retrieved text - UNVERIFIED, flagged for Stage-2 direct-file confirmation.",
+    "map": "Invasively measured via brachial arterial line; sample rate UNVERIFIED.",
+    "eit": "Continuous collection via dual 16-electrode belts (chest below nipple line, abdomen); frame rate UNVERIFIED. EIT is a DISTINCT modality from EIS and is out of scope for the frozen A/B/C (would violate the single-variable-at-a-time rule if mixed with EIS)."
+  },
+  "eligibility": {
+    "rule": "Require ECG, pleth, and thoracic EIS present and the subject not among the 2 impedance-instrumentation-excluded subjects",
+    "n_eligible": 16,
+    "verification_status": "PARTIAL - based on the paper's own stated final-analysis cohort, not this session's direct file check (blocked). Stage-2 must re-verify against the actual Zenodo file set before training."
+  }
+}
