@@ -1,0 +1,7 @@
+{
+  "purpose": "Stage 2 gate verdict per Section 46.",
+  "qde_v2": {"status": "COMPLETE", "result": "results/qde_v2_leg_bioz_stage2.json", "finding": "negative-leaning, single-subject-dominated (subject 2 outlier flips aggregate mean sign vs 7/10-subject majority direction)"},
+  "galaxyppg": {"status": "BLOCKED_BY_DATA_ACCESS", "detail": "results/galaxyppg_stage2_access_attempt.json", "protocol_unaffected": true},
+  "verdict": "STAGE2_PASS_WITH_LIMITATIONS",
+  "rationale": "QDE V2 completed with a real, reproducible, honestly-reported (negative-leaning) result. GalaxyPPG could not be trained due to a genuine, reproduced, host-specific network access failure (zenodo.org), not a design or protocol flaw - the frozen protocol remains valid and ready to execute once access is available. Per Section 46, a blocked GalaxyPPG download does not invalidate the completed QDE V2 science, and per Section 91 independent downstream work (Stage 3) continues."
+}

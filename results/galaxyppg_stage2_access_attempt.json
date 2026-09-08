@@ -1,0 +1,14 @@
+{
+  "purpose": "Stage 2B raw-file access gate for GalaxyPPG, per Section 35 - metadata/paper verification alone is not sufficient for a training result.",
+  "attempts_this_sprint": [
+    {"method": "curl direct HTTPS to zenodo.org/records/14635823", "result": "TIMEOUT after 20000ms, 0 bytes received"},
+    {"method": "curl to zenodo.org/api/records/14635823 (REST API)", "result": "TIMEOUT after 20000ms, 0 bytes received"},
+    {"method": "WebFetch tool to zenodo.org/records/14635823", "result": "HTTP 504 Gateway Timeout"}
+  ],
+  "control_evidence": "Same-sprint successful access to physionet.org, github.com, and a real byte-verified S3 download from openneuro.org's S3 bucket for ds003838 (see ds003838_stage3_actual_file_audit.json) confirms this sandbox's network egress works in general - the failure is specific to the zenodo.org host.",
+  "conclusion": "GalaxyPPG raw CSV files remain genuinely inaccessible from this sandbox's network egress this sprint, exactly as in Stage 1B.",
+  "status": "GALAXYPPG_STAGE2_BLOCKED_BY_DATA_ACCESS",
+  "what_this_means": "No new performance result can be honestly reported for GalaxyPPG this sprint. The frozen protocol (results/galaxyppg_protocol_stage1b.json) remains valid and ready to execute the moment raw file access is available - no redesign is needed, only data access.",
+  "what_remains_metadata_only": "24-subject cohort, per-device completeness, measured sample rates (all from the peer-reviewed paper, PMC12119839 - real, authoritative, but not this session's own file listing).",
+  "unaffected_work_continues": "This block does not affect QDE V2 (already completed, Stage 2A) or ds003838 (Stage 3B, real S3 access confirmed working) - per Section 91, one dataset's access failure does not stop independent work."
+}
