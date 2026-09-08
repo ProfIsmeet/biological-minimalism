@@ -246,8 +246,11 @@ function ConfigurationGrid({ experiment }: { experiment: ResearchExperiment }) {
 }
 
 function deltaClass(entry: ResearchBreakdownEntry, higherIsBetter = false): string {
+  // Audit M30: color by DIRECTION only. A single 0.05 magnitude threshold is
+  // meaningless across bpm (MAE) and macro-F1, so no magnitude cutoff is applied;
+  // an exact 0 (no direction) is neutral.
   if (entry.delta?.mean === null || entry.delta?.mean === undefined) return "text-slate-500";
-  if (Math.abs(entry.delta.mean) < 0.05) return "text-slate-300";
+  if (entry.delta.mean === 0) return "text-slate-300";
   const improved = higherIsBetter ? entry.delta.mean > 0 : entry.delta.mean < 0;
   return improved ? "text-emerald-300" : "text-amber-300";
 }
@@ -450,6 +453,24 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
           {experiment.marginal_result.subject_heterogeneity ? <p className="mt-1 text-xs text-slate-400"><span className="text-slate-500">Subject heterogeneity:</span> {experiment.marginal_result.subject_heterogeneity}</p> : null}
           {experiment.marginal_result.class_heterogeneity ? <p className="mt-1 text-xs text-slate-400"><span className="text-slate-500">Class heterogeneity:</span> {experiment.marginal_result.class_heterogeneity}</p> : null}
           {experiment.marginal_result.sensitivity_status ? <p className="mt-1 text-xs text-slate-400">Sensitivity analysis: {humanize(experiment.marginal_result.sensitivity_status)}.</p> : null}
+          {experiment.marginal_result.controlled_comparisons && experiment.marginal_result.controlled_comparisons.length ? (
+            <div className="mt-3 space-y-1.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Controlled comparisons</p>
+              {experiment.marginal_result.controlled_comparisons.map((comparison) => {
+                const isHeadline = comparison.comparison_id === experiment.marginal_result?.headline_comparison_id;
+                const isHistorical = comparison.role === "HISTORICAL_CAPACITY_CONFOUNDED_RESULT";
+                return (
+                  <div key={comparison.comparison_id} className={clsx("rounded border px-2.5 py-1.5 text-[11px]", isHistorical ? "border-slate-600/40 bg-slate-500/[0.04] opacity-70" : isHeadline ? "border-emerald-400/25 bg-emerald-400/[0.05]" : "border-white/10 bg-white/[0.02]")}>
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <span className="text-slate-300">{comparison.label}{isHeadline ? <span className="ml-1 rounded-full border border-emerald-400/30 px-1.5 py-px text-[9px] font-semibold text-emerald-300">HEADLINE</span> : null}{isHistorical ? <span className="ml-1 rounded-full border border-slate-500/40 px-1.5 py-px text-[9px] font-semibold text-slate-400">HISTORICAL — capacity-confounded</span> : null}</span>
+                      <span className="tabular-nums-mono font-semibold text-slate-100">{signedMetric(comparison.delta)}{comparison.n_seeds !== null ? ` · ${comparison.n_seeds_favor_candidate}/${comparison.n_seeds} seeds` : ""}</span>
+                    </div>
+                    <p className="mt-0.5 text-[10px] text-slate-500">{comparison.delta_definition}. {comparison.interpretation}</p>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
           <ul className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-slate-400">{experiment.marginal_result.notes.map((note) => <li key={note}>• {note}</li>)}</ul>
         </div>
       ) : null}

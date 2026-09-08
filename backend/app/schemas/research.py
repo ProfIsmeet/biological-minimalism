@@ -90,6 +90,31 @@ class ResearchMetricEstimate(BaseModel):
     unit: str
 
 
+class ComparisonRole(StrEnum):
+    """Role of a controlled comparison in the PPG headline (audit H5 §12-15)."""
+
+    PRIMARY_CONTROLLED = "PRIMARY_CONTROLLED"
+    MATCHED_SHUFFLED_CONTROL = "MATCHED_SHUFFLED_CONTROL"
+    HISTORICAL_CAPACITY_CONFOUNDED_RESULT = "HISTORICAL_CAPACITY_CONFOUNDED_RESULT"
+
+
+class ControlledComparison(BaseModel):
+    """One self-contained comparison. Each carries its OWN operands and its OWN
+    replication statistics (audit M15 §15): no blending of a single-run magnitude
+    with a different comparison's five-seed consistency."""
+
+    comparison_id: str
+    label: str  # semantic label, e.g. "capacity-controlled IMU-information benefit (A_cap -> B)"
+    role: ComparisonRole
+    baseline_id: str
+    candidate_id: str
+    delta_definition: str  # e.g. "baseline_MAE - candidate_MAE (positive = candidate better)"
+    delta: ResearchMetricEstimate  # mean + SD + n for THIS comparison
+    n_seeds: int | None = Field(default=None, ge=0)
+    n_seeds_favor_candidate: int | None = Field(default=None, ge=0)
+    interpretation: str
+
+
 class ResearchConfiguration(BaseModel):
     configuration_id: str
     label: str
@@ -127,6 +152,12 @@ class ResearchMarginalResult(BaseModel):
     subject_heterogeneity: str | None = None
     class_heterogeneity: str | None = None
     sensitivity_status: SensitivityStatus | None = None
+    # Structured controlled comparisons (audit H5/M15). When populated, the
+    # `delta` above is the capacity-controlled headline, and `headline_comparison_id`
+    # names which entry it corresponds to. The historical capacity-confounded
+    # A->B is present here only as HISTORICAL_CAPACITY_CONFOUNDED_RESULT.
+    controlled_comparisons: list[ControlledComparison] = Field(default_factory=list)
+    headline_comparison_id: str | None = None
     notes: list[str] = Field(default_factory=list)
 
 

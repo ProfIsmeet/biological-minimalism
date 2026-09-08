@@ -12,6 +12,8 @@ from pydantic import ValidationError
 
 from app.schemas.research import (
     CapacityMatchStatus,
+    ComparisonRole,
+    ControlledComparison,
     EvidenceStrength,
     MarginalDirection,
     MetricDirectionality,
@@ -151,6 +153,95 @@ def _ppg_breakdown(
     )
 
 
+def _ppg_controlled_comparisons(
+    repository_root: Path,
+) -> tuple[list[ControlledComparison], ResearchConfiguration | None, ControlledComparison | None]:
+    """Build the capacity-controlled PPG comparisons from the canonical source
+    (audit H5/M15). Returns (comparisons, model_a_cap configuration, primary).
+
+    Each comparison reads its OWN mean/SD/seed-sign-count from
+    results/ppg_dalia_capacity_control.json::primary_comparisons — no blending of
+    a single-run magnitude with another comparison's replication metadata. If the
+    artifact is absent the headline degrades to None and the caller falls back to
+    the historical framing (clearly labelled) rather than fabricating values."""
+    cc = _optional_json(repository_root, "results/ppg_dalia_capacity_control.json")
+    if cc is None:
+        return [], None, None
+    pcs = cc.get("primary_comparisons", {})
+    agg = cc.get("aggregate", {})
+
+    def _cmp(key: str, cid: str, label: str, role: ComparisonRole, baseline: str,
+             candidate: str, interpretation: str) -> ControlledComparison | None:
+        block = pcs.get(key)
+        if not isinstance(block, dict) or not isinstance(block.get("mean"), (int, float)):
+            return None
+        return ControlledComparison(
+            comparison_id=cid, label=label, role=role,
+            baseline_id=baseline, candidate_id=candidate,
+            delta_definition="baseline_MAE - candidate_MAE (positive = candidate lower MAE = better)",
+            delta=_metric(block["mean"], "bpm", sd=block.get("sd_sample_ddof1"),
+                          n=block.get("n_seeds_total")),
+            n_seeds=block.get("n_seeds_total"),
+            n_seeds_favor_candidate=block.get("n_seeds_candidate_better"),
+            interpretation=interpretation,
+        )
+
+    primary = _cmp(
+        "baseline_Acap_candidate_B", "capacity_controlled_Acap_to_B",
+        "Capacity-controlled IMU-information benefit (A_cap -> B)",
+        ComparisonRole.PRIMARY_CONTROLLED, "model_a_cap", "model_b_ppg_plus_imu",
+        "After matching PPG-only capacity to Model B, synchronized IMU still lowers MAE in every seed; "
+        "this is the cleanest current estimate of IMU sensor-information value.",
+    )
+    shuffled = _cmp(
+        "baseline_C_candidate_B", "matched_shuffled_control_C_to_B",
+        "Matched shuffled control (C -> B, synchronization increment)",
+        ComparisonRole.MATCHED_SHUFFLED_CONTROL, "model_c_ppg_plus_shuffled_imu",
+        "model_b_ppg_plus_imu",
+        "Against a same-capacity shuffled-IMU control, synchronized IMU still helps in every seed, "
+        "so the benefit is not merely extra parameters or a shuffled context signal.",
+    )
+    comparisons = [c for c in (primary, shuffled) if c is not None]
+
+    # Historical uncontrolled A->B, DEMOTED and clearly labelled (never the headline).
+    ms = _optional_json(repository_root, "results/ppg_dalia_imu_multiseed_replication.json")
+    if ms is not None:
+        tot = ms.get("aggregate", {}).get("total_sync_imu_benefit_mae_A_minus_B", {})
+        if isinstance(tot.get("mean"), (int, float)):
+            comparisons.append(ControlledComparison(
+                comparison_id="historical_uncontrolled_A_to_B",
+                label="Historical uncontrolled A -> B (capacity-confounded)",
+                role=ComparisonRole.HISTORICAL_CAPACITY_CONFOUNDED_RESULT,
+                baseline_id="model_a_ppg_only", candidate_id="model_b_ppg_plus_imu",
+                delta_definition="baseline_MAE - candidate_MAE (positive = candidate better)",
+                delta=_metric(tot["mean"], "bpm", sd=tot.get("sd"), n=tot.get("n_seeds_total")),
+                n_seeds=tot.get("n_seeds_total"), n_seeds_favor_candidate=tot.get("n_seeds_favor_B"),
+                interpretation=(
+                    "Original architecture differed (baseline A ~8k params vs candidate ~29k). This "
+                    "magnitude CANNOT be interpreted as pure IMU value; capacity control (A_cap->B) "
+                    "substantially reduced the apparent effect. Shown for history only."
+                ),
+            ))
+
+    # Capacity-matched PPG-only (A_cap) as a real configuration for referential integrity.
+    a_cap = agg.get("model_a_cap")
+    b_recomp = agg.get("model_b_original_recomputed_from_multiseed")
+    a_cap_config = None
+    if isinstance(a_cap, dict) and isinstance(a_cap.get("mean"), (int, float)):
+        a_cap_config = ResearchConfiguration(
+            configuration_id="model_a_cap",
+            label="PPG only (capacity-matched, A_cap)",
+            description="Capacity-matched PPG-only baseline (~29k params) for a fair A_cap->B comparison.",
+            sensing=["wrist PPG"],
+            metrics={"mae": _metric(a_cap["mean"], "bpm", sd=a_cap.get("sd_sample_ddof1"))},
+        )
+        if isinstance(b_recomp, dict) and isinstance(b_recomp.get("mean"), (int, float)):
+            a_cap_config.metrics["mae_reference_model_b"] = _metric(
+                b_recomp["mean"], "bpm", sd=b_recomp.get("sd_sample_ddof1")
+            )
+    return comparisons, a_cap_config, primary
+
+
 def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
     artifact = "results/ppg_dalia_imu_ablation.json"
     result = _read_json(repository_root, artifact)
@@ -192,6 +283,11 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
     baseline_mae = configurations[0].metrics["mae"].mean
     candidate_mae = configurations[1].metrics["mae"].mean
     assert baseline_mae is not None and candidate_mae is not None
+    # Capacity-controlled headline (audit H5): the marginal_result.delta must be
+    # the capacity-controlled A_cap->B, NOT the uncontrolled single-seed A->B.
+    controlled_comparisons, a_cap_config, primary_cmp = _ppg_controlled_comparisons(repository_root)
+    if a_cap_config is not None:
+        configurations.append(a_cap_config)
     test_subjects = list(_require(result, "test_subjects", artifact))
     all_subjects = [
         *list(_require(result, "train_subjects", artifact)),
@@ -257,6 +353,11 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
         status=ResearchStatus.COMPLETE,
         result_class=ResearchResultClass.POSITIVE_MARGINAL_VALUE,
         outcome_summary=(
+            "Under capacity control, synchronized IMU still lowers held-out PPG HR MAE by "
+            "~0.605 bpm (A_cap->B, 5/5 seeds); a same-capacity shuffled-IMU control (C->B) improves "
+            "~0.776 bpm (5/5). The original uncontrolled A->B magnitude was largely capacity, not IMU "
+            "information, and is retained only as a historical, capacity-confounded result."
+            if primary_cmp is not None else
             "Synchronized IMU improved held-out PPG-based HR estimation in this frozen experiment; "
             "shuffled IMU also improved over PPG-only, so synchronization explains only part of the gain."
         ),
@@ -270,15 +371,40 @@ def adapt_ppg_dalia_ablation(repository_root: Path) -> ResearchExperiment:
         ),
         configurations=configurations,
         marginal_result=ResearchMarginalResult(
-            baseline_configuration_id="model_a_ppg_only",
+            # Headline is the CAPACITY-CONTROLLED A_cap->B when available (audit H5);
+            # only if the capacity-control artifact is absent do we fall back to the
+            # uncontrolled A->B point estimate (older deployments).
+            baseline_configuration_id="model_a_cap" if primary_cmp is not None else "model_a_ppg_only",
             candidate_configuration_id="model_b_ppg_plus_imu",
             added_sensing="synchronized wrist IMU",
             metric="mae",
-            delta=_metric(candidate_mae - baseline_mae, "bpm"),
+            # Headline delta kept in the codebase-wide candidate-baseline convention
+            # (MAE: negative = improvement), so it reads consistently against PTT/others.
+            # The +0.605 baseline-candidate value lives in the self-documenting
+            # controlled_comparisons entry with its explicit delta_definition (audit M1).
+            delta=(
+                _metric(-primary_cmp.delta.mean, "bpm", sd=primary_cmp.delta.sd, n=primary_cmp.delta.n)
+                if primary_cmp is not None and primary_cmp.delta.mean is not None
+                else _metric(candidate_mae - baseline_mae, "bpm")
+            ),
             direction=MarginalDirection.IMPROVED,
-            paired_replicates=paired_replicates,
-            candidate_improved_count=candidate_improved_count,
-            candidate_worsened_count=candidate_worsened_count,
+            paired_replicates=primary_cmp.n_seeds if primary_cmp is not None else paired_replicates,
+            candidate_improved_count=(
+                primary_cmp.n_seeds_favor_candidate if primary_cmp is not None else candidate_improved_count
+            ),
+            candidate_worsened_count=(
+                (primary_cmp.n_seeds - primary_cmp.n_seeds_favor_candidate)
+                if primary_cmp is not None and primary_cmp.n_seeds is not None
+                and primary_cmp.n_seeds_favor_candidate is not None
+                else candidate_worsened_count
+            ),
+            metric_kind=MetricKind.REGRESSION,
+            metric_directionality=MetricDirectionality.LOWER_IS_BETTER,
+            capacity_match_status=(
+                CapacityMatchStatus.MATCHED if primary_cmp is not None else CapacityMatchStatus.CONFOUNDED
+            ),
+            controlled_comparisons=controlled_comparisons,
+            headline_comparison_id=primary_cmp.comparison_id if primary_cmp is not None else None,
             notes=marginal_notes,
         ),
         breakdowns=breakdowns,

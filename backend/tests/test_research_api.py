@@ -51,9 +51,38 @@ def test_ppg_dalia_marginal_result_preserves_exact_artifact_values() -> None:
     assert metrics["model_b_ppg_plus_imu"]["mae"].mean == pytest.approx(7.031700611114502)
     assert metrics["model_c_ppg_plus_shuffled_imu"]["mae"].mean == pytest.approx(7.956958293914795)
     assert experiment.marginal_result is not None
-    assert experiment.marginal_result.delta.mean == pytest.approx(-2.058361530303955)
+    # Audit H5: the HEADLINE is now the capacity-controlled A_cap->B (~0.605 bpm),
+    # NOT the uncontrolled single-seed A->B (~2.058 bpm). Delta stays in the
+    # codebase candidate-baseline convention (negative = improvement).
+    assert experiment.marginal_result.delta.mean == pytest.approx(-0.6053154945373536)
     assert experiment.marginal_result.direction.value == "improved"
+    assert experiment.marginal_result.capacity_match_status.value == "matched"
+    assert experiment.marginal_result.baseline_configuration_id == "model_a_cap"
     assert experiment.scope.held_out_subjects == ["S14", "S2", "S9"]
+
+
+def test_ppg_dalia_controlled_comparisons_demote_historical() -> None:
+    """Audit H5/M15: the old uncontrolled A->B survives only as a clearly labelled
+    HISTORICAL_CAPACITY_CONFOUNDED_RESULT, and each comparison carries its own stats."""
+    experiment = _experiment(PPG_DALIA_ABLATION_ID)
+    mr = experiment.marginal_result
+    assert mr is not None
+    by_role = {c.role.value: c for c in mr.controlled_comparisons}
+    assert set(by_role) == {
+        "PRIMARY_CONTROLLED",
+        "MATCHED_SHUFFLED_CONTROL",
+        "HISTORICAL_CAPACITY_CONFOUNDED_RESULT",
+    }
+    primary = by_role["PRIMARY_CONTROLLED"]
+    assert primary.delta.mean == pytest.approx(0.6053154945373536)  # baseline-candidate convention
+    assert primary.n_seeds_favor_candidate == 5 and primary.n_seeds == 5
+    shuffled = by_role["MATCHED_SHUFFLED_CONTROL"]
+    assert shuffled.delta.mean == pytest.approx(0.7762914657592773)
+    historical = by_role["HISTORICAL_CAPACITY_CONFOUNDED_RESULT"]
+    # Historical is present but NOT the headline, and self-labels its confound.
+    assert mr.headline_comparison_id == primary.comparison_id
+    assert historical.comparison_id != mr.headline_comparison_id
+    assert "capacity" in historical.interpretation.lower()
 
 
 def test_ptt_negative_result_preserves_exact_values_and_direction() -> None:

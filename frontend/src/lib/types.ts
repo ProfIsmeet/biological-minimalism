@@ -285,7 +285,27 @@ export interface ResearchMarginalResult {
   subject_heterogeneity?: string | null;
   class_heterogeneity?: string | null;
   sensitivity_status?: string | null;
+  controlled_comparisons?: ControlledComparison[];
+  headline_comparison_id?: string | null;
   notes: string[];
+}
+
+export type ComparisonRole =
+  | "PRIMARY_CONTROLLED"
+  | "MATCHED_SHUFFLED_CONTROL"
+  | "HISTORICAL_CAPACITY_CONFOUNDED_RESULT";
+
+export interface ControlledComparison {
+  comparison_id: string;
+  label: string;
+  role: ComparisonRole;
+  baseline_id: string;
+  candidate_id: string;
+  delta_definition: string;
+  delta: ResearchMetricEstimate;
+  n_seeds: number | null;
+  n_seeds_favor_candidate: number | null;
+  interpretation: string;
 }
 
 export interface ResearchBreakdownEntry {
