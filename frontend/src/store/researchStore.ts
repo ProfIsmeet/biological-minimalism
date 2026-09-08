@@ -52,15 +52,24 @@ export const useResearchStore = create<ResearchState>((set) => ({
   error: null,
   load: async () => {
     set({ loading: true, error: null });
+    // Audit M12: OPTIONAL panels (operational cost, decision inputs, hardware
+    // topology, Pareto, engineering readiness) load in ISOLATION. Each rejection
+    // is caught here and mapped to that panel's own error, so a 404/500/malformed
+    // response on an optional endpoint can NEVER abort the core scientific panels.
+    const optional = async <T>(
+      promise: Promise<T>,
+    ): Promise<{ ok: true; value: T } | { ok: false; error: string }> => {
+      try {
+        return { ok: true, value: await promise };
+      } catch (error) {
+        return { ok: false, error: error instanceof Error ? error.message : "unavailable" };
+      }
+    };
     try {
-      const [summaries, projectSummary, operationalCosts, decisionInputEnvelope, topologyEnvelope, readinessEnvelope, engineeringEnvelope] = await Promise.all([
+      // CORE (required) scientific data. A failure here is a genuine Research Mode error.
+      const [summaries, projectSummary] = await Promise.all([
         api.getResearchExperiments(),
         api.getResearchSummary(),
-        api.getOperationalCosts(),
-        api.getDecisionInputs(),
-        api.getHardwareTopology(),
-        api.getParetoReadiness(),
-        api.getEngineeringReadiness(),
       ]);
       const availableIds = summaries
         .filter((item) => item.availability === "available")
@@ -72,6 +81,16 @@ export const useResearchStore = create<ResearchState>((set) => ({
           experiments[envelope.experiment_id] = envelope.experiment;
         }
       }
+      // OPTIONAL panels — settled independently; `optional()` never rejects, so
+      // this Promise.all cannot throw into the core catch below.
+      const [operationalCosts, decisionInputEnvelope, topologyEnvelope, readinessEnvelope, engineeringEnvelope] =
+        await Promise.all([
+          optional(api.getOperationalCosts()),
+          optional(api.getDecisionInputs()),
+          optional(api.getHardwareTopology()),
+          optional(api.getParetoReadiness()),
+          optional(api.getEngineeringReadiness()),
+        ]);
       const unavailable = [
         ...summaries.filter((item) => item.availability === "unavailable"),
         ...envelopes.filter((item) => item.availability === "unavailable"),
@@ -79,22 +98,36 @@ export const useResearchStore = create<ResearchState>((set) => ({
       set((state) => ({
         summaries,
         projectSummary,
-        operationalCostCatalog: operationalCosts.catalog,
-        operationalCostError:
-          operationalCosts.availability === "unavailable"
-            ? operationalCosts.error ?? "Operational-cost catalog unavailable."
-            : null,
-        decisionInputs: decisionInputEnvelope.decision_inputs,
-        decisionInputsError:
-          decisionInputEnvelope.availability === "unavailable"
-            ? decisionInputEnvelope.error ?? "Decision inputs unavailable."
-            : null,
-        hardwareTopology: topologyEnvelope.topology,
-        hardwareTopologyError: topologyEnvelope.availability === "unavailable" ? topologyEnvelope.error ?? "Hardware topology unavailable." : null,
-        paretoReadiness: readinessEnvelope.readiness,
-        paretoReadinessError: readinessEnvelope.availability === "unavailable" ? readinessEnvelope.error ?? "Pareto readiness unavailable." : null,
-        engineeringReadiness: engineeringEnvelope.readiness,
-        engineeringReadinessError: engineeringEnvelope.availability === "unavailable" ? engineeringEnvelope.error ?? "Engineering readiness unavailable." : null,
+        operationalCostCatalog: operationalCosts.ok ? operationalCosts.value.catalog : null,
+        operationalCostError: operationalCosts.ok
+          ? (operationalCosts.value.availability === "unavailable"
+              ? operationalCosts.value.error ?? "Operational-cost catalog unavailable."
+              : null)
+          : operationalCosts.error,
+        decisionInputs: decisionInputEnvelope.ok ? decisionInputEnvelope.value.decision_inputs : null,
+        decisionInputsError: decisionInputEnvelope.ok
+          ? (decisionInputEnvelope.value.availability === "unavailable"
+              ? decisionInputEnvelope.value.error ?? "Decision inputs unavailable."
+              : null)
+          : decisionInputEnvelope.error,
+        hardwareTopology: topologyEnvelope.ok ? topologyEnvelope.value.topology : null,
+        hardwareTopologyError: topologyEnvelope.ok
+          ? (topologyEnvelope.value.availability === "unavailable"
+              ? topologyEnvelope.value.error ?? "Hardware topology unavailable."
+              : null)
+          : topologyEnvelope.error,
+        paretoReadiness: readinessEnvelope.ok ? readinessEnvelope.value.readiness : null,
+        paretoReadinessError: readinessEnvelope.ok
+          ? (readinessEnvelope.value.availability === "unavailable"
+              ? readinessEnvelope.value.error ?? "Pareto readiness unavailable."
+              : null)
+          : readinessEnvelope.error,
+        engineeringReadiness: engineeringEnvelope.ok ? engineeringEnvelope.value.readiness : null,
+        engineeringReadinessError: engineeringEnvelope.ok
+          ? (engineeringEnvelope.value.availability === "unavailable"
+              ? engineeringEnvelope.value.error ?? "Engineering readiness unavailable."
+              : null)
+          : engineeringEnvelope.error,
         experiments,
         selectedExperimentId:
           state.selectedExperimentId && experiments[state.selectedExperimentId]
