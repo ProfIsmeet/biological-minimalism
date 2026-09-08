@@ -400,12 +400,17 @@ def build_data_rate_budget() -> dict:
         "artifact_id": "biological-minimalism-reference-data-rate-budget-day11-v1",
         "schema_version": "1.0.0",
         "part": "DAY11_PART2",
-        "statement": ("Transparent RAW-sensor data-rate table. raw_payload_bit_rate = channels x sample_rate x bits/sample. "
-                      "RAW excludes framing, protocol, and compression. RADIO_DATA_RATE and PROCESSED_DATA_RATE are NOT "
-                      "computed (overhead/compression/schedule open)."),
+        "statement": ("Transparent data-rate table. raw_payload_bit_rate = channels x sample_rate x bits/sample. "
+                      "For biopotential rows (EEG/EOG) sample_rate_hz is the resampled SCIENTIFIC/MODEL STREAM rate "
+                      "(100 Hz), which is distinct from the AFE hardware acquisition rate (ADS1299-class >=250 SPS, "
+                      "see hardware_acquisition_rate_sps). RAW excludes framing, protocol, and compression. "
+                      "RADIO_DATA_RATE and PROCESSED_DATA_RATE are NOT computed (overhead/compression/schedule open)."),
         "equation": "raw_payload_bit_rate = channels x sample_rate_hz x bits_per_sample",
-        "rate_class_separation": {"RAW_SENSOR_DATA_RATE": "computed where channels/rate/bits are frozen",
-                                  "PROCESSED_DATA_RATE": "NOT_READY", "RADIO_DATA_RATE": "NOT_READY"},
+        "rate_class_separation": {
+            "HARDWARE_ACQUISITION_RATE": "AFE ODR (e.g. ADS1299-class >=250 SPS); see per-row hardware_acquisition_rate_sps",
+            "SCIENTIFIC_MODEL_STREAM_RATE": "resampled rate fed to the model (e.g. 100 Hz Sleep-EDF); used for payload rows here",
+            "RAW_SENSOR_DATA_RATE": "computed from the stream rate where channels/rate/bits are frozen",
+            "PROCESSED_DATA_RATE": "NOT_READY", "RADIO_DATA_RATE": "NOT_READY"},
         "modalities": [
             {"modality": "wrist_ppg", "module": "wrist_module", "channels": 1, "sample_rate_hz": 64, "bits_per_sample": 19,
              "raw_payload_bit_rate": ppg, "class": "DATASHEET_CALCULATED",
@@ -423,10 +428,18 @@ def build_data_rate_budget() -> dict:
              "raw_payload_bit_rate": None, "class": "UNKNOWN", "note": "BioZ cadence/channels open. NOT_READY."},
             {"modality": "frontal_eeg", "module": "head_module", "channels": 1, "sample_rate_hz": 100, "bits_per_sample": 24,
              "raw_payload_bit_rate": eeg_sci, "class": "DATASHEET_CALCULATED",
-             "note": "Scientific use case: 1 EEG derivation @100 Hz. AFE-capacity framing = 4ch x 250 SPS x 24 = %d bps." % eeg_afe_cap},
+             # Audit M5: 100 Hz is the resampled scientific/model STREAM rate, NOT raw
+             # hardware acquisition. The ADS1299-class AFE acquires at >=250 SPS.
+             "rate_class": "SCIENTIFIC_MODEL_STREAM_RATE",
+             "hardware_acquisition_rate_sps": 250,
+             "hardware_acquisition_note": "ADS1299-class minimum ODR is 250 SPS; the 100 Hz value is the resampled Sleep-EDF scientific/model stream, not raw hardware acquisition.",
+             "note": "Scientific use case: 1 EEG derivation @100 Hz (model stream). AFE-capacity framing = 4ch x 250 SPS x 24 = %d bps." % eeg_afe_cap},
             {"modality": "frontal_eog_horizontal", "module": "head_module", "channels": 1, "sample_rate_hz": 100, "bits_per_sample": 24,
              "raw_payload_bit_rate": eog_sci, "class": "DATASHEET_CALCULATED",
-             "note": "Matches frozen results/eog_operational_burden_day10.json (2400 bps). On a shared AFE at 250 SPS it would be 6000 bps."},
+             "rate_class": "SCIENTIFIC_MODEL_STREAM_RATE",
+             "hardware_acquisition_rate_sps": 250,
+             "hardware_acquisition_note": "ADS1299-class minimum ODR is 250 SPS; the 100 Hz value is the resampled scientific/model stream, not raw hardware acquisition. On the shared AFE at 250 SPS the payload would be 6000 bps.",
+             "note": "Matches frozen results/eog_operational_burden_day10.json (2400 bps at the 100 Hz model stream rate)."},
             {"modality": "second_ppg_site", "module": "optical_site_evaluation_branch", "channels": 3, "sample_rate_hz": 500, "bits_per_sample": 19,
              "raw_payload_bit_rate": second_ppg, "class": "DATASHEET_CALCULATED"},
             {"modality": "leg_bioz", "module": "leg_module", "channels": None, "sample_rate_hz": None, "bits_per_sample": 16,
