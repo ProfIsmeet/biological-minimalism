@@ -95,6 +95,10 @@ class ScientificMarginalValue(StrictModel):
     heterogeneity: dict[str, str]
     evidence_strength: str
     evidence_scope: dict[str, Any]
+    # Audit H5/§12: when the raw absolute_benefit is capacity-confounded (e.g. PPG A->B),
+    # carry the contract's capacity_confound_status so the UI never shows the raw MAE
+    # benefit as the current pure marginal sensor value without the caveat.
+    capacity_confound: dict[str, Any] | None = None
     provenance: ScientificProvenance
     claim_boundaries: ClaimBoundaries
 

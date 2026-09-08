@@ -121,6 +121,17 @@
           "negative_control_present": true,
           "subject_disjoint_split": true
         },
+        "capacity_confound": {
+          "status": "RESOLVED_WITH_REVISED_CLAIM",
+          "source_artifact": "results/ppg_dalia_capacity_control.json",
+          "a_cap_parameters": 28865,
+          "b_c_parameters": 29089,
+          "a_cap_residual_vs_b_fraction": 0.0077005053456633095,
+          "fraction_of_original_gap_explained_by_capacity_alone": 0.6777823878375916,
+          "genuine_imu_information_benefit_on_matched_capacity_mae_bpm": 0.6053154945373536,
+          "genuine_imu_information_benefit_seed_consistency": "5/5",
+          "note": "Model A_cap (capacity-matched PPG-only, 28,865 params) closes most of the original A->B gap through architecture alone. The remaining, capacity-controlled IMU-information benefit (A_cap->B) is smaller than originally reported but remains real and 5/5-seed-consistent. The already-capacity-matched C->B comparison (shuffled vs. synchronized IMU) is unaffected by this finding."
+        },
         "provenance": {
           "source_artifact": "results/ppg_dalia_imu_ablation.json",
           "source_reproducibility_artifact": null,
@@ -1048,6 +1059,7 @@
           "negative_control_present": false,
           "subject_disjoint_split": true
         },
+        "capacity_confound": null,
         "provenance": {
           "source_artifact": "results/ptt_ppg_site_ablation.json",
           "source_reproducibility_artifact": "results/ptt_ppg_site_ablation_reproducibility.json",

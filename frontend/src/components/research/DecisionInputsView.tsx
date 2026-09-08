@@ -74,6 +74,22 @@ function ComponentCard({ component }: { component: DecisionInputComponent }) {
             <div><p className="text-slate-600">RMSE benefit</p><p className="mt-0.5 font-mono text-slate-300">{signed(science.absolute_benefit.rmse_bpm)} bpm</p></div>
             <div><p className="text-slate-600">Evidence strength</p><p className="mt-0.5 text-slate-300">{science.evidence_strength}</p></div>
           </div>
+          {science.capacity_confound ? (
+            <p className="mt-3 rounded border border-amber-400/25 bg-amber-400/[0.05] px-2.5 py-1.5 text-[10px] leading-relaxed text-amber-200/90">
+              Capacity-confounded: the raw MAE benefit above includes model-capacity effect
+              {typeof science.capacity_confound.fraction_of_original_gap_explained_by_capacity_alone === "number"
+                ? ` (~${Math.round(science.capacity_confound.fraction_of_original_gap_explained_by_capacity_alone * 100)}% of the original gap is capacity alone)`
+                : ""}
+              . The capacity-controlled genuine sensor benefit is
+              {typeof science.capacity_confound.genuine_imu_information_benefit_on_matched_capacity_mae_bpm === "number"
+                ? ` ~${science.capacity_confound.genuine_imu_information_benefit_on_matched_capacity_mae_bpm.toFixed(3)} bpm`
+                : " smaller"}
+              {science.capacity_confound.genuine_imu_information_benefit_seed_consistency
+                ? ` (${science.capacity_confound.genuine_imu_information_benefit_seed_consistency} seeds)`
+                : ""}
+              — do not read the raw benefit as the current pure marginal sensor value.
+            </p>
+          ) : null}
           <p className="mt-3 text-[11px] leading-relaxed text-slate-500">{Object.values(science.heterogeneity).join(" · ")}</p>
         </section>
 

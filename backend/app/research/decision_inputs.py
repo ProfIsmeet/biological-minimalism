@@ -118,6 +118,7 @@ def _scientific_value(experiment: dict[str, Any]) -> ScientificMarginalValue:
         heterogeneity=experiment["marginal_status"]["heterogeneity"],
         evidence_strength=experiment["marginal_status"]["evidence_strength"],
         evidence_scope=experiment["evidence_scope"],
+        capacity_confound=experiment.get("capacity_confound_status"),  # audit H5/§12
         provenance=ScientificProvenance(
             source_artifact=experiment["source_artifact"],
             source_reproducibility_artifact=experiment.get("source_reproducibility_artifact"),

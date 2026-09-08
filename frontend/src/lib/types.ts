@@ -676,6 +676,13 @@ export interface DecisionScientificMarginalValue {
   heterogeneity: Record<string, string>;
   evidence_strength: string;
   evidence_scope: Record<string, unknown>;
+  capacity_confound?: {
+    status?: string;
+    fraction_of_original_gap_explained_by_capacity_alone?: number;
+    genuine_imu_information_benefit_on_matched_capacity_mae_bpm?: number;
+    genuine_imu_information_benefit_seed_consistency?: string;
+    note?: string;
+  } | null;
   provenance: {
     source_artifact: string;
     source_reproducibility_artifact: string | null;
