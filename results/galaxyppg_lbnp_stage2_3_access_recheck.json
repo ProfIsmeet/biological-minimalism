@@ -1,0 +1,17 @@
+{
+  "purpose": "One controlled access recheck per Section 46/49 - zenodo.org was unreachable across two entire prior sprints (curl direct, curl API, WebFetch all failed with timeouts/504s); this sprint's single recheck succeeded.",
+  "recheck_timestamp_context": "2026-09-09, during Stage2-4-science-owner-completion sprint",
+  "galaxyppg": {
+    "url_checked": "https://zenodo.org/api/records/14635823",
+    "result": "HTTP 200 - SUCCESS",
+    "real_file_listing": {"file": "GalaxyPPG.zip", "size_bytes": 481594233, "license": "cc-by-4.0", "access": "open"},
+    "disposition": "UNBLOCKED - real file download initiated this sprint"
+  },
+  "lbnp": {
+    "url_checked": "https://zenodo.org/records/10119427 (concept DOI, redirects to https://zenodo.org/api/records/10119428, the specific version record)",
+    "result": "HTTP 200 (after redirect) - SUCCESS",
+    "real_file_listing": {"file": "Mayo_LBNP_raw_data.zip", "size_bytes": 712958490, "license": "cc-by-4.0", "access": "open"},
+    "disposition": "UNBLOCKED - real file download initiated this sprint"
+  },
+  "conclusion": "The prior zenodo.org failures were a transient/environmental network condition (both this sandbox's and possibly Zenodo's side - not determined which), not a permanent or credentialing-based block. Per Section 46's 'one controlled recheck' allowance, this recheck was performed once and succeeded - no repeated retrying against a broken endpoint was needed this time."
+}
