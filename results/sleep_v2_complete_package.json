@@ -1,0 +1,226 @@
+{
+  "purpose": "Complete Sleep V2 (corrected, H1-seed-fixed) scientific package - A, B, C, interaction, all cross-referenced from their own result artifacts, not hand-duplicated.",
+  "v1_vs_v2_separation": "V1 (historical, uncorrected-seed-order) results remain in results/sleep_edf_eeg_eog_ablation.json, results/sleep_edf_eeg_eog_control_analysis.json, results/sleep_edf_interaction_resp_day10.json - ALL UNCHANGED, NEVER MIXED WITH V2 NUMBERS in this package.",
+  "corrected_A": {
+    "mean": 0.7364866682288819,
+    "sd_sample_ddof1": 0.02788511459473134,
+    "per_seed": {
+      "seed42": 0.7583523560273976,
+      "seed43": 0.7463286717943326,
+      "seed44": 0.691059931536046,
+      "seed45": 0.7296048187305253,
+      "seed46": 0.7570875630561076
+    }
+  },
+  "corrected_B": {
+    "mean": 0.7646892437262166,
+    "sd_sample_ddof1": 0.011550951384864006,
+    "per_seed": {
+      "seed42": 0.7794365004499049,
+      "seed43": 0.7677209768042014,
+      "seed44": 0.7665801993426723,
+      "seed45": 0.7622703291254722,
+      "seed46": 0.7474382129088321
+    }
+  },
+  "B_minus_A": {
+    "mean": 0.028202575497334757,
+    "sd_sample_ddof1": 0.030776216115134033,
+    "per_seed": {
+      "seed42": 0.02108414442250728,
+      "seed43": 0.021392305009868773,
+      "seed44": 0.07552026780662635,
+      "seed45": 0.03266551039494692,
+      "seed46": -0.009649350147275526
+    },
+    "n_seeds_candidate_better": 4,
+    "n_seeds_total": 5
+  },
+  "corrected_C": {
+    "mean": 0.7323574625667539,
+    "sd_sample_ddof1": 0.047210496723762714,
+    "per_seed": {
+      "seed42": 0.7611712383535706,
+      "seed43": 0.7641875431426138,
+      "seed44": 0.6500758524909107,
+      "seed45": 0.7373635625692851,
+      "seed46": 0.7489891162773901
+    }
+  },
+  "B_minus_C": {
+    "mean": 0.03233178115946249,
+    "sd_sample_ddof1": 0.04825815927143909,
+    "per_seed": {
+      "seed42": 0.018265262096334278,
+      "seed43": 0.0035334336615875372,
+      "seed44": 0.11650434685176159,
+      "seed45": 0.024906766556187065,
+      "seed46": -0.0015509033685580098
+    },
+    "n_seeds_favor_B": 4,
+    "n_seeds_total": 5
+  },
+  "A_minus_C": {
+    "mean": -0.004129205662127733,
+    "sd_sample_ddof1": 0.022622507419402253,
+    "per_seed": {
+      "seed42": 0.002818882326173,
+      "seed43": 0.017858871348281236,
+      "seed44": -0.040984079045135235,
+      "seed45": 0.007758743838759852,
+      "seed46": -0.008098446778717516
+    },
+    "n_seeds_favor_C": 3,
+    "n_seeds_total": 5
+  },
+  "capacity_c_equals_b": true,
+  "interaction": {
+    "m0_macro_f1": {
+      "mean": 0.7364866682288819,
+      "sd_sample_ddof1": 0.02788511459473134,
+      "per_seed": {
+        "seed42": 0.7583523560273976,
+        "seed43": 0.7463286717943326,
+        "seed44": 0.691059931536046,
+        "seed45": 0.7296048187305253,
+        "seed46": 0.7570875630561076
+      }
+    },
+    "ma_macro_f1": {
+      "mean": 0.7646892437262166,
+      "sd_sample_ddof1": 0.011550951384864006,
+      "per_seed": {
+        "seed42": 0.7794365004499049,
+        "seed43": 0.7677209768042014,
+        "seed44": 0.7665801993426723,
+        "seed45": 0.7622703291254722,
+        "seed46": 0.7474382129088321
+      }
+    },
+    "mb_macro_f1": {
+      "mean": 0.7425437687535249,
+      "sd_sample_ddof1": 0.01985234560287619,
+      "per_seed": {
+        "seed42": 0.7622488661165596,
+        "seed43": 0.7619924279786086,
+        "seed44": 0.7186464833181441,
+        "seed45": 0.7270905383270997,
+        "seed46": 0.7427405280272124
+      }
+    },
+    "mab_macro_f1": {
+      "mean": 0.7629590247568847,
+      "sd_sample_ddof1": 0.025522252093762906,
+      "per_seed": {
+        "seed42": 0.7870683306451645,
+        "seed43": 0.7821988575747431,
+        "seed44": 0.7232452145407784,
+        "seed45": 0.7670708243147956,
+        "seed46": 0.7552118967089424
+      }
+    },
+    "benefit_A": {
+      "mean": 0.028202575497334757,
+      "sd_sample_ddof1": 0.030776216115134033,
+      "per_seed": {
+        "seed42": 0.02108414442250728,
+        "seed43": 0.021392305009868773,
+        "seed44": 0.07552026780662635,
+        "seed45": 0.03266551039494692,
+        "seed46": -0.009649350147275526
+      }
+    },
+    "benefit_B": {
+      "mean": 0.006057100524643056,
+      "sd_sample_ddof1": 0.01620393913637211,
+      "per_seed": {
+        "seed42": 0.003896510089162031,
+        "seed43": 0.015663756184275957,
+        "seed44": 0.027586551782098123,
+        "seed45": -0.002514280403425606,
+        "seed46": -0.014347035028895228
+      }
+    },
+    "benefit_AB": {
+      "mean": 0.02647235652800297,
+      "sd_sample_ddof1": 0.01620541010142957,
+      "per_seed": {
+        "seed42": 0.02871597461776687,
+        "seed43": 0.03587018578041046,
+        "seed44": 0.032185283004732446,
+        "seed45": 0.03746600558427027,
+        "seed46": -0.0018756663471651835
+      }
+    },
+    "interaction_term": {
+      "mean": -0.007787319493974843,
+      "sd_sample_ddof1": 0.036348465191822166,
+      "per_seed": {
+        "seed42": 0.0037353201060975616,
+        "seed43": -0.001185875413734272,
+        "seed44": -0.07092153658399203,
+        "seed45": 0.007314775592748957,
+        "seed46": 0.02212071882900557
+      },
+      "n_seeds_positive": 3,
+      "n_seeds_negative": 2,
+      "n_seeds_total": 5
+    },
+    "stability_classification": "approximately_additive_or_unresolved"
+  },
+  "interaction_m0_ma_equivalence": {
+    "decision": "M0 = corrected V2 baseline_eeg_only (results/sleep_edf_primary_seedfix_v2.json), M_A = corrected V2 candidate_eeg_plus_eog (same file). NOT retrained in this script.",
+    "rationale": "Original Day-10 interaction script's M0/M_A used the identical SleepStageClassifier class, identical frozen primary subject split, and identical hyperparameters (epochs=20, batch_size=64, lr=0.001, embedding_dim=32, AdamW, class-weighted CE) as original A/B. The ONLY axis of variation between 'original A/B' and 'corrected V2 A/B' is the H1 seeding-order fix. Reusing corrected V2 A/B as M0/M_A (rather than either the original buggy-seed A/B, or a fresh unnecessary retrain) is therefore the version-consistent choice: all four interaction operands (M0, M_A, M_B, M_AB) now share one coherent corrected-seeding V2 protocol.",
+    "verified_architecture_match": true,
+    "verified_split_match": true,
+    "verified_hyperparameter_match": true
+  },
+  "resp_provenance": {
+    "native_sfreq_hz": 1.0,
+    "loaded_common_grid_sfreq_hz": 100.0,
+    "resampling_method": "FFT-based (mne.io.edf.edf._read_segment_file -> mne.filter.resample, npad=0)",
+    "note": "H2 correction (Day 12): Resp oro-nasal is natively 1 Hz; the 100 Hz figure is the common/model grid produced by MNE's FFT-based upsampling when reading multi-rate channels together, not a native acquisition rate. Carried into this V2 interaction result's provenance per master-prompt Section 30 - do not report Resp as native 100 Hz."
+  },
+  "seed_provenance": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "protocol": "model_init_seed = run_seed; data_order_seed = run_seed+100000; control_shuffle_seed = run_seed+200000 (ml/sleep_seed_utils.py)",
+    "seeds_are_optimization_repetitions_not_biological_n": true
+  },
+  "checkpoint_provenance": {
+    "A_B": "ml/checkpoints/sleep_edf_{baseline_eeg_only,candidate_eeg_plus_eog}_seedfix_v2_seed{42-46}.pt (10 files, from a prior sprint)",
+    "C": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seedfix_v2_seed{42-46}.pt (5 files, this sprint)",
+    "interaction": "ml/checkpoints/sleep_edf_interaction_{M_B_eeg_plus_resp,M_AB_eeg_plus_eog_plus_resp}_seedfix_v2_seed{42-46}.pt (10 files, this sprint) - NOT to be confused with the pre-existing Day-10 V1 checkpoints of similar names (no seedfix_v2 suffix)"
+  },
+  "primary_subject_split": {
+    "train": [
+      "SC4001",
+      "SC4031",
+      "SC4051",
+      "SC4061",
+      "SC4071",
+      "SC4091",
+      "SC4101",
+      "SC4111",
+      "SC4121",
+      "SC4141",
+      "SC4161",
+      "SC4171"
+    ],
+    "val": [
+      "SC4021",
+      "SC4041",
+      "SC4151"
+    ],
+    "test": [
+      "SC4011",
+      "SC4081",
+      "SC4131"
+    ]
+  }
+}
