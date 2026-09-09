@@ -1,0 +1,9 @@
+{
+  "purpose": "BOUNDED diagnostic split (n=7) - the only complete (EDF+scoring) recordings downloaded before PhysioNet's TLS certificate expired mid-download this sprint (docs/HMC_FULL_COHORT_CERT_EXPIRY_BLOCKER.md). NOT the canonical full-151 split (results/hmc_split_stage3_full_cohort.json), NOT combined with or compared numerically against a future full-cohort result.",
+  "cohort_type": "BOUNDED_DIAGNOSTIC_BLOCKED_BY_EXTERNAL_CERT_EXPIRY",
+  "bounded_cohort_size": 7,
+  "reduced_cohort_size": 7,
+  "full_frozen_cohort_size": 151,
+  "selection_method": "Sequential RECORDS-index order (SN001-SN007) - the only order available given the download stopped mid-stream; not outcome-informed (no HMC file had been opened or trained on before this split was written).",
+  "split": {"train": ["SN001", "SN002", "SN003", "SN004", "SN005"], "val": ["SN006"], "test": ["SN007"]}
+}
