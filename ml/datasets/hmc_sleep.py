@@ -116,7 +116,12 @@ def load_recording_windows(edf_path: Path, scoring_path: Path, channels: tuple[s
 
     import mne
 
-    needed_raw_channels = sorted({c for c in channels if c in (EEG_CHANNEL, EOG_CHANNEL_1, EOG_CHANNEL_2)})
+    needed_raw_channels = sorted({
+        raw_c
+        for c in channels
+        for raw_c in ((EOG_CHANNEL_1, EOG_CHANNEL_2) if c == EOG_DERIVED_HORIZONTAL else (c,))
+        if raw_c in (EEG_CHANNEL, EOG_CHANNEL_1, EOG_CHANNEL_2)
+    })
     raw = mne.io.read_raw_edf(edf_path, include=needed_raw_channels, preload=True, verbose="ERROR")
     sfreq = raw.info["sfreq"]
     assert abs(sfreq - NATIVE_SFREQ_HZ) < 1e-6, f"Unexpected sample rate {sfreq} Hz in {edf_path} (expected {NATIVE_SFREQ_HZ} Hz per Stage 1B audit)"

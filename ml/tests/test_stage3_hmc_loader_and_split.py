@@ -101,6 +101,23 @@ def test_pilot_split_disjoint_and_superseded_disclosure_present():
     assert pilot["reduced_cohort_size"] == 12
 
 
+def test_needed_raw_channels_expands_derived_eog_to_both_raw_channels():
+    """Regression test for a real bug found this sprint: requesting
+    EOG_DERIVED_HORIZONTAL alone silently dropped both raw EOG channels
+    from the MNE `include` list, causing a real KeyError on real HMC
+    files when computing B/C configs."""
+    from ml.datasets.hmc_sleep import EOG_CHANNEL_1, EOG_CHANNEL_2, EOG_DERIVED_HORIZONTAL
+
+    channels = (EOG_DERIVED_HORIZONTAL,)
+    needed = sorted({
+        raw_c
+        for c in channels
+        for raw_c in ((EOG_CHANNEL_1, EOG_CHANNEL_2) if c == EOG_DERIVED_HORIZONTAL else (c,))
+        if raw_c in ("EEG C4-M1", EOG_CHANNEL_1, EOG_CHANNEL_2)
+    })
+    assert needed == sorted([EOG_CHANNEL_1, EOG_CHANNEL_2])
+
+
 def test_full_split_was_frozen_before_pilot_data_reused():
     # the full split's selection rule references no HMC file content
     d = json.loads(FULL_SPLIT_PATH.read_text())
