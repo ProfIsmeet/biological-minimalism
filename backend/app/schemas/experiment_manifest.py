@@ -135,6 +135,32 @@ class ExperimentManifestFile(StrictModel):
     entries: list[ExperimentManifestEntry]
 
 
+class ManifestEntryDisplayProjection(StrictModel):
+    """The ONLY shape any frontend/paper/jury consumer should read from.
+
+    Produced exclusively by `app.research.future_science_ingestion.project_for_display`,
+    which already applies the promotion gate, state-separation, and metric-
+    directionality guards. A consumer that only ever reads this projection
+    (never `ExperimentManifestEntry` directly) structurally cannot render a
+    fabricated headline number for a non-COMPLETE entry, cannot blur
+    HISTORICAL into SUPERSEDED, and cannot infer a replication class that
+    the manifest did not explicitly declare (governing prompt Phase-3
+    consumer-guard requirement)."""
+
+    experiment_id: str
+    completion_state: ExperimentCompletionState
+    completion_state_label: str
+    is_headline_eligible: bool
+    replication_class: ReplicationClass
+    replication_class_label: str
+    metric_name: str
+    metric_directionality: MetricDirectionality
+    benefit_value: float | None
+    benefit_display: str
+    limitations: list[str]
+    provenance_source: str
+
+
 class FutureScienceManifestEnvelope(StrictModel):
     """API-facing envelope. `status` carries the rich typed state (governing
     prompt §2/§25); `availability` stays for consistency with every other
@@ -146,3 +172,6 @@ class FutureScienceManifestEnvelope(StrictModel):
     error_code: str | None = None
     error: str | None = None
     manifest: ExperimentManifestFile | None = None
+    # Empty unless status == "INGESTED" — never partially populated from a
+    # failed/malformed parse (governing prompt §33 "stale result fallback").
+    display_projections: list[ManifestEntryDisplayProjection] = Field(default_factory=list)
