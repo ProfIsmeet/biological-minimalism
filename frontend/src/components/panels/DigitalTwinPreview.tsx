@@ -54,7 +54,12 @@ export function DigitalTwinPreview() {
           Digital Twin unavailable during recorded-data replay until real personalized inference is implemented.
         </p>
       ) : (
-        <DigitalTwinPanel state={state} size={220} />
+        <>
+          <DigitalTwinPanel state={state} size={220} />
+          <p className="mt-2 text-[11px] leading-relaxed text-slate-500">
+            Synthetic, untrained illustration — not a validated prediction.
+          </p>
+        </>
       )}
     </Panel>
   );
