@@ -8,9 +8,11 @@ from app.research.catalog import research_catalog
 from app.research.decision_inputs import decision_inputs
 from app.research.day6 import day6_research
 from app.research.engineering_readiness import engineering_readiness
+from app.research.future_science_ingestion import future_science_manifest
 from app.research.operational_costs import operational_cost_catalog
 from app.schemas.decision_inputs import ParetoDecisionInputsEnvelope
 from app.schemas.engineering_readiness import EngineeringReadinessEnvelope
+from app.schemas.experiment_manifest import FutureScienceManifestEnvelope
 from app.schemas.hardware_topology import HardwareTopologyEnvelope, ParetoReadinessDay6Envelope
 from app.schemas.operational_cost import (
     OperationalCostCatalogEnvelope,
@@ -120,3 +122,17 @@ def get_pareto_readiness() -> ParetoReadinessDay6Envelope:
 )
 def get_engineering_readiness() -> EngineeringReadinessEnvelope:
     return engineering_readiness.artifact()
+
+
+@router.get(
+    "/future-science-manifest",
+    response_model=FutureScienceManifestEnvelope,
+    summary=(
+        "Read the future Ismet science-completion manifest, if any. Reports "
+        "PENDING_SCIENCE_HANDOFF (not a 404 or a fabricated result) until Ismet's "
+        "in-progress science-completion sprint produces one; fails closed with a "
+        "typed error code if a manifest is present but malformed/invalid."
+    ),
+)
+def get_future_science_manifest() -> FutureScienceManifestEnvelope:
+    return future_science_manifest.status()
