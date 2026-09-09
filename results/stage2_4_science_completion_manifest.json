@@ -1,0 +1,82 @@
+{
+  "purpose": "Machine-readable Stage 2-4 science-owner completion manifest, self-contained handoff companion to docs/ISMET_STAGE2_4_SCIENCE_COMPLETION_HANDOFF_TO_CLAUDE.md",
+  "verdict": "STAGE2_4_SCIENCE_COMPLETE_WITH_DATA_ACCESS_LIMITATIONS_READY_FOR_CLAUDE_CONTROLLED_INTEGRATION",
+  "experiments": [
+    {
+      "name": "sleep_v2_corrected_A_B",
+      "status": "CANONICAL_UNCHANGED",
+      "result_artifact": "results/sleep_edf_primary_seedfix_v2.json",
+      "n_subjects": 18, "n_seeds": 5,
+      "safe_claim": "Confirmed under original + H1-corrected seeding.",
+      "unsafe_claim": "EOG is necessary for sleep staging."
+    },
+    {
+      "name": "sleep_v2_corrected_C",
+      "status": "COMPLETE_REAL_THIS_SPRINT",
+      "result_artifact": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json",
+      "n_subjects": 3, "n_seeds": 5,
+      "key_numbers": {"B_minus_C_mean": 0.03233178115946249, "n_seeds_favor_B": 4},
+      "safe_claim": "B beats C by similar magnitude/direction to A->B - genuine temporal-EOG evidence.",
+      "unsafe_claim": "This proves causal necessity of EOG."
+    },
+    {
+      "name": "sleep_v2_corrected_interaction",
+      "status": "COMPLETE_REAL_THIS_SPRINT",
+      "result_artifact": "results/sleep_edf_interaction_resp_seedfix_v2.json",
+      "n_subjects": 3, "n_seeds": 5,
+      "key_numbers": {"interaction_mean": -0.007787319493974843, "stability_classification": "approximately_additive_or_unresolved", "n_seeds_positive": 3, "n_seeds_negative": 2},
+      "safe_claim": "Interaction term is genuinely mixed/unresolved at this seed count.",
+      "unsafe_claim": "Resp and EOG interact synergistically or redundantly (neither is established)."
+    },
+    {
+      "name": "hmc_bounded_n7_diagnostic",
+      "status": "BOUNDED_DIAGNOSTIC_NOT_CANONICAL",
+      "result_artifact": "results/hmc_sleep_external_replication_stage3_bounded_n7.json",
+      "n_subjects": "7 recordings (1 test)", "n_seeds": 5,
+      "key_numbers": {"B_minus_A_mean": -0.03130687066105483, "n_seeds_favor_B": 2},
+      "blocker": "PhysioNet TLS certificate expired mid-download - full 151-cohort pending cert renewal",
+      "safe_claim": "At this bounded scale, the Sleep-EDF EOG benefit did not reproduce - reported honestly, not generalized.",
+      "unsafe_claim": "HMC replicates or fails to replicate Sleep-EDF (n too small for either claim)."
+    },
+    {
+      "name": "qde_v2_leg_bioz",
+      "status": "COMPLETE_FROM_PRIOR_SPRINT_UNCHANGED",
+      "result_artifact": "results/qde_v2_leg_bioz_stage2.json",
+      "n_subjects": 10, "n_seeds": "N/A (deterministic)",
+      "key_numbers": {"A_minus_B_mean": -0.051831883862800465, "n_subjects_favoring_B_over_A": 7},
+      "safe_claim": "Negative-leaning, single-subject(subject 2)-dominated.",
+      "unsafe_claim": "Leg BioZ is universally useless or measures fluid shift."
+    },
+    {
+      "name": "ds003838_bounded_n3",
+      "status": "BOUNDED_DIAGNOSTIC_NOT_CANONICAL_FROM_PRIOR_SPRINT",
+      "result_artifact": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+      "n_subjects": 3, "n_seeds": "N/A (deterministic)",
+      "safe_claim": "Real access proven working; sparse-vs-full EEG question unresolved.",
+      "unsafe_claim": "Four EEG channels capture cognition."
+    },
+    {
+      "name": "galaxyppg",
+      "status": "ACCESS_AND_SYNC_RESOLVED_TRAINING_PENDING",
+      "result_artifact": "docs/GALAXYPPG_LBNP_STAGE2_3_ACCESS_UNBLOCKED_DISCLOSURE.md",
+      "n_subjects": 24,
+      "real_bug_fixed": "Cross-device UTC+9 timestamp misalignment (Polar H10 vs E4)",
+      "safe_claim": "Access/structure/sync verified; no training result exists yet.",
+      "unsafe_claim": "Any IMU-value claim (none run)."
+    },
+    {
+      "name": "lbnp",
+      "status": "ACCESS_RESOLVED_STRUCTURE_VERIFIED_TRAINING_PENDING",
+      "result_artifact": "docs/GALAXYPPG_LBNP_STAGE2_3_ACCESS_UNBLOCKED_DISCLOSURE.md",
+      "n_subjects": 16,
+      "safe_claim": "Access/cohort-size/site-count verified from raw files; no training result exists yet.",
+      "unsafe_claim": "Any EIS-value claim (none run)."
+    }
+  ],
+  "blockers": [
+    {"experiment": "hmc_full_cohort", "type": "EXTERNAL_INFRASTRUCTURE", "detail": "PhysioNet TLS cert expired mid-sprint, verified via openssl, not bypassed"},
+    {"experiment": "galaxyppg_lbnp_training", "type": "TIME_PRIORITIZATION", "detail": "Explicitly deprioritized behind Sleep V2/HMC per master prompt's own ordering, not a technical blocker"}
+  ],
+  "test_suite": {"ml_tests": {"passed": 405, "failed": 0, "skipped": 0}, "backend_tests": {"passed": 128, "failed": 0, "skipped": 0}},
+  "science_readiness": "READY_FOR_CLAUDE_CONTROLLED_INTEGRATION_WITH_DISCLOSED_LIMITATIONS"
+}
