@@ -932,6 +932,64 @@ export interface EngineeringReadinessEnvelope {
   error: string | null;
 }
 
+// --- Phase 2/3: future-science ingestion contract (Stage 2-4 handoff) ------
+// No manifest satisfying this contract exists yet (Ismet's science-completion
+// sprint is in progress). A consumer must ONLY read `display_projections` —
+// never `manifest.entries` directly — to inherit the backend's promotion-gate
+// and state-separation guards (governing prompt Phase-3 consumer-guard
+// requirement). See backend/app/schemas/experiment_manifest.py.
+
+export type ExperimentCompletionState =
+  | "COMPLETE"
+  | "BOUNDED_DIAGNOSTIC"
+  | "BLOCKED_BY_DATA_ACCESS"
+  | "PENDING"
+  | "HISTORICAL"
+  | "SUPERSEDED";
+
+export type ReplicationClass =
+  | "EXTERNAL_REPLICATION"
+  | "SAME_DATASET_HOLDOUT"
+  | "SINGLE_RUN"
+  | "NOT_APPLICABLE";
+
+export type FutureScienceMetricDirectionality = "lower_is_better" | "higher_is_better" | "not_applicable";
+
+export interface ManifestEntryDisplayProjection {
+  experiment_id: string;
+  completion_state: ExperimentCompletionState;
+  completion_state_label: string;
+  is_headline_eligible: boolean;
+  replication_class: ReplicationClass;
+  replication_class_label: string;
+  metric_name: string;
+  metric_directionality: FutureScienceMetricDirectionality;
+  benefit_value: number | null;
+  benefit_display: string;
+  limitations: string[];
+  provenance_source: string;
+}
+
+// Raw manifest shape — present on the envelope for completeness/debugging,
+// but no frontend component in this codebase should render from it directly.
+export interface ExperimentManifestFile {
+  schema_version: string;
+  manifest_id: string;
+  generated_by: string;
+  generated_at: string | null;
+  entries: unknown[];
+}
+
+export interface FutureScienceManifestEnvelope {
+  availability: ResearchAvailability;
+  status: "PENDING_SCIENCE_HANDOFF" | "INGESTION_FAILED" | "INGESTED" | string;
+  manifest_path: string;
+  error_code: string | null;
+  error: string | null;
+  manifest: ExperimentManifestFile | null;
+  display_projections: ManifestEntryDisplayProjection[];
+}
+
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [
   { value: "earth_orbit", label: "Earth Orbit" },
   { value: "lunar_surface", label: "Lunar Surface" },

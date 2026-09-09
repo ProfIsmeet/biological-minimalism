@@ -10,6 +10,7 @@ import type {
   OperationalCostComponentEnvelope,
   ParetoDecisionInputsEnvelope,
   EngineeringReadinessEnvelope,
+  FutureScienceManifestEnvelope,
   HardwareTopologyEnvelope,
   ParetoReadinessDay6Envelope,
   ReplayFaultConfig,
@@ -116,4 +117,7 @@ export const api = {
 
   getEngineeringReadiness: () =>
     request<EngineeringReadinessEnvelope>("/research/engineering-readiness"),
+
+  getFutureScienceManifest: () =>
+    request<FutureScienceManifestEnvelope>("/research/future-science-manifest"),
 };

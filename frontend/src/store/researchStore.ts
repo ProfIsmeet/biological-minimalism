@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import type {
   OperationalCostCatalog,
   EngineeringReadiness,
+  FutureScienceManifestEnvelope,
   HardwareTopologyContract,
   ParetoDecisionInputs,
   ParetoReadinessDay6,
@@ -25,6 +26,11 @@ interface ResearchState {
   paretoReadinessError: string | null;
   engineeringReadiness: EngineeringReadiness | null;
   engineeringReadinessError: string | null;
+  // Stored as the WHOLE envelope (not decomposed into data/error) because its
+  // 3-way status (PENDING_SCIENCE_HANDOFF / INGESTION_FAILED / INGESTED) is
+  // not a simple success/failure — PENDING is an honest, expected state, not
+  // an error to alarm the user with.
+  futureScienceManifest: FutureScienceManifestEnvelope | null;
   experiments: Record<string, ResearchExperiment>;
   selectedExperimentId: string | null;
   loading: boolean;
@@ -46,6 +52,7 @@ export const useResearchStore = create<ResearchState>((set) => ({
   paretoReadinessError: null,
   engineeringReadiness: null,
   engineeringReadinessError: null,
+  futureScienceManifest: null,
   experiments: {},
   selectedExperimentId: null,
   loading: false,
@@ -83,14 +90,21 @@ export const useResearchStore = create<ResearchState>((set) => ({
       }
       // OPTIONAL panels — settled independently; `optional()` never rejects, so
       // this Promise.all cannot throw into the core catch below.
-      const [operationalCosts, decisionInputEnvelope, topologyEnvelope, readinessEnvelope, engineeringEnvelope] =
-        await Promise.all([
-          optional(api.getOperationalCosts()),
-          optional(api.getDecisionInputs()),
-          optional(api.getHardwareTopology()),
-          optional(api.getParetoReadiness()),
-          optional(api.getEngineeringReadiness()),
-        ]);
+      const [
+        operationalCosts,
+        decisionInputEnvelope,
+        topologyEnvelope,
+        readinessEnvelope,
+        engineeringEnvelope,
+        futureScienceEnvelope,
+      ] = await Promise.all([
+        optional(api.getOperationalCosts()),
+        optional(api.getDecisionInputs()),
+        optional(api.getHardwareTopology()),
+        optional(api.getParetoReadiness()),
+        optional(api.getEngineeringReadiness()),
+        optional(api.getFutureScienceManifest()),
+      ]);
       const unavailable = [
         ...summaries.filter((item) => item.availability === "unavailable"),
         ...envelopes.filter((item) => item.availability === "unavailable"),
@@ -128,6 +142,20 @@ export const useResearchStore = create<ResearchState>((set) => ({
               ? engineeringEnvelope.value.error ?? "Engineering readiness unavailable."
               : null)
           : engineeringEnvelope.error,
+        // A transport/network failure is folded into the same envelope shape
+        // as a content-level INGESTION_FAILED, rather than a bare null — the
+        // panel always has an honest status string to render, never silence.
+        futureScienceManifest: futureScienceEnvelope.ok
+          ? futureScienceEnvelope.value
+          : {
+              availability: "unavailable",
+              status: "INGESTION_FAILED",
+              manifest_path: "results/stage2_4_science_completion_manifest.json",
+              error_code: null,
+              error: futureScienceEnvelope.error,
+              manifest: null,
+              display_projections: [],
+            },
         experiments,
         selectedExperimentId:
           state.selectedExperimentId && experiments[state.selectedExperimentId]
@@ -152,6 +180,7 @@ export const useResearchStore = create<ResearchState>((set) => ({
         paretoReadinessError: error instanceof Error ? error.message : "Pareto readiness could not be loaded.",
         engineeringReadiness: null,
         engineeringReadinessError: error instanceof Error ? error.message : "Engineering readiness could not be loaded.",
+        futureScienceManifest: null,
       });
     }
   },

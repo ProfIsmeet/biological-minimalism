@@ -28,8 +28,10 @@ from app.schemas.experiment_manifest import (
     ExperimentManifestEntry,
     ExperimentManifestFile,
     FutureScienceManifestEnvelope,
+    ManifestEntryDisplayProjection,
     ManifestMetric,
     ManifestResultValue,
+    ReplicationClass,
 )
 from app.schemas.research import MetricDirectionality, ResearchAvailability
 
@@ -52,6 +54,39 @@ KNOWN_METRIC_DIRECTIONS: dict[str, MetricDirectionality] = {
 # promotion" and "blocked -> complete promotion" are explicit attack targets).
 _PROMOTABLE_TO_HEADLINE = frozenset({ExperimentCompletionState.COMPLETE})
 
+# Human labels a consumer displays VERBATIM — never re-derived or abbreviated
+# in a way that could blur two distinct states together (Phase-3 consumer-
+# guard requirement: BOUNDED_DIAGNOSTIC vs COMPLETE, HISTORICAL vs SUPERSEDED
+# must always read as visibly different states).
+_COMPLETION_STATE_LABELS: dict[ExperimentCompletionState, str] = {
+    ExperimentCompletionState.COMPLETE: "Complete (canonical)",
+    ExperimentCompletionState.BOUNDED_DIAGNOSTIC: "Bounded diagnostic (not full protocol)",
+    ExperimentCompletionState.BLOCKED_BY_DATA_ACCESS: "Blocked (data access unavailable)",
+    ExperimentCompletionState.PENDING: "Pending (not yet run)",
+    ExperimentCompletionState.HISTORICAL: "Historical (superseded protocol, preserved for continuity)",
+    ExperimentCompletionState.SUPERSEDED: "Superseded (do not cite as current)",
+}
+
+# A result must never be auto-labeled EXTERNAL_REPLICATION merely for being a
+# second run (governing prompt §38); this map only ever echoes what the
+# manifest itself declared.
+_REPLICATION_CLASS_LABELS: dict[ReplicationClass, str] = {
+    ReplicationClass.EXTERNAL_REPLICATION: "Independent external replication",
+    ReplicationClass.SAME_DATASET_HOLDOUT: "Same-dataset holdout (not independent replication)",
+    ReplicationClass.SINGLE_RUN: "Single run (no replication claim)",
+    ReplicationClass.NOT_APPLICABLE: "Not applicable",
+}
+
+# Completion states whose evidence is NOT a full canonical protocol run, even
+# though they may contain real (bounded/diagnostic) numbers (governing prompt
+# §44: "bounded diagnostic where full evidence is required" must invalidate a
+# claim demanding full evidence).
+_INCOMPLETE_EVIDENCE_STATES = frozenset({
+    ExperimentCompletionState.BLOCKED_BY_DATA_ACCESS,
+    ExperimentCompletionState.PENDING,
+    ExperimentCompletionState.SUPERSEDED,
+})
+
 
 class ManifestErrorCode(StrEnum):
     MISSING_MANIFEST = "MISSING_MANIFEST"
@@ -65,6 +100,7 @@ class ManifestErrorCode(StrEnum):
     MIXED_PROTOCOL_VERSION = "MIXED_PROTOCOL_VERSION"
     CROSS_TARGET_COMPARISON_PROHIBITED = "CROSS_TARGET_COMPARISON_PROHIBITED"
     NOT_PROMOTABLE_TO_HEADLINE = "NOT_PROMOTABLE_TO_HEADLINE"
+    CLAIM_EVIDENCE_INSUFFICIENT = "CLAIM_EVIDENCE_INSUFFICIENT"
 
 
 class ManifestValidationError(Exception):
@@ -194,6 +230,86 @@ def forbid_mixed_protocol_derivation(entry_a: ExperimentManifestEntry, entry_b: 
         )
 
 
+def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayProjection:
+    """The single choke point any frontend/paper/jury consumer must go
+    through (Phase-3 consumer-guard requirement). Never returns a bypassable
+    raw pass-through of the entry: a non-COMPLETE entry can never carry a
+    numeric `benefit_value`, and `completion_state_label`/`replication_class_label`
+    are always the entry's OWN declared state — never inferred or blurred."""
+    try:
+        assert_promotable_to_headline(entry)
+        headline_eligible = True
+    except ManifestValidationError:
+        headline_eligible = False
+
+    benefit_value: float | None = None
+    if headline_eligible and entry.control_result is not None:
+        try:
+            benefit_value = compute_benefit(entry.metric, baseline=entry.control_result, candidate=entry.primary_result)
+        except ManifestValidationError:
+            benefit_value = None
+
+    if not headline_eligible:
+        benefit_display = f"N/A — {_COMPLETION_STATE_LABELS[entry.completion_state]}"
+    elif benefit_value is not None:
+        sign = "+" if benefit_value >= 0 else ""
+        benefit_display = (
+            f"{entry.primary_result.display} (control-relative benefit {sign}{benefit_value:.4g} {entry.metric.unit})"
+        )
+    else:
+        benefit_display = entry.primary_result.display
+
+    return ManifestEntryDisplayProjection(
+        experiment_id=entry.experiment_id,
+        completion_state=entry.completion_state,
+        completion_state_label=_COMPLETION_STATE_LABELS[entry.completion_state],
+        is_headline_eligible=headline_eligible,
+        replication_class=entry.replication_class,
+        replication_class_label=_REPLICATION_CLASS_LABELS[entry.replication_class],
+        metric_name=entry.metric.name,
+        metric_directionality=entry.metric.directionality,
+        benefit_value=benefit_value if headline_eligible else None,
+        benefit_display=benefit_display,
+        limitations=list(entry.limitations),
+        provenance_source=entry.provenance.source_artifact_path,
+    )
+
+
+def build_two_arm_comparison_narrative(entry_a: ExperimentManifestEntry, entry_b: ExperimentManifestEntry) -> str:
+    """The only sanctioned way to narrate two manifest entries together (e.g.
+    for a paper's Results section or a jury answer). Refuses to combine
+    mismatched targets or mismatched protocol versions rather than silently
+    producing a narrative that implies a comparison that was never validated."""
+    forbid_cross_target_comparison(entry_a, entry_b)
+    forbid_mixed_protocol_derivation(entry_a, entry_b)
+    proj_a = project_for_display(entry_a)
+    proj_b = project_for_display(entry_b)
+    return (
+        f"{entry_a.experiment_id} ({proj_a.completion_state_label}) vs "
+        f"{entry_b.experiment_id} ({proj_b.completion_state_label}): "
+        f"{proj_a.benefit_display} / {proj_b.benefit_display}."
+    )
+
+
+def validate_claim_against_entry(entry: ExperimentManifestEntry, *, required_full_evidence: bool = False) -> None:
+    """Governing prompt §44: "A claim should be invalid if its evidence is:
+    blocked, pending, bounded diagnostic where full evidence is required,
+    superseded, or mixed-version." (Mixed-version is enforced separately, at
+    the two-entry boundary, by `forbid_mixed_protocol_derivation`.)"""
+    if entry.completion_state in _INCOMPLETE_EVIDENCE_STATES:
+        raise ManifestValidationError(
+            ManifestErrorCode.CLAIM_EVIDENCE_INSUFFICIENT,
+            f"{entry.experiment_id}: completion_state={entry.completion_state.value} "
+            f"cannot support a paper/jury claim.",
+        )
+    if required_full_evidence and entry.completion_state == ExperimentCompletionState.BOUNDED_DIAGNOSTIC:
+        raise ManifestValidationError(
+            ManifestErrorCode.CLAIM_EVIDENCE_INSUFFICIENT,
+            f"{entry.experiment_id}: completion_state=BOUNDED_DIAGNOSTIC is insufficient "
+            f"for a claim that requires full-protocol evidence.",
+        )
+
+
 class FutureScienceManifestReader:
     """Loads the future manifest on demand; never caches a stale result and
     never falls back to any existing canonical science artifact on failure."""
@@ -224,6 +340,7 @@ class FutureScienceManifestReader:
             status="INGESTED",
             manifest_path=FUTURE_SCIENCE_MANIFEST_RELATIVE_PATH,
             manifest=manifest,
+            display_projections=[project_for_display(entry) for entry in manifest.entries],
         )
 
 

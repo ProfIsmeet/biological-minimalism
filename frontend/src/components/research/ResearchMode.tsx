@@ -19,6 +19,7 @@ import { Panel } from "@/components/ui/Panel";
 import { OperationalCostView } from "@/components/research/OperationalCostView";
 import { DecisionInputsView } from "@/components/research/DecisionInputsView";
 import { EngineeringReadinessView } from "@/components/research/EngineeringReadinessView";
+import { FutureScienceHandoffCard } from "@/components/research/FutureScienceHandoffCard";
 import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
 import type {
   ResearchBreakdown,
@@ -543,6 +544,7 @@ export function ResearchMode() {
     paretoReadinessError,
     engineeringReadiness,
     engineeringReadinessError,
+    futureScienceManifest,
     experiments,
     selectedExperimentId,
     loading,
@@ -636,6 +638,8 @@ export function ResearchMode() {
       {operationalCostError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Operational-cost catalog unavailable: {operationalCostError}</p> : null}
       {operationalCostCatalog ? <OperationalCostView catalog={operationalCostCatalog} experiments={experiments} /> : null}
       {selected ? <ExperimentDetail experiment={selected} /> : null}
+
+      {futureScienceManifest ? <FutureScienceHandoffCard envelope={futureScienceManifest} /> : null}
 
       {projectSummary ? (
         <footer className="rounded-lg border border-white/5 bg-white/[0.015] px-4 py-3 text-xs leading-relaxed text-slate-500">{projectSummary.statement} Operational costs remain separate, provenance-bearing dimensions; no Pareto score or final architecture ranking is calculated.</footer>
