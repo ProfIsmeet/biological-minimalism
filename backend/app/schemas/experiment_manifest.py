@@ -157,6 +157,13 @@ class ManifestEntryDisplayProjection(StrictModel):
     metric_directionality: MetricDirectionality
     benefit_value: float | None
     benefit_display: str
+    # Phase-4 hostile-review finding: an aggregate benefit_value must never be
+    # the ONLY thing a consumer can see. Carrying these through means a
+    # strongly-positive aggregate cannot visually hide severe per-subject/
+    # per-class heterogeneity (governing prompt §52: "Can an aggregate result
+    # hide heterogeneity?").
+    subject_sensitivity: SensitivityBlock
+    class_sensitivity: SensitivityBlock | None
     limitations: list[str]
     provenance_source: str
 

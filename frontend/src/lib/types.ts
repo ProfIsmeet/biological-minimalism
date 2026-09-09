@@ -955,6 +955,21 @@ export type ReplicationClass =
 
 export type FutureScienceMetricDirectionality = "lower_is_better" | "higher_is_better" | "not_applicable";
 
+export type FutureScienceSensitivityStatus = "available" | "unavailable" | "pending";
+
+export interface FutureScienceSensitivityEntry {
+  key: string;
+  value: number | null;
+  note: string | null;
+}
+
+export interface FutureScienceSensitivityBlock {
+  status: FutureScienceSensitivityStatus;
+  entries: FutureScienceSensitivityEntry[];
+  dominant_key: string | null;
+  note: string | null;
+}
+
 export interface ManifestEntryDisplayProjection {
   experiment_id: string;
   completion_state: ExperimentCompletionState;
@@ -966,6 +981,10 @@ export interface ManifestEntryDisplayProjection {
   metric_directionality: FutureScienceMetricDirectionality;
   benefit_value: number | null;
   benefit_display: string;
+  // Phase-4 hostile-review fix: carried through so a strong aggregate benefit
+  // can never visually hide severe per-subject/per-class heterogeneity.
+  subject_sensitivity: FutureScienceSensitivityBlock;
+  class_sensitivity: FutureScienceSensitivityBlock | null;
   limitations: string[];
   provenance_source: string;
 }

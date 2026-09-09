@@ -101,6 +101,7 @@ class ManifestErrorCode(StrEnum):
     CROSS_TARGET_COMPARISON_PROHIBITED = "CROSS_TARGET_COMPARISON_PROHIBITED"
     NOT_PROMOTABLE_TO_HEADLINE = "NOT_PROMOTABLE_TO_HEADLINE"
     CLAIM_EVIDENCE_INSUFFICIENT = "CLAIM_EVIDENCE_INSUFFICIENT"
+    SUSPICIOUS_REPLICATION_CLAIM = "SUSPICIOUS_REPLICATION_CLAIM"
 
 
 class ManifestValidationError(Exception):
@@ -230,6 +231,33 @@ def forbid_mixed_protocol_derivation(entry_a: ExperimentManifestEntry, entry_b: 
         )
 
 
+def assert_replication_claim_is_plausible(
+    candidate_replication: ExperimentManifestEntry, primary: ExperimentManifestEntry
+) -> None:
+    """Phase-4 hostile-review stress test: a same-dataset holdout must never
+    be presented as an independent external replication (governing prompt
+    §38). This cannot be proven from a single entry read in isolation, but
+    when a candidate replication is presented alongside the primary result it
+    claims to replicate, a declared `EXTERNAL_REPLICATION` sharing the exact
+    same dataset AND dataset_version as the primary is implausible — a
+    genuine external replication requires a different dataset/cohort. This
+    does not "fix" a mislabeled manifest (the manifest author's intent cannot
+    be inferred); it fails closed on the implausible combination instead of
+    silently displaying it as an independent replication."""
+    if (
+        candidate_replication.replication_class == ReplicationClass.EXTERNAL_REPLICATION
+        and candidate_replication.dataset == primary.dataset
+        and candidate_replication.dataset_version == primary.dataset_version
+    ):
+        raise ManifestValidationError(
+            ManifestErrorCode.SUSPICIOUS_REPLICATION_CLAIM,
+            f"{candidate_replication.experiment_id} claims EXTERNAL_REPLICATION of "
+            f"{primary.experiment_id} but shares the exact same dataset+dataset_version "
+            f"({candidate_replication.dataset}/{candidate_replication.dataset_version}) — this looks "
+            f"like a same-dataset holdout mislabeled as an external replication.",
+        )
+
+
 def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayProjection:
     """The single choke point any frontend/paper/jury consumer must go
     through (Phase-3 consumer-guard requirement). Never returns a bypassable
@@ -270,6 +298,8 @@ def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayP
         metric_directionality=entry.metric.directionality,
         benefit_value=benefit_value if headline_eligible else None,
         benefit_display=benefit_display,
+        subject_sensitivity=entry.subject_sensitivity,
+        class_sensitivity=entry.class_sensitivity,
         limitations=list(entry.limitations),
         provenance_source=entry.provenance.source_artifact_path,
     )

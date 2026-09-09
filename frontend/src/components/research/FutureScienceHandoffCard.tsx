@@ -5,6 +5,7 @@ import { Panel } from "@/components/ui/Panel";
 import type {
   ExperimentCompletionState,
   FutureScienceManifestEnvelope,
+  FutureScienceSensitivityBlock,
   ManifestEntryDisplayProjection,
   ReplicationClass,
 } from "@/lib/types";
@@ -39,6 +40,37 @@ function StatusPill({ label, className }: { label: string; className: string }) 
   );
 }
 
+// A strongly-positive aggregate benefit must never be shown without this —
+// otherwise a single dominant subject/class could drive the whole headline
+// number while the dashboard reads as uniform support (Phase-4 hostile-
+// review finding, governing prompt §52).
+function SensitivitySection({ label, block }: { label: string; block: FutureScienceSensitivityBlock }) {
+  if (block.status !== "available" || block.entries.length === 0) {
+    return (
+      <p className="mt-2 text-[11px] text-slate-500">
+        {label}: {block.status === "pending" ? "pending" : "unavailable"}
+        {block.note ? ` — ${block.note}` : ""}
+      </p>
+    );
+  }
+  return (
+    <details className="mt-2 rounded-lg border border-white/5 bg-white/[0.015]">
+      <summary className="cursor-pointer px-3 py-2 text-[11px] font-semibold text-slate-400">
+        {label} ({block.entries.length}){block.dominant_key ? ` — dominant: ${block.dominant_key}` : ""}
+      </summary>
+      <div className="space-y-1 border-t border-white/5 px-3 py-2">
+        {block.entries.map((entry) => (
+          <p key={entry.key} className="flex justify-between gap-3 font-mono text-[10px] text-slate-400">
+            <span>{entry.key}</span>
+            <span>{entry.value ?? "—"}{entry.note ? ` (${entry.note})` : ""}</span>
+          </p>
+        ))}
+        {block.note ? <p className="pt-1 text-[10px] text-amber-300/80">{block.note}</p> : null}
+      </div>
+    </details>
+  );
+}
+
 function ProjectionCard({ projection }: { projection: ManifestEntryDisplayProjection }) {
   return (
     <article className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
@@ -58,6 +90,10 @@ function ProjectionCard({ projection }: { projection: ManifestEntryDisplayProjec
         </div>
       </div>
       <p className="mt-2 font-mono text-[12px] text-slate-300">{projection.benefit_display}</p>
+      <SensitivitySection label="Subject sensitivity" block={projection.subject_sensitivity} />
+      {projection.class_sensitivity ? (
+        <SensitivitySection label="Class sensitivity" block={projection.class_sensitivity} />
+      ) : null}
       {projection.limitations.length > 0 ? (
         <ul className="mt-2 space-y-1 text-[11px] leading-relaxed text-slate-500">
           {projection.limitations.map((item) => (
