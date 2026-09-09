@@ -15,6 +15,7 @@ from app.research.catalog import (
     PTT_SITE_ABLATION_ID,
     SLEEP_EDF_ABLATION_ID,
     ResearchCatalog,
+    _build_sleep_supplementary_breakdowns,
     research_catalog,
 )
 from app.schemas.research import ResearchAvailability
@@ -208,3 +209,26 @@ def test_research_models_do_not_contaminate_live_telemetry_schema() -> None:
         {"research", "research_experiments", "research_summary", "marginal_result", "claim_boundaries"}
     )
     assert "research" not in json.dumps(LiveMetricsSnapshot.model_json_schema()).lower()
+
+
+def test_secondary_class_level_missing_class_is_unknown_not_false() -> None:
+    """A class absent from the frozen artifact must render `regresses: None`
+    (unknown), never a fabricated `False` (audit-style hardening, §12 `or 0`
+    sweep: the prior `(rec.get("B_minus_A") or 0) < 0` silently mapped a
+    missing value to "does not regress")."""
+    secondary = {
+        "class_level_aggregate": {
+            "Wake": {"B_minus_A": 0.02, "A_mean_f1": 0.8, "B_mean_f1": 0.82, "C_mean_f1": 0.79},
+            "N3": {"B_minus_A": -0.043, "A_mean_f1": 0.7, "B_mean_f1": 0.657, "C_mean_f1": 0.69},
+            # N1, N2, REM intentionally absent to simulate an incompletely regenerated artifact.
+        }
+    }
+    breakdowns = _build_sleep_supplementary_breakdowns(control=None, persubj=None, secondary=secondary)
+    class_level = next(b for b in breakdowns if b.breakdown_id == "secondary_class_level")
+    by_label = {entry.label: entry for entry in class_level.entries}
+
+    assert by_label["Wake"].dimensions["regresses"] is False
+    assert by_label["N3"].dimensions["regresses"] is True
+    for missing in ("N1", "N2", "REM"):
+        assert by_label[missing].dimensions["b_minus_a"] is None
+        assert by_label[missing].dimensions["regresses"] is None

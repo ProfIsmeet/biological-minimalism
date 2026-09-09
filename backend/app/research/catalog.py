@@ -1306,7 +1306,10 @@ def _build_sleep_supplementary_breakdowns(
                 ResearchBreakdownEntry(
                     entry_id=f"secondary-class-{cname}",
                     label=cname,
-                    dimensions={"b_minus_a": rec.get("B_minus_A"), "regresses": (rec.get("B_minus_A") or 0) < 0},
+                    dimensions={
+                        "b_minus_a": rec.get("B_minus_A"),
+                        "regresses": (rec.get("B_minus_A") < 0) if rec.get("B_minus_A") is not None else None,
+                    },
                     configuration_metrics={
                         "baseline_eeg_only": {"macro_f1": _metric(rec.get("A_mean_f1"), "F1")},
                         "candidate_eeg_plus_eog": {"macro_f1": _metric(rec.get("B_mean_f1"), "F1")},
