@@ -29,27 +29,39 @@
   capacity-matched protocol, EOG added sleep-staging macro-F1 beyond EEG
   alone (mean +0.0282, 4/5 seeds favorable)." Cross-platform reproduction
   (Claude, Mac) independently confirms direction and favorable-seed count.
-- **Sleep V2 corrected C**: see final numeric result once training
-  completes this sprint (in progress) — claim will be scoped to "B vs.
-  temporally-deranged-EOG control, same architecture/capacity."
-- **Sleep V2 corrected interaction**: claim will state the exact
-  `stability_classification` the numbers produce (`super_additive_leaning`
-  / `sub_additive_leaning` / `approximately_additive_or_unresolved`) —
-  never forced toward a "cleaner" answer.
-- **HMC**: pending full-cohort training this sprint. If it completes: claim
-  will be scoped to "independent-family reproduction attempt on a clinical
-  cohort distinct from Sleep-EDF's healthy-volunteer population" — never
-  "replication," per the frozen protocol's forbidden-claims list.
+- **Sleep V2 corrected C**: "B beats C by +0.0323 (4/5 seeds), nearly
+  identical direction/magnitude to A→B (+0.0282, 4/5 seeds) — real evidence
+  the EOG benefit reflects genuine temporal correspondence, not just
+  capacity." N1 and REM classes show the largest B-vs-C gaps.
+- **Sleep V2 corrected interaction**: real result is
+  `approximately_additive_or_unresolved` (interaction mean −0.0078, SD
+  0.0363, 3/5 seeds positive, 2/5 negative) — reported exactly as this
+  frozen-rule outcome, never forced toward a cleaner answer. Resp alone
+  (+0.0061) is much weaker than EOG alone (+0.0282), consistent with H2's
+  low-bandwidth hypothesis, stated as a plausible explanation only.
+- **HMC bounded n=7**: real result is negative-leaning — B−A = −0.0313 (only
+  2/5 seeds favor B), B−C = +0.0080 (2/5 seeds favor B, near coin-flip).
+  Explicitly reported as the frozen protocol's own predeclared negative
+  outcome ("the Sleep-EDF EOG benefit did not reproduce on HMC's clinical
+  cohort"), NOT generalized beyond this bounded n=7/1-test-recording
+  diagnostic — full 151-cohort result is blocked by a genuine external
+  PhysioNet TLS certificate expiry, not by design or effort.
 - **QDE V2**: "Bilateral leg impedance did not show a robust,
   subject-consistent improvement over arm+trunk impedance for
   baseline-relative body-mass change in this n=10 cohort; a majority of
   subjects show a small favorable direction, but the aggregate is dominated
   and reversed by one outlier subject (subject 2)." Never "leg BioZ is
   useless" or "leg BioZ measures fluid shift."
-- **GalaxyPPG / LBNP**: access was blocked for two full prior sprints and
-  is now resolved this sprint — any claim depends entirely on the actual
-  training result, not yet known at the time this doc was written. No
-  claim is made about IMU/EIS value until real numbers exist.
+- **GalaxyPPG / LBNP**: access blocked for two full prior sprints, resolved
+  this sprint (Zenodo reachable again on one controlled recheck). Real
+  archives downloaded and MD5-verified; real structure confirmed (24/16
+  subjects respectively, independently re-confirmed from raw file
+  structure for LBNP). A real cross-device UTC+9 timestamp bug was found
+  and fixed for GalaxyPPG (verified via a working end-to-end R-peak
+  reference-HR pipeline). Full A/B/C training was NOT completed this
+  sprint (time-prioritized behind Sleep V2 and HMC per the master prompt's
+  explicit ordering) — no IMU/EIS value claim is made, since no training
+  was run.
 - **ds003838**: "The n=3 bounded diagnostic proved the real-file access
   path and loader work correctly, and that the negative control (C)
   behaves exactly as expected (chance-level)." No claim about the actual
