@@ -258,6 +258,27 @@ def assert_replication_claim_is_plausible(
         )
 
 
+# Entries in these states have not actually been executed, so any present
+# sample-size count describes a plan, not an achieved result (Phase-4
+# close-out requirement: "BOUNDED_DIAGNOSTIC / BLOCKED / PENDING entries do
+# not fabricate these counts"). BOUNDED_DIAGNOSTIC is deliberately excluded —
+# it DID run, just not the full protocol, so its counts are real achieved
+# counts, not a plan.
+_UNEXECUTED_STATES = frozenset({ExperimentCompletionState.BLOCKED_BY_DATA_ACCESS, ExperimentCompletionState.PENDING})
+
+
+def _sample_size_display(value: int | None, label: str, *, executed: bool) -> str:
+    """Never renders a missing count as 0 (H4-style UNKNOWN handling applied
+    to sample-size fields). `label` must name exactly which count this is —
+    "Biological subjects" and "Training seeds" are never merged into one
+    ambiguous "n" and seeds are never implied to be biological replication."""
+    if value is None:
+        return f"{label}: unavailable"
+    if not executed:
+        return f"{label}: {value} (planned; not yet executed)"
+    return f"{label}: {value}"
+
+
 def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayProjection:
     """The single choke point any frontend/paper/jury consumer must go
     through (Phase-3 consumer-guard requirement). Never returns a bypassable
@@ -287,6 +308,7 @@ def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayP
     else:
         benefit_display = entry.primary_result.display
 
+    executed = entry.completion_state not in _UNEXECUTED_STATES
     return ManifestEntryDisplayProjection(
         experiment_id=entry.experiment_id,
         completion_state=entry.completion_state,
@@ -298,6 +320,14 @@ def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayP
         metric_directionality=entry.metric.directionality,
         benefit_value=benefit_value if headline_eligible else None,
         benefit_display=benefit_display,
+        biological_subject_n=entry.biological_subject_n,
+        biological_subject_n_display=_sample_size_display(
+            entry.biological_subject_n, "Biological subjects", executed=executed
+        ),
+        optimization_seed_n=entry.optimization_seed_n,
+        optimization_seed_n_display=_sample_size_display(
+            entry.optimization_seed_n, "Training seeds", executed=executed
+        ),
         subject_sensitivity=entry.subject_sensitivity,
         class_sensitivity=entry.class_sensitivity,
         limitations=list(entry.limitations),

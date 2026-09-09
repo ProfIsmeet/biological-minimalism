@@ -165,15 +165,20 @@ def test_missing_provenance_fails_closed() -> None:
 
 # --- §33: subject/seed n conflated -------------------------------------------
 
-def test_subject_n_and_seed_n_are_both_required_independently() -> None:
-    """The schema requires both fields independently (>= 1); omitting either
-    one — the shape a "conflated single n" bug would take — must fail closed
-    rather than silently reusing one value for the other."""
+def test_subject_n_and_seed_n_missing_becomes_unavailable_never_zero_or_conflated() -> None:
+    """Phase-4 close-out revision: both fields are nullable (a manifest may
+    not yet know either count, e.g. an unexecuted BLOCKED/PENDING entry), so
+    omitting one no longer fails the whole manifest — it degrades to
+    `None` ("unavailable" at display time) for that field only, and the
+    OTHER field is never silently backfilled from it (no conflation). An
+    explicitly invalid non-positive value is still a real malformed value,
+    not an absence, and is still rejected."""
     raw = _valid_manifest()
     del raw["entries"][0]["optimization_seed_n"]
-    with pytest.raises(ManifestValidationError) as excinfo:
-        validate_manifest_dict(raw)
-    assert excinfo.value.code == ManifestErrorCode.SCHEMA_VALIDATION_FAILED
+    manifest = validate_manifest_dict(raw)  # no longer raises
+    entry = manifest.entries[0]
+    assert entry.optimization_seed_n is None
+    assert entry.biological_subject_n == 5  # untouched — not backfilled from the missing seed_n
 
     raw2 = _valid_manifest()
     raw2["entries"][0]["biological_subject_n"] = 0

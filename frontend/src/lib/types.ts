@@ -981,6 +981,12 @@ export interface ManifestEntryDisplayProjection {
   metric_directionality: FutureScienceMetricDirectionality;
   benefit_value: number | null;
   benefit_display: string;
+  // Phase-4 close-out: labeled separately so subjects and seeds are never
+  // merged into one ambiguous "n" or implied to be the same kind of count.
+  biological_subject_n: number | null;
+  biological_subject_n_display: string;
+  optimization_seed_n: number | null;
+  optimization_seed_n_display: string;
   // Phase-4 hostile-review fix: carried through so a strong aggregate benefit
   // can never visually hide severe per-subject/per-class heterogeneity.
   subject_sensitivity: FutureScienceSensitivityBlock;

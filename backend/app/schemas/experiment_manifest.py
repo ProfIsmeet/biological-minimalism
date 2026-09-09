@@ -105,8 +105,12 @@ class ExperimentManifestEntry(StrictModel):
 
     # Biological subjects and optimization seeds are always independently
     # required and never conflated (governing prompt §26/§33).
-    biological_subject_n: int = Field(ge=1)
-    optimization_seed_n: int = Field(ge=1)
+    # Nullable: a manifest may not yet know either count (e.g. a BLOCKED/PENDING
+    # entry with no execution yet). Missing must degrade to "unavailable" at
+    # display time, never to a fabricated 0 (H4-style UNKNOWN handling,
+    # Phase-4 close-out). When present, still must be a real positive count.
+    biological_subject_n: int | None = Field(default=None, ge=1)
+    optimization_seed_n: int | None = Field(default=None, ge=1)
 
     primary_result: ManifestResultValue
     control_result: ManifestResultValue | None = None
@@ -157,6 +161,14 @@ class ManifestEntryDisplayProjection(StrictModel):
     metric_directionality: MetricDirectionality
     benefit_value: float | None
     benefit_display: str
+    # Phase-4 close-out: named separately and labeled semantically so a
+    # consumer can never merge them into one ambiguous "n" or imply seeds are
+    # biological replication. `_display` is never a fabricated 0 for a
+    # missing count (governing prompt Phase-4 close-out requirement).
+    biological_subject_n: int | None
+    biological_subject_n_display: str
+    optimization_seed_n: int | None
+    optimization_seed_n_display: str
     # Phase-4 hostile-review finding: an aggregate benefit_value must never be
     # the ONLY thing a consumer can see. Carrying these through means a
     # strongly-positive aggregate cannot visually hide severe per-subject/
