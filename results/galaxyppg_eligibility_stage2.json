@@ -1,0 +1,272 @@
+{
+  "purpose": "Real GalaxyPPG participant eligibility table, built from actual files, data-quality rules only, frozen before any model outcome.",
+  "n_participants_found": 24,
+  "n_eligible": 24,
+  "eligibility_rule": "bvp_present AND acc_present AND ecg_present AND overlap_duration_s > 300 (after the documented UTC+9 Polar correction)",
+  "table": [
+    {
+      "participant_id": "P01",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32242.352999925613,
+      "post_correction_start_gap_s": -157.6470000743866,
+      "overlap_duration_s": 3699.59375,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P02",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32336.358999967575,
+      "post_correction_start_gap_s": -63.64100003242493,
+      "overlap_duration_s": 3755.96875,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P03",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32328.296999931335,
+      "post_correction_start_gap_s": -71.70300006866455,
+      "overlap_duration_s": 3783.46875,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P04",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32245.203999996185,
+      "post_correction_start_gap_s": -154.7960000038147,
+      "overlap_duration_s": 3721.078125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P05",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32374.46499991417,
+      "post_correction_start_gap_s": -25.53500008583069,
+      "overlap_duration_s": 3845.6875,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P06",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32332.197999954224,
+      "post_correction_start_gap_s": -67.80200004577637,
+      "overlap_duration_s": 3768.515625,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P07",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32192.607000112534,
+      "post_correction_start_gap_s": -207.39299988746643,
+      "overlap_duration_s": 3773.5,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P08",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32377.19000005722,
+      "post_correction_start_gap_s": -22.80999994277954,
+      "overlap_duration_s": 3741.015625,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P09",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32202.572000026703,
+      "post_correction_start_gap_s": -197.42799997329712,
+      "overlap_duration_s": 3855.828125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P10",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32263.09400010109,
+      "post_correction_start_gap_s": -136.90599989891052,
+      "overlap_duration_s": 3909.680000066757,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P11",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32369.30999994278,
+      "post_correction_start_gap_s": -30.69000005722046,
+      "overlap_duration_s": 3763.53125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P12",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32271.542999982834,
+      "post_correction_start_gap_s": -128.45700001716614,
+      "overlap_duration_s": 3867.7309999465942,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P13",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32206.868000030518,
+      "post_correction_start_gap_s": -193.13199996948242,
+      "overlap_duration_s": 3843.453125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P14",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32398.194999933243,
+      "post_correction_start_gap_s": -1.8050000667572021,
+      "overlap_duration_s": 3823.34375,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P15",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32286.15899991989,
+      "post_correction_start_gap_s": -113.84100008010864,
+      "overlap_duration_s": 3853.421875,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P16",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32382.677000045776,
+      "post_correction_start_gap_s": -17.322999954223633,
+      "overlap_duration_s": 3859.4049999713898,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P17",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32360.323999881744,
+      "post_correction_start_gap_s": -39.676000118255615,
+      "overlap_duration_s": 3833.3659999370575,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P18",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32311.694000005722,
+      "post_correction_start_gap_s": -88.30599999427795,
+      "overlap_duration_s": 3648.71875,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P19",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32189.446000099182,
+      "post_correction_start_gap_s": -210.55399990081787,
+      "overlap_duration_s": 3817.361000061035,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P20",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32272.11899995804,
+      "post_correction_start_gap_s": -127.88100004196167,
+      "overlap_duration_s": 4165.203125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P21",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 31932.52699995041,
+      "post_correction_start_gap_s": -467.47300004959106,
+      "overlap_duration_s": 3815.78125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P22",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32345.640000104904,
+      "post_correction_start_gap_s": -54.359999895095825,
+      "overlap_duration_s": 3648.71875,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P23",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32146.97300004959,
+      "post_correction_start_gap_s": -253.02699995040894,
+      "overlap_duration_s": 3788.453125,
+      "eligible": true,
+      "exclusion_reason": null
+    },
+    {
+      "participant_id": "P24",
+      "bvp_present": true,
+      "acc_present": true,
+      "ecg_present": true,
+      "pre_correction_start_gap_s": 32238.74499988556,
+      "post_correction_start_gap_s": -161.25500011444092,
+      "overlap_duration_s": 3823.34375,
+      "eligible": true,
+      "exclusion_reason": null
+    }
+  ]
+}

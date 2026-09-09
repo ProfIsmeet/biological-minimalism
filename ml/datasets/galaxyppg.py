@@ -158,3 +158,69 @@ def reference_hr_windows(r_peak_times: np.ndarray, window_start_times: np.ndarra
             if mean_rr > 0:
                 hr[i] = 60.0 / mean_rr
     return hr
+
+
+BVP_SAMPLES_PER_8S = int(round(8.0 * E4_BVP_HZ))   # 512
+ACC_SAMPLES_PER_8S = int(round(8.0 * E4_ACC_HZ))   # 256
+WINDOW_SECONDS = 8.0
+STRIDE_SECONDS = 2.0  # matches the PPG-DaLiA windowing convention this experiment replicates
+
+
+def build_participant_windows(dataset_dir: Path, participant_id: str) -> dict:
+    """Real, aligned 8s/2s-stride BVP+ACC windows with real R-peak-derived
+    reference HR labels for one participant. Windows with fewer than 3 real
+    R-peaks in range are excluded (data-integrity rule, not imputed).
+
+    Returns dict with:
+      bvp_windows: (n, 512) float32
+      acc_windows: (n, 3, 256) float32
+      hr: (n,) float32, real bpm labels
+      window_start_times: (n,) float64, epoch seconds (for activity/event lookup)
+    """
+    d = load_participant(dataset_dir, participant_id)
+    bvp_val, bvp_t = d["bvp"]
+    acc_val, acc_t = d["acc"]
+    ecg_val, ecg_t = d["ecg"]
+
+    r_peaks = detect_r_peaks(ecg_val, ecg_t)
+
+    # Candidate window starts: every STRIDE_SECONDS across the BVP recording,
+    # restricted to where a full window of both BVP and ACC exists.
+    t_min = max(bvp_t[0], acc_t[0], ecg_t[0])
+    t_max = min(bvp_t[-1], acc_t[-1], ecg_t[-1]) - WINDOW_SECONDS
+    if t_max <= t_min:
+        return {"bvp_windows": np.empty((0, BVP_SAMPLES_PER_8S), dtype=np.float32),
+                "acc_windows": np.empty((0, 3, ACC_SAMPLES_PER_8S), dtype=np.float32),
+                "hr": np.empty((0,), dtype=np.float32),
+                "window_start_times": np.empty((0,), dtype=np.float64)}
+
+    starts = np.arange(t_min, t_max, STRIDE_SECONDS)
+    hr = reference_hr_windows(r_peaks, starts, WINDOW_SECONDS)
+
+    bvp_windows, acc_windows, valid_starts, valid_hr = [], [], [], []
+    bvp_idx = np.searchsorted(bvp_t, starts)
+    acc_idx = np.searchsorted(acc_t, starts)
+    for i, t0 in enumerate(starts):
+        if np.isnan(hr[i]):
+            continue
+        bi = bvp_idx[i]
+        ai = acc_idx[i]
+        if bi + BVP_SAMPLES_PER_8S > len(bvp_val) or ai + ACC_SAMPLES_PER_8S > len(acc_val):
+            continue
+        bvp_windows.append(bvp_val[bi:bi + BVP_SAMPLES_PER_8S])
+        acc_windows.append(acc_val[ai:ai + ACC_SAMPLES_PER_8S].T)  # (3, 256)
+        valid_starts.append(t0)
+        valid_hr.append(hr[i])
+
+    if not bvp_windows:
+        return {"bvp_windows": np.empty((0, BVP_SAMPLES_PER_8S), dtype=np.float32),
+                "acc_windows": np.empty((0, 3, ACC_SAMPLES_PER_8S), dtype=np.float32),
+                "hr": np.empty((0,), dtype=np.float32),
+                "window_start_times": np.empty((0,), dtype=np.float64)}
+
+    return {
+        "bvp_windows": np.stack(bvp_windows).astype(np.float32),
+        "acc_windows": np.stack(acc_windows).astype(np.float32),
+        "hr": np.array(valid_hr, dtype=np.float32),
+        "window_start_times": np.array(valid_starts, dtype=np.float64),
+    }
