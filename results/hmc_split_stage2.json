@@ -1,0 +1,17 @@
+{
+  "dataset": "HMC Sleep Staging v1.1 (PhysioNet)",
+  "protocol_source": "results/hmc_protocol_stage1b.json (Stage 1B, commit fe32384, read-only)",
+  "deviation_doc": "docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md",
+  "cohort_type": "REDUCED_COHORT_BANDWIDTH_LIMITED",
+  "full_frozen_cohort_size": 151,
+  "reduced_cohort_size": 12,
+  "selection_rule": "First 12 recordings in ascending sequential RECORDS order (SN001..SN012); no outcome data available at selection time.",
+  "split": {
+    "train": ["SN001", "SN002", "SN003", "SN004", "SN005", "SN006", "SN007", "SN008"],
+    "val": ["SN009", "SN010"],
+    "test": ["SN011", "SN012"]
+  },
+  "unit": "recording_id (== subject, confirmed 1:1 by Stage 1B audit)",
+  "frozen_before_data_download": true,
+  "frozen_before_outcome_inspection": true
+}
