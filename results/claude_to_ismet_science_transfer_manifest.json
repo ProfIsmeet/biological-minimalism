@@ -1,0 +1,199 @@
+{
+  "manifest_id": "claude_to_ismet_science_transfer",
+  "generated_context": "Claude accidental Stage-2 science sprint on branch stage2-4-sleep-canonical; ownership of the ML-science line transferred to Ismet by Emir. This manifest preserves Claude's work for Ismet verification. NO NEW TRAINING performed to produce this manifest.",
+  "generated_utc_note": "Session date 2026-09-09 (per environment). Times below are local file mtimes.",
+  "repository": {
+    "path": "/Users/emirharunsunbul/Documents/ChatGPT/IAC",
+    "remote": "https://github.com/ProfIsmeet/biological-minimalism.git",
+    "claude_branch": "stage2-4-sleep-canonical",
+    "claude_branch_head_before_handoff_commit": "52bd2eca1ef89b0460a4a3dd3648118176ad6610",
+    "base": "52bd2eca1ef89b0460a4a3dd3648118176ad6610 (== origin/day12-post-remediation-integration, verified)",
+    "ahead_behind_vs_base_before_handoff": "0/0 (no commits were made during the science sprint)",
+    "local_main": "d257f196f736e281a671fcc117781331034db1eb",
+    "origin_main": "b02c6db4434b22741077115786126a59643dc08b"
+  },
+  "ismet_branch_verification": {
+    "branch": "origin/stage2-4-expansion-science",
+    "expected_head": "0f1ba3be3d9275ae59f5d7ca951193a1f7109fdd",
+    "observed_head": "0f1ba3be3d9275ae59f5d7ca951193a1f7109fdd",
+    "match": true,
+    "inspected": "READ_ONLY (fetched, log + diff --name-only only; NOT merged, NOT cherry-picked, NOT edited)",
+    "merge_base_with_claude_base": "0e03c63729ce7a1e374edd978ef55f9edd45f435"
+  },
+  "datasets": [
+    {
+      "name": "Sleep-EDF (sleep-cassette)",
+      "version": "PhysioNet sleep-edfx 1.0.0",
+      "source": "https://physionet.org/files/sleep-edfx/1.0.0/sleep-cassette/",
+      "access": "open, no credentialing",
+      "local_path": "datasets/sleep-edfx/raw/",
+      "total_bytes_human": "856M",
+      "file_count": 36,
+      "subject_count": 18,
+      "cohort": "frozen primary split ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json (train=12, val=3, test=3)",
+      "verification": "ALL 36 files SHA256-verified against PhysioNet official SHA256SUMS.txt (byte-exact)",
+      "gitignored": true,
+      "accidentally_tracked": false,
+      "ismet_can_reuse_directly": true,
+      "licensing_reuse_ok": true,
+      "note": "This is the SAME dataset lineage as the existing corrected A/B (results/sleep_edf_primary_seedfix_v2.json). Re-downloaded fresh this session because the raw/ dir was absent on this clone (gitignored). Ismet can reuse this local copy as-is."
+    },
+    {
+      "name": "HMC Sleep Staging",
+      "version": "PhysioNet hmc-sleep-staging 1.1",
+      "source": "https://physionet.org/files/hmc-sleep-staging/1.1/recordings/",
+      "access": "open, CC BY 4.0, no credentialing",
+      "local_path": "datasets/hmc-sleep-staging/raw/",
+      "total_bytes_human": "1.3G",
+      "file_count": 36,
+      "recording_count": 12,
+      "cohort": "REDUCED bandwidth-limited pilot subset SN001..SN012 (of the full frozen 151); split results/hmc_split_stage2.json (train=8, val=2, test=2)",
+      "verification": "ALL 36 pilot files SHA256-verified against PhysioNet official SHA256SUMS.txt (byte-exact)",
+      "gitignored": true,
+      "accidentally_tracked": false,
+      "ismet_can_reuse_directly": true,
+      "licensing_reuse_ok": true,
+      "note": "Only 12 of 151 recordings downloaded (bandwidth deviation, see docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md). NO HMC TRAINING was performed. Channel labels EEG C4-M1 / EOG E1-M2 / EOG E2-M2 confirmed from raw header; sleepscoring.txt annotation format confirmed. Ismet still needs the full 151-recording cohort for the frozen full experiment."
+    }
+  ],
+  "code": [
+    {
+      "path": "ml/train_sleep_edf_shuffled_eog_control_seedfix_v2.py",
+      "tracked": false,
+      "purpose": "Corrected shuffled-EOG control (C) trainer under H1 seed-before-model-init protocol, with isolated control_shuffle_seed sub-seed.",
+      "implementation_completeness": "COMPLETE (executed once; data-load + capacity check verified: Model C params 8309 == Model B 8309; killed at seed42 training start by Emir before any result/checkpoint written)",
+      "scientific_acceptance": "UNVERIFIED_BY_ISMET",
+      "transfer_class": "POTENTIALLY_REUSABLE_IMPLEMENTATION",
+      "reuse_note": "Loads corrected V2 A/B split from results/sleep_edf_primary_seedfix_v2.json; drives EOG shuffle by seeds.control_shuffle_seed (run_seed+200000). Ismet should review the control design before running."
+    },
+    {
+      "path": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py",
+      "tracked": false,
+      "purpose": "Corrected EEG x EOG x Resp interaction trainer (M_B, M_AB) under H1 protocol; reuses corrected V2 A/B as M0/M_A with a documented equivalence decision.",
+      "implementation_completeness": "COMPLETE_BUT_NEVER_EXECUTED",
+      "scientific_acceptance": "UNVERIFIED_BY_ISMET",
+      "transfer_class": "POTENTIALLY_REUSABLE_IMPLEMENTATION",
+      "reuse_note": "Contains the frozen Day-10 interaction formula (M_AB - M_A - M_B + M0) and a capacity-fairness safeguard. Carries Resp 1Hz-native / 100Hz-grid provenance. M0/M_A-equivalence decision is Claude's assertion, NOT independently verified."
+    },
+    {
+      "path": "ml/datasets/hmc_sleep.py",
+      "tracked": false,
+      "purpose": "New HMC Sleep Staging loader: SNxxx.edf + SNxxx_sleepscoring.txt pairing, C4-M1 EEG, E1-M2 minus E2-M2 derived EOG, 30s epoching at native 256 Hz, per-window z-score, within-subject EOG shuffle control.",
+      "implementation_completeness": "COMPLETE_BUT_ONLY_SMOKE-LEVEL_EXERCISED (header/annotation format confirmed on real files; full load path never run in training)",
+      "scientific_acceptance": "UNVERIFIED_BY_ISMET",
+      "transfer_class": "POTENTIALLY_REUSABLE_IMPLEMENTATION",
+      "reuse_note": "Implements the Stage-1B frozen HMC protocol (results/hmc_protocol_stage1b.json). Ismet owns HMC science; this is a candidate loader only."
+    },
+    {
+      "path": "ml/train_hmc_sleep_a_b_c.py",
+      "tracked": false,
+      "purpose": "HMC A/B/C trainer (Stage 3), reuses SleepStageClassifier unmodified; corrected seed protocol from the start.",
+      "implementation_completeness": "COMPLETE_BUT_NEVER_EXECUTED",
+      "scientific_acceptance": "UNVERIFIED_BY_ISMET",
+      "transfer_class": "POTENTIALLY_REUSABLE_IMPLEMENTATION",
+      "reuse_note": "NO HMC TRAINING RUN. Contains a per-recording eval loop. Ismet should review the reduced-cohort deviation and the sequence-length-agnostic capacity claim before use."
+    },
+    {
+      "path": "docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md",
+      "tracked": false,
+      "purpose": "Frozen-before-download disclosure of the 12-of-151 reduced HMC cohort due to measured bandwidth limits.",
+      "implementation_completeness": "COMPLETE",
+      "scientific_acceptance": "N/A (disclosure doc)",
+      "transfer_class": "POTENTIALLY_REUSABLE_IMPLEMENTATION",
+      "reuse_note": "If Ismet runs the full 151-recording cohort, this deviation is superseded and the pilot becomes a smaller disclosed data point."
+    },
+    {
+      "path": "results/hmc_split_stage2.json",
+      "tracked": false,
+      "purpose": "Frozen reduced HMC recording split (train SN001-008 / val SN009-010 / test SN011-012), selected before any HMC file opened.",
+      "implementation_completeness": "COMPLETE",
+      "scientific_acceptance": "N/A (frozen split artifact)",
+      "transfer_class": "READY_FOR_ISMET_VERIFICATION",
+      "reuse_note": "Sequential RECORDS-order selection; no outcome data at selection time."
+    }
+  ],
+  "checkpoints": [
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "baseline_eeg_only", "seed": 42, "path": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt", "size_bytes": 42540, "sha256": "997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "baseline_eeg_only", "seed": 43, "path": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed43.pt", "size_bytes": 42540, "sha256": "b3a10405ccdad0e42764d295644d8baec60a403c2617f49fa2c028f2fddd042a", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "baseline_eeg_only", "seed": 44, "path": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed44.pt", "size_bytes": 42540, "sha256": "8c85c8ef58fe04d7f7759cd69fe6319d78b0ee4695c573391861b83cff44e0a1", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "baseline_eeg_only", "seed": 45, "path": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed45.pt", "size_bytes": 42540, "sha256": "36d80df09442a040e94857752bfae60ab59a44929a5a270bbf8c616144496168", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "baseline_eeg_only", "seed": 46, "path": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed46.pt", "size_bytes": 42540, "sha256": "4072f4843d4a94a7f1ca6a9b169e5c9d89a53f423ed037e0d23df9478cf88216", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "candidate_eeg_plus_eog", "seed": 42, "path": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed42.pt", "size_bytes": 43133, "sha256": "1987fcce2729a65cbdbd30a1e4cc41564c3638cb2fae7962e2ad98fad8551271", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "candidate_eeg_plus_eog", "seed": 43, "path": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed43.pt", "size_bytes": 43133, "sha256": "9206b289a5b963b1f4b539d6a0b5bc461272751cb8344f51816c8ef2cb235ad4", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "candidate_eeg_plus_eog", "seed": 44, "path": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed44.pt", "size_bytes": 43133, "sha256": "97a9dfd18b8e3ad619e252c94a710e045215047b7d1e7b2bea8acdd21a7ccd18", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "candidate_eeg_plus_eog", "seed": 45, "path": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed45.pt", "size_bytes": 43133, "sha256": "3215076e805891d15432d06b4bf39571d2f9a8b00be41acd7c7f4af154d6e9fe", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"},
+    {"experiment": "sleep_edf_primary_seedfix_v2_reproduction", "config": "candidate_eeg_plus_eog", "seed": 46, "path": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed46.pt", "size_bytes": 43133, "sha256": "cc5929d09e4e7819845c30ab36257acebbc402f7db4fd5134b38efc6c514c6f1", "loadable": true, "state": "COMPLETE_LOADABLE", "canonical_status": "NONCANONICAL_PENDING_ISMET_VERIFICATION"}
+  ],
+  "checkpoint_notes": "All 10 are a FRESH REPRODUCTION of corrected A/B, trained this session on this Mac (torch 2.14.0). They do NOT overwrite Ismet's original A/B provenance (those .pt binaries were never present on this clone). They are gitignored (ml/checkpoints/*). Ismet may adopt via fixed-checkpoint eval or ignore in favor of the original provenance.",
+  "results": [
+    {
+      "path": "results/claude_noncanonical_sleep_edf_primary_seedfix_v2_reproduction.json",
+      "tracked": false,
+      "source_checkpoints": "the 10 A/B reproduction checkpoints above",
+      "source_dataset": "Sleep-EDF 18-subject frozen primary split",
+      "generating_script": "ml/train_sleep_edf_primary_seedfix_v2.py (existing Ismet script, run unmodified)",
+      "reproduction_metrics": {
+        "baseline_mean": 0.733906766976478,
+        "baseline_sd_ddof1": 0.02813837600133564,
+        "candidate_mean": 0.7645271717211548,
+        "candidate_sd_ddof1": 0.010741036580766443,
+        "B_minus_A_mean": 0.030620404744676755,
+        "n_seeds_candidate_better": 4,
+        "per_seed_baseline": {"seed42": 0.749972, "seed43": 0.742279, "seed44": 0.686879, "seed45": 0.731563, "seed46": 0.758842},
+        "per_seed_candidate": {"seed42": 0.775479, "seed43": 0.764782, "seed44": 0.769557, "seed45": 0.766009, "seed46": 0.746808}
+      },
+      "canonical_comparison": {
+        "canonical_baseline_mean": 0.7364866682288819,
+        "canonical_candidate_mean": 0.7646892437262166,
+        "canonical_B_minus_A_mean": 0.028202575497334757,
+        "canonical_n_favor": 4,
+        "max_abs_per_seed_diff_approx": 0.0084,
+        "direction_preserved": true,
+        "favorable_count_preserved": true,
+        "interpretation": "Cross-platform reproduction (Windows/Ismet -> Mac/Claude, different torch build). Direction and magnitude preserved; not bit-exact (expected)."
+      },
+      "transfer_class": "NONCANONICAL_RESULT_PENDING_ISMET_REVIEW"
+    }
+  ],
+  "caches": [
+    {"note": "NO preprocessing cache was written. Both loaders parse EDF on the fly (read_raw_edf preload=True). No .pkl/.npz/.h5 processed cache exists for either dataset from this run."}
+  ],
+  "incomplete_runs": [
+    {
+      "experiment": "sleep_edf_shuffled_eog_control_seedfix_v2 (C)",
+      "state": "PARTIAL_INCOMPLETE",
+      "what_completed": "data load (train=32656, val=7989, test=8412 epochs), capacity check (Model C 8309 params == Model B 8309), reached seed42 training start",
+      "what_missing": "ALL training, ALL checkpoints, result JSON",
+      "artifacts_written": "none (killed before first checkpoint/result write)",
+      "transfer_class": "PARTIAL_INCOMPLETE"
+    },
+    {
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2 (M_B, M_AB)",
+      "state": "NOT_STARTED",
+      "artifacts_written": "none",
+      "transfer_class": "PARTIAL_INCOMPLETE"
+    },
+    {
+      "experiment": "hmc_sleep_external_replication_stage2 (HMC A/B/C)",
+      "state": "HMC_TRAINING_NOT_STARTED",
+      "artifacts_written": "none (data downloaded + loader written only)",
+      "transfer_class": "PARTIAL_INCOMPLETE"
+    }
+  ],
+  "tests": [
+    {"command": ".venv-integration/bin/python -m pytest ml/tests -q", "result": "290 passed, 19 skipped", "when": "baseline, before any Stage-2 code changes", "env": ".venv-integration (py3.14, torch 2.14.0)"},
+    {"command": "backend/.venv/bin/pytest -q (in backend/)", "result": "158 passed", "when": "baseline, before any Stage-2 code changes", "env": "backend/.venv (py3.12)"},
+    {"command": ".venv-integration/bin/python -m pytest ml/tests/test_sleep_scientific_remediation_day12.py ml/tests/test_sleep_edf_eeg_eog_ablation.py ml/tests/test_sleep_edf_shuffled_eog_control.py ml/tests/test_sleep_edf_secondary_holdout.py -q", "result": "61 passed, 5 skipped", "when": "H1 protocol reverification", "env": ".venv-integration"},
+    {"note": "NO new tests were written for the Claude Stage-2 trainers/loaders. Ismet must add tests (recording-disjoint folds, control determinism, channel availability, stage mapping) when adopting."}
+  ],
+  "commits_during_sprint": "NONE (branch stayed at base 52bd2ec; all work was uncommitted working-tree state until this handoff commit).",
+  "bugs_found": [
+    {"severity": "PROCESS", "description": "The two Claude Stage-2 trainers re-parse all EDF files from scratch (no shared cache), making each stage ~60-90 min of redundant load. Not a correctness bug; an efficiency note for Ismet.", "fixed": false, "affects_results": false}
+  ],
+  "known_concerns": [
+    "M0/M_A-equivalence decision in the interaction trainer is Claude's assertion (architecture/split/hyperparameters match) but NOT independently verified by Ismet.",
+    "C control validity (within-subject, within-partition, isolated control_shuffle_seed, labels untouched, capacity-matched) is IMPLEMENTED per the frozen predeclaration but produced NO results to inspect.",
+    "HMC is a 12/151 reduced-cohort pilot with NO training run; any future claim needs the full frozen cohort."
+  ],
+  "final_verdict": "CLAUDE_SCIENCE_WORK_PRESERVED_WITH_LIMITATIONS_READY_FOR_ISMET_VERIFICATION"
+}

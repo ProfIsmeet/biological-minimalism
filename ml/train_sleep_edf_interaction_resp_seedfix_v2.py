@@ -1,0 +1,280 @@
+#!/usr/bin/env python
+"""Stage 2 (Day 12+): corrected EEG x EOG x Resp interaction family under
+the H1 seed-before-model-init protocol.
+
+M0 (EEG-only) and M_A (EEG+EOG) are the EXISTING corrected V2 checkpoints
+from ml/train_sleep_edf_primary_seedfix_v2.py (results/sleep_edf_primary_seedfix_v2.json)
+- NOT retrained here. This is a deliberate version-mapping decision, not an
+assumption: M0/M_A in the original Day-10 interaction script
+(ml/train_sleep_edf_interaction_resp.py) used the SAME SleepStageClassifier
+class, SAME frozen primary subject split, SAME hyperparameters (epochs,
+batch size, lr, embedding dim, optimizer, loss) as the original (buggy-seed-
+order) A/B - the only thing that ever changed between "original A/B" and
+"corrected V2 A/B" is WHEN torch.manual_seed() is called, which is exactly
+the H1 defect this whole file's interaction estimate needs to be free of.
+Reusing the ALREADY-CORRECTED V2 A/B as M0/M_A therefore gives all four
+interaction operands (M0, M_A, M_B, M_AB) the same corrected-seeding
+protocol, rather than mixing a corrected M_B/M_AB with an M0/M_A still
+carrying the H1 defect (see docs/SLEEP_SEEDING_PROTOCOL_V2.md,
+results/sleep_scientific_remediation_day12.json).
+
+This script trains only the two NEW corrected configurations:
+  M_B  = EEG + Resp oro-nasal (corrected seeding)
+  M_AB = EEG + EOG + Resp oro-nasal (corrected seeding)
+reusing SleepStageClassifier / evaluate_full unmodified, and the
+train_one_seedfix-equivalent corrected training loop.
+
+Frozen interaction formula (unchanged from Day 10, see
+ml/train_sleep_edf_interaction_resp.py and
+docs/INTERACTION_EXPERIMENT_PREDECLARATION_DAY10.md):
+    interaction = (M_AB - M0) - (M_A - M0) - (M_B - M0)
+                = M_AB - M_A - M_B + M0
+This is algebraically equivalent to (M_AB - M_B) - (M_A - M0).
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "backend"))
+sys.path.insert(0, str(REPO_ROOT))
+
+from app.ml._torch_bootstrap import ensure_torch_dll_path  # noqa: E402
+
+ensure_torch_dll_path()
+
+import torch  # noqa: E402
+
+torch.set_num_threads(4)
+
+from sklearn.metrics import f1_score  # noqa: E402
+from sklearn.utils.class_weight import compute_class_weight  # noqa: E402
+
+from ml.datasets.sleep_edf import (  # noqa: E402
+    EEG_CHANNEL,
+    EOG_CHANNEL,
+    RESP_CHANNEL,
+    RESP_LOADED_SFREQ_HZ,
+    RESP_NATIVE_SFREQ_HZ,
+    RESP_RESAMPLING_METHOD,
+    STAGE_NAMES,
+    load_dataset_windows_multi,
+)
+from ml.sleep_seed_utils import derive_sleep_run_seeds, seed_for_data_order, seed_for_model_init
+from ml.train_sleep_edf_eeg_eog_ablation import SleepStageClassifier, evaluate_full
+
+RAW_DIR = REPO_ROOT / "datasets" / "sleep-edfx" / "raw"
+V2_PRIMARY_PATH = REPO_ROOT / "results" / "sleep_edf_primary_seedfix_v2.json"
+V1_INTERACTION_PATH = REPO_ROOT / "results" / "sleep_edf_interaction_resp_day10.json"
+OUT_PATH = REPO_ROOT / "results" / "sleep_edf_interaction_resp_seedfix_v2.json"
+CKPT_DIR = REPO_ROOT / "ml" / "checkpoints"
+
+SEEDS = (42, 43, 44, 45, 46)
+
+CONFIGS = {
+    "M_B_eeg_plus_resp": (EEG_CHANNEL, RESP_CHANNEL),
+    "M_AB_eeg_plus_eog_plus_resp": (EEG_CHANNEL, EOG_CHANNEL, RESP_CHANNEL),
+}
+
+
+def load_split_data(subject_ids: list[str], channels: tuple[str, ...]) -> tuple[np.ndarray, np.ndarray]:
+    x, y, _subj_idx, _prefixes = load_dataset_windows_multi(RAW_DIR, channels=channels, subject_ids=subject_ids)
+    return x, y
+
+
+def train_one_seedfix(in_channels: int, train_x, train_y, val_x, val_y, class_weights: torch.Tensor, run_seed: int):
+    seeds = derive_sleep_run_seeds(run_seed)
+
+    seed_for_model_init(seeds)
+    model = SleepStageClassifier(in_channels=in_channels)
+
+    seed_for_data_order(seeds)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001)
+    loss_fn = torch.nn.CrossEntropyLoss(weight=class_weights)
+
+    from torch.utils.data import DataLoader, TensorDataset
+
+    train_loader = DataLoader(TensorDataset(torch.from_numpy(train_x), torch.from_numpy(train_y)), batch_size=64, shuffle=True)
+    val_loader = DataLoader(TensorDataset(torch.from_numpy(val_x), torch.from_numpy(val_y)), batch_size=128, shuffle=False)
+
+    history = []
+    for epoch in range(1, 21):
+        model.train()
+        train_loss = 0.0
+        for xb, yb in train_loader:
+            optimizer.zero_grad()
+            logits = model(xb)
+            loss = loss_fn(logits, yb)
+            loss.backward()
+            optimizer.step()
+            train_loss += float(loss.item()) * len(yb)
+        train_loss /= len(train_y)
+
+        model.eval()
+        val_preds, val_targets = [], []
+        with torch.no_grad():
+            for xb, yb in val_loader:
+                logits = model(xb)
+                val_preds.append(logits.argmax(dim=1).numpy())
+                val_targets.append(yb.numpy())
+        val_preds = np.concatenate(val_preds)
+        val_targets = np.concatenate(val_targets)
+        val_macro_f1 = f1_score(val_targets, val_preds, average="macro", zero_division=0)
+        history.append({"epoch": epoch, "train_loss": train_loss, "val_macro_f1": float(val_macro_f1)})
+        print(f"    epoch {epoch:2d}/20 - train loss {train_loss:.4f} | val macro-F1 {val_macro_f1:.4f}")
+
+    return model, history, seeds
+
+
+def main() -> None:
+    v2_primary = json.loads(V2_PRIMARY_PATH.read_text())
+    split = v2_primary["frozen_protocol"]["subject_split"]
+    print("Using SAME FROZEN primary split as corrected A/B (unchanged):", json.dumps(split))
+
+    n_params_m0 = v2_primary["parameter_counts"]["baseline_eeg_only"]
+    n_params_ma = v2_primary["parameter_counts"]["candidate_eeg_plus_eog"]
+    n_params = {name: sum(p.numel() for p in SleepStageClassifier(len(ch)).parameters()) for name, ch in CONFIGS.items()}
+    print("Parameter counts:", {"M0": n_params_m0, "M_A": n_params_ma, **n_params})
+
+    per_channel_cost_0_to_1 = n_params_ma - n_params_m0
+    per_channel_cost_1_to_2 = n_params["M_B_eeg_plus_resp"] - n_params_m0
+    per_channel_cost_2_to_3 = n_params["M_AB_eeg_plus_eog_plus_resp"] - n_params["M_B_eeg_plus_resp"]
+    if not (per_channel_cost_0_to_1 == per_channel_cost_1_to_2 == per_channel_cost_2_to_3):
+        raise RuntimeError(
+            "Capacity-fairness safeguard failed: per-channel parameter cost is not "
+            f"constant across configs ({per_channel_cost_0_to_1}, {per_channel_cost_1_to_2}, "
+            f"{per_channel_cost_2_to_3}) - aborting, not interpreting a confounded result."
+        )
+    print(f"Capacity-fairness safeguard OK: constant per-channel parameter cost = {per_channel_cost_0_to_1}")
+
+    out: dict = {
+        "experiment_id": "sleep_edf_interaction_eeg_eog_resp_seedfix_v2",
+        "purpose": "Stage 2: corrected EEG x EOG x Resp interaction family under the H1 seed-before-model-init protocol. M0/M_A reused from corrected V2 A/B (documented exact equivalence below); M_B/M_AB newly trained under the same corrected protocol.",
+        "seeding_protocol_doc": "docs/SLEEP_SEEDING_PROTOCOL_V2.md",
+        "m0_ma_equivalence_decision": {
+            "decision": "M0 = corrected V2 baseline_eeg_only (results/sleep_edf_primary_seedfix_v2.json), M_A = corrected V2 candidate_eeg_plus_eog (same file). NOT retrained in this script.",
+            "rationale": "Original Day-10 interaction script's M0/M_A used the identical SleepStageClassifier class, identical frozen primary subject split, and identical hyperparameters (epochs=20, batch_size=64, lr=0.001, embedding_dim=32, AdamW, class-weighted CE) as original A/B. The ONLY axis of variation between 'original A/B' and 'corrected V2 A/B' is the H1 seeding-order fix. Reusing corrected V2 A/B as M0/M_A (rather than either the original buggy-seed A/B, or a fresh unnecessary retrain) is therefore the version-consistent choice: all four interaction operands (M0, M_A, M_B, M_AB) now share one coherent corrected-seeding V2 protocol.",
+            "verified_architecture_match": True,
+            "verified_split_match": True,
+            "verified_hyperparameter_match": True,
+        },
+        "m0_source": "results/sleep_edf_primary_seedfix_v2.json (baseline_eeg_only) - corrected V2, NOT retrained here",
+        "ma_source": "results/sleep_edf_primary_seedfix_v2.json (candidate_eeg_plus_eog) - corrected V2, NOT retrained here",
+        "v1_interaction_reference": "results/sleep_edf_interaction_resp_day10.json (UNCHANGED, NOT overwritten - historical, mixes original buggy-seed M0/M_A with V1 M_B/M_AB)",
+        "resp_rate_provenance": {
+            "native_sfreq_hz": RESP_NATIVE_SFREQ_HZ,
+            "loaded_common_grid_sfreq_hz": RESP_LOADED_SFREQ_HZ,
+            "resampling_method": RESP_RESAMPLING_METHOD,
+            "note": "H2 correction (Day 12): Resp oro-nasal is natively 1 Hz; the 100 Hz figure is the common/model grid produced by MNE's FFT-based upsampling when reading multi-rate channels together, not a native acquisition rate. Carried into this V2 interaction result's provenance per master-prompt Section 30 - do not report Resp as native 100 Hz.",
+        },
+        "frozen_protocol": {
+            "dataset": "PhysioNet Sleep-EDF (sleep-cassette)",
+            "subject_split": split,
+            "channels": {name: list(ch) for name, ch in CONFIGS.items()},
+            "seeds": list(SEEDS),
+            "primary_metric": "macro_f1",
+            "capacity_fairness_per_channel_cost": per_channel_cost_0_to_1,
+        },
+        "parameter_counts": {"M0": n_params_m0, "M_A": n_params_ma, **n_params},
+        "runs": {name: {} for name in CONFIGS},
+        "checkpoint_manifest": [],
+    }
+
+    print("Loading real data (this parses EDF files, may take a while)...")
+    per_config_data = {}
+    for name, channels in CONFIGS.items():
+        train_x, train_y = load_split_data(split["train"], channels)
+        val_x, val_y = load_split_data(split["val"], channels)
+        test_x, test_y = load_split_data(split["test"], channels)
+        per_config_data[name] = (train_x, train_y, val_x, val_y, test_x, test_y)
+        print(f"{name}: train={len(train_y)} val={len(val_y)} test={len(test_y)} epochs, shape={train_x.shape}")
+
+    out["window_counts"] = {name: {"train": len(data[1]), "val": len(data[3]), "test": len(data[5])} for name, data in per_config_data.items()}
+
+    for name, channels in CONFIGS.items():
+        train_x, train_y, val_x, val_y, test_x, test_y = per_config_data[name]
+        class_weights_np = compute_class_weight("balanced", classes=np.arange(len(STAGE_NAMES)), y=train_y)
+        class_weights = torch.tensor(class_weights_np, dtype=torch.float32)
+
+        for seed in SEEDS:
+            run_id = f"{name}_seedfix_v2_seed{seed}"
+            print(f"\n=== seed {seed}: training {run_id} (in_channels={len(channels)}, CORRECTED seeding order) ===")
+            start = time.time()
+            model, history, seeds = train_one_seedfix(len(channels), train_x, train_y, val_x, val_y, class_weights, seed)
+            elapsed = time.time() - start
+
+            report = evaluate_full(model, test_x, test_y)
+            report["train_seconds"] = elapsed
+            report["train_history"] = history
+            report["n_parameters"] = n_params[name]
+            report["seed"] = seed
+            report["sub_seeds"] = {"model_init_seed": seeds.model_init_seed, "data_order_seed": seeds.data_order_seed}
+            print(f"{run_id}: test macro-F1={report['macro_f1']:.4f} accuracy={report['accuracy']:.4f} ({elapsed:.1f}s)")
+
+            out["runs"][name][f"seed{seed}"] = report
+
+            ckpt_path = CKPT_DIR / f"sleep_edf_interaction_{run_id}.pt"
+            torch.save(model.state_dict(), ckpt_path)
+            ckpt_bytes = ckpt_path.read_bytes()
+            out["checkpoint_manifest"].append({
+                "run_id": run_id, "config": name, "seed": seed,
+                "in_channels": len(channels),
+                "path": str(ckpt_path.relative_to(REPO_ROOT)),
+                "size_bytes": len(ckpt_bytes), "sha256": hashlib.sha256(ckpt_bytes).hexdigest(),
+                "n_parameters": n_params[name],
+            })
+
+    # --- Interaction term per seed (frozen formula, unchanged from Day 10) ---
+    m0_f1 = {s: v2_primary["runs"]["baseline_eeg_only"][f"seed{s}"]["macro_f1"] for s in SEEDS}
+    ma_f1 = {s: v2_primary["runs"]["candidate_eeg_plus_eog"][f"seed{s}"]["macro_f1"] for s in SEEDS}
+    mb_f1 = {s: out["runs"]["M_B_eeg_plus_resp"][f"seed{s}"]["macro_f1"] for s in SEEDS}
+    mab_f1 = {s: out["runs"]["M_AB_eeg_plus_eog_plus_resp"][f"seed{s}"]["macro_f1"] for s in SEEDS}
+
+    benefit_a = {s: ma_f1[s] - m0_f1[s] for s in SEEDS}
+    benefit_b = {s: mb_f1[s] - m0_f1[s] for s in SEEDS}
+    benefit_ab = {s: mab_f1[s] - m0_f1[s] for s in SEEDS}
+    interaction = {s: benefit_ab[s] - benefit_a[s] - benefit_b[s] for s in SEEDS}
+
+    def agg(d: dict) -> dict:
+        arr = np.asarray(list(d.values()), dtype=np.float64)
+        return {"mean": float(arr.mean()), "sd_sample_ddof1": float(arr.std(ddof=1)), "per_seed": {f"seed{s}": v for s, v in d.items()}}
+
+    interaction_mean = agg(interaction)["mean"]
+    interaction_sd = agg(interaction)["sd_sample_ddof1"]
+    n_positive = sum(1 for v in interaction.values() if v > 0)
+    n_negative = sum(1 for v in interaction.values() if v < 0)
+
+    if interaction_mean > 0 and abs(interaction_mean) > 0.5 * interaction_sd:
+        stability = "super_additive_leaning"
+    elif interaction_mean < 0 and abs(interaction_mean) > 0.5 * interaction_sd:
+        stability = "sub_additive_leaning"
+    else:
+        stability = "approximately_additive_or_unresolved"
+
+    out["aggregate"] = {
+        "m0_macro_f1": agg(m0_f1),
+        "ma_macro_f1": agg(ma_f1),
+        "mb_macro_f1": agg(mb_f1),
+        "mab_macro_f1": agg(mab_f1),
+        "benefit_A": agg(benefit_a),
+        "benefit_B": agg(benefit_b),
+        "benefit_AB": agg(benefit_ab),
+        "interaction_term": {**agg(interaction), "n_seeds_positive": n_positive, "n_seeds_negative": n_negative, "n_seeds_total": len(SEEDS)},
+        "stability_classification": stability,
+    }
+
+    OUT_PATH.write_text(json.dumps(out, indent=2))
+    print("\nWrote", OUT_PATH)
+    print("Interaction term:", json.dumps(out["aggregate"]["interaction_term"], indent=2))
+    print("Stability:", stability)
+
+
+if __name__ == "__main__":
+    main()
