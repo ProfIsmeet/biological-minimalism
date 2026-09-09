@@ -1,0 +1,156 @@
+{
+  "purpose": "Strict expected-membership manifest for the 15 new Sleep V2 checkpoints (5 C + 10 interaction). Archive tooling should fail on missing/duplicate/mismatched/unexpected membership.",
+  "expected_count": 15,
+  "expected_members": [
+    {
+      "filename": "sleep_edf_model_c_shuffled_eog_seedfix_v2_seed42.pt",
+      "experiment": "sleep_edf_shuffled_eog_control_seedfix_v2",
+      "arm": "C",
+      "seed": 42,
+      "sha256": "aaec8c3afda33b5e4bacf7f64e9af4780a9584cb42a2287620a5702173c64240",
+      "size_bytes": 42596,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_shuffled_eog_control_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_model_c_shuffled_eog_seedfix_v2_seed43.pt",
+      "experiment": "sleep_edf_shuffled_eog_control_seedfix_v2",
+      "arm": "C",
+      "seed": 43,
+      "sha256": "3aa5d6d32e0b10ec037a2642de11b84d831c79b6afe305390631074688f365fa",
+      "size_bytes": 42596,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_shuffled_eog_control_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_model_c_shuffled_eog_seedfix_v2_seed44.pt",
+      "experiment": "sleep_edf_shuffled_eog_control_seedfix_v2",
+      "arm": "C",
+      "seed": 44,
+      "sha256": "3c5c6e45872c468b92dd96a42c0f9608de02fad37f98e626cd3bd8af370ab956",
+      "size_bytes": 42596,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_shuffled_eog_control_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_model_c_shuffled_eog_seedfix_v2_seed45.pt",
+      "experiment": "sleep_edf_shuffled_eog_control_seedfix_v2",
+      "arm": "C",
+      "seed": 45,
+      "sha256": "0795f3b175e256e72b9f54c51438f324267f8e51dfbd11a22b960b7ac1a04005",
+      "size_bytes": 42596,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_shuffled_eog_control_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_model_c_shuffled_eog_seedfix_v2_seed46.pt",
+      "experiment": "sleep_edf_shuffled_eog_control_seedfix_v2",
+      "arm": "C",
+      "seed": 46,
+      "sha256": "d45bab50361e83ec9ce9ea3fc2fedaf50a9e60214a8acef42788592a6fc76eb0",
+      "size_bytes": 42596,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_shuffled_eog_control_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_B_eeg_plus_resp_seedfix_v2_seed42.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_B",
+      "seed": 42,
+      "sha256": "98baf9ec9b5b3217294441acea6d24fb25fcf88c26e09426727c9afda573ce81",
+      "size_bytes": 42967,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_B_eeg_plus_resp_seedfix_v2_seed43.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_B",
+      "seed": 43,
+      "sha256": "2325360c7e8725100e7414d971d3273b115908a4d63ae08903b7a70bade1b2f6",
+      "size_bytes": 42967,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_B_eeg_plus_resp_seedfix_v2_seed44.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_B",
+      "seed": 44,
+      "sha256": "0adb5816e9d4fa51b5147d6bc160775b1f6a813b8ab7e3f38a5b0973c6660063",
+      "size_bytes": 42967,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_B_eeg_plus_resp_seedfix_v2_seed45.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_B",
+      "seed": 45,
+      "sha256": "daac81546119f454483d3d99aa74bc8317d23c0d7eb55407f03f774f5f8901f3",
+      "size_bytes": 42967,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_B_eeg_plus_resp_seedfix_v2_seed46.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_B",
+      "seed": 46,
+      "sha256": "2164945ec773b7a6949456d3dcd004227558ea8ae92afc915fdd752eb935a3f9",
+      "size_bytes": 42967,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seedfix_v2_seed42.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_AB",
+      "seed": 42,
+      "sha256": "f93a33b6bcbfbf536193737a960c2a896d138b19ebec36faef326be0b443a56e",
+      "size_bytes": 43941,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seedfix_v2_seed43.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_AB",
+      "seed": 43,
+      "sha256": "546db4c20d6b2b793a82bba04b730e44478f2010f7080097b2be38378eb6c751",
+      "size_bytes": 43941,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seedfix_v2_seed44.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_AB",
+      "seed": 44,
+      "sha256": "9f0cb34d15f04bc284e030e18e0d6001977538e48df054c037894826e1f93d24",
+      "size_bytes": 43941,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seedfix_v2_seed45.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_AB",
+      "seed": 45,
+      "sha256": "07107f7f07db744940e04ef6bbcbfe5e788391a82907381dc2a57295dcfcbeb7",
+      "size_bytes": 43941,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    },
+    {
+      "filename": "sleep_edf_interaction_M_AB_eeg_plus_eog_plus_resp_seedfix_v2_seed46.pt",
+      "experiment": "sleep_edf_interaction_resp_seedfix_v2",
+      "arm": "M_AB",
+      "seed": 46,
+      "sha256": "7eddfb43baa18f91b2a12f5965ce00b2bc6e895a8831210f5cab4b7ae42851ca",
+      "size_bytes": 43941,
+      "protocol_version": "V2_corrected",
+      "source_commit_script": "ml/train_sleep_edf_interaction_resp_seedfix_v2.py"
+    }
+  ]
+}
