@@ -90,6 +90,13 @@ function ProjectionCard({ projection }: { projection: ManifestEntryDisplayProjec
         </div>
       </div>
       <p className="mt-2 font-mono text-[12px] text-slate-300">{projection.benefit_display}</p>
+      {/* Two separate, semantically distinct lines — never merged into one
+          ambiguous "n", and training seeds are never implied to be
+          biological replication (Phase-4 close-out). */}
+      <p className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-[11px] text-slate-500">
+        <span>{projection.biological_subject_n_display}</span>
+        <span>{projection.optimization_seed_n_display}</span>
+      </p>
       <SensitivitySection label="Subject sensitivity" block={projection.subject_sensitivity} />
       {projection.class_sensitivity ? (
         <SensitivitySection label="Class sensitivity" block={projection.class_sensitivity} />
