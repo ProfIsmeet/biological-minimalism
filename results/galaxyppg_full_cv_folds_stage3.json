@@ -1,0 +1,42 @@
+{
+  "purpose": "Full 6-fold grouped CV for GalaxyPPG, frozen before any full-CV training (single-fold diagnostic from the prior sprint already exists and used the identical seed-42 shuffle over the same 24 participants).",
+  "n_folds": 6,
+  "folds": [
+    [
+      "P06",
+      "P16",
+      "P19",
+      "P24"
+    ],
+    [
+      "P11",
+      "P12",
+      "P14",
+      "P18"
+    ],
+    [
+      "P02",
+      "P13",
+      "P15",
+      "P17"
+    ],
+    [
+      "P03",
+      "P07",
+      "P10",
+      "P22"
+    ],
+    [
+      "P05",
+      "P08",
+      "P20",
+      "P23"
+    ],
+    [
+      "P01",
+      "P04",
+      "P09",
+      "P21"
+    ]
+  ]
+}
