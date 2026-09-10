@@ -11,6 +11,7 @@ import type {
   ResearchExperiment,
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
+  Stage4EngineeringReadiness,
 } from "@/lib/types";
 
 interface ResearchState {
@@ -26,6 +27,8 @@ interface ResearchState {
   paretoReadinessError: string | null;
   engineeringReadiness: EngineeringReadiness | null;
   engineeringReadinessError: string | null;
+  stage4EngineeringReadiness: Stage4EngineeringReadiness | null;
+  stage4EngineeringReadinessError: string | null;
   // Stored as the WHOLE envelope (not decomposed into data/error) because its
   // 3-way status (PENDING_SCIENCE_HANDOFF / INGESTION_FAILED / INGESTED) is
   // not a simple success/failure — PENDING is an honest, expected state, not
@@ -52,6 +55,8 @@ export const useResearchStore = create<ResearchState>((set) => ({
   paretoReadinessError: null,
   engineeringReadiness: null,
   engineeringReadinessError: null,
+  stage4EngineeringReadiness: null,
+  stage4EngineeringReadinessError: null,
   futureScienceManifest: null,
   experiments: {},
   selectedExperimentId: null,
@@ -96,6 +101,7 @@ export const useResearchStore = create<ResearchState>((set) => ({
         topologyEnvelope,
         readinessEnvelope,
         engineeringEnvelope,
+        stage4EngineeringEnvelope,
         futureScienceEnvelope,
       ] = await Promise.all([
         optional(api.getOperationalCosts()),
@@ -103,6 +109,7 @@ export const useResearchStore = create<ResearchState>((set) => ({
         optional(api.getHardwareTopology()),
         optional(api.getParetoReadiness()),
         optional(api.getEngineeringReadiness()),
+        optional(api.getStage4EngineeringReadiness()),
         optional(api.getFutureScienceManifest()),
       ]);
       const unavailable = [
@@ -142,6 +149,12 @@ export const useResearchStore = create<ResearchState>((set) => ({
               ? engineeringEnvelope.value.error ?? "Engineering readiness unavailable."
               : null)
           : engineeringEnvelope.error,
+        stage4EngineeringReadiness: stage4EngineeringEnvelope.ok ? stage4EngineeringEnvelope.value.readiness : null,
+        stage4EngineeringReadinessError: stage4EngineeringEnvelope.ok
+          ? (stage4EngineeringEnvelope.value.availability === "unavailable"
+              ? stage4EngineeringEnvelope.value.error ?? "Stage 4 engineering readiness unavailable."
+              : null)
+          : stage4EngineeringEnvelope.error,
         // A transport/network failure is folded into the same envelope shape
         // as a content-level INGESTION_FAILED, rather than a bare null — the
         // panel always has an honest status string to render, never silence.

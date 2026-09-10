@@ -21,6 +21,7 @@ import { DecisionInputsView } from "@/components/research/DecisionInputsView";
 import { EngineeringReadinessView } from "@/components/research/EngineeringReadinessView";
 import { FutureScienceHandoffCard } from "@/components/research/FutureScienceHandoffCard";
 import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
+import { Stage4EngineeringReadinessCard } from "@/components/research/Stage4EngineeringReadinessCard";
 import type {
   ResearchBreakdown,
   ResearchBreakdownEntry,
@@ -544,6 +545,8 @@ export function ResearchMode() {
     paretoReadinessError,
     engineeringReadiness,
     engineeringReadinessError,
+    stage4EngineeringReadiness,
+    stage4EngineeringReadinessError,
     futureScienceManifest,
     experiments,
     selectedExperimentId,
@@ -630,6 +633,8 @@ export function ResearchMode() {
 
       {engineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Engineering readiness unavailable: {engineeringReadinessError}</p> : null}
       {engineeringReadiness ? <EngineeringReadinessView readiness={engineeringReadiness} /> : null}
+      {stage4EngineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 4 engineering readiness unavailable: {stage4EngineeringReadinessError}</p> : null}
+      {stage4EngineeringReadiness ? <Stage4EngineeringReadinessCard readiness={stage4EngineeringReadiness} /> : null}
       {experimentList.length ? <MarginalValueTable experiments={experimentList} /> : null}
       {hardwareTopologyError || paretoReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Hardware architecture unavailable: {hardwareTopologyError ?? paretoReadinessError}</p> : null}
       {hardwareTopology && paretoReadiness && operationalCostCatalog ? <HardwareArchitectureView topology={hardwareTopology} catalog={operationalCostCatalog} readiness={paretoReadiness} /> : null}

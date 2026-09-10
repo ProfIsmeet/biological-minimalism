@@ -18,6 +18,7 @@ import type {
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
   SensorHealthSnapshot,
+  Stage4EngineeringReadinessEnvelope,
   SensorName,
   SensorStatus,
   SimulationStateResponse,
@@ -120,4 +121,7 @@ export const api = {
 
   getFutureScienceManifest: () =>
     request<FutureScienceManifestEnvelope>("/research/future-science-manifest"),
+
+  getStage4EngineeringReadiness: () =>
+    request<Stage4EngineeringReadinessEnvelope>("/research/stage4-engineering-readiness"),
 };

@@ -932,6 +932,79 @@ export interface EngineeringReadinessEnvelope {
   error: string | null;
 }
 
+// --- Stage 4: power/data-rate/mass/BOM evidence advancement ----------------
+// evidence_class distinguishes a frozen Day-11 datasheet value from a new
+// Stage-4 engineering assumption; a consumer must never render the two as
+// visually/semantically identical (governing prompt §34/§35).
+export type Stage4EvidenceClass =
+  | "DATASHEET_DIRECT"
+  | "DATASHEET_CALCULATED"
+  | "ENGINEERING_ASSUMPTION"
+  | "ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE"
+  | "ASSUMED_USE_SCHEDULE";
+
+export interface Stage4EvidenceQuantity extends EngineeringQuantity {
+  evidence_class: Stage4EvidenceClass;
+}
+
+export interface Stage4DutyScheduleEntry {
+  module: string;
+  state: string;
+  duty_fraction: number;
+  note: string;
+}
+
+export interface Stage4SystemPower {
+  status: string;
+  reason: string;
+  base_topology_load_side_mw: Stage4EvidenceQuantity;
+  base_topology_battery_side_mw: Stage4EvidenceQuantity;
+  contributors_mw: Record<string, number>;
+  excluded_from_base_total_mw: Record<string, number>;
+  duty_schedule: Stage4DutyScheduleEntry[];
+}
+
+export interface Stage4SystemDataRate {
+  system_raw_total_bps: Stage4EvidenceQuantity;
+  system_transmitted_bps: Stage4EvidenceQuantity;
+  processed_data_rate_status: string;
+  excluded_from_base_total_bps: Record<string, number>;
+}
+
+export interface Stage4SystemMass {
+  status: string;
+  tier_achieved: string;
+  system_mass_base_topology_excl_leg_g: Stage4EvidenceQuantity;
+  eog_incremental_mass_g: Stage4EvidenceQuantity;
+}
+
+export interface Stage4BomAdvancement {
+  not_a_final_bom: boolean;
+  final: boolean;
+  items_advanced: Record<string, string>[];
+  still_missing: string[];
+}
+
+export interface Stage4EngineeringReadiness {
+  artifact_id: string;
+  sprint: string;
+  statement: string;
+  prohibited: string[];
+  system_average_power: Stage4SystemPower;
+  system_data_rate: Stage4SystemDataRate;
+  system_mass: Stage4SystemMass;
+  bom: Stage4BomAdvancement;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  source_artifacts: string[];
+}
+
+export interface Stage4EngineeringReadinessEnvelope {
+  availability: ResearchAvailability;
+  readiness: Stage4EngineeringReadiness | null;
+  error: string | null;
+}
+
 // --- Phase 2/3: future-science ingestion contract (Stage 2-4 handoff) ------
 // No manifest satisfying this contract exists yet (Ismet's science-completion
 // sprint is in progress). A consumer must ONLY read `display_projections` —
