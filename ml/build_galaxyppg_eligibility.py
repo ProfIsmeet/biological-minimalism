@@ -12,11 +12,21 @@ import json
 import sys
 from pathlib import Path
 
+import numpy as np
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from ml.datasets.galaxyppg import detect_r_peaks  # noqa: E402
+
 DATA_DIR = REPO_ROOT / "datasets" / "galaxyppg" / "raw" / "extracted" / "Dataset"
 OUT_PATH = REPO_ROOT / "results" / "galaxyppg_eligibility_stage2.json"
+MIN_R_PEAKS_PER_MINUTE = 40.0  # real data-integrity gate (Stage 3 addition): a
+# resting/active adult HR is physiologically >=40 bpm; anything far below this
+# indicates the reference ECG channel itself is unusable (electrode contact
+# failure / saturation), not a genuine low heart rate - found this sprint via
+# real full-cohort evaluation (P03: 0.08 peaks/min, P07: 0.83 peaks/min, vs.
+# ~85-86 peaks/min for every other real subject checked)
 
 
 def first_last_timestamp(csv_path: Path, col: str) -> tuple[float, float] | None:
@@ -73,11 +83,28 @@ def main() -> None:
 
         required_ok = bvp_present and acc_present and ecg_present
         plausible_sync = entry.get("overlap_duration_s", 0) > 300  # at least 5 min real overlap
-        entry["eligible"] = bool(required_ok and plausible_sync)
+
+        r_peaks_per_min = None
+        ecg_quality_ok = True
+        if required_ok:
+            with open(ecg_path, newline="", encoding="utf-8") as f:
+                rows = list(csv.DictReader(f))
+            ecg_val = np.array([float(r["ecg"]) for r in rows], dtype=np.float32)
+            UTC9 = 9 * 3600
+            ecg_t = np.array([float(r["phoneTimestamp"]) for r in rows], dtype=np.float64) / 1e3 - UTC9
+            peaks = detect_r_peaks(ecg_val, ecg_t)
+            duration_min = (ecg_t[-1] - ecg_t[0]) / 60.0
+            r_peaks_per_min = len(peaks) / duration_min if duration_min > 0 else 0.0
+            ecg_quality_ok = r_peaks_per_min >= MIN_R_PEAKS_PER_MINUTE
+            entry["r_peaks_per_min"] = r_peaks_per_min
+
+        entry["eligible"] = bool(required_ok and plausible_sync and ecg_quality_ok)
         if not required_ok:
             entry["exclusion_reason"] = "missing required file(s)"
         elif not plausible_sync:
             entry["exclusion_reason"] = f"implausible/insufficient overlap after UTC+9 correction ({entry.get('overlap_duration_s', 0):.1f}s)"
+        elif not ecg_quality_ok:
+            entry["exclusion_reason"] = f"reference ECG quality too poor for R-peak detection ({r_peaks_per_min:.2f} peaks/min, below the {MIN_R_PEAKS_PER_MINUTE} peaks/min data-integrity threshold - real electrode contact/saturation issue, not a low heart rate)"
         else:
             entry["exclusion_reason"] = None
         table.append(entry)

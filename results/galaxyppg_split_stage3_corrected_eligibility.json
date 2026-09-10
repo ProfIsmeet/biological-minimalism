@@ -1,0 +1,28 @@
+{
+  "purpose": "Corrected single-fold split over the REAL 18-subject eligible cohort (after fixing the reference-ECG-quality BLOCKER this sprint - see docs/GALAXYPPG_REFERENCE_SIGNAL_QUALITY_BLOCKER.md). Neutral seed-42 shuffle, same convention as all other frozen splits this project.",
+  "n_eligible": 18,
+  "train": [
+    "P04",
+    "P08",
+    "P09",
+    "P10",
+    "P11",
+    "P13",
+    "P14",
+    "P16",
+    "P17",
+    "P18",
+    "P21",
+    "P23"
+  ],
+  "val": [
+    "P05",
+    "P20",
+    "P24"
+  ],
+  "test": [
+    "P02",
+    "P06",
+    "P12"
+  ]
+}
