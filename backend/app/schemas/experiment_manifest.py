@@ -3,9 +3,7 @@
 This schema describes the shape a future Ismet science-completion manifest
 must have to be ingested safely. It does NOT contain any real experiment
 results — no manifest satisfying this schema exists in `results/` yet. See
-`app.research.future_science_ingestion` for the fail-closed validator and
-`docs/CLAUDE_TO_ISMET_STAGE2_4_SCIENCE_TRANSFER_HANDOFF.md` / governing
-prompt §23-34 for the design rationale.
+`app.research.future_science_ingestion` for the fail-closed validator.
 
 Reuses existing project enums (`MetricKind`, `MetricDirectionality`,
 `SensitivityStatus`) rather than inventing a parallel vocabulary.
