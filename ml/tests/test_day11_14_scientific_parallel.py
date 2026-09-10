@@ -238,7 +238,10 @@ def test_freeze_manifest_hashes_are_valid_and_current():
     manifest = json.loads(FREEZE_MANIFEST.read_text())
     for e in manifest["entries"][:5]:  # spot-check first 5 to keep this fast
         path = REPO_ROOT / e["path"]
-        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        # Section 28 remediation: hashes are computed on line-ending-
+        # normalized content (CRLF -> LF) so this check is stable across
+        # Windows/Linux/macOS checkouts - see ml/build_scientific_freeze_day14.py.
+        actual = hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
         assert actual == e["sha256"], f"{e['path']} hash stale - re-run ml/build_scientific_freeze_day14.py"
 
 
