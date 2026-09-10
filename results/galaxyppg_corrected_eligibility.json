@@ -1,0 +1,18 @@
+{
+  "purpose": "Full machine-readable eligibility record for all 24 GalaxyPPG participants, including the real reference-ECG-quality gate added this sprint (docs/GALAXYPPG_REFERENCE_SIGNAL_QUALITY_BLOCKER.md). Derived from results/galaxyppg_eligibility_stage2.json, restated here as the authoritative Stage 3 corrected-eligibility artifact.",
+  "gate": "bvp_present AND acc_present AND ecg_present AND overlap_duration_s > 300 AND r_peaks_per_min >= 40.0",
+  "threshold_justification_doc": "docs/GALAXYPPG_REFERENCE_QUALITY_THRESHOLD_JUSTIFICATION.md",
+  "n_total": 24,
+  "n_eligible": 18,
+  "excluded": [
+    {"participant_id": "P01", "r_peaks_per_min": 37.08, "reason": "reference ECG quality too poor for R-peak detection"},
+    {"participant_id": "P03", "r_peaks_per_min": 0.08, "reason": "reference ECG quality too poor for R-peak detection"},
+    {"participant_id": "P07", "r_peaks_per_min": 0.83, "reason": "reference ECG quality too poor for R-peak detection"},
+    {"participant_id": "P15", "r_peaks_per_min": 6.77, "reason": "reference ECG quality too poor for R-peak detection"},
+    {"participant_id": "P19", "r_peaks_per_min": 1.42, "reason": "reference ECG quality too poor for R-peak detection"},
+    {"participant_id": "P22", "r_peaks_per_min": 0.47, "reason": "reference ECG quality too poor for R-peak detection"}
+  ],
+  "eligible": ["P02", "P04", "P05", "P06", "P08", "P09", "P10", "P11", "P12", "P13", "P14", "P16", "P17", "P18", "P20", "P21", "P23", "P24"],
+  "no_performance_outcome_used": true,
+  "source_full_table": "results/galaxyppg_eligibility_stage2.json"
+}

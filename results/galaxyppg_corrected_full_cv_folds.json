@@ -1,0 +1,39 @@
+{
+  "purpose": "GALAXYPPG_CORRECTED_ELIGIBILITY_CV_PROTOCOL_V2 - full 6-fold grouped CV over the real 18-subject eligible cohort (after fixing the reference-ECG-quality BLOCKER). Preserves the original frozen protocol intent (6-fold grouped CV, every eligible subject held out exactly once) with the minimum necessary deviation: fold size reduced from 4 to 3 to evenly cover 18 (not 24) real eligible subjects. Same neutral random.Random(42) shuffle convention used for every other frozen split in this project.",
+  "n_folds": 6,
+  "n_eligible": 18,
+  "folds": [
+    [
+      "P08",
+      "P17",
+      "P18"
+    ],
+    [
+      "P09",
+      "P11",
+      "P13"
+    ],
+    [
+      "P10",
+      "P14",
+      "P23"
+    ],
+    [
+      "P04",
+      "P16",
+      "P21"
+    ],
+    [
+      "P05",
+      "P20",
+      "P24"
+    ],
+    [
+      "P02",
+      "P06",
+      "P12"
+    ]
+  ],
+  "fold5_reuse_note": "Fold 5 (test=P02/P06/P12) is IDENTICAL train/val/test membership to the already-completed corrected single-fold result (results/galaxyppg_hr_corrected_eligibility_stage3.json) - independently re-verified this sprint by re-deriving the fold assignment from scratch and confirming exact set equality. Reused, not retrained.",
+  "deviation_from_original_24_subject_design": "Original 6-fold design used 4 subjects/fold over 24 subjects. This is the minimum necessary correction given 6 subjects were found ineligible for a real data-integrity reason unrelated to any model outcome - fold count (6) preserved, fold size reduced to 3 to keep folds evenly sized over the real 18-subject cohort."
+}
