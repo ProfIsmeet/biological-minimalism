@@ -43,6 +43,29 @@ ECG/pleth recording in the prior sprint). Metric: MAE (mmHg), LOSO (n=12).
 the same whether the EIS spectrum is correctly aligned or temporally
 deranged; **6/12 favor B over C**, essentially a coin flip).
 
+## Per-subject sensitivity (real, disclosed in full)
+
+| Subject (0-based idx) | A−B | C−B |
+|---|---|---|
+| 4 | **+43.31** | +36.73 |
+| 5 | −0.70 | +0.09 |
+| 6 | −2.34 | +2.37 |
+| 7 | **−36.46** | −25.95 |
+| 8 | −8.97 | −2.25 |
+| 9 | −1.36 | −1.20 |
+| 10 | +1.92 | +1.36 |
+| 11 | −14.41 | −10.89 |
+| 12 | −1.72 | +0.10 |
+| 13 | +0.20 | +3.27 |
+| 14 | −3.12 | −0.70 |
+| 15 | −3.20 | −3.35 |
+
+**Subjects 4 and 7 are extreme, opposite-direction outliers** (+43.3 and
+−36.5 respectively) — roughly canceling in the aggregate mean, which masks
+a genuinely bimodal, highly heterogeneous population rather than a
+uniformly mild negative effect. This is disclosed explicitly, not averaged
+away.
+
 ## Interpretation — real, clear negative result
 
 Thoracic EIS did not add information beyond ECG+pleth for LBNP-stage
