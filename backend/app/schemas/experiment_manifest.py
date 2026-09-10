@@ -24,7 +24,12 @@ class StrictModel(BaseModel):
 
 class ExperimentCompletionState(StrEnum):
     """How much of a declared experiment actually exists as frozen evidence.
-    Deliberately NOT a boolean complete/not-complete (governing prompt §25)."""
+    Deliberately NOT a boolean complete/not-complete (governing prompt §25).
+
+    This is the project's closed status-vocabulary allowlist (Codex parent-audit MEDIUM finding: a source artifact must never self-promote to an arbitrary strong label like "CANONICAL_UNCHANGED" or "SCIENCE_COMPLETE").
+    Because this is a Pydantic StrEnum, any manifest value not listed here
+    fails schema validation (UNKNOWN_STATUS) rather than being accepted —
+    the allowlist is enforced structurally, not just by convention."""
 
     COMPLETE = "COMPLETE"
     BOUNDED_DIAGNOSTIC = "BOUNDED_DIAGNOSTIC"
@@ -32,6 +37,38 @@ class ExperimentCompletionState(StrEnum):
     PENDING = "PENDING"
     HISTORICAL = "HISTORICAL"
     SUPERSEDED = "SUPERSEDED"
+    NONCANONICAL = "NONCANONICAL"
+    REPORTED_COMPLETE = "REPORTED_COMPLETE"
+    VERIFIED_COMPLETE = "VERIFIED_COMPLETE"
+    ACCEPTED_FOR_SCOPE = "ACCEPTED_FOR_SCOPE"
+    # Codex parent-audit finding H-02: an old comparison that used
+    # unequal-capacity models (e.g. the historical ~23% PPG-only -> PPG+IMU
+    # figure) is real evidence that once existed, but must never be
+    # presented as governing marginal-value evidence for any target.
+    HISTORICAL_CAPACITY_CONFOUNDED = "HISTORICAL_CAPACITY_CONFOUNDED"
+
+
+class RawDataProvenanceLevel(StrEnum):
+    """Codex parent-audit MEDIUM finding (GalaxyPPG/LBNP): official dataset
+    access/metadata being verified is NOT the same claim as the local raw
+    files having been hash/structure verified. A prose report asserting
+    verification must never be rendered as ACTUAL_FILE_VERIFIED merely
+    because the report said so."""
+
+    OFFICIAL_METADATA_VERIFIED = "OFFICIAL_METADATA_VERIFIED"
+    LOCAL_RAW_REPORTED_ONLY = "LOCAL_RAW_REPORTED_ONLY"
+    ACTUAL_FILE_VERIFIED = "ACTUAL_FILE_VERIFIED"
+    TRAINING_PENDING = "TRAINING_PENDING"
+
+
+class EnvironmentProvenanceStatus(StrEnum):
+    """Codex parent-audit MEDIUM finding: a later result must not silently
+    inherit an old (e.g. Day-8) environment manifest's reproducibility
+    claim. Defaults fail-closed to INCOMPLETE — a manifest entry must
+    explicitly declare COMPLETE, it is never assumed."""
+
+    COMPLETE = "COMPLETE"
+    INCOMPLETE = "INCOMPLETE"
 
 
 class ReplicationClass(StrEnum):
@@ -82,6 +119,22 @@ class ProvenanceRecord(StrictModel):
     protocol_version: str
     checkpoint_manifest_path: str | None = None
     subject_split_manifest_path: str | None = None
+    # Codex parent-audit MEDIUM finding (HMC split provenance): the
+    # manifest's OWN top-level claim about which split artifact was used.
+    # Must be cross-checked against subject_split_manifest_path (the
+    # embedded/actual pointer) — see
+    # app.research.future_science_ingestion.assert_split_provenance_consistent.
+    # A valid embedded split does not excuse a disagreeing declared source.
+    declared_split_source: str | None = None
+    raw_data_provenance_level: RawDataProvenanceLevel | None = None
+    # Fail-closed default: environment reproducibility is INCOMPLETE unless
+    # this entry's OWN provenance explicitly says otherwise. Never silently
+    # inherits an older result's environment record (Codex MEDIUM finding).
+    environment_provenance_status: EnvironmentProvenanceStatus = EnvironmentProvenanceStatus.INCOMPLETE
+    # Known limitations that must survive into ingestion/display rather than
+    # being silently dropped (Codex MEDIUM finding: cache provenance — e.g.
+    # "relies on weak filename-only cache binding").
+    provenance_warnings: list[str] = Field(default_factory=list)
 
 
 class CheckpointManifestRef(StrictModel):
@@ -176,6 +229,12 @@ class ManifestEntryDisplayProjection(StrictModel):
     class_sensitivity: SensitivityBlock | None
     limitations: list[str]
     provenance_source: str
+    # Codex parent-audit MEDIUM findings: never silently inherit an old
+    # environment record, and never hide a known provenance limitation
+    # (e.g. weak filename-only cache binding) from the consumer.
+    environment_provenance_status: EnvironmentProvenanceStatus
+    provenance_warnings: list[str]
+    raw_data_provenance_level: RawDataProvenanceLevel | None
 
 
 class FutureScienceManifestEnvelope(StrictModel):

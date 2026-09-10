@@ -24,6 +24,7 @@ from pydantic import ValidationError
 from app.research.catalog import REPOSITORY_ROOT
 from app.schemas.experiment_manifest import (
     SUPPORTED_MANIFEST_SCHEMA_VERSIONS,
+    EnvironmentProvenanceStatus,
     ExperimentCompletionState,
     ExperimentManifestEntry,
     ExperimentManifestFile,
@@ -31,6 +32,7 @@ from app.schemas.experiment_manifest import (
     ManifestEntryDisplayProjection,
     ManifestMetric,
     ManifestResultValue,
+    RawDataProvenanceLevel,
     ReplicationClass,
 )
 from app.schemas.research import MetricDirectionality, ResearchAvailability
@@ -65,6 +67,11 @@ _COMPLETION_STATE_LABELS: dict[ExperimentCompletionState, str] = {
     ExperimentCompletionState.PENDING: "Pending (not yet run)",
     ExperimentCompletionState.HISTORICAL: "Historical (superseded protocol, preserved for continuity)",
     ExperimentCompletionState.SUPERSEDED: "Superseded (do not cite as current)",
+    ExperimentCompletionState.NONCANONICAL: "Noncanonical (supportive reproduction only, not accepted evidence)",
+    ExperimentCompletionState.REPORTED_COMPLETE: "Reported complete (self-reported, not independently verified)",
+    ExperimentCompletionState.VERIFIED_COMPLETE: "Verified complete (independently verified)",
+    ExperimentCompletionState.ACCEPTED_FOR_SCOPE: "Accepted for project scope (not the strongest possible evidence tier)",
+    ExperimentCompletionState.HISTORICAL_CAPACITY_CONFOUNDED: "Historical, capacity-confounded (unequal-capacity comparison — not governing evidence)",
 }
 
 # A result must never be auto-labeled EXTERNAL_REPLICATION merely for being a
@@ -85,6 +92,11 @@ _INCOMPLETE_EVIDENCE_STATES = frozenset({
     ExperimentCompletionState.BLOCKED_BY_DATA_ACCESS,
     ExperimentCompletionState.PENDING,
     ExperimentCompletionState.SUPERSEDED,
+    # Codex parent-audit H-02/status-vocabulary findings: a noncanonical
+    # supportive reproduction and a capacity-confounded historical result
+    # can never support a paper/jury claim, same as blocked/pending/superseded.
+    ExperimentCompletionState.NONCANONICAL,
+    ExperimentCompletionState.HISTORICAL_CAPACITY_CONFOUNDED,
 })
 
 
@@ -102,6 +114,10 @@ class ManifestErrorCode(StrEnum):
     NOT_PROMOTABLE_TO_HEADLINE = "NOT_PROMOTABLE_TO_HEADLINE"
     CLAIM_EVIDENCE_INSUFFICIENT = "CLAIM_EVIDENCE_INSUFFICIENT"
     SUSPICIOUS_REPLICATION_CLAIM = "SUSPICIOUS_REPLICATION_CLAIM"
+    # Codex parent-science-audit delta-hardening findings (H-02, MEDIUM):
+    CAPACITY_CONFOUNDED_CANNOT_GOVERN = "CAPACITY_CONFOUNDED_CANNOT_GOVERN"
+    PROVENANCE_MISMATCH = "PROVENANCE_MISMATCH"
+    RAW_PROVENANCE_OVERSTATED = "RAW_PROVENANCE_OVERSTATED"
 
 
 class ManifestValidationError(Exception):
@@ -258,6 +274,58 @@ def assert_replication_claim_is_plausible(
         )
 
 
+def assert_not_governing_marginal_evidence(entry: ExperimentManifestEntry) -> None:
+    """Codex parent-audit finding H-02: an old comparison that used unequal-
+    capacity models (e.g. the historical ~23% PPG-only -> PPG+IMU figure in
+    docs/FURKAN_PAPER_HANDOFF_DAY7.md/FURKAN_PAPER_HANDOFF_CANONICAL_DAY9.md,
+    now superseded by the capacity-controlled A_cap->B comparison in
+    results/ppg_dalia_capacity_control.json) must never be presented as
+    governing marginal-value evidence for any target, no matter how it is
+    labeled elsewhere. This does not invent a replacement number — it only
+    refuses to let a HISTORICAL_CAPACITY_CONFOUNDED entry govern."""
+    if entry.completion_state == ExperimentCompletionState.HISTORICAL_CAPACITY_CONFOUNDED:
+        raise ManifestValidationError(
+            ManifestErrorCode.CAPACITY_CONFOUNDED_CANNOT_GOVERN,
+            f"{entry.experiment_id}: completion_state=HISTORICAL_CAPACITY_CONFOUNDED "
+            f"used an unequal-capacity comparison and cannot be presented as governing "
+            f"marginal-value evidence for any target. The governing comparison (once "
+            f"integrated) is the capacity-controlled artifact, never this one.",
+        )
+
+
+def assert_split_provenance_consistent(entry: ExperimentManifestEntry) -> None:
+    """Codex parent-audit MEDIUM finding (HMC split provenance): a bounded
+    result's top-level declared split source must AGREE with its embedded/
+    actual split manifest pointer, not merely each individually look valid.
+    A valid embedded split does not excuse a disagreeing declared source —
+    this fails closed rather than accepting either pointer alone as proof."""
+    declared = entry.provenance.declared_split_source
+    embedded = entry.provenance.subject_split_manifest_path
+    if declared is not None and embedded is not None and declared != embedded:
+        raise ManifestValidationError(
+            ManifestErrorCode.PROVENANCE_MISMATCH,
+            f"{entry.experiment_id}: provenance.declared_split_source={declared!r} "
+            f"disagrees with provenance.subject_split_manifest_path={embedded!r}. "
+            f"Both must point to the same split artifact before this entry can be "
+            f"treated as having consistent split provenance.",
+        )
+
+
+def assert_raw_provenance_not_overstated(entry: ExperimentManifestEntry, *, claimed_as_file_verified: bool) -> None:
+    """Codex parent-audit MEDIUM finding (GalaxyPPG/LBNP): official dataset
+    access/metadata being verified is NOT the same claim as the local raw
+    files having been hash/structure verified. A consumer must never render
+    OFFICIAL_METADATA_VERIFIED, LOCAL_RAW_REPORTED_ONLY, or TRAINING_PENDING
+    as though it were ACTUAL_FILE_VERIFIED."""
+    level = entry.provenance.raw_data_provenance_level
+    if claimed_as_file_verified and level is not None and level != RawDataProvenanceLevel.ACTUAL_FILE_VERIFIED:
+        raise ManifestValidationError(
+            ManifestErrorCode.RAW_PROVENANCE_OVERSTATED,
+            f"{entry.experiment_id}: raw_data_provenance_level={level.value} cannot be "
+            f"displayed or claimed as file-verified.",
+        )
+
+
 # Entries in these states have not actually been executed, so any present
 # sample-size count describes a plan, not an achieved result (Phase-4
 # close-out requirement: "BOUNDED_DIAGNOSTIC / BLOCKED / PENDING entries do
@@ -332,6 +400,9 @@ def project_for_display(entry: ExperimentManifestEntry) -> ManifestEntryDisplayP
         class_sensitivity=entry.class_sensitivity,
         limitations=list(entry.limitations),
         provenance_source=entry.provenance.source_artifact_path,
+        environment_provenance_status=entry.provenance.environment_provenance_status,
+        provenance_warnings=list(entry.provenance.provenance_warnings),
+        raw_data_provenance_level=entry.provenance.raw_data_provenance_level,
     )
 
 
@@ -342,6 +413,8 @@ def build_two_arm_comparison_narrative(entry_a: ExperimentManifestEntry, entry_b
     producing a narrative that implies a comparison that was never validated."""
     forbid_cross_target_comparison(entry_a, entry_b)
     forbid_mixed_protocol_derivation(entry_a, entry_b)
+    assert_not_governing_marginal_evidence(entry_a)
+    assert_not_governing_marginal_evidence(entry_b)
     proj_a = project_for_display(entry_a)
     proj_b = project_for_display(entry_b)
     return (

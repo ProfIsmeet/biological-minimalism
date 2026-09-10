@@ -90,9 +90,9 @@ export default function DigitalTwinPage() {
         <Panel title="Mission Day" subtitle="Day 1 · 5 · 12 · 30 milestones" icon={<Orbit size={16} />}>
           <DigitalTwinDaySlider day={day} onChange={setDay} />
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            As designed, the Digital Twin would learn a personalized baseline over the first 48–72 hours, then continuously track
-            deviation across four physiological systems as a mission progresses. This is a synthetic, untrained illustration — no
-            model is trained here, so the adaptation shown is simulated, not learned.
+            The Digital Twin is designed to support future personalized-baseline learning and deviation tracking across four
+            physiological systems when sufficient longitudinal subject-specific data are available. This is a synthetic, untrained
+            illustration — no model is trained here, so the adaptation shown is simulated, not learned.
           </p>
         </Panel>
       </div>

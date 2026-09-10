@@ -76,17 +76,39 @@
     "Final architecture selection"
   ],
   "test_state": {
-    "backend_full_suite": "pending final run in this session (last known: 224/224 passed post-port, before this artifact's tests were added)",
-    "new_backend_tests_this_sprint": "backend/tests/test_stage4_engineering_readiness.py — 7/7 passed standalone",
-    "new_ml_tests_this_sprint": "ml/tests/test_ppg_led_power.py — 9/9 passed standalone",
-    "frontend_typecheck_lint_build": "pending in this session"
+    "backend_full_suite": "269/269 passed (231 pre-Codex-hardening + 38 new)",
+    "ml_full_suite": "307 passed, 19 skipped (299 pre-Codex-hardening + 8 new; skips are legitimate dataset/checkpoint absence)",
+    "frontend_typecheck_lint_build": "clean (tsc --noEmit, eslint, next build all pass, 12/12 static pages)",
+    "claim_checker": "STRUCTURED_TRACEABILITY_AND_FORBIDDEN_PATTERN_CHECK_PASS"
   },
   "final_architecture_status": "UNRESOLVED",
   "formal_pareto_status": "FORMAL_PARETO_NOT_READY",
   "digital_twin_status": "CONCEPTUAL_SYNTHETIC_UNTRAINED_UNVALIDATED",
+  "parent_science_audit": {
+    "target_branch": "stage2-4-science-owner-completion",
+    "target_sha": "ab798815882ac0723491dc489de2375f8bf5b774",
+    "status": "CONDITIONAL_PASS",
+    "note": "Independent Codex audit is COMPLETE, not unresolved. Result: 0 BLOCKER, 2 HIGH, several MEDIUM. Full finding map, actions taken, and tests in docs/STAGE4_CODEX_PARENT_AUDIT_DELTA_HARDENING.md. Integration Owner did not remediate Science Owner artifacts (none of the flagged files exist on this branch); hardened Stage-4 consumer-side guards only."
+  },
+  "codex_delta_hardening": {
+    "doc": "docs/STAGE4_CODEX_PARENT_AUDIT_DELTA_HARDENING.md",
+    "h01_checkpoint_identity": "MITIGATED — resolve_checkpoint() never matches by filename; fails closed on hash/protocol/arm/seed mismatch, ambiguity, or noncanonical-only match",
+    "h02_ppg_capacity_confounded_headline": "MITIGATED — HISTORICAL_CAPACITY_CONFOUNDED state structurally excluded from headline eligibility and claim support",
+    "medium_findings_mitigated": [
+      "HMC split provenance consistency (declared vs embedded pointer)",
+      "HMC chronology/preregistered overclaim (claim-checker patterns)",
+      "GalaxyPPG/LBNP raw-data provenance level (OFFICIAL_METADATA_VERIFIED/LOCAL_RAW_REPORTED_ONLY/ACTUAL_FILE_VERIFIED/TRAINING_PENDING)",
+      "status-vocabulary allowlist (no self-promotion to CANONICAL_UNCHANGED/SCIENCE_COMPLETE)",
+      "raw-byte vs canonical-text hash-kind distinction",
+      "environment provenance (fail-closed INCOMPLETE default)",
+      "cache provenance warnings (never hidden)",
+      "stale architecture-handoff supersession"
+    ],
+    "digital_twin_wording_fixed": "frontend/src/app/digital-twin/page.tsx — removed present-tense 'would learn...then continuously track' + unsourced '48-72 hours' claim"
+  },
   "audit_dependencies": [
-    "Codex independent audit of stage2-4-science-owner-completion @ ab798815882ac0723491dc489de2375f8bf5b774 (parallel, unresolved)",
-    "Ismet Stage-3 science-completion handoff (parallel, in progress on next-science-expansion-sprint @ 58e901174cc88fc79e1bc1d5c9bb4d7aa729a372)",
+    "Ismet Stage-3 science-completion handoff (parallel, in progress on next-science-expansion-sprint @ 58e901174cc88fc79e1bc1d5c9bb4d7aa729a372) — NOT yet complete",
+    "Science branch/delta verification once Stage-3 handoff lands",
     "Future independent audit of any later integrated candidate (standing requirement)"
   ]
 }

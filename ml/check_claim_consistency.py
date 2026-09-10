@@ -75,6 +75,13 @@ FORBIDDEN = [
     (re.compile(r"\bzero\s+(added\s+)?burden\b", re.IGNORECASE), "'zero burden' claim (incremental burden is never zeroed)"),
     (re.compile(r"\bpareto[- ]?(optimized|optimised|optimal)\b", re.IGNORECASE), "'Pareto optimized/optimal' claim (FORMAL_PARETO_NOT_READY)"),
     (re.compile(r"\boptimal\s+sensor\s+(set|subset|architecture|selection)\b", re.IGNORECASE), "'optimal sensor set' claim (architecture is UNRESOLVED)"),
+    # Codex parent-science-audit delta-hardening (Stage 4). Each is exempt
+    # when the line carries a negation marker, so legitimate "must not
+    # claim...", "verified only..." caveat copy passes.
+    (re.compile(r"\bbefore\s+any\s+(HMC[- ]?)?file\s+(was\s+)?(opened|downloaded)", re.IGNORECASE), "HMC-style 'before any file was opened/downloaded' chronology overclaim (Codex verified only: before bounded training/evaluation)"),
+    (re.compile(r"\bHMC\b[^.\n]{0,60}\bpreregistered\b|\bpreregistered\b[^.\n]{0,60}\bHMC\b", re.IGNORECASE), "'preregistered' claim for HMC split (requires independent justification)"),
+    (re.compile(r"\b(CANONICAL_UNCHANGED|SCIENCE_COMPLETE)\b"), "self-promoted status label (not in the project's closed status-vocabulary allowlist)"),
+    (re.compile(r"\blearns?\b[^.\n]{0,40}\b(personalized|individual)\s+baseline\b", re.IGNORECASE), "present-tense 'Digital Twin learns a personalized baseline' claim (DIGITAL_TWIN=CONCEPTUAL_SYNTHETIC_UNTRAINED_UNVALIDATED)"),
 ]
 
 # Bare "robust" as an adjective claim (word boundary excludes "robustness").
