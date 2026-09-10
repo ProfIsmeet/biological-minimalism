@@ -1,0 +1,92 @@
+{
+  "artifact_id": "biological-minimalism-stage4-parallel-prep-manifest-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_PARALLEL_ENGINEERING_AND_CLEAN_INTEGRATION_PREPARATION",
+  "generated_role": "INTEGRATION_OWNER",
+  "branch": "stage4-engineering-integration-prep",
+  "clean_base": {
+    "branch": "day12-post-remediation-integration",
+    "sha": "52bd2eca1ef89b0460a4a3dd3648118176ad6610",
+    "verified_local_matches_remote": true
+  },
+  "contaminated_lineage_reviewed": {
+    "branch": "stage2-4-claude-integration-prep",
+    "head_sha": "98275b702bc98bfc209b1bd186239eefc0e72428",
+    "quarantine_sha": "d97b4d5ea82ab039c6d79e095b0c2833ca82bb71",
+    "quarantine_confirmed_absent_from_new_branch": true
+  },
+  "science_audit_target": {
+    "branch": "stage2-4-science-owner-completion",
+    "sha": "ab798815882ac0723491dc489de2375f8bf5b774",
+    "modified_this_sprint": false
+  },
+  "science_owner_active_branch": {
+    "branch": "next-science-expansion-sprint",
+    "sha": "58e901174cc88fc79e1bc1d5c9bb4d7aa729a372",
+    "read_for_integration_this_sprint": false
+  },
+  "ported_implementation_commits": [
+    {"original_sha": "8271d4f54c00ef64ab3644f4218cfdeff53a9de0", "classification": "SAFE_TO_PORT_AS_IS", "new_sha": "5e2e415"},
+    {"original_sha": "558a30be04de27066c7f545be38c365973d1bc26", "classification": "SAFE_TO_PORT_WITH_REPAIR", "new_sha": "abfca32"},
+    {"original_sha": "7e8e567643e2d05ce6bae7dcf994cdfbce717f9e", "classification": "SAFE_TO_PORT_WITH_REPAIR", "new_sha": "37b3b9e"},
+    {"original_sha": "c9c87e34368ae021b8c71ad5f5bd20ae7a56c5b9", "classification": "SAFE_TO_PORT_AS_IS", "new_sha": "fd89360"},
+    {"original_sha": "98275b702bc98bfc209b1bd186239eefc0e72428", "classification": "SAFE_TO_PORT_AS_IS", "new_sha": "246d547"}
+  ],
+  "clean_port_repair_commits": ["10df46c", "c3b4b31"],
+  "rejected_dependencies": [
+    {
+      "reference": "docs/CLAUDE_TO_ISMET_STAGE2_4_SCIENCE_TRANSFER_HANDOFF.md",
+      "found_in": "docs/CLAUDE_PHASE3_JURY_FRAMEWORK_STAGE2_4.md (Q4) and backend/app/schemas/experiment_manifest.py (module docstring)",
+      "resolution": "repointed to clean-base canonical artifacts results/sleep_scientific_remediation_day12.json + results/sleep_edf_secondary_holdout_evaluation.json; dangling docstring pointer removed"
+    },
+    {
+      "reference": "docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md",
+      "found_in": "docs/CLAUDE_PHASE3_PAPER_SKELETON_STAGE2_4.md (Methods)",
+      "resolution": "replaced with an honest pending statement; no substitute file fabricated"
+    }
+  ],
+  "engineering_readiness_dimensions": {
+    "system_average_power": {"before": "SYSTEM_AVERAGE_POWER_NOT_READY", "after": "PARTIAL_READY", "value": "7.236 mW battery-side, base topology"},
+    "system_mass": {"before": "SYSTEM_MASS_NOT_READY", "after": "PARTIAL", "value": "30.533 g, base topology excl. leg module, Tier2"},
+    "system_raw_data_rate": {"before": "48068 bps (contaminated by optional branch, HW-1)", "after": "19585.6 bps base topology + 28500 bps second_ppg_site reported separately", "status": "PARTIAL_READY"},
+    "system_transmitted_data_rate": {"before": "RADIO_DATA_RATE_NOT_READY", "after": "23502.72 bps (20% protocol-overhead assumption)", "status": "PARTIAL_READY"},
+    "bom": {"before": "PARTIAL (MCU/radio/regulator/battery class-only)", "after": "PARTIAL_REFERENCE_BOM (MCU/radio/regulator numeric operating points; PCB/enclosure/attachment/wiring advanced to REFERENCE_SELECTED mass-allowance level)", "final": false}
+  },
+  "completed_items": [
+    "Clean quarantine-free implementation branch created and verified",
+    "5 candidate commits individually adjudicated and ported (2 with documented repairs)",
+    "PPG LED average power modeled via existing ml/engineering/ppg_led_power.py formula",
+    "EEG/EOG head-AFE, thoracic/leg BioZ engineering-assumption operating points defined",
+    "Explicit per-module duty schedule defined",
+    "MCU/radio numeric operating points + regulator efficiency assumption defined",
+    "Data-rate model closed for light_sensor/thoracic_bioz/leg_bioz + transmitted-rate model added",
+    "second_ppg_site correctly excluded from all base-system totals (HW-1 presentation-risk fix)",
+    "Mass model advanced wrist/chest/head modules from Tier0 to Tier2",
+    "New backend schema + reader + API route (GET /research/stage4-engineering-readiness) exposing the above, fail-closed",
+    "7 required docs + this manifest written",
+    "New adversarial + arithmetic tests added and passing"
+  ],
+  "not_ready_items": [
+    "Exact ADS1299 datasheet power-dissipation table value (head AFE remains an engineering assumption)",
+    "Vendor-specific MCU/radio/regulator/battery part selection (class-level reference only)",
+    "PCB stackup, enclosure geometry, electrode materials (mass-allowance level only, no CAD/material spec)",
+    "second_ppg_site module boundary (shared/tethered/standalone)",
+    "Internal/processed data rate (no on-device compression factor frozen)",
+    "Formal Pareto frontier",
+    "Final architecture selection"
+  ],
+  "test_state": {
+    "backend_full_suite": "pending final run in this session (last known: 224/224 passed post-port, before this artifact's tests were added)",
+    "new_backend_tests_this_sprint": "backend/tests/test_stage4_engineering_readiness.py — 7/7 passed standalone",
+    "new_ml_tests_this_sprint": "ml/tests/test_ppg_led_power.py — 9/9 passed standalone",
+    "frontend_typecheck_lint_build": "pending in this session"
+  },
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "FORMAL_PARETO_NOT_READY",
+  "digital_twin_status": "CONCEPTUAL_SYNTHETIC_UNTRAINED_UNVALIDATED",
+  "audit_dependencies": [
+    "Codex independent audit of stage2-4-science-owner-completion @ ab798815882ac0723491dc489de2375f8bf5b774 (parallel, unresolved)",
+    "Ismet Stage-3 science-completion handoff (parallel, in progress on next-science-expansion-sprint @ 58e901174cc88fc79e1bc1d5c9bb4d7aa729a372)",
+    "Future independent audit of any later integrated candidate (standing requirement)"
+  ]
+}

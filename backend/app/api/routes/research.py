@@ -10,6 +10,7 @@ from app.research.day6 import day6_research
 from app.research.engineering_readiness import engineering_readiness
 from app.research.future_science_ingestion import future_science_manifest
 from app.research.operational_costs import operational_cost_catalog
+from app.research.stage4_engineering import stage4_engineering_readiness
 from app.schemas.decision_inputs import ParetoDecisionInputsEnvelope
 from app.schemas.engineering_readiness import EngineeringReadinessEnvelope
 from app.schemas.experiment_manifest import FutureScienceManifestEnvelope
@@ -18,6 +19,7 @@ from app.schemas.operational_cost import (
     OperationalCostCatalogEnvelope,
     OperationalCostComponentEnvelope,
 )
+from app.schemas.stage4_engineering import Stage4EngineeringReadinessEnvelope
 from app.schemas.research import (
     ResearchExperimentEnvelope,
     ResearchExperimentSummaryEnvelope,
@@ -136,3 +138,16 @@ def get_engineering_readiness() -> EngineeringReadinessEnvelope:
 )
 def get_future_science_manifest() -> FutureScienceManifestEnvelope:
     return future_science_manifest.status()
+
+
+@router.get(
+    "/stage4-engineering-readiness",
+    response_model=Stage4EngineeringReadinessEnvelope,
+    summary=(
+        "Read the Stage 4 engineering-readiness summary — advances Day 11 Part-2 "
+        "power/data-rate/mass/BOM from NOT_READY toward PARTIAL_READY using explicit, "
+        "separately-labeled engineering assumptions. Not a final architecture or BOM."
+    ),
+)
+def get_stage4_engineering_readiness() -> Stage4EngineeringReadinessEnvelope:
+    return stage4_engineering_readiness.artifact()
