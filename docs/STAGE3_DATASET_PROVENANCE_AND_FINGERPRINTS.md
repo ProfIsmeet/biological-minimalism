@@ -6,7 +6,11 @@ Unchanged provenance from the prior sprint (Zenodo DOI 10.5281/zenodo.14635823,
 MD5 `d9a48bfcd07928fb22b96dc40cf2e7d4`, CC BY 4.0). This sprint reuses the
 already-downloaded, already-verified local archive — no re-download.
 Real measured rates: E4 BVP 64.0 Hz, E4 ACC 32.0 Hz, Polar ECG ~130.3–130.5 Hz.
-24/24 real participants eligible.
+24 total participants; **18/24 real reference-ECG-quality-eligible**
+(6 excluded this sprint after a real BLOCKER-severity data-integrity gate
+was added — see `docs/GALAXYPPG_REFERENCE_QUALITY_THRESHOLD_JUSTIFICATION.md`
+and `results/galaxyppg_corrected_eligibility.json`). The prior "24/24
+eligible" figure predates that gate and is stale — corrected here.
 
 ## LBNP
 
