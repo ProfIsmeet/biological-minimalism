@@ -113,7 +113,7 @@
       "metric_direction": "higher is better",
       "aggregate_result": null,
       "limitations": "Real access restored this sprint (certificate renewed); full 151-recording download and full-cohort training not completed within this session's time budget",
-      "safe_claim": "HMC full-cohort access is real and working; download is 45/151 complete; full training remains pending.",
+      "safe_claim": "HMC full-cohort access is real and working; download is 52/151 complete; full training remains pending.",
       "unsafe_claims": [
         "HMC replicates or fails to replicate Sleep-EDF (no full result exists)"
       ],
