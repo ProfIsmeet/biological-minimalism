@@ -12,10 +12,21 @@
       "completion_status": "COMPLETE (bounded single fold); full corrected-eligibility 6-fold CV PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
       "replication_class": "EXTERNAL_REPLICATION_SUPPORTIVE",
       "protocol_version": "corrected-eligibility (18/24, real reference-ECG-quality gate added this sprint after a BLOCKER found via hostile review)",
-      "A": "PPG-only, capacity-matched dual encoder (A_cap)", "B": "PPG+aligned wrist ACC", "C": "PPG+within-subject-deranged ACC",
-      "target": "HR (bpm)", "target_provenance": "directly measured (real Polar H10 ECG R-peaks)",
-      "metric": "MAE (bpm)", "metric_direction": "lower is better",
-      "aggregate_result": {"A_cap_mean": 6.207, "B_mean": 4.865, "C_mean": 6.494, "A_to_B_mean": 1.342, "n_seeds_favor_B": 5, "C_to_B_mean": 1.629},
+      "A": "PPG-only, capacity-matched dual encoder (A_cap)",
+      "B": "PPG+aligned wrist ACC",
+      "C": "PPG+within-subject-deranged ACC",
+      "target": "HR (bpm)",
+      "target_provenance": "directly measured (real Polar H10 ECG R-peaks)",
+      "metric": "MAE (bpm)",
+      "metric_direction": "lower is better",
+      "aggregate_result": {
+        "A_cap_mean": 6.207,
+        "B_mean": 4.865,
+        "C_mean": 6.494,
+        "A_to_B_mean": 1.342,
+        "n_seeds_favor_B": 5,
+        "C_to_B_mean": 1.629
+      },
       "per_fold_results": "N/A (single fold)",
       "per_seed_results": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
       "per_subject_results": "results/galaxyppg_hr_corrected_per_subject_stage3.json - all 3 test subjects favor B, no sign reversal",
@@ -26,9 +37,15 @@
       "checkpoint_archive_status": "EXTERNALLY_ARCHIVED_AND_VERIFIED",
       "limitations": "BOUNDED_TO_SINGLE_FOLD over the corrected 18-subject cohort; full 6-fold CV not run this sprint",
       "safe_claim": "Consistent, capacity-controlled IMU benefit (5/5 seeds, 3/3 subjects, no sign reversal), qualitatively consistent with PPG-DaLiA, at this bounded scale.",
-      "unsafe_claims": ["GalaxyPPG replicates PPG-DaLiA (use 'qualitatively consistent')", "Any claim beyond the 3 bounded test subjects"],
+      "unsafe_claims": [
+        "GalaxyPPG replicates PPG-DaLiA (use 'qualitatively consistent')",
+        "Any claim beyond the 3 bounded test subjects"
+      ],
       "blockers": [],
-      "historical_invalidated_artifacts": ["results/galaxyppg_hr_external_replication_stage2.json (prior sprint single-fold, INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT)", "results/galaxyppg_hr_full_grouped_cv_stage3.json (this sprint full 6-fold, INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT)"],
+      "historical_invalidated_artifacts": [
+        "results/galaxyppg_hr_external_replication_stage2.json (prior sprint single-fold, INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT)",
+        "results/galaxyppg_hr_full_grouped_cv_stage3.json (this sprint full 6-fold, INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT)"
+      ],
       "source_commit": "this sprint, see git log"
     },
     {
@@ -42,10 +59,23 @@
       "completion_status": "COMPLETE",
       "replication_class": "COMPLETE_NEGATIVE",
       "protocol_version": "results/lbnp_protocol_stage1b.json, real eligibility corrected this sprint (12/16 - pleth-NaN exclusion)",
-      "A": "ECG+pleth features", "B": "A + real thoracic EIS (log-mag+phase, 100 freq points)", "C": "B with within-subject deranged EIS",
-      "target": "LBNP pressure stage (mmHg)", "target_provenance": "protocol-assigned (real, externally-imposed chamber pressure, step-function looked up per real spectrum timestamp)",
-      "metric": "MAE (mmHg)", "metric_direction": "lower is better",
-      "aggregate_result": {"A_mean": 27.62, "B_mean": 29.86, "C_mean": 29.83, "A_minus_B_mean": -2.24, "C_minus_B_mean": -0.033, "n_favor_B_over_A": 3, "n_favor_B_over_C": 6, "n_total": 12},
+      "A": "ECG+pleth features",
+      "B": "A + real thoracic EIS (log-mag+phase, 100 freq points)",
+      "C": "B with within-subject deranged EIS",
+      "target": "LBNP pressure stage (mmHg)",
+      "target_provenance": "protocol-assigned (real, externally-imposed chamber pressure, step-function looked up per real spectrum timestamp)",
+      "metric": "MAE (mmHg)",
+      "metric_direction": "lower is better",
+      "aggregate_result": {
+        "A_mean": 27.62,
+        "B_mean": 29.86,
+        "C_mean": 29.83,
+        "A_minus_B_mean": -2.24,
+        "C_minus_B_mean": -0.033,
+        "n_favor_B_over_A": 3,
+        "n_favor_B_over_C": 6,
+        "n_total": 12
+      },
       "per_fold_results": "N/A (LOSO)",
       "per_seed_results": "N/A (deterministic ridge regression)",
       "per_subject_results": "results/lbnp_thoracic_eis_stage3.json per_subject_deltas - subjects 4 and 7 are extreme opposite-direction outliers",
@@ -56,29 +86,40 @@
       "checkpoint_archive_status": "N/A",
       "limitations": "n=12 (not the paper's 16) due to real pleth-quality exclusion; MAP/EIT/abdominal/arm sites out of scope",
       "safe_claim": "Thoracic EIS did not add information beyond ECG+pleth for LBNP-stage estimation in this real, actual-file-verified cohort - a real negative result.",
-      "unsafe_claims": ["Thoracic EIS is useless in general", "Any astronaut/microgravity equivalence"],
+      "unsafe_claims": [
+        "Thoracic EIS is useless in general",
+        "Any astronaut/microgravity equivalence"
+      ],
       "blockers": [],
       "source_commit": "this sprint, see git log"
     },
     {
       "dataset": "HMC",
       "dataset_version": "PhysioNet hmc-sleep-staging 1.1",
-      "raw_data_identity": "45/151 recordings SHA256-verified against PhysioNet's own SHA256SUMS.txt (real, partial)",
-      "actual_biological_n": 45,
+      "raw_data_identity": "52/151 recordings SHA256-verified against PhysioNet own SHA256SUMS.txt (real, partial, final count at session end)",
+      "actual_biological_n": 52,
       "held_out_biological_n": null,
       "optimization_seed_n": null,
       "fold_count": null,
       "completion_status": "PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
       "replication_class": "UNRESOLVED (full cohort not trained; n=7 bounded diagnostic from prior sprint retained as historical)",
       "protocol_version": "results/hmc_split_stage3_full_cohort.json (106/23/22, frozen)",
-      "A": "EEG only", "B": "EEG+aligned EOG", "C": "EEG+deranged EOG",
-      "target": "5-class sleep stage", "target_provenance": "directly measured (technician hypnogram)",
-      "metric": "Macro-F1", "metric_direction": "higher is better",
+      "A": "EEG only",
+      "B": "EEG+aligned EOG",
+      "C": "EEG+deranged EOG",
+      "target": "5-class sleep stage",
+      "target_provenance": "directly measured (technician hypnogram)",
+      "metric": "Macro-F1",
+      "metric_direction": "higher is better",
       "aggregate_result": null,
       "limitations": "Real access restored this sprint (certificate renewed); full 151-recording download and full-cohort training not completed within this session's time budget",
       "safe_claim": "HMC full-cohort access is real and working; download is 45/151 complete; full training remains pending.",
-      "unsafe_claims": ["HMC replicates or fails to replicate Sleep-EDF (no full result exists)"],
-      "blockers": ["Compute/session time limit - NOT an access blocker (access is restored)"],
+      "unsafe_claims": [
+        "HMC replicates or fails to replicate Sleep-EDF (no full result exists)"
+      ],
+      "blockers": [
+        "Compute/session time limit - NOT an access blocker (access is restored)"
+      ],
       "source_commit": "this sprint (partial), see git log"
     },
     {
@@ -96,8 +137,15 @@
       "source_commit": "prior sprints, unchanged"
     }
   ],
-  "architecture": {"final_architecture": "UNRESOLVED", "formal_pareto": "NOT_READY"},
+  "architecture": {
+    "final_architecture": "UNRESOLVED",
+    "formal_pareto": "NOT_READY"
+  },
   "digital_twin_status": "conceptual, synthetic, not longitudinally validated",
-  "test_suite": {"ml_tests_passed": 430, "ml_tests_failed": 0, "ml_tests_skipped": 0},
+  "test_suite": {
+    "ml_tests_passed": 430,
+    "ml_tests_failed": 0,
+    "ml_tests_skipped": 0
+  },
   "final_verdict": "STAGE3_SCIENCE_PARTIALLY_COMPLETE_WITH_EXPLICIT_PENDING_AND_BLOCKED_WORK"
 }

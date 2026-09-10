@@ -12,7 +12,7 @@ design choice).
 2. Full 151-recording download resumed (`datasets/hmc-sleep-staging/
    download_full_cohort.sh`, skipping the 8 recordings already downloaded
    and SHA256-verified before the prior expiry).
-3. By the end of this session's time budget, **45 of 151 recordings**
+3. By the end of this session's time budget, **52 of 151 recordings**
    were downloaded and SHA256-verified against PhysioNet's own
    `SHA256SUMS.txt` (real, ongoing, per-file verification — not assumed).
 4. The full-cohort trainer (`ml/train_hmc_sleep_a_b_c_full_cohort.py`,
