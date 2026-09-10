@@ -6,12 +6,12 @@
       "dataset_version": "Zenodo 14635823",
       "raw_data_identity": "GalaxyPPG.zip, 481594233 bytes, MD5 d9a48bfcd07928fb22b96dc40cf2e7d4",
       "actual_biological_n": 24,
-      "held_out_biological_n": 3,
+      "held_out_biological_n": 18,
       "optimization_seed_n": 5,
-      "fold_count": 1,
-      "completion_status": "COMPLETE (bounded single fold); full corrected-eligibility 6-fold CV PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
+      "fold_count": 6,
+      "completion_status": "COMPLETE (full corrected-eligibility 6-fold CV)",
       "replication_class": "EXTERNAL_REPLICATION_SUPPORTIVE",
-      "protocol_version": "corrected-eligibility (18/24, real reference-ECG-quality gate added this sprint after a BLOCKER found via hostile review)",
+      "protocol_version": "GALAXYPPG_CORRECTED_ELIGIBILITY_CV_PROTOCOL_V2 (18/24 eligible, real reference-ECG-quality gate; fold count 6 preserved from the original design, fold size 4->3)",
       "A": "PPG-only, capacity-matched dual encoder (A_cap)",
       "B": "PPG+aligned wrist ACC",
       "C": "PPG+within-subject-deranged ACC",
@@ -20,26 +20,24 @@
       "metric": "MAE (bpm)",
       "metric_direction": "lower is better",
       "aggregate_result": {
-        "A_cap_mean": 6.207,
-        "B_mean": 4.865,
-        "C_mean": 6.494,
-        "A_to_B_mean": 1.342,
-        "n_seeds_favor_B": 5,
-        "C_to_B_mean": 1.629
+        "participant_level": "results/galaxyppg_corrected_full_cv_result.json aggregate_across_all_18_eligible_subjects: A_cap_mean=8.287, B_mean=7.452, C_mean=8.357, A_to_B_mean=+0.834 (12/18 favor B), C_to_B_mean=+0.904 (13/18 favor B)",
+        "window_weighted": "A_cap=8.156, B=7.310, C=8.230 (33,813 pooled test windows), A_to_B=+0.845, C_to_B=+0.920",
+        "bounded_single_fold_diagnostic_superseded": "A_to_B=+1.342, C_to_B=+1.629 on 3/3 test subjects - retained as BOUNDED_EXTERNAL_REPLICATION_SUPPORTIVE_DIAGNOSTIC, not the final verdict"
       },
-      "per_fold_results": "N/A (single fold)",
-      "per_seed_results": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
-      "per_subject_results": "results/galaxyppg_hr_corrected_per_subject_stage3.json - all 3 test subjects favor B, no sign reversal",
+      "per_fold_results": "results/galaxyppg_corrected_full_cv_result.json folds.0-5 (fold 5 independently re-verified reuse of the bounded diagnostic)",
+      "per_seed_results": "results/galaxyppg_corrected_full_cv_result.json folds.*.runs",
+      "per_subject_results": "results/galaxyppg_corrected_full_cv_result.json folds.*.per_subject and heterogeneity_and_sensitivity - all 18 subjects, one test appearance each",
       "per_class_activity_stage_results": null,
-      "heterogeneity": "None observed in this corrected fold (unlike the invalidated pre-fix runs)",
-      "sensitivity": "Not yet computed as LOSO across all 18 (only 3 tested this fold)",
-      "checkpoint_inventory": "15/15 verified locally + externally archived + independently redownload-verified (galaxyppg-corrected-eligibility-checkpoint-archive-v1)",
+      "heterogeneity": "Real, disclosed: 6/18 subjects favor A_cap over B, 5/18 favor C over B - not uniform, unlike the bounded single-fold diagnostic's 3/3",
+      "sensitivity": "Window-weighted vs participant-level aggregation agree to <0.02 bpm; leave-one-out exclusion of the most extreme subject (P16) does not reverse the aggregate sign for either A_to_B or C_to_B",
+      "checkpoint_inventory": "75/75 verified locally + externally archived + independently redownload-verified (galaxyppg-corrected-fullcv-v2-checkpoint-archive-v1); bounded diagnostic's 15/15 remain separately archived (galaxyppg-corrected-eligibility-checkpoint-archive-v1)",
       "checkpoint_archive_status": "EXTERNALLY_ARCHIVED_AND_VERIFIED",
-      "limitations": "BOUNDED_TO_SINGLE_FOLD over the corrected 18-subject cohort; full 6-fold CV not run this sprint",
-      "safe_claim": "Consistent, capacity-controlled IMU benefit (5/5 seeds, 3/3 subjects, no sign reversal), qualitatively consistent with PPG-DaLiA, at this bounded scale.",
+      "limitations": "Real, moderate, heterogeneous effect - not uniform across subjects; smaller in magnitude than the earlier bounded single-fold diagnostic, which the full cohort shows was not representative",
+      "safe_claim": "Aligned wrist IMU added a real but moderate and heterogeneous HR-estimation benefit under a capacity-near-matched comparison on GalaxyPPG (full corrected 6-fold CV, n=18, no aggregate sign reversal) - qualitatively consistent with PPG-DaLiA's capacity-controlled finding.",
       "unsafe_claims": [
         "GalaxyPPG replicates PPG-DaLiA (use 'qualitatively consistent')",
-        "Any claim beyond the 3 bounded test subjects"
+        "The effect is uniform across subjects (6/18 favor A_cap over B)",
+        "Citing the bounded single-fold diagnostic's larger effect size as the current/final GalaxyPPG result"
       ],
       "blockers": [],
       "historical_invalidated_artifacts": [
@@ -143,9 +141,10 @@
   },
   "digital_twin_status": "conceptual, synthetic, not longitudinally validated",
   "test_suite": {
-    "ml_tests_passed": 430,
+    "ml_tests_passed": 454,
     "ml_tests_failed": 0,
     "ml_tests_skipped": 0
   },
-  "final_verdict": "STAGE3_SCIENCE_PARTIALLY_COMPLETE_WITH_EXPLICIT_PENDING_AND_BLOCKED_WORK"
+  "final_verdict": "STAGE3_CORE_AND_PRIORITY_EXTERNAL_SCIENCE_COMPLETE_WITH_LOWER_PRIORITY_EXTERNAL_WORK_PENDING",
+  "final_verdict_rationale": "GalaxyPPG's corrected full 6-fold CV is now COMPLETE (EXTERNAL_REPLICATION_SUPPORTIVE) and all H-01/H-02/Section 26-33 Codex parent-audit remediation items are closed. HMC full-cohort training and ds003838 remain genuinely PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT (explicitly out of scope this sprint per the master prompt) - this verdict does NOT claim full Stage 3 completion. Whether HMC/ds003838 are required before Stage 4 is Emir's decision, not this remediation's."
 }
