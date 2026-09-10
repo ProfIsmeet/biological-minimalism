@@ -201,7 +201,7 @@ def main() -> None:
         arr = np.asarray(vals, dtype=np.float64)
         return {"mean": float(arr.mean()), "sd_sample_ddof1": float(arr.std(ddof=1)), "n": len(vals)}
 
-    out["aggregate_across_all_24_subjects"] = {
+    out["aggregate_across_all_18_eligible_subjects"] = {
         "A_cap_mae": agg(a_mae), "B_mae": agg(b_mae), "C_mae": agg(c_mae),
         "A_to_B": {**agg(a_to_b), "n_subjects_favor_B": sum(1 for d in a_to_b if d > 0), "n_subjects_total": len(a_to_b)},
         "C_to_B": {**agg(c_to_b), "n_subjects_favor_B": sum(1 for d in c_to_b if d > 0), "n_subjects_total": len(c_to_b)},
@@ -209,7 +209,7 @@ def main() -> None:
 
     OUT_PATH.write_text(json.dumps(out, indent=2))
     print("\nWrote", OUT_PATH)
-    print(json.dumps(out["aggregate_across_all_24_subjects"], indent=2))
+    print(json.dumps(out["aggregate_across_all_18_eligible_subjects"], indent=2))
 
 
 if __name__ == "__main__":

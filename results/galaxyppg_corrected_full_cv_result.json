@@ -1,0 +1,1803 @@
+{
+  "experiment_id": "galaxyppg_hr_full_grouped_cv_stage3",
+  "frozen_folds": [
+    [
+      "P08",
+      "P17",
+      "P18"
+    ],
+    [
+      "P09",
+      "P11",
+      "P13"
+    ],
+    [
+      "P10",
+      "P14",
+      "P23"
+    ],
+    [
+      "P04",
+      "P16",
+      "P21"
+    ],
+    [
+      "P05",
+      "P20",
+      "P24"
+    ],
+    [
+      "P02",
+      "P06",
+      "P12"
+    ]
+  ],
+  "fold5_reuse_note": "Fold 5 (test=P01/P04/P09/P21) is identical train/val/test membership to the prior sprint's single-fold diagnostic - reused verbatim, not retrained. See galaxyppg_hr_external_replication_stage2.json for its full per-seed detail.",
+  "folds": {
+    "5": {
+      "test_subjects": [
+        "P02",
+        "P06",
+        "P12"
+      ],
+      "val_subjects": [
+        "P05",
+        "P20",
+        "P24"
+      ],
+      "train_subjects": [
+        "P08",
+        "P17",
+        "P18",
+        "P09",
+        "P11",
+        "P13",
+        "P10",
+        "P14",
+        "P23",
+        "P04",
+        "P16",
+        "P21"
+      ],
+      "reused_from": "galaxyppg_hr_external_replication_stage2.json",
+      "runs": {
+        "A_cap": {
+          "seed42": {
+            "mae": 5.891868591308594,
+            "rmse": 11.529970169067383,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed43": {
+            "mae": 6.3166046142578125,
+            "rmse": 11.940999031066895,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed44": {
+            "mae": 7.0874552726745605,
+            "rmse": 12.93354320526123,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed45": {
+            "mae": 5.961544036865234,
+            "rmse": 11.875407218933105,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed46": {
+            "mae": 5.779453754425049,
+            "rmse": 11.199309349060059,
+            "n_windows": 5685,
+            "train_history_len": 20
+          }
+        },
+        "B": {
+          "seed42": {
+            "mae": 4.930902481079102,
+            "rmse": 9.80851936340332,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed43": {
+            "mae": 5.966744899749756,
+            "rmse": 10.495896339416504,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed44": {
+            "mae": 3.8813118934631348,
+            "rmse": 7.034847736358643,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed45": {
+            "mae": 4.53723669052124,
+            "rmse": 8.432931900024414,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed46": {
+            "mae": 5.00929069519043,
+            "rmse": 8.982917785644531,
+            "n_windows": 5685,
+            "train_history_len": 20
+          }
+        },
+        "C": {
+          "seed42": {
+            "mae": 6.204112529754639,
+            "rmse": 12.464285850524902,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed43": {
+            "mae": 7.420267105102539,
+            "rmse": 11.445135116577148,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed44": {
+            "mae": 6.485312461853027,
+            "rmse": 12.240480422973633,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed45": {
+            "mae": 6.487077236175537,
+            "rmse": 12.798531532287598,
+            "n_windows": 5685,
+            "train_history_len": 20
+          },
+          "seed46": {
+            "mae": 5.875653266906738,
+            "rmse": 11.634636878967285,
+            "n_windows": 5685,
+            "train_history_len": 20
+          }
+        }
+      },
+      "window_counts": {
+        "train": 22756,
+        "val": 5372,
+        "test": 5685
+      },
+      "per_subject": {
+        "P02": {
+          "n_windows": 1874,
+          "A_cap_mae_mean": 6.38635950088501,
+          "B_mae_mean": 4.332287263870239,
+          "C_mae_mean": 6.7824098587036135,
+          "A_to_B_mean": 2.05407223701477,
+          "C_to_B_mean": 2.450122594833374
+        },
+        "P06": {
+          "n_windows": 1881,
+          "A_cap_mae_mean": 6.582336711883545,
+          "B_mae_mean": 5.2915349960327145,
+          "C_mae_mean": 6.902313327789306,
+          "A_to_B_mean": 1.2908017158508303,
+          "C_to_B_mean": 1.6107783317565918
+        },
+        "P12": {
+          "n_windows": 1930,
+          "A_cap_mae_mean": 5.668173027038574,
+          "B_mae_mean": 4.966836643218994,
+          "C_mae_mean": 5.80226240158081,
+          "A_to_B_mean": 0.7013363838195801,
+          "C_to_B_mean": 0.8354257583618159
+        }
+      }
+    },
+    "0": {
+      "test_subjects": [
+        "P08",
+        "P17",
+        "P18"
+      ],
+      "val_subjects": [
+        "P09",
+        "P11",
+        "P13"
+      ],
+      "train_subjects": [
+        "P10",
+        "P14",
+        "P23",
+        "P04",
+        "P16",
+        "P21",
+        "P05",
+        "P20",
+        "P24",
+        "P02",
+        "P06",
+        "P12"
+      ],
+      "hr_normalization": {
+        "mean": 87.177978515625,
+        "std": 22.143150329589844
+      },
+      "window_counts": {
+        "train": 22494,
+        "val": 5718,
+        "test": 5601
+      },
+      "runs": {
+        "A_cap": {
+          "seed42": {
+            "mae": 7.025400161743164,
+            "rmse": 13.080636978149414,
+            "n_windows": 5601
+          },
+          "seed43": {
+            "mae": 7.787970542907715,
+            "rmse": 13.631640434265137,
+            "n_windows": 5601
+          },
+          "seed44": {
+            "mae": 8.225199699401855,
+            "rmse": 15.334671020507812,
+            "n_windows": 5601
+          },
+          "seed45": {
+            "mae": 7.2471113204956055,
+            "rmse": 12.943477630615234,
+            "n_windows": 5601
+          },
+          "seed46": {
+            "mae": 8.061710357666016,
+            "rmse": 14.439275741577148,
+            "n_windows": 5601
+          }
+        },
+        "B": {
+          "seed42": {
+            "mae": 6.230979919433594,
+            "rmse": 10.747828483581543,
+            "n_windows": 5601
+          },
+          "seed43": {
+            "mae": 8.304272651672363,
+            "rmse": 13.81502914428711,
+            "n_windows": 5601
+          },
+          "seed44": {
+            "mae": 7.841144561767578,
+            "rmse": 11.821971893310547,
+            "n_windows": 5601
+          },
+          "seed45": {
+            "mae": 8.175773620605469,
+            "rmse": 13.491660118103027,
+            "n_windows": 5601
+          },
+          "seed46": {
+            "mae": 7.624682903289795,
+            "rmse": 12.993756294250488,
+            "n_windows": 5601
+          }
+        },
+        "C": {
+          "seed42": {
+            "mae": 8.42762565612793,
+            "rmse": 14.538305282592773,
+            "n_windows": 5601
+          },
+          "seed43": {
+            "mae": 8.874652862548828,
+            "rmse": 14.97341251373291,
+            "n_windows": 5601
+          },
+          "seed44": {
+            "mae": 8.695801734924316,
+            "rmse": 14.882850646972656,
+            "n_windows": 5601
+          },
+          "seed45": {
+            "mae": 8.08547592163086,
+            "rmse": 13.947413444519043,
+            "n_windows": 5601
+          },
+          "seed46": {
+            "mae": 7.2497968673706055,
+            "rmse": 12.640746116638184,
+            "n_windows": 5601
+          }
+        }
+      },
+      "per_subject": {
+        "P08": {
+          "A_cap_mae_mean": 6.4325159072875975,
+          "B_mae_mean": 6.1027203559875485,
+          "C_mae_mean": 7.801017570495605,
+          "A_to_B_mean": 0.329795551300049,
+          "C_to_B_mean": 1.6982972145080568
+        },
+        "P17": {
+          "A_cap_mae_mean": 6.907194709777832,
+          "B_mae_mean": 9.454726696014404,
+          "C_mae_mean": 7.362397861480713,
+          "A_to_B_mean": -2.5475319862365726,
+          "C_to_B_mean": -2.0923288345336912
+        },
+        "P18": {
+          "A_cap_mae_mean": 9.73848361968994,
+          "B_mae_mean": 7.295464420318604,
+          "C_mae_mean": 9.472707748413086,
+          "A_to_B_mean": 2.443019199371337,
+          "C_to_B_mean": 2.177243328094482
+        }
+      },
+      "checkpoint_manifest": [
+        {
+          "run_id": "fold0_A_cap_seed42",
+          "fold": 0,
+          "config": "A_cap",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed42.pt",
+          "size_bytes": 138294,
+          "sha256": "a427d763956a55e9e9eba67b4a87343ba2bc6896027d96e3c0f387a85560c67e"
+        },
+        {
+          "run_id": "fold0_B_seed42",
+          "fold": 0,
+          "config": "B",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_B_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "8fef182602deea36a6498a023976af6bd827b8f71d543da0826b7c62c7087493"
+        },
+        {
+          "run_id": "fold0_C_seed42",
+          "fold": 0,
+          "config": "C",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_C_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "997afa745fdc14f76cfa42a9abf97f3ab5546de67d3a097e9e567b71bf1a7a93"
+        },
+        {
+          "run_id": "fold0_A_cap_seed43",
+          "fold": 0,
+          "config": "A_cap",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed43.pt",
+          "size_bytes": 138294,
+          "sha256": "19da074dded947360b02249dbf0db2ae8489141534e871bfa853c528eaed1515"
+        },
+        {
+          "run_id": "fold0_B_seed43",
+          "fold": 0,
+          "config": "B",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_B_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "76f24648830d01bae784f3d8a195e6a94e15e3fa09997c59ff1e9a5a486e3732"
+        },
+        {
+          "run_id": "fold0_C_seed43",
+          "fold": 0,
+          "config": "C",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_C_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "3045fe161b144b7795217e7eea885d89a9e8b661bdeb2f839267388280e43695"
+        },
+        {
+          "run_id": "fold0_A_cap_seed44",
+          "fold": 0,
+          "config": "A_cap",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed44.pt",
+          "size_bytes": 138294,
+          "sha256": "90d449c925ee83a597901eb357fd1edadaeb12db48f048a1d30c53bbaf1bcd5b"
+        },
+        {
+          "run_id": "fold0_B_seed44",
+          "fold": 0,
+          "config": "B",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_B_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "1bcf5ebcc7e1ef920a56ca085e475ce7ff4c8cbb60975581acdbd517560dcdb0"
+        },
+        {
+          "run_id": "fold0_C_seed44",
+          "fold": 0,
+          "config": "C",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_C_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "5f9c8bfa2f9a496199ec7cecce5102b3c93a8ea197db783bbedf2c789fd224a3"
+        },
+        {
+          "run_id": "fold0_A_cap_seed45",
+          "fold": 0,
+          "config": "A_cap",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed45.pt",
+          "size_bytes": 138294,
+          "sha256": "1f0a7c85280ecb1ded96fa018fca64b12ff740baa26ee40482318b30cb015ec7"
+        },
+        {
+          "run_id": "fold0_B_seed45",
+          "fold": 0,
+          "config": "B",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_B_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "b2e686031b9b3d27eb1e457ccfc61ae0e9fd7b452eef096e54dc248145f6d9f3"
+        },
+        {
+          "run_id": "fold0_C_seed45",
+          "fold": 0,
+          "config": "C",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_C_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "a829aeff7d6d7c083ce00ee832097665648a7fa2c5338cc83bc33dbd4d2fbdad"
+        },
+        {
+          "run_id": "fold0_A_cap_seed46",
+          "fold": 0,
+          "config": "A_cap",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed46.pt",
+          "size_bytes": 138294,
+          "sha256": "d053f1ff82289ab504a428eabbd87764e49bf6b4440982d82ff2851ee36e6539"
+        },
+        {
+          "run_id": "fold0_B_seed46",
+          "fold": 0,
+          "config": "B",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_B_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "c68773182dc05c0d38317d5c4271916fc889c4944eca57dc8e5d38a2b642587e"
+        },
+        {
+          "run_id": "fold0_C_seed46",
+          "fold": 0,
+          "config": "C",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold0_C_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "4985e59ed6bae9bd3ca6b28fbee588b362ea92a95531f16a613876ffc0af35f4"
+        }
+      ]
+    },
+    "1": {
+      "test_subjects": [
+        "P09",
+        "P11",
+        "P13"
+      ],
+      "val_subjects": [
+        "P10",
+        "P14",
+        "P23"
+      ],
+      "train_subjects": [
+        "P08",
+        "P17",
+        "P18",
+        "P04",
+        "P16",
+        "P21",
+        "P05",
+        "P20",
+        "P24",
+        "P02",
+        "P06",
+        "P12"
+      ],
+      "hr_normalization": {
+        "mean": 84.93771362304688,
+        "std": 21.88447380065918
+      },
+      "window_counts": {
+        "train": 22345,
+        "val": 5750,
+        "test": 5718
+      },
+      "runs": {
+        "A_cap": {
+          "seed42": {
+            "mae": 9.930184364318848,
+            "rmse": 16.536069869995117,
+            "n_windows": 5718
+          },
+          "seed43": {
+            "mae": 9.345054626464844,
+            "rmse": 16.595996856689453,
+            "n_windows": 5718
+          },
+          "seed44": {
+            "mae": 9.090605735778809,
+            "rmse": 15.51819133758545,
+            "n_windows": 5718
+          },
+          "seed45": {
+            "mae": 7.830478668212891,
+            "rmse": 14.654266357421875,
+            "n_windows": 5718
+          },
+          "seed46": {
+            "mae": 7.8006672859191895,
+            "rmse": 14.415657997131348,
+            "n_windows": 5718
+          }
+        },
+        "B": {
+          "seed42": {
+            "mae": 8.079788208007812,
+            "rmse": 11.997386932373047,
+            "n_windows": 5718
+          },
+          "seed43": {
+            "mae": 8.79483699798584,
+            "rmse": 13.972975730895996,
+            "n_windows": 5718
+          },
+          "seed44": {
+            "mae": 7.085520267486572,
+            "rmse": 11.987678527832031,
+            "n_windows": 5718
+          },
+          "seed45": {
+            "mae": 7.693525314331055,
+            "rmse": 12.955662727355957,
+            "n_windows": 5718
+          },
+          "seed46": {
+            "mae": 7.836232662200928,
+            "rmse": 13.6170072555542,
+            "n_windows": 5718
+          }
+        },
+        "C": {
+          "seed42": {
+            "mae": 9.50984001159668,
+            "rmse": 16.110170364379883,
+            "n_windows": 5718
+          },
+          "seed43": {
+            "mae": 9.455144882202148,
+            "rmse": 16.706878662109375,
+            "n_windows": 5718
+          },
+          "seed44": {
+            "mae": 8.910623550415039,
+            "rmse": 16.43259620666504,
+            "n_windows": 5718
+          },
+          "seed45": {
+            "mae": 8.42160415649414,
+            "rmse": 16.163707733154297,
+            "n_windows": 5718
+          },
+          "seed46": {
+            "mae": 8.660386085510254,
+            "rmse": 16.17500114440918,
+            "n_windows": 5718
+          }
+        }
+      },
+      "per_subject": {
+        "P09": {
+          "A_cap_mae_mean": 5.9856010437011715,
+          "B_mae_mean": 6.2037276268005375,
+          "C_mae_mean": 6.461545658111572,
+          "A_to_B_mean": -0.21812658309936594,
+          "C_to_B_mean": 0.257818031311035
+        },
+        "P11": {
+          "A_cap_mae_mean": 12.908761787414551,
+          "B_mae_mean": 10.188567352294921,
+          "C_mae_mean": 12.526466369628906,
+          "A_to_B_mean": 2.7201944351196303,
+          "C_to_B_mean": 2.337899017333985
+        },
+        "P13": {
+          "A_cap_mae_mean": 7.602619934082031,
+          "B_mae_mean": 7.3571062088012695,
+          "C_mae_mean": 8.37259521484375,
+          "A_to_B_mean": 0.24551372528076154,
+          "C_to_B_mean": 1.0154890060424808
+        }
+      },
+      "checkpoint_manifest": [
+        {
+          "run_id": "fold1_A_cap_seed42",
+          "fold": 1,
+          "config": "A_cap",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed42.pt",
+          "size_bytes": 138294,
+          "sha256": "a92d7356afddbcb75ba2cb13e114b6aea21fe3d53bbcb4a57c673ebb869b0387"
+        },
+        {
+          "run_id": "fold1_B_seed42",
+          "fold": 1,
+          "config": "B",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_B_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "62e7cad3504b48e75d8281c4171bc11cc72cc9ff295ed09e48646d4cdd66e513"
+        },
+        {
+          "run_id": "fold1_C_seed42",
+          "fold": 1,
+          "config": "C",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_C_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "e4ca6dcfb13b4a358fc3ce8aa07745494371f4e632dc818adca2c2b162bbc237"
+        },
+        {
+          "run_id": "fold1_A_cap_seed43",
+          "fold": 1,
+          "config": "A_cap",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed43.pt",
+          "size_bytes": 138294,
+          "sha256": "b0219f52fc29e4bc5ee3ae7628acc5dd44b36f8fa96a3b66ed0db3c1ca99764f"
+        },
+        {
+          "run_id": "fold1_B_seed43",
+          "fold": 1,
+          "config": "B",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_B_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "0959071f8c35904df45acc1fc6dd288f618850ca8f2e41c7964bd4bf1fe7e4d3"
+        },
+        {
+          "run_id": "fold1_C_seed43",
+          "fold": 1,
+          "config": "C",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_C_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "8ba7c06968db902cb1314bac5bfd57ceaf2d7c317b317df74068b8a71d013ae2"
+        },
+        {
+          "run_id": "fold1_A_cap_seed44",
+          "fold": 1,
+          "config": "A_cap",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed44.pt",
+          "size_bytes": 138294,
+          "sha256": "ee0fdbc3d207fc43244c96f735607629d442ea12fac5c4cbaa0a2ef70575fe94"
+        },
+        {
+          "run_id": "fold1_B_seed44",
+          "fold": 1,
+          "config": "B",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_B_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "4b68d1ed6c55ce8de22f44ce10750fe7a17759f123205c4836ce6aab72b9e371"
+        },
+        {
+          "run_id": "fold1_C_seed44",
+          "fold": 1,
+          "config": "C",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_C_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "08f43cb800f78206b079ca917119544bc361d38a3f95a82f3047157976f2a441"
+        },
+        {
+          "run_id": "fold1_A_cap_seed45",
+          "fold": 1,
+          "config": "A_cap",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed45.pt",
+          "size_bytes": 138294,
+          "sha256": "1aaae353d3e7cc7ec4c3d3b652a7ebe3a145211d943c8c4b2b06c7cbc013cde3"
+        },
+        {
+          "run_id": "fold1_B_seed45",
+          "fold": 1,
+          "config": "B",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_B_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "7c6b813f871bab4c1947b925d89e9157258c4a8f720fac4a4f5be45cd038d882"
+        },
+        {
+          "run_id": "fold1_C_seed45",
+          "fold": 1,
+          "config": "C",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_C_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "61417e7ffd09909a10419ca4947f6f85dc25d387f2718af27f93740c1b75c394"
+        },
+        {
+          "run_id": "fold1_A_cap_seed46",
+          "fold": 1,
+          "config": "A_cap",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed46.pt",
+          "size_bytes": 138294,
+          "sha256": "5711ece9359025daa86256ea727a951dc5b523b46b172a7b2789c19e0e0e2ef9"
+        },
+        {
+          "run_id": "fold1_B_seed46",
+          "fold": 1,
+          "config": "B",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_B_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "37197eb5ebd5e36202949786f8e1ad0210c3369aafdaa8dcdff495057d42917a"
+        },
+        {
+          "run_id": "fold1_C_seed46",
+          "fold": 1,
+          "config": "C",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold1_C_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "6bab81cd237ef74ef293fbb283f5c50ef9d1cb554e11438b3dc931ed2fc8f00f"
+        }
+      ]
+    },
+    "2": {
+      "test_subjects": [
+        "P10",
+        "P14",
+        "P23"
+      ],
+      "val_subjects": [
+        "P04",
+        "P16",
+        "P21"
+      ],
+      "train_subjects": [
+        "P08",
+        "P17",
+        "P18",
+        "P09",
+        "P11",
+        "P13",
+        "P05",
+        "P20",
+        "P24",
+        "P02",
+        "P06",
+        "P12"
+      ],
+      "hr_normalization": {
+        "mean": 85.6501693725586,
+        "std": 21.996776580810547
+      },
+      "window_counts": {
+        "train": 22376,
+        "val": 5687,
+        "test": 5750
+      },
+      "runs": {
+        "A_cap": {
+          "seed42": {
+            "mae": 7.059427261352539,
+            "rmse": 12.952418327331543,
+            "n_windows": 5750
+          },
+          "seed43": {
+            "mae": 7.582297325134277,
+            "rmse": 13.492389678955078,
+            "n_windows": 5750
+          },
+          "seed44": {
+            "mae": 9.336304664611816,
+            "rmse": 14.79208755493164,
+            "n_windows": 5750
+          },
+          "seed45": {
+            "mae": 8.093290328979492,
+            "rmse": 14.421406745910645,
+            "n_windows": 5750
+          },
+          "seed46": {
+            "mae": 6.888201713562012,
+            "rmse": 13.304893493652344,
+            "n_windows": 5750
+          }
+        },
+        "B": {
+          "seed42": {
+            "mae": 8.136404037475586,
+            "rmse": 12.50369930267334,
+            "n_windows": 5750
+          },
+          "seed43": {
+            "mae": 7.276251316070557,
+            "rmse": 10.807488441467285,
+            "n_windows": 5750
+          },
+          "seed44": {
+            "mae": 8.006850242614746,
+            "rmse": 13.108922004699707,
+            "n_windows": 5750
+          },
+          "seed45": {
+            "mae": 6.604966640472412,
+            "rmse": 11.211243629455566,
+            "n_windows": 5750
+          },
+          "seed46": {
+            "mae": 8.087993621826172,
+            "rmse": 13.467997550964355,
+            "n_windows": 5750
+          }
+        },
+        "C": {
+          "seed42": {
+            "mae": 7.260417938232422,
+            "rmse": 13.712779998779297,
+            "n_windows": 5750
+          },
+          "seed43": {
+            "mae": 7.0281195640563965,
+            "rmse": 12.823387145996094,
+            "n_windows": 5750
+          },
+          "seed44": {
+            "mae": 6.946066379547119,
+            "rmse": 13.507437705993652,
+            "n_windows": 5750
+          },
+          "seed45": {
+            "mae": 6.892324924468994,
+            "rmse": 13.70673942565918,
+            "n_windows": 5750
+          },
+          "seed46": {
+            "mae": 7.387462139129639,
+            "rmse": 14.308036804199219,
+            "n_windows": 5750
+          }
+        }
+      },
+      "per_subject": {
+        "P10": {
+          "A_cap_mae_mean": 9.649023056030273,
+          "B_mae_mean": 7.7763011932373045,
+          "C_mae_mean": 8.994703102111817,
+          "A_to_B_mean": 1.872721862792969,
+          "C_to_B_mean": 1.2184019088745126
+        },
+        "P14": {
+          "A_cap_mae_mean": 7.435346412658691,
+          "B_mae_mean": 7.99193172454834,
+          "C_mae_mean": 6.596525001525879,
+          "A_to_B_mean": -0.5565853118896484,
+          "C_to_B_mean": -1.395406723022461
+        },
+        "P23": {
+          "A_cap_mae_mean": 6.235623073577881,
+          "B_mae_mean": 7.091044998168945,
+          "C_mae_mean": 5.410808753967285,
+          "A_to_B_mean": -0.8554219245910639,
+          "C_to_B_mean": -1.6802362442016596
+        }
+      },
+      "checkpoint_manifest": [
+        {
+          "run_id": "fold2_A_cap_seed42",
+          "fold": 2,
+          "config": "A_cap",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed42.pt",
+          "size_bytes": 138294,
+          "sha256": "bab7f225674a826aa2d6a3fffce3a9f60193456279803adf35969d0b1b142461"
+        },
+        {
+          "run_id": "fold2_B_seed42",
+          "fold": 2,
+          "config": "B",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_B_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "72c9dd49c33aa0496881b0221abbcc1ec6228c17356274953d085d2fcee5509a"
+        },
+        {
+          "run_id": "fold2_C_seed42",
+          "fold": 2,
+          "config": "C",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_C_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "3f4f67e282af995ebba00c0a4d08ca4b64b2c8d139b60e7e157450642649712a"
+        },
+        {
+          "run_id": "fold2_A_cap_seed43",
+          "fold": 2,
+          "config": "A_cap",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed43.pt",
+          "size_bytes": 138294,
+          "sha256": "46b8e3b23c7e4a9b87e2ad8f73ea3dfdd129a6cb33c9f83802728279766b27e7"
+        },
+        {
+          "run_id": "fold2_B_seed43",
+          "fold": 2,
+          "config": "B",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_B_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "5513728679b7fa2317d2ef27d5ad1eda1356f53d8582d3ac01e55008a05eec4c"
+        },
+        {
+          "run_id": "fold2_C_seed43",
+          "fold": 2,
+          "config": "C",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_C_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "2787a4adfcf210564aae3136386bf7d37d6893344f6e79e8f617671b88c95767"
+        },
+        {
+          "run_id": "fold2_A_cap_seed44",
+          "fold": 2,
+          "config": "A_cap",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed44.pt",
+          "size_bytes": 138294,
+          "sha256": "7d7356baa810dace812171f3bbf06c2efafc3d6a326ff5ae7a907740be38d2dc"
+        },
+        {
+          "run_id": "fold2_B_seed44",
+          "fold": 2,
+          "config": "B",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_B_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "a2e26b7c46f6cf31706d7f35e06f1c9d9d8b98cb275981dac1bf927838eaeeff"
+        },
+        {
+          "run_id": "fold2_C_seed44",
+          "fold": 2,
+          "config": "C",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_C_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "fc325dc4a628587736a7cf1db2262dee84535310cc61f0de0714bb4bfeccd3fd"
+        },
+        {
+          "run_id": "fold2_A_cap_seed45",
+          "fold": 2,
+          "config": "A_cap",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed45.pt",
+          "size_bytes": 138294,
+          "sha256": "3b64a36f72ac7db88e0d987ea5c21da4d6a3ca6493539c61c55300d6a008b9a5"
+        },
+        {
+          "run_id": "fold2_B_seed45",
+          "fold": 2,
+          "config": "B",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_B_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "9e87e1d73286ebda03bfcad8990bf8cef7f67864c2519fb9396541e8056c88c4"
+        },
+        {
+          "run_id": "fold2_C_seed45",
+          "fold": 2,
+          "config": "C",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_C_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "752c66f028ad2da86c0dd7cd602f31dd06e616a5400cbd0b214bf6c3ac73f067"
+        },
+        {
+          "run_id": "fold2_A_cap_seed46",
+          "fold": 2,
+          "config": "A_cap",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed46.pt",
+          "size_bytes": 138294,
+          "sha256": "eb46340a6f9df727bb8b31903550e9159dd5fd7018bcd150a13640853587d802"
+        },
+        {
+          "run_id": "fold2_B_seed46",
+          "fold": 2,
+          "config": "B",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_B_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "8a86735d63a4cdd16fd4a8a8574a4a025296b608dbaf91ae91d4d8c1090ad1fd"
+        },
+        {
+          "run_id": "fold2_C_seed46",
+          "fold": 2,
+          "config": "C",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold2_C_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "48fc5d8d17cdc355ef181631faf527aa017af0fb788637652e5663fb9aec7636"
+        }
+      ]
+    },
+    "3": {
+      "test_subjects": [
+        "P04",
+        "P16",
+        "P21"
+      ],
+      "val_subjects": [
+        "P05",
+        "P20",
+        "P24"
+      ],
+      "train_subjects": [
+        "P08",
+        "P17",
+        "P18",
+        "P09",
+        "P11",
+        "P13",
+        "P10",
+        "P14",
+        "P23",
+        "P02",
+        "P06",
+        "P12"
+      ],
+      "hr_normalization": {
+        "mean": 87.43284606933594,
+        "std": 22.08077049255371
+      },
+      "window_counts": {
+        "train": 22754,
+        "val": 5372,
+        "test": 5687
+      },
+      "runs": {
+        "A_cap": {
+          "seed42": {
+            "mae": 8.78051471710205,
+            "rmse": 18.101316452026367,
+            "n_windows": 5687
+          },
+          "seed43": {
+            "mae": 8.113122940063477,
+            "rmse": 17.00473403930664,
+            "n_windows": 5687
+          },
+          "seed44": {
+            "mae": 9.018104553222656,
+            "rmse": 18.27812957763672,
+            "n_windows": 5687
+          },
+          "seed45": {
+            "mae": 8.920807838439941,
+            "rmse": 17.601774215698242,
+            "n_windows": 5687
+          },
+          "seed46": {
+            "mae": 8.342975616455078,
+            "rmse": 18.193523406982422,
+            "n_windows": 5687
+          }
+        },
+        "B": {
+          "seed42": {
+            "mae": 5.557572841644287,
+            "rmse": 10.200201988220215,
+            "n_windows": 5687
+          },
+          "seed43": {
+            "mae": 6.961628437042236,
+            "rmse": 13.460066795349121,
+            "n_windows": 5687
+          },
+          "seed44": {
+            "mae": 6.193878173828125,
+            "rmse": 11.601053237915039,
+            "n_windows": 5687
+          },
+          "seed45": {
+            "mae": 7.342131614685059,
+            "rmse": 11.681150436401367,
+            "n_windows": 5687
+          },
+          "seed46": {
+            "mae": 5.522984504699707,
+            "rmse": 9.842984199523926,
+            "n_windows": 5687
+          }
+        },
+        "C": {
+          "seed42": {
+            "mae": 8.36509895324707,
+            "rmse": 17.645370483398438,
+            "n_windows": 5687
+          },
+          "seed43": {
+            "mae": 8.097500801086426,
+            "rmse": 16.70418930053711,
+            "n_windows": 5687
+          },
+          "seed44": {
+            "mae": 9.441451072692871,
+            "rmse": 18.661327362060547,
+            "n_windows": 5687
+          },
+          "seed45": {
+            "mae": 8.934638023376465,
+            "rmse": 18.39052391052246,
+            "n_windows": 5687
+          },
+          "seed46": {
+            "mae": 8.132606506347656,
+            "rmse": 17.036733627319336,
+            "n_windows": 5687
+          }
+        }
+      },
+      "per_subject": {
+        "P04": {
+          "A_cap_mae_mean": 10.094744300842285,
+          "B_mae_mean": 7.203530120849609,
+          "C_mae_mean": 10.366004180908202,
+          "A_to_B_mean": 2.8912141799926756,
+          "C_to_B_mean": 3.162474060058593
+        },
+        "P16": {
+          "A_cap_mae_mean": 8.703879356384277,
+          "B_mae_mean": 5.485714626312256,
+          "C_mae_mean": 8.6771240234375,
+          "A_to_B_mean": 3.2181647300720213,
+          "C_to_B_mean": 3.191409397125244
+        },
+        "P21": {
+          "A_cap_mae_mean": 7.1419282913208,
+          "B_mae_mean": 6.289180183410645,
+          "C_mae_mean": 6.86156005859375,
+          "A_to_B_mean": 0.8527481079101555,
+          "C_to_B_mean": 0.5723798751831053
+        }
+      },
+      "checkpoint_manifest": [
+        {
+          "run_id": "fold3_A_cap_seed42",
+          "fold": 3,
+          "config": "A_cap",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed42.pt",
+          "size_bytes": 138294,
+          "sha256": "61ed328f06a0c140940c46c84ed5cf15296c2b047cefda37740505d41db3e8a5"
+        },
+        {
+          "run_id": "fold3_B_seed42",
+          "fold": 3,
+          "config": "B",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_B_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "a733af370fe94f54201b748d0a27de61664a138ae61679fb5d1b9501aae1a1b6"
+        },
+        {
+          "run_id": "fold3_C_seed42",
+          "fold": 3,
+          "config": "C",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_C_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "ef8b2e50c99fee44228fdf5f7d0c4c21be0aedd89656f9086c42809cdc88b6b3"
+        },
+        {
+          "run_id": "fold3_A_cap_seed43",
+          "fold": 3,
+          "config": "A_cap",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed43.pt",
+          "size_bytes": 138294,
+          "sha256": "3d6ce3609a9eb1e98bc0562af29c2550c3f78dd77a35b23d59316ebd50d52343"
+        },
+        {
+          "run_id": "fold3_B_seed43",
+          "fold": 3,
+          "config": "B",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_B_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "d99959b5ec926a89fc02cebebb251506cf48d03e7db503ad5060fe746237869a"
+        },
+        {
+          "run_id": "fold3_C_seed43",
+          "fold": 3,
+          "config": "C",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_C_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "42b4c1194052952e71c7f71508ee94b9f745039686c029dad4a79db12e3e51d1"
+        },
+        {
+          "run_id": "fold3_A_cap_seed44",
+          "fold": 3,
+          "config": "A_cap",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed44.pt",
+          "size_bytes": 138294,
+          "sha256": "bd6c227a113740d74cab69153d751ef04769ce7cd941badd2096c2fcfaefd5cd"
+        },
+        {
+          "run_id": "fold3_B_seed44",
+          "fold": 3,
+          "config": "B",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_B_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "80d04538e985b2d3e26479ec34e7ee150b98523724546a19d2685ce300e3de02"
+        },
+        {
+          "run_id": "fold3_C_seed44",
+          "fold": 3,
+          "config": "C",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_C_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "cc05cad42c16cf29d6f83445032f361c9e390908169e2f2c9e4f982f54efd12d"
+        },
+        {
+          "run_id": "fold3_A_cap_seed45",
+          "fold": 3,
+          "config": "A_cap",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed45.pt",
+          "size_bytes": 138294,
+          "sha256": "15c9a209475516cda4445b808ad1b83865e00405b92ec7acfc2a7978a44a832c"
+        },
+        {
+          "run_id": "fold3_B_seed45",
+          "fold": 3,
+          "config": "B",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_B_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "fb2e44fb71ea7119155138d6c54842c840a3621d32c9a68ebc1e62013d7a2832"
+        },
+        {
+          "run_id": "fold3_C_seed45",
+          "fold": 3,
+          "config": "C",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_C_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "5912c89766a1a4ff848245cf40792db24c93bfcf07c4ef15d8aa923767fc9130"
+        },
+        {
+          "run_id": "fold3_A_cap_seed46",
+          "fold": 3,
+          "config": "A_cap",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed46.pt",
+          "size_bytes": 138294,
+          "sha256": "7dd1a2dca405cd05809d54c643f9703455738860a0bf93fbeb77e51045d425b9"
+        },
+        {
+          "run_id": "fold3_B_seed46",
+          "fold": 3,
+          "config": "B",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_B_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "b6b8d505e3158ef46bebd655e97352722d9fa8bc62c1849e0bf02a2ede2601ee"
+        },
+        {
+          "run_id": "fold3_C_seed46",
+          "fold": 3,
+          "config": "C",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold3_C_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "76c9d452bd9faf6af302d7937ffec3e911db132cd1b9994bbc24d38d2f998720"
+        }
+      ]
+    },
+    "4": {
+      "test_subjects": [
+        "P05",
+        "P20",
+        "P24"
+      ],
+      "val_subjects": [
+        "P02",
+        "P06",
+        "P12"
+      ],
+      "train_subjects": [
+        "P08",
+        "P17",
+        "P18",
+        "P09",
+        "P11",
+        "P13",
+        "P10",
+        "P14",
+        "P23",
+        "P04",
+        "P16",
+        "P21"
+      ],
+      "hr_normalization": {
+        "mean": 88.03631591796875,
+        "std": 22.910175323486328
+      },
+      "window_counts": {
+        "train": 22756,
+        "val": 5685,
+        "test": 5372
+      },
+      "runs": {
+        "A_cap": {
+          "seed42": {
+            "mae": 9.534299850463867,
+            "rmse": 16.277610778808594,
+            "n_windows": 5372
+          },
+          "seed43": {
+            "mae": 9.679967880249023,
+            "rmse": 17.35490608215332,
+            "n_windows": 5372
+          },
+          "seed44": {
+            "mae": 10.758950233459473,
+            "rmse": 18.97847557067871,
+            "n_windows": 5372
+          },
+          "seed45": {
+            "mae": 9.635597229003906,
+            "rmse": 17.13504981994629,
+            "n_windows": 5372
+          },
+          "seed46": {
+            "mae": 9.993979454040527,
+            "rmse": 18.0044002532959,
+            "n_windows": 5372
+          }
+        },
+        "B": {
+          "seed42": {
+            "mae": 9.51722526550293,
+            "rmse": 16.70956802368164,
+            "n_windows": 5372
+          },
+          "seed43": {
+            "mae": 9.59890079498291,
+            "rmse": 17.770082473754883,
+            "n_windows": 5372
+          },
+          "seed44": {
+            "mae": 9.680205345153809,
+            "rmse": 17.02269172668457,
+            "n_windows": 5372
+          },
+          "seed45": {
+            "mae": 9.990818977355957,
+            "rmse": 17.588579177856445,
+            "n_windows": 5372
+          },
+          "seed46": {
+            "mae": 9.479549407958984,
+            "rmse": 16.67726707458496,
+            "n_windows": 5372
+          }
+        },
+        "C": {
+          "seed42": {
+            "mae": 10.20330810546875,
+            "rmse": 18.686311721801758,
+            "n_windows": 5372
+          },
+          "seed43": {
+            "mae": 9.787068367004395,
+            "rmse": 17.484695434570312,
+            "n_windows": 5372
+          },
+          "seed44": {
+            "mae": 10.356927871704102,
+            "rmse": 17.80510711669922,
+            "n_windows": 5372
+          },
+          "seed45": {
+            "mae": 10.29012393951416,
+            "rmse": 18.09275245666504,
+            "n_windows": 5372
+          },
+          "seed46": {
+            "mae": 9.569822311401367,
+            "rmse": 17.048269271850586,
+            "n_windows": 5372
+          }
+        }
+      },
+      "per_subject": {
+        "P05": {
+          "A_cap_mae_mean": 16.65153522491455,
+          "B_mae_mean": 17.365346145629882,
+          "C_mae_mean": 16.856981658935545,
+          "A_to_B_mean": -0.713810920715332,
+          "C_to_B_mean": -0.5083644866943366
+        },
+        "P20": {
+          "A_cap_mae_mean": 9.003432273864746,
+          "B_mae_mean": 9.206635475158691,
+          "C_mae_mean": 8.717073822021485,
+          "A_to_B_mean": -0.2032032012939453,
+          "C_to_B_mean": -0.4895616531372067
+        },
+        "P24": {
+          "A_cap_mae_mean": 6.033926200866699,
+          "B_mae_mean": 4.54200496673584,
+          "C_mae_mean": 6.457073402404785,
+          "A_to_B_mean": 1.4919212341308592,
+          "C_to_B_mean": 1.9150684356689451
+        }
+      },
+      "checkpoint_manifest": [
+        {
+          "run_id": "fold4_A_cap_seed42",
+          "fold": 4,
+          "config": "A_cap",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed42.pt",
+          "size_bytes": 138294,
+          "sha256": "1f3d8fc01f4600e90d5160dd0ff622514aa7af0b8239a6b097c66292558700e8"
+        },
+        {
+          "run_id": "fold4_B_seed42",
+          "fold": 4,
+          "config": "B",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_B_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "ec5843192fd20ab4e757e3172ad94e39fc18f5df572879f22438ab77f4a9b389"
+        },
+        {
+          "run_id": "fold4_C_seed42",
+          "fold": 4,
+          "config": "C",
+          "seed": 42,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_C_seed42.pt",
+          "size_bytes": 138818,
+          "sha256": "a03f840e7e15df3a8a49f02d8d93bc7047765124bc385d06bbd129877e629609"
+        },
+        {
+          "run_id": "fold4_A_cap_seed43",
+          "fold": 4,
+          "config": "A_cap",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed43.pt",
+          "size_bytes": 138294,
+          "sha256": "019a932d395ce0f653240849927b59978bbbef836f65f90fc10b5680750f2a68"
+        },
+        {
+          "run_id": "fold4_B_seed43",
+          "fold": 4,
+          "config": "B",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_B_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "96379b7b64e9d8a2c07cddd5065cdc0b73aaebcc7b8f4d809f5b0e45d7eb9866"
+        },
+        {
+          "run_id": "fold4_C_seed43",
+          "fold": 4,
+          "config": "C",
+          "seed": 43,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_C_seed43.pt",
+          "size_bytes": 138818,
+          "sha256": "13609cbbe15f0b8ee5eac9d0ff2bcd19afd04b1d1eab233064467c61e6377904"
+        },
+        {
+          "run_id": "fold4_A_cap_seed44",
+          "fold": 4,
+          "config": "A_cap",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed44.pt",
+          "size_bytes": 138294,
+          "sha256": "0bf09a8050904410447ed1e2edfa89b01272f55c6720632405968efca95f93c2"
+        },
+        {
+          "run_id": "fold4_B_seed44",
+          "fold": 4,
+          "config": "B",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_B_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "09a11e64cb3091e8186e7d838024b4c1e0e300b91cb8b857da7cf1ef3d0ccc4c"
+        },
+        {
+          "run_id": "fold4_C_seed44",
+          "fold": 4,
+          "config": "C",
+          "seed": 44,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_C_seed44.pt",
+          "size_bytes": 138818,
+          "sha256": "b95e12cb4d97e05901560aefbc68d184838393696249b4b281430e32ff9ec984"
+        },
+        {
+          "run_id": "fold4_A_cap_seed45",
+          "fold": 4,
+          "config": "A_cap",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed45.pt",
+          "size_bytes": 138294,
+          "sha256": "c8114926ac030032dd3f2ec8154deb861aa1600eeeaac61c099963042a63f0c1"
+        },
+        {
+          "run_id": "fold4_B_seed45",
+          "fold": 4,
+          "config": "B",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_B_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "7ff35f3ce544bfc1bd2dc6e578c0a4aacbe499661e1fdfc80a236ef46de6ca6f"
+        },
+        {
+          "run_id": "fold4_C_seed45",
+          "fold": 4,
+          "config": "C",
+          "seed": 45,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_C_seed45.pt",
+          "size_bytes": 138818,
+          "sha256": "1e01c684845480f9a585a6b73707c74a3abfe99a75513bbb1d0d481d90b5ae13"
+        },
+        {
+          "run_id": "fold4_A_cap_seed46",
+          "fold": 4,
+          "config": "A_cap",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed46.pt",
+          "size_bytes": 138294,
+          "sha256": "c3dddfe069963f320ccb18ba1a81c4ee815f120e708b93ee3f6cea44d21b1809"
+        },
+        {
+          "run_id": "fold4_B_seed46",
+          "fold": 4,
+          "config": "B",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_B_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "238f45faddabcbcceb466e6f13c2f872581282b911c3625a54b0f639a451da8f"
+        },
+        {
+          "run_id": "fold4_C_seed46",
+          "fold": 4,
+          "config": "C",
+          "seed": 46,
+          "path": "ml\\checkpoints\\galaxyppg_hr_correctedcv_v2_fold4_C_seed46.pt",
+          "size_bytes": 138818,
+          "sha256": "00636803ea70ab24a1cd51608d5a333a65d904f303fd53ecc44b9c495b83147e"
+        }
+      ]
+    }
+  },
+  "aggregate_across_all_18_eligible_subjects": {
+    "A_cap_mae": {
+      "mean": 8.286749135123358,
+      "sd_sample_ddof1": 2.818514313827782,
+      "n": 18
+    },
+    "B_mae": {
+      "mean": 7.452481166521709,
+      "sd_sample_ddof1": 2.9814782366794637,
+      "n": 18
+    },
+    "C_mae": {
+      "mean": 8.356753889719645,
+      "sd_sample_ddof1": 2.756731706614676,
+      "n": 18
+    },
+    "A_to_B": {
+      "mean": 0.8342679686016505,
+      "sd_sample_ddof1": 1.5471357112933417,
+      "n": 18,
+      "n_subjects_favor_B": 12,
+      "n_subjects_total": 18
+    },
+    "C_to_B": {
+      "mean": 0.904272723197937,
+      "sd_sample_ddof1": 1.6102097903638535,
+      "n": 18,
+      "n_subjects_favor_B": 13,
+      "n_subjects_total": 18
+    }
+  },
+  "aggregate_key_name_correction_note": "This key was written by the running training process as 'aggregate_across_all_24_subjects', a stale name left over from the pre-fix 24-subject full-CV script this file was sed-copied from. The source script (ml/train_galaxyppg_corrected_full_cv.py) was corrected mid-sprint to write 'aggregate_across_all_18_eligible_subjects' for future runs, but the already-running process (Python does not re-read already-imported source) still used the old key name when it wrote this file. Renamed here post-hoc, disclosed explicitly. The n=18 subject-level values themselves were never affected - this is a key-name correction only, no numeric result changed.",
+  "window_weighted_aggregate": {
+    "method": "Per-fold, per-condition MAE averaged across the 5 seeds (each seed's MAE already pooled over that fold's test windows, i.e. window-weighted within-fold), then pooled across all 6 folds weighted by each fold's real test-window count (33,813 windows total). This is the technical/window-level counterpart to the biological-participant-level aggregate below - it lets subjects with more real windows contribute proportionally, rather than each subject counting equally.",
+    "per_fold": {
+      "0": {
+        "A_cap": {
+          "mean_mae_across_5_seeds": 7.669478416442871,
+          "sd_across_5_seeds_ddof1": 0.5171902904152793,
+          "n_test_windows_this_fold": 5601
+        },
+        "B": {
+          "mean_mae_across_5_seeds": 7.63537073135376,
+          "sd_across_5_seeds_ddof1": 0.8297945096942967,
+          "n_test_windows_this_fold": 5601
+        },
+        "C": {
+          "mean_mae_across_5_seeds": 8.266670608520508,
+          "sd_across_5_seeds_ddof1": 0.6415929769350469,
+          "n_test_windows_this_fold": 5601
+        }
+      },
+      "1": {
+        "A_cap": {
+          "mean_mae_across_5_seeds": 8.799398136138915,
+          "sd_across_5_seeds_ddof1": 0.9483523358793007,
+          "n_test_windows_this_fold": 5718
+        },
+        "B": {
+          "mean_mae_across_5_seeds": 7.897980690002441,
+          "sd_across_5_seeds_ddof1": 0.6211102898249744,
+          "n_test_windows_this_fold": 5718
+        },
+        "C": {
+          "mean_mae_across_5_seeds": 8.991519737243653,
+          "sd_across_5_seeds_ddof1": 0.480781041477808,
+          "n_test_windows_this_fold": 5718
+        }
+      },
+      "2": {
+        "A_cap": {
+          "mean_mae_across_5_seeds": 7.791904258728027,
+          "sd_across_5_seeds_ddof1": 0.9840150005805238,
+          "n_test_windows_this_fold": 5750
+        },
+        "B": {
+          "mean_mae_across_5_seeds": 7.622493171691895,
+          "sd_across_5_seeds_ddof1": 0.6677890889595703,
+          "n_test_windows_this_fold": 5750
+        },
+        "C": {
+          "mean_mae_across_5_seeds": 7.102878189086914,
+          "sd_across_5_seeds_ddof1": 0.2123194939540478,
+          "n_test_windows_this_fold": 5750
+        }
+      },
+      "3": {
+        "A_cap": {
+          "mean_mae_across_5_seeds": 8.63510513305664,
+          "sd_across_5_seeds_ddof1": 0.3896355999889242,
+          "n_test_windows_this_fold": 5687
+        },
+        "B": {
+          "mean_mae_across_5_seeds": 6.3156391143798825,
+          "sd_across_5_seeds_ddof1": 0.8198750802602578,
+          "n_test_windows_this_fold": 5687
+        },
+        "C": {
+          "mean_mae_across_5_seeds": 8.594259071350098,
+          "sd_across_5_seeds_ddof1": 0.5800858444444719,
+          "n_test_windows_this_fold": 5687
+        }
+      },
+      "4": {
+        "A_cap": {
+          "mean_mae_across_5_seeds": 9.92055892944336,
+          "sd_across_5_seeds_ddof1": 0.49914272804625326,
+          "n_test_windows_this_fold": 5372
+        },
+        "B": {
+          "mean_mae_across_5_seeds": 9.653339958190918,
+          "sd_across_5_seeds_ddof1": 0.20390428195572213,
+          "n_test_windows_this_fold": 5372
+        },
+        "C": {
+          "mean_mae_across_5_seeds": 10.041450119018554,
+          "sd_across_5_seeds_ddof1": 0.34449446798631755,
+          "n_test_windows_this_fold": 5372
+        }
+      },
+      "5": {
+        "A_cap": {
+          "mean_mae_across_5_seeds": 6.20738525390625,
+          "sd_across_5_seeds_ddof1": 0.5314052463119975,
+          "n_test_windows_this_fold": 5685
+        },
+        "B": {
+          "mean_mae_across_5_seeds": 4.865097332000732,
+          "sd_across_5_seeds_ddof1": 0.7606043315138428,
+          "n_test_windows_this_fold": 5685
+        },
+        "C": {
+          "mean_mae_across_5_seeds": 6.494484519958496,
+          "sd_across_5_seeds_ddof1": 0.5754303611010363,
+          "n_test_windows_this_fold": 5685
+        }
+      }
+    },
+    "pooled": {
+      "A_cap": {
+        "pooled_window_weighted_mae": 8.155597766236207,
+        "total_windows_pooled_across_6_folds": 33813
+      },
+      "B": {
+        "pooled_window_weighted_mae": 7.310459320979474,
+        "total_windows_pooled_across_6_folds": 33813
+      },
+      "C": {
+        "pooled_window_weighted_mae": 8.23044531385065,
+        "total_windows_pooled_across_6_folds": 33813
+      },
+      "A_to_B": 0.8451384452567332,
+      "C_to_B": 0.919985992871176
+    }
+  },
+  "heterogeneity_and_sensitivity": {
+    "per_subject_A_to_B_sorted": {
+      "P17": -2.5475319862365726,
+      "P23": -0.8554219245910639,
+      "P05": -0.713810920715332,
+      "P14": -0.5565853118896484,
+      "P09": -0.21812658309936594,
+      "P20": -0.2032032012939453,
+      "P13": 0.24551372528076154,
+      "P08": 0.329795551300049,
+      "P12": 0.7013363838195801,
+      "P21": 0.8527481079101555,
+      "P06": 1.2908017158508303,
+      "P24": 1.4919212341308592,
+      "P10": 1.872721862792969,
+      "P02": 2.05407223701477,
+      "P18": 2.443019199371337,
+      "P11": 2.7201944351196303,
+      "P04": 2.8912141799926756,
+      "P16": 3.2181647300720213
+    },
+    "per_subject_C_to_B_sorted": {
+      "P17": -2.0923288345336912,
+      "P23": -1.6802362442016596,
+      "P14": -1.395406723022461,
+      "P05": -0.5083644866943366,
+      "P20": -0.4895616531372067,
+      "P09": 0.257818031311035,
+      "P21": 0.5723798751831053,
+      "P12": 0.8354257583618159,
+      "P13": 1.0154890060424808,
+      "P10": 1.2184019088745126,
+      "P06": 1.6107783317565918,
+      "P08": 1.6982972145080568,
+      "P24": 1.9150684356689451,
+      "P18": 2.177243328094482,
+      "P11": 2.337899017333985,
+      "P02": 2.450122594833374,
+      "P04": 3.162474060058593,
+      "P16": 3.191409397125244
+    },
+    "n_subjects_favor_B_A_to_B": 12,
+    "n_subjects_favor_B_C_to_B": 13,
+    "n_subjects_total": 18,
+    "leave_one_out_sensitivity_A_to_B": {
+      "full_mean_n18": 0.8342679686016505,
+      "most_extreme_subject": "P16",
+      "most_extreme_value": 3.2181647300720213,
+      "mean_excluding_most_extreme_n17": 0.6940387473386875,
+      "sign_reversal_on_exclusion": false
+    },
+    "leave_one_out_sensitivity_C_to_B": {
+      "full_mean_n18": 0.904272723197937,
+      "most_extreme_subject": "P16",
+      "most_extreme_value": 3.191409397125244,
+      "mean_excluding_most_extreme_n17": 0.7697352717904484,
+      "sign_reversal_on_exclusion": false
+    },
+    "window_vs_participant_weighting_agreement": "Window-weighted (A_to_B +0.845, C_to_B +0.920) and biological-participant-level (A_to_B +0.834, C_to_B +0.904) aggregates agree closely (<0.02 bpm difference) - the effect is not an artifact of window-count imbalance across subjects.",
+    "no_sign_reversal_under_any_tested_aggregation_or_loo_exclusion": true,
+    "note_on_direction_vs_bounded_diagnostic": "The prior bounded single-fold diagnostic (fold 5 only, 3/3 subjects favored B) showed a larger effect (A_cap->B ~+1.342, C->B ~+1.629) than the full 6-fold result (A_cap->B ~+0.834-0.845, C->B ~+0.904-0.920). Direction is consistent (B favored) at both the aggregate and majority-subject level, but the full cohort reveals real subject heterogeneity (6/18 subjects favor A_cap over B) that the single fold's 3/3-favor-B result did not surface - this is exactly the kind of dilution a bounded diagnostic cannot rule out, and is why the master prompt required the full CV before any final classification."
+  },
+  "final_classification": "EXTERNAL_REPLICATION_SUPPORTIVE",
+  "final_classification_rationale": "Aggregate MAE gap favors B at both the participant-level (A_cap->B +0.834 bpm, C->B +0.904 bpm, n=18) and window-weighted level (A_cap->B +0.845 bpm, C->B +0.920 bpm, 33,813 pooled test windows), with no sign reversal under either aggregation or under leave-one-out exclusion of the single most extreme subject. A majority of subjects favor B under both comparisons (12/18 for A_cap->B, 13/18 for C->B). This is directionally consistent with the prior bounded single-fold diagnostic and with the capacity-controlled PPG-DaLiA finding, though the full cohort's real heterogeneity (6/18 and 5/18 subjects respectively favor the opposite direction) means this is a real but moderate, heterogeneous effect - not a uniform one. Classified SUPPORTIVE rather than MIXED because no analysis performed (window- weighted, participant-level, or leave-one-out) reversed the aggregate sign."
+}

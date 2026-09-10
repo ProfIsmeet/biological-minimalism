@@ -1,0 +1,383 @@
+{
+  "purpose": "Expected-membership manifest for the 75 GalaxyPPG corrected full-CV (V2) checkpoints prior to external archival.",
+  "n_expected": 75,
+  "n_folds": 5,
+  "note": "Fold 5 reused the prior bounded diagnostic result verbatim (no new checkpoints trained this sprint for fold 5) - only folds 0-4 (5 folds x 5 seeds x 3 conditions = 75) were newly trained.",
+  "entries": [
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed42.pt",
+      "sha256": "a427d763956a55e9e9eba67b4a87343ba2bc6896027d96e3c0f387a85560c67e",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed43.pt",
+      "sha256": "19da074dded947360b02249dbf0db2ae8489141534e871bfa853c528eaed1515",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed44.pt",
+      "sha256": "90d449c925ee83a597901eb357fd1edadaeb12db48f048a1d30c53bbaf1bcd5b",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed45.pt",
+      "sha256": "1f0a7c85280ecb1ded96fa018fca64b12ff740baa26ee40482318b30cb015ec7",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_A_cap_seed46.pt",
+      "sha256": "d053f1ff82289ab504a428eabbd87764e49bf6b4440982d82ff2851ee36e6539",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_B_seed42.pt",
+      "sha256": "8fef182602deea36a6498a023976af6bd827b8f71d543da0826b7c62c7087493",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_B_seed43.pt",
+      "sha256": "76f24648830d01bae784f3d8a195e6a94e15e3fa09997c59ff1e9a5a486e3732",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_B_seed44.pt",
+      "sha256": "1bcf5ebcc7e1ef920a56ca085e475ce7ff4c8cbb60975581acdbd517560dcdb0",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_B_seed45.pt",
+      "sha256": "b2e686031b9b3d27eb1e457ccfc61ae0e9fd7b452eef096e54dc248145f6d9f3",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_B_seed46.pt",
+      "sha256": "c68773182dc05c0d38317d5c4271916fc889c4944eca57dc8e5d38a2b642587e",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_C_seed42.pt",
+      "sha256": "997afa745fdc14f76cfa42a9abf97f3ab5546de67d3a097e9e567b71bf1a7a93",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_C_seed43.pt",
+      "sha256": "3045fe161b144b7795217e7eea885d89a9e8b661bdeb2f839267388280e43695",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_C_seed44.pt",
+      "sha256": "5f9c8bfa2f9a496199ec7cecce5102b3c93a8ea197db783bbedf2c789fd224a3",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_C_seed45.pt",
+      "sha256": "a829aeff7d6d7c083ce00ee832097665648a7fa2c5338cc83bc33dbd4d2fbdad",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold0_C_seed46.pt",
+      "sha256": "4985e59ed6bae9bd3ca6b28fbee588b362ea92a95531f16a613876ffc0af35f4",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed42.pt",
+      "sha256": "a92d7356afddbcb75ba2cb13e114b6aea21fe3d53bbcb4a57c673ebb869b0387",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed43.pt",
+      "sha256": "b0219f52fc29e4bc5ee3ae7628acc5dd44b36f8fa96a3b66ed0db3c1ca99764f",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed44.pt",
+      "sha256": "ee0fdbc3d207fc43244c96f735607629d442ea12fac5c4cbaa0a2ef70575fe94",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed45.pt",
+      "sha256": "1aaae353d3e7cc7ec4c3d3b652a7ebe3a145211d943c8c4b2b06c7cbc013cde3",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_A_cap_seed46.pt",
+      "sha256": "5711ece9359025daa86256ea727a951dc5b523b46b172a7b2789c19e0e0e2ef9",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_B_seed42.pt",
+      "sha256": "62e7cad3504b48e75d8281c4171bc11cc72cc9ff295ed09e48646d4cdd66e513",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_B_seed43.pt",
+      "sha256": "0959071f8c35904df45acc1fc6dd288f618850ca8f2e41c7964bd4bf1fe7e4d3",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_B_seed44.pt",
+      "sha256": "4b68d1ed6c55ce8de22f44ce10750fe7a17759f123205c4836ce6aab72b9e371",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_B_seed45.pt",
+      "sha256": "7c6b813f871bab4c1947b925d89e9157258c4a8f720fac4a4f5be45cd038d882",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_B_seed46.pt",
+      "sha256": "37197eb5ebd5e36202949786f8e1ad0210c3369aafdaa8dcdff495057d42917a",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_C_seed42.pt",
+      "sha256": "e4ca6dcfb13b4a358fc3ce8aa07745494371f4e632dc818adca2c2b162bbc237",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_C_seed43.pt",
+      "sha256": "8ba7c06968db902cb1314bac5bfd57ceaf2d7c317b317df74068b8a71d013ae2",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_C_seed44.pt",
+      "sha256": "08f43cb800f78206b079ca917119544bc361d38a3f95a82f3047157976f2a441",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_C_seed45.pt",
+      "sha256": "61417e7ffd09909a10419ca4947f6f85dc25d387f2718af27f93740c1b75c394",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold1_C_seed46.pt",
+      "sha256": "6bab81cd237ef74ef293fbb283f5c50ef9d1cb554e11438b3dc931ed2fc8f00f",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed42.pt",
+      "sha256": "bab7f225674a826aa2d6a3fffce3a9f60193456279803adf35969d0b1b142461",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed43.pt",
+      "sha256": "46b8e3b23c7e4a9b87e2ad8f73ea3dfdd129a6cb33c9f83802728279766b27e7",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed44.pt",
+      "sha256": "7d7356baa810dace812171f3bbf06c2efafc3d6a326ff5ae7a907740be38d2dc",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed45.pt",
+      "sha256": "3b64a36f72ac7db88e0d987ea5c21da4d6a3ca6493539c61c55300d6a008b9a5",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_A_cap_seed46.pt",
+      "sha256": "eb46340a6f9df727bb8b31903550e9159dd5fd7018bcd150a13640853587d802",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_B_seed42.pt",
+      "sha256": "72c9dd49c33aa0496881b0221abbcc1ec6228c17356274953d085d2fcee5509a",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_B_seed43.pt",
+      "sha256": "5513728679b7fa2317d2ef27d5ad1eda1356f53d8582d3ac01e55008a05eec4c",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_B_seed44.pt",
+      "sha256": "a2e26b7c46f6cf31706d7f35e06f1c9d9d8b98cb275981dac1bf927838eaeeff",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_B_seed45.pt",
+      "sha256": "9e87e1d73286ebda03bfcad8990bf8cef7f67864c2519fb9396541e8056c88c4",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_B_seed46.pt",
+      "sha256": "8a86735d63a4cdd16fd4a8a8574a4a025296b608dbaf91ae91d4d8c1090ad1fd",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_C_seed42.pt",
+      "sha256": "3f4f67e282af995ebba00c0a4d08ca4b64b2c8d139b60e7e157450642649712a",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_C_seed43.pt",
+      "sha256": "2787a4adfcf210564aae3136386bf7d37d6893344f6e79e8f617671b88c95767",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_C_seed44.pt",
+      "sha256": "fc325dc4a628587736a7cf1db2262dee84535310cc61f0de0714bb4bfeccd3fd",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_C_seed45.pt",
+      "sha256": "752c66f028ad2da86c0dd7cd602f31dd06e616a5400cbd0b214bf6c3ac73f067",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold2_C_seed46.pt",
+      "sha256": "48fc5d8d17cdc355ef181631faf527aa017af0fb788637652e5663fb9aec7636",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed42.pt",
+      "sha256": "61ed328f06a0c140940c46c84ed5cf15296c2b047cefda37740505d41db3e8a5",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed43.pt",
+      "sha256": "3d6ce3609a9eb1e98bc0562af29c2550c3f78dd77a35b23d59316ebd50d52343",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed44.pt",
+      "sha256": "bd6c227a113740d74cab69153d751ef04769ce7cd941badd2096c2fcfaefd5cd",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed45.pt",
+      "sha256": "15c9a209475516cda4445b808ad1b83865e00405b92ec7acfc2a7978a44a832c",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_A_cap_seed46.pt",
+      "sha256": "7dd1a2dca405cd05809d54c643f9703455738860a0bf93fbeb77e51045d425b9",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_B_seed42.pt",
+      "sha256": "a733af370fe94f54201b748d0a27de61664a138ae61679fb5d1b9501aae1a1b6",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_B_seed43.pt",
+      "sha256": "d99959b5ec926a89fc02cebebb251506cf48d03e7db503ad5060fe746237869a",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_B_seed44.pt",
+      "sha256": "80d04538e985b2d3e26479ec34e7ee150b98523724546a19d2685ce300e3de02",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_B_seed45.pt",
+      "sha256": "fb2e44fb71ea7119155138d6c54842c840a3621d32c9a68ebc1e62013d7a2832",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_B_seed46.pt",
+      "sha256": "b6b8d505e3158ef46bebd655e97352722d9fa8bc62c1849e0bf02a2ede2601ee",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_C_seed42.pt",
+      "sha256": "ef8b2e50c99fee44228fdf5f7d0c4c21be0aedd89656f9086c42809cdc88b6b3",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_C_seed43.pt",
+      "sha256": "42b4c1194052952e71c7f71508ee94b9f745039686c029dad4a79db12e3e51d1",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_C_seed44.pt",
+      "sha256": "cc05cad42c16cf29d6f83445032f361c9e390908169e2f2c9e4f982f54efd12d",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_C_seed45.pt",
+      "sha256": "5912c89766a1a4ff848245cf40792db24c93bfcf07c4ef15d8aa923767fc9130",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold3_C_seed46.pt",
+      "sha256": "76c9d452bd9faf6af302d7937ffec3e911db132cd1b9994bbc24d38d2f998720",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed42.pt",
+      "sha256": "1f3d8fc01f4600e90d5160dd0ff622514aa7af0b8239a6b097c66292558700e8",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed43.pt",
+      "sha256": "019a932d395ce0f653240849927b59978bbbef836f65f90fc10b5680750f2a68",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed44.pt",
+      "sha256": "0bf09a8050904410447ed1e2edfa89b01272f55c6720632405968efca95f93c2",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed45.pt",
+      "sha256": "c8114926ac030032dd3f2ec8154deb861aa1600eeeaac61c099963042a63f0c1",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_A_cap_seed46.pt",
+      "sha256": "c3dddfe069963f320ccb18ba1a81c4ee815f120e708b93ee3f6cea44d21b1809",
+      "size_bytes": 138294
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_B_seed42.pt",
+      "sha256": "ec5843192fd20ab4e757e3172ad94e39fc18f5df572879f22438ab77f4a9b389",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_B_seed43.pt",
+      "sha256": "96379b7b64e9d8a2c07cddd5065cdc0b73aaebcc7b8f4d809f5b0e45d7eb9866",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_B_seed44.pt",
+      "sha256": "09a11e64cb3091e8186e7d838024b4c1e0e300b91cb8b857da7cf1ef3d0ccc4c",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_B_seed45.pt",
+      "sha256": "7ff35f3ce544bfc1bd2dc6e578c0a4aacbe499661e1fdfc80a236ef46de6ca6f",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_B_seed46.pt",
+      "sha256": "238f45faddabcbcceb466e6f13c2f872581282b911c3625a54b0f639a451da8f",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_C_seed42.pt",
+      "sha256": "a03f840e7e15df3a8a49f02d8d93bc7047765124bc385d06bbd129877e629609",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_C_seed43.pt",
+      "sha256": "13609cbbe15f0b8ee5eac9d0ff2bcd19afd04b1d1eab233064467c61e6377904",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_C_seed44.pt",
+      "sha256": "b95e12cb4d97e05901560aefbc68d184838393696249b4b281430e32ff9ec984",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_C_seed45.pt",
+      "sha256": "1e01c684845480f9a585a6b73707c74a3abfe99a75513bbb1d0d481d90b5ae13",
+      "size_bytes": 138818
+    },
+    {
+      "filename": "galaxyppg_hr_correctedcv_v2_fold4_C_seed46.pt",
+      "sha256": "00636803ea70ab24a1cd51608d5a333a65d904f303fd53ecc44b9c495b83147e",
+      "size_bytes": 138818
+    }
+  ]
+}
