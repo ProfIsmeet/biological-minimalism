@@ -15,7 +15,7 @@ directly from real files this way).
 
 This sprint downloads and trains on the **full 151-recording cohort**
 (`results/hmc_split_stage3_full_cohort.json`, a neutral deterministic
-70/15/15 split, frozen before any HMC file was opened — see
+70/15/15 split, frozen before any bounded training/evaluation — see
 `docs/HMC_STAGE3_SPLIT_STRATEGY_DEVIATION.md`).
 
 **The 12-recording pilot split/data is never used as, combined with, or

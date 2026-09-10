@@ -25,8 +25,8 @@ sorted, then deterministically shuffled with `random.Random(42).shuffle()`
 (seed 42, this project's standard run seed), then partitioned 70/15/15 by
 position: **106 train / 23 val / 22 test**. This is a fixed, single split —
 not k-fold — decided and written to
-`results/hmc_split_stage3_full_cohort.json` before downloading a single
-HMC file.
+`results/hmc_split_stage3_full_cohort.json` before any bounded
+training/evaluation.
 
 **Disposition**: `PILOT_SUPERSEDED_FOR_CANONICAL_HMC_REPLICATION` — Claude's
 12-recording reduced-cohort pilot split (`results/hmc_split_stage2.json`,
@@ -35,7 +35,11 @@ is retained as a historical, disclosed pilot artifact, never used as the
 canonical HMC replication split, and never combined with full-cohort
 numbers.
 
-**Whether any outcome was already inspected**: No. No HMC recording had
-been opened, downloaded, or trained on when this split was constructed —
-verified by this document being written and committed before any HMC
-download command in this session's history.
+**Whether any outcome was already inspected**: No. The full-cohort split
+was frozen before bounded training/evaluation — verified by this
+document's own git commit timestamp preceding the first HMC bounded
+training run in this session's history. (Note: the real RECORDS index
+listing — filenames only, no scientific/performance content — was fetched
+to enumerate the 151 valid IDs before this split was constructed; no
+recording's signal content or any performance outcome was ever inspected
+before the split was frozen.)

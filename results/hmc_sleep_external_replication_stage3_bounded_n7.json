@@ -2,8 +2,8 @@
   "experiment_id": "hmc_sleep_external_replication_stage3_BOUNDED_DIAGNOSTIC_n7",
   "scope_disclosure": "BOUNDED DIAGNOSTIC on 7 recordings (train=5/val=1/test=1) - PhysioNet's TLS certificate expired mid-download this sprint (docs/HMC_FULL_COHORT_CERT_EXPIRY_BLOCKER.md), stopping the full 151-recording download at 8 recordings (7 with complete EDF+scoring pairs). This is NOT the canonical full-cohort HMC replication result.",
   "frozen_protocol_source": "results/hmc_protocol_stage1b.json (Stage 1B commit fe32384, read-only, not merged)",
-  "reduced_cohort_deviation_doc": "docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md",
-  "split_source": "results/hmc_split_stage2.json",
+  "reduced_cohort_deviation_doc": "docs/HMC_FULL_COHORT_CERT_EXPIRY_BLOCKER.md",
+  "split_source": "results/hmc_split_stage3_bounded_n7.json",
   "seeding_protocol_doc": "docs/SLEEP_SEEDING_PROTOCOL_V2.md",
   "eeg_derivation": "C4/M1",
   "eog_derivation": "E1/M2 minus E2/M2",
@@ -2885,5 +2885,6 @@
       "n_seeds_favor_B": 2,
       "n_seeds_total": 5
     }
-  }
+  },
+  "provenance_correction_note": "CORRECTED this sprint (Codex remediation, Section 26): the original written values for reduced_cohort_deviation_doc and split_source incorrectly pointed to Claude prior sprint 12-record pilot artifacts (results/hmc_split_stage2.json, docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md) - inherited unchanged from the template trainer script. The ACTUAL split file used to train this n=7 result was always results/hmc_split_stage3_bounded_n7.json (verified against the trainer scripts own SPLIT_PATH constant). No training result number changed - this is a provenance-pointer correction only."
 }
