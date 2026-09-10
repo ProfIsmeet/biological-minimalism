@@ -14,9 +14,10 @@ markers in any public-facing dashboard view (they belong in this document only).
 - Capacity-control protocol for PPG+IMU — `results/ppg_dalia_capacity_control.json`.
 - Sleep-EDF seed-before-model-init correction (H1) — `docs/SLEEP_SEEDING_PROTOCOL_V2.md`.
 - **Stage 2-4 extension (PENDING_SCIENCE_HANDOFF):** HMC A/B/C protocol, ds003838 full-cohort
-  protocol, corrected Sleep shuffled-EOG-control/interaction protocol — frozen protocol documents
-  exist (`docs/HMC_STAGE2_BANDWIDTH_REDUCED_COHORT_DEVIATION.md` and the Stage-1B protocol freezes),
-  but the corresponding *results* do not exist on this branch yet.
+  protocol, corrected Sleep shuffled-EOG-control/interaction protocol. Protocol/deviation documents
+  for these experiments are candidate work-in-progress on the Science Owner's separate branch, not
+  yet present as canonical artifacts on this branch; neither the protocol documents nor the
+  corresponding *results* exist here yet.
 
 ## Results
 

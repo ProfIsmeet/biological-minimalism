@@ -37,9 +37,10 @@ Every Phase-2/3 manifest entry requires `biological_subject_n` and `optimization
 independently-required integers (`Field(ge=1)` on both, no shared default) — a manifest that omits
 either fails closed with `SCHEMA_VALIDATION_FAILED`
 (`test_subject_n_and_seed_n_are_both_required_independently`). In the existing canonical Sleep-EDF
-result: n=3 biological subjects (primary) / n=8 (secondary holdout), 5 optimization seeds — never
-pooled into a combined "n=11" or "n=8 seeds" figure (`docs/CLAUDE_TO_ISMET_STAGE2_4_SCIENCE_TRANSFER_HANDOFF.md`,
-"primary n=3 and secondary n=8 are reported separately; never pooled into an n=11 test").
+result: n=3 biological subjects (primary, `results/sleep_scientific_remediation_day12.json`) / n=8
+(secondary holdout, `results/sleep_edf_secondary_holdout_evaluation.json`), 5 optimization seeds —
+never pooled into a combined "n=11" or "n=8 seeds" figure; the two counts are reported by two
+separate artifacts and are never summed.
 
 ## 5. Why doesn't the system show a global sensor ranking?
 
