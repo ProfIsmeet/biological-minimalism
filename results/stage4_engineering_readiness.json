@@ -99,7 +99,7 @@
         "fixed_overhead_current_ua": 300.0,
         "supply_v": 2.5,
         "evidence_class": "ENGINEERING_ASSUMPTION",
-        "note": "Day-11 Part-2 explicitly could not verify an exact ADS1299 per-channel power-dissipation table row in its environment (no PDF text extraction available). This environment has the same limitation. This is therefore an explicit order-of-magnitude ENGINEERING_ASSUMPTION for 2 active channels (1 EEG + 1 shared EOG) + internal reference + bias at the already-frozen AVDD-bipolar (2.5V) supply point \u2014 NOT a verified datasheet table value. Supersede with the exact datasheet figure or bench measurement when available."
+        "note": "Day-11 Part-2 explicitly could not verify an exact ADS1299 per-channel power-dissipation table row in its environment (no PDF text extraction available). This environment has the same limitation. This is therefore an explicit order-of-magnitude ENGINEERING_ASSUMPTION for 2 active channels (1 EEG + 1 shared EOG) + internal reference + bias at the already-frozen AVDD-bipolar (2.5V) supply point \u2014 NOT a verified datasheet table value. Supersede with the exact datasheet figure or bench measurement when available. SCOPE: analog (AVDD) current only \u2014 DVDD digital-supply current (3.3V, also frozen in Day-11 Part-2) is NOT included in this power figure, matching the same AFE-only convention already used for wrist_ppg/ecg_chest above."
       },
       "average_power_mw": {
         "value": 1.5,

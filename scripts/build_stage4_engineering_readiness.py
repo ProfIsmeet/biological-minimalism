@@ -26,6 +26,13 @@ sys.path.insert(0, str(REPO_ROOT / "ml"))
 from engineering.ppg_led_power import LedPowerInputs, compute_led_power  # noqa: E402
 
 OUT_PATH = REPO_ROOT / "results" / "stage4_engineering_readiness.json"
+DAY11_POWER_PATH = REPO_ROOT / "results" / "reference_power_budget_day11_part2.json"
+
+# Read the 5 already-frozen Day-11 Part-2 component power values from their
+# source artifact rather than hand-copying them as constants (rule 70: one
+# authoritative source, not a hand-maintained duplicate that can silently
+# diverge if the frozen artifact is ever revised).
+_day11_power = json.loads(DAY11_POWER_PATH.read_text(encoding="utf-8"))["reference_operating_points"]
 
 EV_DATASHEET_DIRECT = "DATASHEET_DIRECT"
 EV_DATASHEET_CALCULATED = "DATASHEET_CALCULATED"
@@ -61,8 +68,8 @@ SECOND_PPG_LED_SCENARIO = LedPowerInputs(
 )
 second_ppg_led = compute_led_power(SECOND_PPG_LED_SCENARIO)
 
-WRIST_PPG_AFE_MW = 0.018  # frozen Day-11 Part-2 value, LED-excluded
-SECOND_PPG_AFE_MW = 0.018  # frozen Day-11 Part-2 value, LED-excluded (25 s/s floor; 500 Hz current still open)
+WRIST_PPG_AFE_MW = _day11_power["wrist_ppg"]["level2_afe_reference_power"]["max"]  # frozen Day-11 Part-2 value, LED-excluded
+SECOND_PPG_AFE_MW = _day11_power["second_ppg_site"]["level2_afe_floor_mW"]["max"]  # frozen Day-11 Part-2 value, LED-excluded (25 s/s floor; 500 Hz current still open)
 
 wrist_ppg_total_mw = WRIST_PPG_AFE_MW + wrist_ppg_led.total_average_power_mw
 second_ppg_total_mw = SECOND_PPG_AFE_MW + second_ppg_led.total_average_power_mw
@@ -161,10 +168,10 @@ DUTY_SCHEDULE = {
 # already an AVERAGE (duty-folded where applicable). Sum at load, then apply
 # regulator efficiency to get battery-side power.
 # ---------------------------------------------------------------------------
-WRIST_IMU_MW = 0.018  # frozen Day-11 Part-2 reference operating point (low-power accel-only)
-TMP117_MW = 0.01155  # frozen
-OPT3001_MW = 0.00594  # frozen, wrist case
-ECG_AFE_MW = 0.67  # frozen
+WRIST_IMU_MW = _day11_power["wrist_imu"]["reference_operating_point"]["reference_power_mW"]  # frozen Day-11 Part-2 reference operating point (low-power accel-only)
+TMP117_MW = _day11_power["skin_temperature"]["reference_power_mW"]["value"]  # frozen
+OPT3001_MW = _day11_power["light_sensor"]["reference_power_mW"]["value"]  # frozen, wrist case
+ECG_AFE_MW = _day11_power["ecg_chest"]["afe_reference_power_mW"]["value"]  # frozen
 
 base_topology_load_mw = {
     "wrist_ppg_total_incl_led": wrist_ppg_total_mw,
@@ -363,7 +370,11 @@ artifact = {
                     "+ 1 shared EOG) + internal reference + bias at the already-"
                     "frozen AVDD-bipolar (2.5V) supply point — NOT a verified "
                     "datasheet table value. Supersede with the exact datasheet "
-                    "figure or bench measurement when available."
+                    "figure or bench measurement when available. SCOPE: analog "
+                    "(AVDD) current only — DVDD digital-supply current (3.3V, "
+                    "also frozen in Day-11 Part-2) is NOT included in this power "
+                    "figure, matching the same AFE-only convention already used "
+                    "for wrist_ppg/ecg_chest above."
                 ),
             },
             "average_power_mw": q(head_afe_power_mw, "mW", EV_ENGINEERING_ASSUMPTION),
