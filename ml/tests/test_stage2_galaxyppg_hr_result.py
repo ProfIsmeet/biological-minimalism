@@ -1,6 +1,14 @@
 """Contract tests for the real GalaxyPPG HR external-replication result.
 No performance thresholds - the result is genuinely mixed and must not be
-silently reversed or hidden by a future edit."""
+silently reversed or hidden by a future edit.
+
+NOTE (this sprint): the underlying result file
+(results/galaxyppg_hr_external_replication_stage2.json) is marked
+INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT - see
+docs/GALAXYPPG_REFERENCE_SIGNAL_QUALITY_BLOCKER.md. These tests still
+verify the file's internal structural contracts (still true), but its MAE
+numbers must not be cited as valid evidence - see
+docs/GALAXYPPG_STAGE3_CORRECTED_RESULTS.md for the corrected rerun."""
 
 from __future__ import annotations
 
@@ -14,7 +22,11 @@ ELIGIBILITY = json.loads((REPO_ROOT / "results" / "galaxyppg_eligibility_stage2.
 
 
 def test_all_24_participants_eligible():
-    assert ELIGIBILITY["n_eligible"] == 24
+    # SUPERSEDED this sprint: a real BLOCKER (docs/GALAXYPPG_REFERENCE_SIGNAL_QUALITY_BLOCKER.md)
+    # found that 6/24 subjects have reference ECG too corrupted for R-peak
+    # detection. Corrected eligibility is 18/24 - this test now checks the
+    # corrected number, not the original (wrong) claim.
+    assert ELIGIBILITY["n_eligible"] == 18
 
 
 def test_scope_disclosure_present():
