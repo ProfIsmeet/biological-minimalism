@@ -40,6 +40,17 @@ has real fields:
 `pleth` — exactly the three A-arm signals the frozen protocol needs.
 Internal shapes/sample rates not yet extracted (deferred — see below).
 
+## Real target structure (`LBNPinf`, confirmed timebase-compatible with EIS)
+
+`LBNPinf[0, subject_idx]` has real fields `lbnp` (pressure level sequence,
+e.g. subject 1: `[0, 0, 15, 30, 30, 45, 45, 60, 60, 70, 70]` mmHg) and `ts`
+(real stage-transition timestamps, e.g. subject 1: `693.82` to `722.93`).
+**These timestamps are in the same numeric range/units as `SSout`'s `tvec`
+for the same subject** (692.28–729.87) — confirming the EIS spectrum
+timebase and the LBNP-stage timebase are directly compatible for real
+per-spectrum target labeling (step-function lookup: each EIS spectrum's
+stage = the most recent `lbnp` level whose `ts` has passed).
+
 ## What remains for a full LBNP A/B/C training run (not done this sprint)
 
 1. Extract real native sample rates for `ecgs`/`MAP`/`pleth` from `ts`
