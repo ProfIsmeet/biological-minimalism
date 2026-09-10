@@ -1,0 +1,84 @@
+{
+  "purpose": "Section 32 remediation: consolidated machine-readable provenance index for all GalaxyPPG and LBNP Stage 1B-3 artifacts, line-ending-normalized SHA256 per file. Pointer/index only - does not duplicate result content, see docs/STAGE3_SCIENCE_COMPLETION_REPORT.md for the narrative account.",
+  "galaxyppg": {
+    "eligibility_current": "results/galaxyppg_corrected_eligibility.json",
+    "eligibility_superseded": "results/galaxyppg_eligibility_stage2.json (pre-fix, 24-subject, superseded by the 40-peaks/min reference-quality gate)",
+    "cv_protocol_current": "results/galaxyppg_corrected_full_cv_folds.json (GALAXYPPG_CORRECTED_ELIGIBILITY_CV_PROTOCOL_V2, 18 subjects, 6 folds)",
+    "cv_protocol_superseded": "results/galaxyppg_full_cv_folds_stage3.json (pre-fix, 24-subject design)",
+    "bounded_single_fold_result": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+    "full_cv_result_in_progress": "results/galaxyppg_corrected_full_cv_result.json (written incrementally as folds complete)"
+  },
+  "lbnp": {
+    "protocol": "results/lbnp_protocol_stage1b.json",
+    "file_audit": "results/lbnp_actual_file_audit_stage1b.json",
+    "access_attempt_stage3": "results/lbnp_stage3_access_attempt.json",
+    "eis_result": "results/lbnp_thoracic_eis_stage3.json (n=12 real actual-file-verified eligible of 16 enrolled, COMPLETE_NEGATIVE per prior sprint finding)"
+  },
+  "file_hashes": [
+    {
+      "path": "results/galaxyppg_protocol_stage1b.json",
+      "exists": true,
+      "sha256": "5a3cef6383273a25f62a5d9994e760c288714e9922510d9f0185e5511958c9f5"
+    },
+    {
+      "path": "results/galaxyppg_actual_file_audit_stage1b.json",
+      "exists": true,
+      "sha256": "0679e50cf619e63712b8009aaba70b1cf3ed5fe2daadc4ec5b8925f171f985de"
+    },
+    {
+      "path": "results/galaxyppg_eligibility_stage2.json",
+      "exists": true,
+      "sha256": "1f3d2a6b7c9da3d4c0ef057b461057798643f2cad87e45484921ada7606d5901"
+    },
+    {
+      "path": "results/galaxyppg_corrected_eligibility.json",
+      "exists": true,
+      "sha256": "06bda54dbd3fd41b4f51477c2e847376e1f42b065b549f7b5f1194dbf9b5284b"
+    },
+    {
+      "path": "results/galaxyppg_corrected_full_cv_folds.json",
+      "exists": true,
+      "sha256": "0b5fb0ccba92d2f108a8ef01855fbd68f8aab0fadae1ce60d9fcce63c618f7ca"
+    },
+    {
+      "path": "results/galaxyppg_split_stage2_single_fold.json",
+      "exists": true,
+      "sha256": "f7b6ec29bbf7fab15b8739fe66da5496fa40a587e4fa41158c899441fe589922"
+    },
+    {
+      "path": "results/galaxyppg_split_stage3_corrected_eligibility.json",
+      "exists": true,
+      "sha256": "72cd496df4c87321f83be8a8635a7e9cff068c004ef3138f71ffe447ed28a4b7"
+    },
+    {
+      "path": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+      "exists": true,
+      "sha256": "5e3dd90987e2b0aacd8cf90b74e3db31b5e59447028f11b5194c0914c0a235ef"
+    },
+    {
+      "path": "results/galaxyppg_hr_corrected_per_subject_stage3.json",
+      "exists": true,
+      "sha256": "cce47925bbd0c479de528cd49dcee044330587e355185d754da4e87dc2a06550"
+    },
+    {
+      "path": "results/lbnp_protocol_stage1b.json",
+      "exists": true,
+      "sha256": "4d7bdb439503a9b09e707cd0d17b979c12e6e61a3eb706ab70e7e8bf5533cac2"
+    },
+    {
+      "path": "results/lbnp_actual_file_audit_stage1b.json",
+      "exists": true,
+      "sha256": "f9f18c1e357c066b82ab7452e9d00651f1e73051a30fe9ff81136e26c21c700e"
+    },
+    {
+      "path": "results/lbnp_stage3_access_attempt.json",
+      "exists": true,
+      "sha256": "c4a0e8a9da6864786cfeb131089977aa091d565e8d822707620411b0ad78624f"
+    },
+    {
+      "path": "results/lbnp_thoracic_eis_stage3.json",
+      "exists": true,
+      "sha256": "34126d71649b864812b3565c1b85ca0452bf28911407a3f98dbc4c3a630e708a"
+    }
+  ]
+}

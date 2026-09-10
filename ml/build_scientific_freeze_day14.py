@@ -58,7 +58,11 @@ CANONICAL_FILES = [
 
 
 def sha256_of(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Hash line-ending-normalized content (CRLF -> LF) so the manifest's
+    # hashes are stable across Windows/Linux/macOS checkouts of the same
+    # git-tracked text content, rather than reflecting incidental
+    # CRLF-vs-LF byte differences that carry no scientific meaning.
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def main() -> None:

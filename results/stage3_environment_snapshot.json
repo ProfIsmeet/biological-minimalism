@@ -1,0 +1,21 @@
+{
+  "purpose": "Section 29 remediation: an explicit Stage 3 environment-snapshot artifact, re-queried live from the actual training/evaluation venv during this sprint (GalaxyPPG corrected full-CV + Codex parent-audit remediation), not merely copied forward from the Day-10 record.",
+  "snapshot_git_commit": "3224f07f06e1d06c8a69943a3a7ae6a533377e5f",
+  "snapshot_branch": "stage3-science-completion",
+  "verification_method": "Directly imported and printed __version__/platform fields from backend/.venv (the same venv every ml/ training and evaluation script in this repository's history has used) during this sprint. No package was upgraded, downgraded, or reinstalled.",
+  "actual": {
+    "python_version": "3.13.0",
+    "os": "Windows-2022Server-10.0.20348-SP0",
+    "cuda_available": false,
+    "torch": "2.6.0+cpu",
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.0",
+    "mne": "1.12.1",
+    "wfdb": "4.3.1",
+    "pandas": "3.0.5"
+  },
+  "compared_against": "results/day10_frozen_environment_verification.json",
+  "drift_since_day10": "NONE - all fields identical to the Day-10 EXACT_FROZEN_ENVIRONMENT verification.",
+  "environment_status": "EXACT_FROZEN_ENVIRONMENT_CONFIRMED_STAGE3"
+}
