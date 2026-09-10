@@ -11,12 +11,12 @@
         "PPG-DaLiA (capacity-controlled): A_cap->B ~0.605 bpm, C->B ~0.776 bpm, both 5/5 seeds (results/ppg_dalia_capacity_control.json). The original ~20.6%/23% figure is HISTORICAL_CAPACITY_CONFOUNDED (Model A 8,065 params vs Model B 28,865/29,089 params, not capacity-matched) - never cite it as a clean IMU effect."
       ],
       "negative_evidence": [],
-      "replication": "EXTERNAL_REPLICATION_SUPPORTIVE (GalaxyPPG, independent device/subject family - real, corrected-eligibility bounded single-fold result: A_cap->B +1.342 bpm, C->B +1.629 bpm, 5/5 seeds, 3/3 test subjects, no sign reversal; full corrected 6-fold CV in progress/pending)",
-      "biological_n": "15 (PPG-DaLiA, inherited); GalaxyPPG: 18 real eligible of 24 (6 excluded for a real reference-ECG-quality defect), 3 tested in the bounded fold",
+      "replication": "EXTERNAL_REPLICATION_SUPPORTIVE (GalaxyPPG, independent device/subject family - full corrected 6-fold CV COMPLETE: participant-level A_cap->B +0.834 bpm (12/18 favor B), C->B +0.904 bpm (13/18 favor B); window-weighted A_cap->B +0.845 bpm, C->B +0.920 bpm; no sign reversal under either aggregation or leave-one-out exclusion of the most extreme subject. Real, moderate, heterogeneous effect - smaller than the earlier bounded single-fold diagnostic (+1.342/+1.629 bpm on 3/3 subjects), which the full cohort shows was not representative.)",
+      "biological_n": "15 (PPG-DaLiA, inherited); GalaxyPPG: 18 real eligible of 24 (6 excluded for a real reference-ECG-quality defect), all 18 tested across the completed full 6-fold CV (one test appearance each)",
       "burden_known": "IMU co-located with PPG in the same wristband - near-zero marginal burden (established)",
       "body_region": "wrist",
       "contact_module_impact": "single wristband module already assumed for PPG; IMU adds no new contact region",
-      "key_uncertainty": "GalaxyPPG's bounded single-fold result is real and positive but not yet the full corrected 6-fold CV - full-cohort conclusion still pending"
+      "key_uncertainty": "GalaxyPPG's full corrected 6-fold CV is complete and directionally supportive, but the effect is real, moderate, and heterogeneous (6/18 subjects favor A_cap over B) rather than uniform - not yet strong enough on its own to resolve FINAL_ARCHITECTURE, which remains a decision for Emir/Project Coordinator, not this remediation."
     },
     {
       "sensor_site": "chest/frontal EEG + EOG (sleep module)",

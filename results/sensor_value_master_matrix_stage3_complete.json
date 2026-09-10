@@ -86,15 +86,15 @@
       "C": "+deranged ACC",
       "metric": "MAE (bpm)",
       "sign_convention": "lower = better",
-      "exact_result": "STAGE 3 UPDATE: A real BLOCKER was found (6/24 subjects had corrupted reference ECG, near-zero detectable R-peaks) via hostile review of a full 6-fold CV. Fixed (real R-peak-rate eligibility gate added), corrected eligibility=18/24. Corrected single-fold rerun (3 test subjects): A_cap=6.207, B=4.865, C=6.494 (MAE bpm). A-B=+1.342 (5/5 seeds favor B). C-B=+1.629 (5/5 seeds favor B). No sign reversal across all 3 test subjects. Both the pre-fix single-fold diagnostic and the pre-fix full 6-fold CV are marked INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT. See docs/GALAXYPPG_STAGE3_CORRECTED_RESULTS.md.",
-      "n_subjects": "24 eligible per Stage 1B metadata (not actual-file-verified this sprint)",
-      "seeds": "N/A - not trained",
-      "sensitivity": "No sign reversal in the corrected fold (unlike the invalidated pre-fix runs, which showed spurious heterogeneity caused by corrupted reference labels)",
+      "exact_result": "STAGE 3 UPDATE (full CV complete): A real BLOCKER was found (6/24 subjects had corrupted reference ECG, near-zero detectable R-peaks) via hostile review of a full 6-fold CV. Fixed (real R-peak-rate eligibility gate added), corrected eligibility=18/24. Full corrected 6-fold CV completed (5 newly-trained folds + 1 independently re-verified reused fold): participant-level A_cap->B=+0.834 bpm (12/18 favor B), C->B=+0.904 bpm (13/18 favor B); window-weighted (33,813 pooled test windows) A_cap->B=+0.845 bpm, C->B=+0.920 bpm. No sign reversal under either aggregation or leave-one-out exclusion of the most extreme subject. Both the pre-fix single-fold diagnostic and the pre-fix full 6-fold CV remain marked INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT. See results/galaxyppg_corrected_full_cv_result.json and docs/GALAXYPPG_STAGE3_CORRECTED_RESULTS.md.",
+      "n_subjects": "24 total, 18 real reference-ECG-quality-eligible (6 excluded for a real corrupted-reference-ECG data-integrity defect)",
+      "seeds": "5 seeds (42-46) per fold/condition",
+      "sensitivity": "Real subject heterogeneity disclosed: 6/18 subjects favor A_cap over B, 5/18 favor C over B. No sign reversal at the aggregate level under window-weighted vs participant-level aggregation or under leave-one-out exclusion of the single most extreme subject (P16).",
       "negative_finding": false,
-      "replication_state": "EXTERNAL_REPLICATION_SUPPORTIVE (bounded single fold, corrected eligibility)",
+      "replication_state": "EXTERNAL_REPLICATION_SUPPORTIVE (full corrected 6-fold CV, n=18 biological participants)",
       "burden_relevance": "same as PPG-DaLiA row - wrist IMU near-zero marginal burden",
-      "limitations": "BOUNDED_TO_SINGLE_FOLD over the corrected 18-subject cohort; full 6-fold CV under corrected eligibility PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
-      "safe_claim": "Consistent, capacity-controlled IMU benefit (5/5 seeds, 3/3 subjects), qualitatively consistent with PPG-DaLiA, at this bounded corrected-eligibility scale."
+      "limitations": "Real, moderate, heterogeneous effect - not uniform across subjects (see sensitivity). Smaller in magnitude than the earlier bounded single-fold diagnostic (+1.342/+1.629 bpm on 3/3 subjects), which the full cohort reveals was not representative of the whole 18-subject population.",
+      "safe_claim": "Aligned wrist IMU added a real but moderate and heterogeneous HR-estimation benefit under a capacity-near-matched comparison on GalaxyPPG (full corrected 6-fold CV, n=18 biological participants, A_cap->B +0.834 bpm, C->B +0.904 bpm, majority of subjects favor B, no aggregate sign reversal) - qualitatively consistent with PPG-DaLiA's capacity-controlled finding, though smaller and less uniform than the earlier bounded single-fold diagnostic suggested."
     },
     {
       "experiment": "LBNP ECG+pleth -> +thoracic EIS",
