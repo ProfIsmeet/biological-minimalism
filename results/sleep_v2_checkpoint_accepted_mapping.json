@@ -1,0 +1,22 @@
+{
+  "purpose": "Codex finding H-01 remediation: the accepted canonical corrected Sleep V2 A/B checkpoints and Claude's noncanonical Mac reproduction checkpoints share IDENTICAL FILENAMES but different byte content (different SHA256, different size) - filename alone is never authoritative. This is the single authoritative disambiguation source. Science Owner artifacts only; Integration Owner's consumer-side resolution is a separate, already-hardened layer.",
+  "real_collision_confirmed": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt: canonical SHA256=5bc7c4794e11b148365fd0c03760042307fca1259b9d6c0b01c763f1fb49ece7 (42067 bytes) vs noncanonical Mac reproduction SHA256=997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6 (42540 bytes) - SAME FILENAME, DIFFERENT FILES.",
+  "accepted_canonical_checkpoints": {
+    "source_manifest": "results/sleep_edf_primary_seedfix_v2.json checkpoint_manifest",
+    "status": "ACCEPTED_CANONICAL",
+    "entries": [
+      {"filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt", "protocol": "corrected_V2", "arm": "A", "seed": 42, "sha256": "5bc7c4794e11b148365fd0c03760042307fca1259b9d6c0b01c763f1fb49ece7", "size_bytes": 42067},
+      {"filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed42.pt", "protocol": "corrected_V2", "arm": "B", "seed": 42, "sha256": null, "note": "see results/sleep_edf_primary_seedfix_v2.json checkpoint_manifest for the full 10-entry canonical list (A+B x seeds 42-46); not hand-duplicated here to avoid a second, potentially-stale copy of the same numbers"}
+    ]
+  },
+  "noncanonical_mac_reproduction_checkpoints": {
+    "source_manifest": "results/claude_to_ismet_science_transfer_manifest.json checkpoints",
+    "status": "NONCANONICAL_PENDING_ISMET_REVIEW (adjudicated: accepted as supportive reproducibility evidence only, never promoted - docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md)",
+    "note": "These 10 checkpoints use the IDENTICAL filename pattern as the canonical set above (trained on a different machine/torch build, per the transfer handoff) - they were never physically present in this repository's own ml/checkpoints/ directory alongside the canonical set (gitignored, generated on a separate Mac session), so no on-disk overwrite occurred, but the filename ambiguity is real and must be resolved by SHA256, never by filename, for any future reconciliation.",
+    "example_entries": [
+      {"filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt", "protocol": "corrected_V2_mac_reproduction", "arm": "A", "seed": 42, "sha256": "997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6", "size_bytes": 42540}
+    ]
+  },
+  "rule_for_future_consumers": "Any tool, script, or manual process that needs to identify a Sleep V2 checkpoint's canonical status MUST check its SHA256 against results/sleep_edf_primary_seedfix_v2.json's checkpoint_manifest, NEVER trust the filename alone. This mapping file is the Science Owner's authoritative source for that check.",
+  "numerical_results_unchanged": "This remediation is a provenance/identity clarification only. No accepted numerical result was altered."
+}
