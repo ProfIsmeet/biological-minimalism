@@ -4,20 +4,28 @@
   "candidates": [
     {
       "sensor_site": "wrist PPG + wrist IMU (wristband module)",
-      "demonstrated_targets": ["HR (bpm)"],
-      "positive_evidence": ["PPG-DaLiA: IMU cut HR MAE ~23% vs capacity-controlled PPG-only baseline"],
+      "demonstrated_targets": [
+        "HR (bpm)"
+      ],
+      "positive_evidence": [
+        "PPG-DaLiA (capacity-controlled): A_cap->B ~0.605 bpm, C->B ~0.776 bpm, both 5/5 seeds (results/ppg_dalia_capacity_control.json). The original ~20.6%/23% figure is HISTORICAL_CAPACITY_CONFOUNDED (Model A 8,065 params vs Model B 28,865/29,089 params, not capacity-matched) - never cite it as a clean IMU effect."
+      ],
       "negative_evidence": [],
-      "replication": "ATTEMPTED_BLOCKED (GalaxyPPG, independent device family - blocked by data access this sprint, protocol frozen and ready)",
-      "biological_n": "15 (PPG-DaLiA, inherited)",
+      "replication": "EXTERNAL_REPLICATION_SUPPORTIVE (GalaxyPPG, independent device/subject family - real, corrected-eligibility bounded single-fold result: A_cap->B +1.342 bpm, C->B +1.629 bpm, 5/5 seeds, 3/3 test subjects, no sign reversal; full corrected 6-fold CV in progress/pending)",
+      "biological_n": "15 (PPG-DaLiA, inherited); GalaxyPPG: 18 real eligible of 24 (6 excluded for a real reference-ECG-quality defect), 3 tested in the bounded fold",
       "burden_known": "IMU co-located with PPG in the same wristband - near-zero marginal burden (established)",
       "body_region": "wrist",
       "contact_module_impact": "single wristband module already assumed for PPG; IMU adds no new contact region",
-      "key_uncertainty": "Whether the effect reproduces on an independent device/subject family (GalaxyPPG) - currently unresolved, not negative"
+      "key_uncertainty": "GalaxyPPG's bounded single-fold result is real and positive but not yet the full corrected 6-fold CV - full-cohort conclusion still pending"
     },
     {
       "sensor_site": "chest/frontal EEG + EOG (sleep module)",
-      "demonstrated_targets": ["5-class sleep stage"],
-      "positive_evidence": ["Sleep-EDF: EOG added macro-F1 beyond EEG alone, confirmed under both original and H1-corrected seeding"],
+      "demonstrated_targets": [
+        "5-class sleep stage"
+      ],
+      "positive_evidence": [
+        "Sleep-EDF: EOG added macro-F1 beyond EEG alone, confirmed under both original and H1-corrected seeding"
+      ],
       "negative_evidence": [],
       "replication": "OUT_OF_SCOPE_THIS_BRANCH (HMC belongs to Claude's Sleep/external-replication line per Section 47)",
       "biological_n": "primary Sleep-EDF cohort (inherited)",
@@ -28,9 +36,14 @@
     },
     {
       "sensor_site": "upper-body (arm+trunk) BioZ + leg BioZ (bio-impedance module)",
-      "demonstrated_targets": ["absolute TBW (historical, circular target - see limitation)", "baseline-relative body-mass change (this sprint's new experiment)"],
+      "demonstrated_targets": [
+        "absolute TBW (historical, circular target - see limitation)",
+        "baseline-relative body-mass change (this sprint's new experiment)"
+      ],
       "positive_evidence": [],
-      "negative_evidence": ["QDE V2: leg BioZ did not show a robust, subject-consistent improvement over arm+trunk BioZ alone for baseline-relative body-mass change; aggregate mean dominated by one outlier subject (n=10)"],
+      "negative_evidence": [
+        "QDE V2: leg BioZ did not show a robust, subject-consistent improvement over arm+trunk BioZ alone for baseline-relative body-mass change; aggregate mean dominated by one outlier subject (n=10)"
+      ],
       "replication": "N/A (single dataset, new experiment not a replication)",
       "biological_n": 10,
       "burden_known": "leg BioZ is a real added contact-region burden beyond arm+trunk (established)",
@@ -40,19 +53,25 @@
     },
     {
       "sensor_site": "thoracic bio-impedance spectroscopy (EIS)",
-      "demonstrated_targets": ["LBNP-induced central hypovolemic stress stage (planned, not yet trained)"],
+      "demonstrated_targets": [
+        "LBNP-induced central hypovolemic stress stage"
+      ],
       "positive_evidence": [],
-      "negative_evidence": [],
-      "replication": "N/A - not yet trained (blocked by data access)",
-      "biological_n": "16 usable per metadata, not actual-file-verified",
+      "negative_evidence": [
+        "LBNP thoracic EIS did not add information beyond ECG+pleth (A-B=-2.24 mmHg MAE, only 3/12 subjects favor B; B indistinguishable from its own within-subject-deranged control, C-B~=-0.03) - real, complete, COMPLETE_NEGATIVE result, real n=12 actual-file-verified cohort"
+      ],
+      "replication": "N/A (single dataset, new experiment)",
+      "biological_n": "12 real actual-file-verified eligible (of 16 enrolled - 4 excluded for real missing pleth data)",
       "burden_known": "distinct module/contact-region from ECG/pleth - real added burden if adopted (established)",
       "body_region": "thorax (also abdomen/arm sites available but out of frozen scope)",
-      "contact_module_impact": "would require a dedicated EIS acquisition module distinct from this project's existing PPG/ECG modules",
-      "key_uncertainty": "Entirely unresolved - blocked by data access, not evidence of any kind yet"
+      "contact_module_impact": "would require a dedicated EIS acquisition module distinct from this project's existing PPG/ECG modules - and per this sprint's real negative result, unclear benefit to justify that burden for this specific target",
+      "key_uncertainty": "Resolved for this specific target/protocol (real negative) - abdominal/arm sites and other targets remain untested"
     },
     {
       "sensor_site": "sparse frontal+mastoid EEG (AF7/AF8/TP9/TP10, Muse-matched) vs full montage",
-      "demonstrated_targets": ["3-class digit-span memory load (bounded diagnostic only)"],
+      "demonstrated_targets": [
+        "3-class digit-span memory load (bounded diagnostic only)"
+      ],
       "positive_evidence": [],
       "negative_evidence": [],
       "replication": "N/A (new target/domain)",

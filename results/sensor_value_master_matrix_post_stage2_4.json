@@ -10,7 +10,7 @@
       "C": "PPG+shuffled IMU",
       "metric": "MAE (bpm)",
       "sign_convention": "lower MAE = better",
-      "exact_result": "IMU cut HR MAE ~23% vs PPG-only, per results/sensor_marginal_value_contract.json (inherited, unmodified by this branch)",
+      "exact_result": "HISTORICAL_CAPACITY_CONFOUNDED: original A->B ~1.879 bpm (~20.6% relative, sometimes miscited as ~23%) used Model A (8,065 params) vs Model B (28,865/29,089 params) - NOT capacity-matched. Capacity control (docs/PPG_DALIA_CAPACITY_CONTROL_PREDECLARATION.md) found ~68% of this gap is recovered by capacity/architecture alone (A_cap). The GOVERNING capacity-controlled result is: A_cap->B ~0.605 bpm, C->B ~0.776 bpm, both 5/5 seeds (results/ppg_dalia_capacity_control.json). Per docs/FURKAN_PAPER_HANDOFF_CANONICAL_DAY9.md: do NOT write 20.6%/23% pure IMU, 1.88 bpm clean IMU, or a 59/41 causal split.",
       "n_subjects": 15,
       "seeds": "multiple (see original artifact)",
       "sensitivity": "inherited context only - not re-verified this branch",
@@ -18,7 +18,7 @@
       "replication_state": "ORIGINAL_FINDING (this is the finding GalaxyPPG attempted to replicate)",
       "burden_relevance": "wrist IMU already co-located with PPG in a wristband module - near-zero marginal burden",
       "limitations": "Single dataset/device family - see GalaxyPPG row for replication attempt status",
-      "safe_claim": "Aligned wrist IMU added HR-estimation information beyond a capacity-controlled PPG-only baseline on PPG-DaLiA."
+      "safe_claim": "Under a capacity-controlled comparison, aligned wrist IMU added a smaller but real HR-estimation benefit (A_cap->B ~0.605 bpm, C->B ~0.776 bpm, 5/5 seeds) beyond a capacity-matched PPG-only baseline on PPG-DaLiA. The original ~20.6%/23% figure is historical and capacity-confounded - never cite it as a clean IMU effect."
     },
     {
       "experiment": "PTT one PPG -> second PPG",
