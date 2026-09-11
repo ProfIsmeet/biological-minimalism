@@ -357,3 +357,77 @@ None found or remaining.
    `UNRESOLVED`, `formal_pareto` remains `NOT_READY` after all this
    sprint's wording/classification updates - verified directly.
 
+---
+
+## Stage 3 Final Governance & Freeze Closure Sprint — Hostile Review
+
+A third independent audit found that governance was not genuinely
+fail-closed: the prior `governing_artifacts` map was manually maintained
+and had let the superseded LBNP result and the bounded (supporting-only)
+Galaxy diagnostic sit alongside genuinely governing entries, and a test
+in the prior sprint's own freeze-consistency suite contained a
+`if "historical" in key.lower(): continue` key-name bypass - exactly the
+anti-pattern real governance systems must not have.
+
+### BLOCKER / HIGH
+
+None found or remaining.
+
+### Structural defect found and fixed this sprint
+
+**The `if "historical" in key.lower()` bypass**
+(`ml/tests/test_stage3_final_freeze_self_consistency.py`, prior version):
+this test would have silently passed even if a HISTORICAL artifact were
+assigned a governing-sounding key name without the substring
+"historical" in it - governance depended on how a key was NAMED, not on
+the artifact's actual state. Rewritten entirely: the new registry
+(`results/stage3_governance_registry.json`) gives every artifact an
+explicit `status` field, `ml/stage3_science_resolver.py` resolves purely
+from that field, and every test in
+`ml/tests/test_stage3_governance_*.py` looks up an artifact's real
+registry status before asserting anything - no key-name string matching
+anywhere in the governance-validation path.
+
+### MEDIUM
+
+1. **Bounded Galaxy diagnostic was implicitly governing**: the prior
+   freeze manifest's `governing_artifacts` dict included
+   `galaxyppg_bounded_diagnostic` pointing at the single-fold result,
+   alongside the full-CV result - two Galaxy entries in one governance
+   map invited exactly the "which one is current" ambiguity this system
+   exists to prevent. Fixed: the bounded diagnostic is now `SUPPORTING`
+   in the registry and does not appear in `governing_artifacts` at all;
+   only `galaxyppg_external_replication` (the full CV) does.
+2. **Test-count reporting error**: the prior sprint's report said "20 new
+   tests" when the actual delta was 14 (486→500). Corrected in
+   `results/stage3_science_completion_manifest.json`'s
+   `reconciliation_note`, with the real delta stated for both that sprint
+   and this one.
+
+### INFO — hostile probes attempted (Part XII)
+
+All performed against a temp-file copy of the registry, never the real
+file on disk (verified: `test_real_registry_file_untouched_by_hostile_probes`).
+
+1. **Resolving old LBNP as current**: `resolve_by_path_or_status` raises
+   `GovernanceResolutionError` (status `HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL`).
+2. **Resolving invalid pre-QC Galaxy results as current**: both the
+   pre-fix single-fold and pre-fix full-CV results raise (status
+   `INVALIDATED`).
+3. **Noncanonical Mac Sleep reproduction resolving as current**: raises
+   (status `NONCANONICAL_REPRODUCTION`).
+4. **Two GOVERNING artifacts in one family**: raises `AMBIGUOUS`.
+5. **Zero GOVERNING artifacts in one family**: raises `No GOVERNING artifact`.
+6. **Governing artifact's file deleted/missing**: raises `does not exist on disk`.
+7. **Placing a superseded artifact into the governing map**: structurally
+   impossible without also changing its registry `status` field to
+   `GOVERNING` - and `test_no_governing_artifact_has_a_non_governing_registry_status`
+   would immediately catch any registry edit that tried.
+8. **Using old HMC count semantics**: `results/hmc_current_download_inventory.json`
+   now publishes the 59/58/52 three-way breakdown with explicit
+   `canonical_fields`; all current-facing consumers checked and fixed
+   (Section 9).
+9. **Stale LBNP narrative docs**: `docs/STAGE3_HANDOFF_TO_EMIR_AND_INTEGRATION_OWNER.md`,
+   `docs/LBNP_STAGE3_HIGH03_REMEDIATION.md`, and `docs/LBNP_STAGE3_RESULTS.md`
+   all fixed or banner-marked historical (Sections 3-5).
+

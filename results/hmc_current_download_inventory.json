@@ -4,7 +4,10 @@
   "n_edf_files_present": 59,
   "n_complete_recording_pairs_edf_plus_annotation": 58,
   "incomplete_recordings": [
-    {"id": "SN060", "reason": "SN060.edf present (6.4MB) but SN060_sleepscoring.txt annotation is missing, and the .edf file size (6.4MB) is far smaller than every complete recording's .edf (92-129MB range observed for SN058/SN059) - real evidence this is a partial/interrupted download, not a complete recording."}
+    {
+      "id": "SN060",
+      "reason": "SN060.edf present (6.4MB) but SN060_sleepscoring.txt annotation is missing, and the .edf file size (6.4MB) is far smaller than every complete recording's .edf (92-129MB range observed for SN058/SN059) - real evidence this is a partial/interrupted download, not a complete recording."
+    }
   ],
   "n_sha256_verified_against_physionet": {
     "value": 52,
@@ -13,9 +16,18 @@
   },
   "n_total_cohort": 151,
   "historical_counts_now_superseded": [
-    {"count": "45/151", "source": "results/sensor_value_master_matrix_stage3_complete.json, results/stage3_science_completion_manifest.json (some fields, prior sprint)"},
-    {"count": "52/151", "source": "docs/HMC_STAGE3_FULL_COHORT_STATUS.md - this was actually the SHA256-VERIFIED count, not the file-presence count; conflating the two caused the prior inconsistency"},
-    {"count": "59/151", "source": "this sprint's own first-pass reconciliation (prior commit) - was a raw .edf file count that did not check for the matching annotation file or partial-download evidence; superseded by the 58-complete/59-present split below"}
+    {
+      "count": "45/151",
+      "source": "results/sensor_value_master_matrix_stage3_complete.json, results/stage3_science_completion_manifest.json (some fields, prior sprint)"
+    },
+    {
+      "count": "52/151",
+      "source": "docs/HMC_STAGE3_FULL_COHORT_STATUS.md - this was actually the SHA256-VERIFIED count, not the file-presence count; conflating the two caused the prior inconsistency"
+    },
+    {
+      "count": "59/151",
+      "source": "this sprint's own first-pass reconciliation (prior commit) - was a raw .edf file count that did not check for the matching annotation file or partial-download evidence; superseded by the 58-complete/59-present split below"
+    }
   ],
   "current_authoritative_state": {
     "n_edf_files_present": 59,
@@ -26,5 +38,16 @@
   },
   "current_status": "PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
   "explicit_scope_note": "This sprint's master prompt explicitly forbids resuming HMC download or training. This artifact only reconciles which counts are CURRENT and what each one actually means, it does not advance HMC progress in any way.",
-  "recommendation": "A future sprint that resumes HMC work should (1) re-run SHA256 verification for the 6 unverified-but-complete recordings (SN053-SN058, or whichever range is unverified at that time) against PhysioNet's own SHA256SUMS.txt, and (2) either complete or discard SN060's partial download, before trusting the full set for training."
+  "recommendation": "A future sprint that resumes HMC work should (1) re-run SHA256 verification for the 6 unverified-but-complete recordings (SN053-SN058, or whichever range is unverified at that time) against PhysioNet's own SHA256SUMS.txt, and (2) either complete or discard SN060's partial download, before trusting the full set for training.",
+  "canonical_fields": {
+    "edf_files_present_n": 59,
+    "complete_recording_pairs_n": 58,
+    "sha256_verified_recordings_n": 52,
+    "partial_recordings": [
+      "SN060"
+    ],
+    "planned_full_cohort_n": 151
+  },
+  "full_cohort_scientific_status": "FULL_COHORT_PENDING",
+  "bounded_diagnostic_status": "BOUNDED_DIAGNOSTIC (n=7, results/hmc_sleep_external_replication_stage3_bounded_n7.json) - unaffected by this inventory, remains the only trained HMC evidence"
 }

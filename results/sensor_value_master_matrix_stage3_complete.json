@@ -143,7 +143,7 @@
       "C": "EEG+shuffled EOG",
       "metric": "Macro-F1",
       "sign_convention": "higher = better",
-      "exact_result": "A=0.4562, B=0.4249, C=0.4169 (mean, 5 seeds). B-A=-0.0313 (2/5 seeds favor B), B-C=+0.0080 (2/5 seeds favor B) - negative-leaning at this bounded n=7/1-test-recording scale. See docs/HMC_BOUNDED_N7_RESULTS.md. | Stage 3 update: PhysioNet certificate confirmed renewed (real access restored). 45/151 recordings downloaded+verified by session end. Full-cohort training PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT - n=7 bounded diagnostic remains the only trained result.",
+      "exact_result": "A=0.4562, B=0.4249, C=0.4169 (mean, 5 seeds). B-A=-0.0313 (2/5 seeds favor B), B-C=+0.0080 (2/5 seeds favor B) - negative-leaning at this bounded n=7/1-test-recording scale. See docs/HMC_BOUNDED_N7_RESULTS.md. | Stage 3 update: PhysioNet certificate confirmed renewed (real access restored). HMC current state (results/hmc_current_download_inventory.json): 59 edf files present, 58 complete recording pairs, 52 SHA256-verified, 1 partial (SN060). Full-cohort training PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT - n=7 bounded diagnostic remains the only trained result.",
       "n_subjects": "7 recordings (5 train/1 val/1 test) - bounded by a genuine external PhysioNet TLS certificate expiry mid-download, NOT the frozen full-151 cohort",
       "seeds": "5 (42-46)",
       "sensitivity": "Test metric driven entirely by ONE test recording - seed variance reflects within-recording noise, not between-subject variance",
