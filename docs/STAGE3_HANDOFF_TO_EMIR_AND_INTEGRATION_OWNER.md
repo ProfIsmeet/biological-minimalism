@@ -71,3 +71,16 @@ Codex independent audit of `ab798815882ac0723491dc489de2375f8bf5b774`
    and fixed with full before/after transparency; the completed full CV's
    real, disclosed subject heterogeneity is the same discipline applied a
    second time.
+
+## Update: Codex fail remediation sprint
+
+A second independent Codex audit of the prior sprint's frozen SHA
+(`aaa87c21...`) found three real HIGH-severity defects (GalaxyPPG
+participant-level C evaluation, P01 eligibility justification, LBNP
+target-range/C-control protocol compliance). All three are now CLOSED —
+see `docs/STAGE3_CODEX_FAIL_REMEDIATION_REPORT.md` for the full account,
+including which numbers changed (GalaxyPPG C_to_B +0.904→+0.916 bpm; LBNP
+now a protocol-compliant rerun with COMPLETE_NEGATIVE unchanged) and which
+did not (GalaxyPPG A_cap/B untouched). Recommend routing this branch
+(`stage3-codex-fail-remediation`) for a second independent Codex delta
+audit before any further acceptance decision.

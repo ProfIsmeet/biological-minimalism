@@ -50,3 +50,15 @@ HMC full-cohort training and ds003838 remain genuinely
 `PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT` (out of scope this sprint). This
 does not claim full Stage 3 completion — whether HMC/ds003838 are
 required before Stage 4 is Emir's decision.
+
+## Codex fail remediation sprint (branch `stage3-codex-fail-remediation`)
+
+A second independent Codex audit of `aaa87c21...` returned
+`INDEPENDENT STAGE3 DELTA AUDIT FAIL` (three HIGH findings: GalaxyPPG
+participant-C evaluation bug, P01 eligibility justification, LBNP
+target-range/C-control non-compliance). All three closed with real fixes,
+programmatic strong-consistency verification, and 32 new passing tests —
+see `docs/STAGE3_CODEX_FAIL_REMEDIATION_REPORT.md` for full detail.
+Updated verdict:
+`STAGE3_CODEX_FAIL_REMEDIATION_REPORTED_COMPLETE_PENDING_INDEPENDENT_REAUDIT`.
+Test suite: 486 passed, 0 failed, 0 skipped.

@@ -202,3 +202,91 @@ None found this sprint.
     after this sprint's wording updates - verified directly, not merely
     asserted.
 
+---
+
+## Stage 3 Codex Fail Remediation Sprint — Hostile Review
+
+Full attack list per Part X of the remediation master prompt.
+
+### BLOCKER
+
+None found this sprint.
+
+### HIGH
+
+None remaining - the three inbound HIGH findings (HIGH-01/02/03) were
+closed with real fixes, strong-consistency/programmatic verification, and
+tests. See `docs/STAGE3_CODEX_FAIL_REMEDIATION_REPORT.md` for full detail.
+
+### MEDIUM
+
+1. **LBNP A_minus_B is genuinely sign-sensitive** (subject 9 exclusion
+   flips it) - disclosed prominently in the v2 result and completion
+   report, not smoothed over. The more diagnostic C_minus_B comparison is
+   robust, which is why the overall classification remains
+   COMPLETE_NEGATIVE, but this MEDIUM is recorded rather than hidden.
+2. **Section 27 provenance-field expansion incomplete**: the consolidated
+   GalaxyPPG/LBNP provenance artifact was not expanded to the full field
+   list this sprint's master prompt requested (timezone evidence,
+   frequency-axis evidence, etc.) - disclosed as PARTIAL, not falsely
+   closed.
+3. **Quarantine transfer history correction not re-attempted**: Section 30
+   asked to correct a historical claim about file-by-file cherry-picking
+   if current docs still repeat it - not re-audited this sprint; status
+   OPEN.
+
+### LOW
+
+1. HMC's 59/151 current count was not independently SHA256-re-verified
+   this sprint (explicitly out of scope) - the inventory artifact
+   discloses this limitation rather than implying full verification.
+
+### INFO — attack vectors checked
+
+1. **P01 performance leakage**: `results/galaxyppg_reference_ecg_qc.json`
+   contains no performance field of any kind (tested,
+   `test_no_performance_field_in_qc_artifact`).
+2. **Post-hoc threshold tuning**: the composite QC rule's two thresholds
+   (40/min, 0.50 agreement ratio) were chosen from natural gaps in the
+   real distribution, not swept for a preferred outcome - the rule was
+   checked against, not fitted to, P01's membership.
+3. **Incorrect QC evidence**: the second detector is a genuinely different
+   algorithm (amplitude-threshold `find_peaks`, no derivative/energy
+   step) - not a relabeled copy of the primary detector.
+4. **Participant C aligned-input recurrence**: verified via strong-
+   consistency check (0.00e+00 diff) that the fix, not a new bug, is what
+   changed the numbers.
+5. **C seed/derangement mismatch**: `deranged_acc_for_subject_at_index`
+   is tested directly against `deranged_acc_stable`'s own array-level
+   output for an uneven-window-count synthetic case
+   (`test_deranged_acc_index_matches_array_level_derangement`).
+6. **Fold-5 false provenance**: fixed and tested exact equality against
+   the true source (Section 16/37).
+7. **Old Galaxy evidence leakage**: fail-closed resolver + 5 tests
+   (Section 17/38).
+8. **LBNP >60 mmHg leakage**: behavioral filter test + real-data
+   verification that 0 out-of-scope windows remain (Section 39).
+9. **LBNP same-stage C substitutions**: direct tensor-level check with a
+   realistic repeated-stage synthetic case, plus 0-collision verification
+   on the real 12-subject data (Section 40).
+10. **Subject leakage**: LBNP train/test split is LOSO by construction,
+    unchanged this sprint; GalaxyPPG group leakage already verified in
+    the prior sprint's hostile review, re-confirmed unaffected since
+    fold/subject assignment was not touched by HIGH-01/02/03.
+11. **Normalization leakage**: `hr_mean`/`hr_std` (GalaxyPPG) and ridge
+    feature standardization (LBNP) are both fit on TRAIN only in every
+    script touched this sprint - unchanged from the prior, already-
+    verified pattern.
+12. **Subject-7 sensitivity**: under the corrected (0-60mmHg-only) LBNP
+    dataset, the canceling-outlier pair is subjects 4 and 9, not 4 and 7 -
+    a genuine change from filtering out-of-scope data, not an error;
+    disclosed explicitly in the remediation doc.
+13. **Stale HMC counts**: reconciled to one current count (59/151),
+    Section 26.
+14. **Status self-promotion**: `ACCEPTED_CANONICAL` found and removed
+    (Section 24/29) - the one real instance this sprint's re-audit found.
+15. **Checkpoint ambiguity**: Sleep V2 mapping completed to all 20 real
+    entries (Section 24).
+16. **Freeze-manifest incompleteness**: new Section-32 manifest covers 21
+    current-package files, verified all-exist and hash-stable.
+
