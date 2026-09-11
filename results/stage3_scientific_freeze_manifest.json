@@ -1,34 +1,155 @@
 {
+  "purpose": "Stage 3 scientific freeze manifest, GENERATED FROM results/stage3_governance_registry.json (Section 18-19 remediation) - not a separately maintained parallel truth. governing_artifacts and historical_or_supporting_artifacts below are both derived directly from the registry; this file does not independently decide what is governing.",
+  "source_of_truth": "results/stage3_governance_registry.json",
+  "hash_semantics_note": "All hashes here are computed on line-ending-normalized TEXT content (CRLF->LF), distinct from raw-byte SHA256 hashes used for binary checkpoint files - text hashes and checkpoint hashes are never comparable to each other and are never conflated in this repository's convention.",
   "governing_artifacts": {
-    "lbnp_eis_result": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
-    "lbnp_eis_result_historical_superseded": "results/lbnp_thoracic_eis_stage3.json",
-    "galaxyppg_full_cv_result": "results/galaxyppg_corrected_full_cv_result.json",
-    "galaxyppg_bounded_diagnostic": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
-    "hmc_current_state": "results/hmc_current_download_inventory.json",
-    "stage3_manifest": "results/stage3_science_completion_manifest.json"
+    "sleep_edf_primary_ab": "results/sleep_edf_primary_seedfix_v2.json",
+    "sleep_edf_shuffled_control_c": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json",
+    "sleep_edf_interaction": "results/sleep_edf_interaction_resp_seedfix_v2.json",
+    "sleep_checkpoint_identity": "results/sleep_v2_checkpoint_accepted_mapping.json",
+    "ppg_dalia_capacity_control": "results/ppg_dalia_capacity_control.json",
+    "ptt_second_ppg_site": "results/ptt_ppg_site_ablation.json",
+    "qde_v2_leg_bioz": "results/qde_v2_leg_bioz_stage2.json",
+    "galaxyppg_external_replication": "results/galaxyppg_corrected_full_cv_result.json",
+    "galaxyppg_eligibility_qc": "results/galaxyppg_corrected_eligibility.json",
+    "lbnp_thoracic_eis": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+    "lbnp_target_stage_inventory": "results/lbnp_target_stage_inventory.json",
+    "hmc_bounded_diagnostic": "results/hmc_sleep_external_replication_stage3_bounded_n7.json",
+    "hmc_current_download_state": "results/hmc_current_download_inventory.json",
+    "ds003838_bounded_diagnostic": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+    "stage3_completion_manifest": "results/stage3_science_completion_manifest.json",
+    "stage3_consolidated_provenance": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
+    "architecture_evidence_handoff": "results/architecture_evidence_handoff_stage4.json",
+    "sensor_value_master_matrix": "results/sensor_value_master_matrix_stage3_complete.json",
+    "environment_provenance": "results/stage3_environment_snapshot.json"
   },
-  "purpose": "Stage 3 scientific freeze manifest (Codex fail remediation sprint) - the current Stage-3 science source-of-truth hash chain. This is a NEW manifest, distinct from and not a retrofit of results/scientific_freeze_manifest_day14.json (which covers a different, earlier science package).",
-  "hash_semantics_note": "All hashes here are computed on line-ending-normalized TEXT content (CRLF->LF), distinct from raw-byte SHA256 hashes used for binary checkpoint files (e.g. results/*_expected_membership.json entries) - text hashes and checkpoint hashes are never comparable to each other and are never conflated in this repository's convention.",
-  "n_files": 21,
+  "historical_or_supporting_artifacts": {
+    "sleep_edf_primary_ab": [
+      {
+        "path": "results/claude_noncanonical_sleep_edf_primary_seedfix_v2_reproduction.json",
+        "status": "NONCANONICAL_REPRODUCTION",
+        "notes": "Mac-trained reproduction, supportive evidence only per docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md - never governing."
+      }
+    ],
+    "sleep_edf_interaction": [
+      {
+        "path": "results/sleep_edf_interaction_resp_day10.json",
+        "status": "HISTORICAL",
+        "notes": "Pre-V2-seedfix interaction result, superseded."
+      }
+    ],
+    "ppg_dalia_capacity_control": [
+      {
+        "path": "results/sensor_marginal_value_contract.json",
+        "status": "HISTORICAL",
+        "notes": "Historical capacity-CONFOUNDED PPG-DaLiA figure (~20.6%/23%) - never governing, see H-02 remediation."
+      }
+    ],
+    "galaxyppg_external_replication": [
+      {
+        "path": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+        "status": "SUPPORTING",
+        "notes": "Bounded single-fold diagnostic (same corrected 18-subject cohort) - real, valid, but supporting evidence only; the full CV supersedes it as the governing external-replication claim. Reused verbatim as fold 5 of the governing full-CV result."
+      },
+      {
+        "path": "results/galaxyppg_hr_external_replication_stage2.json",
+        "status": "INVALIDATED",
+        "notes": "Pre-reference-quality-fix single-fold result - INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT."
+      },
+      {
+        "path": "results/galaxyppg_hr_full_grouped_cv_stage3.json",
+        "status": "INVALIDATED",
+        "notes": "Pre-reference-quality-fix full 6-fold CV - INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT."
+      }
+    ],
+    "galaxyppg_eligibility_qc": [
+      {
+        "path": "results/galaxyppg_reference_ecg_qc.json",
+        "status": "SUPPORTING",
+        "notes": "Full raw QC evidence table underlying the eligibility decision above."
+      },
+      {
+        "path": "results/galaxyppg_eligibility_stage2.json",
+        "status": "HISTORICAL",
+        "notes": "Pre-BLOCKER-fix eligibility (24/24 eligible) - superseded."
+      }
+    ],
+    "lbnp_thoracic_eis": [
+      {
+        "path": "results/lbnp_thoracic_eis_stage3.json",
+        "status": "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL",
+        "notes": "607-window execution including 200 out-of-scope (>60mmHg) windows and a weaker same-stage-leaking C-control - never governing."
+      }
+    ]
+  },
+  "n_files": 32,
   "all_files_exist": true,
   "entries": [
     {
-      "path": "results/galaxyppg_reference_ecg_qc.json",
+      "path": "results/stage3_governance_registry.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "d5534d2b5c1f3a1d0002bc6063977da165bf6fb7cea5c1cf81c61b391bbf5343"
+      "sha256": "8798bd4cedaf053d0da8074627037199900406b47a53d772cc3d9d0c9d4ed547"
     },
     {
-      "path": "results/galaxyppg_corrected_eligibility.json",
+      "path": "results/sleep_edf_primary_seedfix_v2.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "b7518fdb29c8ae21476dd8053abe6f7ca334d0061a430f8ca8fcf4d81f7c402c"
+      "sha256": "27b939bc6e40105695c010b6137b04e3e2b97ed1ed010ac01f8a6dc24f825cae"
     },
     {
-      "path": "results/galaxyppg_corrected_full_cv_folds.json",
+      "path": "results/claude_noncanonical_sleep_edf_primary_seedfix_v2_reproduction.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "0b5fb0ccba92d2f108a8ef01855fbd68f8aab0fadae1ce60d9fcce63c618f7ca"
+      "sha256": "0b12df04020310b43eb5069a40374fa1195f94d2f4c37e60a6fc95d0fb03a217"
+    },
+    {
+      "path": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "87ca409f1bcf358ccaac232a8fc1435ac49e518600e2462a4ffa3b295327b063"
+    },
+    {
+      "path": "results/sleep_edf_interaction_resp_seedfix_v2.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "a4b50ef5935380187cf5f7291d3b926115a23267938b91a7d890d6bb66072ff8"
+    },
+    {
+      "path": "results/sleep_edf_interaction_resp_day10.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "0355bf6d43b41f630a6ca762cc5d3525dcde269aa267cc7329fc0cd2159b5fd7"
+    },
+    {
+      "path": "results/sleep_v2_checkpoint_accepted_mapping.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "bf660c22859c006fe67a9191a88827ea5c8e58457c3d7c8e0db345a4f842ccd3"
+    },
+    {
+      "path": "results/ppg_dalia_capacity_control.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "6fd59a338896fa792c96c44c6c96f739893b41bbdd7df48994721c2d0d33ecd1"
+    },
+    {
+      "path": "results/sensor_marginal_value_contract.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "c0d259421bb998780d8ab17907137210be60f8df42be83a53d7e51e29a80495e"
+    },
+    {
+      "path": "results/ptt_ppg_site_ablation.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "767dab063bf0ed53d04108170a999ecd60c3e75158adbd7cddff4bb58072db44"
+    },
+    {
+      "path": "results/qde_v2_leg_bioz_stage2.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "5d7d6e37a3d320ddc159b1f612503212cf76146d3608d4b9ca881be1936c2033"
     },
     {
       "path": "results/galaxyppg_corrected_full_cv_result.json",
@@ -43,40 +164,34 @@
       "sha256": "0620e6c2ee80d2abcea75bc5d46eea6c216493ed8ccbc2fdaa74605e1d104d4e"
     },
     {
-      "path": "results/galaxyppg_hr_corrected_per_subject_stage3.json",
+      "path": "results/galaxyppg_hr_external_replication_stage2.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "d8815b511ec69d706d3f786767482d8223c829718b68e882c45b7b744872db0d"
+      "sha256": "db96563979a3ae90864ba151dc28a7d29c81ab277ee7dbc7c9927e891f17b5b4"
     },
     {
-      "path": "results/galaxyppg_high01_strong_consistency_check.json",
+      "path": "results/galaxyppg_hr_full_grouped_cv_stage3.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "46a98648aa17fe0cdebe7decd51f0215e9944edc003422984385c10d7eb200cb"
+      "sha256": "91edda73fd2b01c901c592319791693d369858ee6c24f569edb1dbebd9832a6b"
     },
     {
-      "path": "results/galaxyppg_invalidated_evidence_registry.json",
+      "path": "results/galaxyppg_corrected_eligibility.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "e38208c705294d88aa8820c26d07fd35dc482ed7794b2e3d96a4dd7e6ecec78c"
+      "sha256": "b7518fdb29c8ae21476dd8053abe6f7ca334d0061a430f8ca8fcf4d81f7c402c"
     },
     {
-      "path": "results/galaxyppg_correctedcv_v2_expected_membership.json",
+      "path": "results/galaxyppg_reference_ecg_qc.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "7d94eacd846d000f95696496711b3d7b90099eaf03f52575cb3a77964a6ac157"
+      "sha256": "d5534d2b5c1f3a1d0002bc6063977da165bf6fb7cea5c1cf81c61b391bbf5343"
     },
     {
-      "path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
+      "path": "results/galaxyppg_eligibility_stage2.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "61d34359206d10b47fb5a0b2f50cf632e35cb217e17cab197ac6b4c14a9b4e63"
-    },
-    {
-      "path": "results/lbnp_target_stage_inventory.json",
-      "exists": true,
-      "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "e01a64e38e5b7ac8918e70ee7c8059f53458320e1df7b44e4e85dd45ce526c6a"
+      "sha256": "1f3d2a6b7c9da3d4c0ef057b461057798643f2cad87e45484921ada7606d5901"
     },
     {
       "path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
@@ -91,40 +206,40 @@
       "sha256": "c2a68d2abb45b3ac429a2ec05fb5db1859a03ee4f0540cdf401d43132ef3c32f"
     },
     {
-      "path": "results/lbnp_protocol_stage1b.json",
+      "path": "results/lbnp_target_stage_inventory.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "4d7bdb439503a9b09e707cd0d17b979c12e6e61a3eb706ab70e7e8bf5533cac2"
+      "sha256": "e01a64e38e5b7ac8918e70ee7c8059f53458320e1df7b44e4e85dd45ce526c6a"
     },
     {
-      "path": "results/sleep_v2_checkpoint_accepted_mapping.json",
+      "path": "results/hmc_sleep_external_replication_stage3_bounded_n7.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "bf660c22859c006fe67a9191a88827ea5c8e58457c3d7c8e0db345a4f842ccd3"
-    },
-    {
-      "path": "results/sleep_edf_primary_seedfix_v2.json",
-      "exists": true,
-      "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "27b939bc6e40105695c010b6137b04e3e2b97ed1ed010ac01f8a6dc24f825cae"
+      "sha256": "c413c089f458305f48aadcd40cf33aeb70c9ac129f8212c89784fbe6ee61ee27"
     },
     {
       "path": "results/hmc_current_download_inventory.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "81530dd9c691b29cb27ae99f8e3391b1050d184656d7d7a26410d57eff31a140"
+      "sha256": "a73a557e4b21d6850482ff150b602da3a13a49debb9e56c2472d378fce120b0f"
+    },
+    {
+      "path": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "6821955ab2fdf116b4377f8bd15cea5d1196765ff273c40024fa363b5e10c750"
     },
     {
       "path": "results/stage3_science_completion_manifest.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "8d15991b36c2d943a1cad73288dbacd2e794ec07375835554c2953abe0202f78"
+      "sha256": "ffb2f7fd71878d39aaeae4abac930f0bbd3c978beee5a3eed7c8e38295867ad5"
     },
     {
-      "path": "results/sensor_value_master_matrix_stage3_complete.json",
+      "path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "0e631135d27e325561ab9e5b804aae19a4bea509c4f131aaa0d0823eff7db199"
+      "sha256": "61d34359206d10b47fb5a0b2f50cf632e35cb217e17cab197ac6b4c14a9b4e63"
     },
     {
       "path": "results/architecture_evidence_handoff_stage4.json",
@@ -133,10 +248,34 @@
       "sha256": "914ea11249bcddbc94581017d7097bc1cdfff2cf0f904c51a22964cd50a3f862"
     },
     {
+      "path": "results/sensor_value_master_matrix_stage3_complete.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "0e759d914dd42d52f470039c2d8795cf5342ed7018ceec18ece90bf332fc9cab"
+    },
+    {
       "path": "results/stage3_environment_snapshot.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
       "sha256": "6fe59000962a09a0d41450a9e8b244faae264272ea28851f58bea835bde51aa3"
+    },
+    {
+      "path": "docs/STAGE3_SAFE_UNSAFE_CLAIMS.md",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "f5813ca61bd167d4790d3b7a2fad1c3bc766088c4f20dfd32b9a7dd57e1ba6a6"
+    },
+    {
+      "path": "docs/STAGE3_HANDOFF_TO_EMIR_AND_INTEGRATION_OWNER.md",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "0219f6d25aa08c0e04516f3c0c699bdf652bb631405618f970e23c60948051a5"
+    },
+    {
+      "path": "docs/STAGE3_SCIENCE_COMPLETION_REPORT.md",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "d2b589bc1bf79f685fe60241644e61aa1b58825df166373dedd87bfe1725e1c1"
     }
   ]
 }

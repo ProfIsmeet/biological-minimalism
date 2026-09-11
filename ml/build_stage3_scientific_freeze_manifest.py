@@ -1,11 +1,15 @@
 #!/usr/bin/env python
-"""Section 32 remediation: a NEW Stage-3 scientific freeze manifest,
-covering the actual current Stage-3 science package (not a retrofit of
-the historical Day-14 freeze manifest, which covers a different, earlier
-package). Hashes line-ending-normalized content (CRLF->LF) so results are
-stable across Windows/Linux/macOS checkouts, distinct from the raw-byte
+"""Section 18-19 remediation: the Stage-3 scientific freeze manifest is
+now GENERATED FROM results/stage3_governance_registry.json, not a
+separately, manually maintained parallel truth. governing_artifacts and
+historical_or_supporting_artifacts below are both derived directly from
+the registry's per-family artifact statuses - there is no second,
+independently-typed source of what counts as "governing" in this file.
+
+Hashes line-ending-normalized content (CRLF->LF) so results are stable
+across Windows/Linux/macOS checkouts, distinct from the raw-byte
 checkpoint SHA256 hashes recorded elsewhere (checkpoints are binary and
-must be hashed as raw bytes; this manifest's targets are all text/JSON)."""
+must be hashed as raw bytes; every target here is text/JSON/Markdown)."""
 
 from __future__ import annotations
 
@@ -17,35 +21,17 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from ml.stage3_science_resolver import GOVERNING_STATUS, REGISTRY_PATH  # noqa: E402
+
 OUT_PATH = REPO_ROOT / "results" / "stage3_scientific_freeze_manifest.json"
 
-CANONICAL_TEXT_FILES = [
-    # GalaxyPPG
-    "results/galaxyppg_reference_ecg_qc.json",
-    "results/galaxyppg_corrected_eligibility.json",
-    "results/galaxyppg_corrected_full_cv_folds.json",
-    "results/galaxyppg_corrected_full_cv_result.json",
-    "results/galaxyppg_hr_corrected_eligibility_stage3.json",
-    "results/galaxyppg_hr_corrected_per_subject_stage3.json",
-    "results/galaxyppg_high01_strong_consistency_check.json",
-    "results/galaxyppg_invalidated_evidence_registry.json",
-    "results/galaxyppg_correctedcv_v2_expected_membership.json",
-    "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
-    # LBNP
-    "results/lbnp_target_stage_inventory.json",
-    "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
-    "results/lbnp_thoracic_eis_stage3.json",
-    "results/lbnp_protocol_stage1b.json",
-    # Sleep V2 / checkpoint identity
-    "results/sleep_v2_checkpoint_accepted_mapping.json",
-    "results/sleep_edf_primary_seedfix_v2.json",
-    # HMC
-    "results/hmc_current_download_inventory.json",
-    # Stage-3 completion / status
-    "results/stage3_science_completion_manifest.json",
-    "results/sensor_value_master_matrix_stage3_complete.json",
-    "results/architecture_evidence_handoff_stage4.json",
-    "results/stage3_environment_snapshot.json",
+# Cross-cutting current-facing docs not tracked per-family in the
+# governance registry (the registry covers RESULT artifacts; these are
+# narrative/claim documents that must also be frozen and hash-stable).
+CROSS_CUTTING_DOCS = [
+    "docs/STAGE3_SAFE_UNSAFE_CLAIMS.md",
+    "docs/STAGE3_HANDOFF_TO_EMIR_AND_INTEGRATION_OWNER.md",
+    "docs/STAGE3_SCIENCE_COMPLETION_REPORT.md",
 ]
 
 
@@ -54,9 +40,32 @@ def sha256_of(path: Path) -> str:
 
 
 def main() -> None:
+    registry = json.loads(REGISTRY_PATH.read_text())
+
+    governing_artifacts: dict[str, str] = {}
+    historical_or_supporting_artifacts: dict[str, list[dict]] = {}
+    all_tracked_paths: list[str] = [str(REGISTRY_PATH.relative_to(REPO_ROOT)).replace("\\", "/")]
+
+    for family_id, fd in registry["families"].items():
+        governing_for_family = [a for a in fd["artifacts"] for _ in [0] if a["status"] == GOVERNING_STATUS]
+        if len(governing_for_family) == 1:
+            governing_artifacts[family_id] = governing_for_family[0]["path"]
+        elif len(governing_for_family) > 1:
+            raise RuntimeError(f"Freeze build aborted: family '{family_id}' has {len(governing_for_family)} GOVERNING artifacts - ambiguous.")
+        # else: family has zero GOVERNING artifacts (e.g. fully pending) - omitted from governing_artifacts, not an error here
+
+        non_governing = [a for a in fd["artifacts"] if a["status"] != GOVERNING_STATUS]
+        if non_governing:
+            historical_or_supporting_artifacts[family_id] = non_governing
+
+        for a in fd["artifacts"]:
+            all_tracked_paths.append(a["path"])
+
+    all_tracked_paths.extend(CROSS_CUTTING_DOCS)
+
     entries = []
     all_exist = True
-    for rel in CANONICAL_TEXT_FILES:
+    for rel in all_tracked_paths:
         path = REPO_ROOT / rel
         exists = path.exists()
         all_exist = all_exist and exists
@@ -67,38 +76,32 @@ def main() -> None:
             "sha256": sha256_of(path) if exists else None,
         })
 
-    governing_artifacts = {
-        "lbnp_eis_result": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
-        "lbnp_eis_result_historical_superseded": "results/lbnp_thoracic_eis_stage3.json",
-        "galaxyppg_full_cv_result": "results/galaxyppg_corrected_full_cv_result.json",
-        "galaxyppg_bounded_diagnostic": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
-        "hmc_current_state": "results/hmc_current_download_inventory.json",
-        "stage3_manifest": "results/stage3_science_completion_manifest.json",
-    }
-
     manifest = {
-        "governing_artifacts": governing_artifacts,
         "purpose": (
-            "Stage 3 scientific freeze manifest (Codex fail remediation "
-            "sprint) - the current Stage-3 science source-of-truth hash "
-            "chain. This is a NEW manifest, distinct from and not a "
-            "retrofit of results/scientific_freeze_manifest_day14.json "
-            "(which covers a different, earlier science package)."
+            "Stage 3 scientific freeze manifest, GENERATED FROM "
+            "results/stage3_governance_registry.json (Section 18-19 "
+            "remediation) - not a separately maintained parallel truth. "
+            "governing_artifacts and historical_or_supporting_artifacts "
+            "below are both derived directly from the registry; this file "
+            "does not independently decide what is governing."
         ),
+        "source_of_truth": "results/stage3_governance_registry.json",
         "hash_semantics_note": (
             "All hashes here are computed on line-ending-normalized TEXT "
             "content (CRLF->LF), distinct from raw-byte SHA256 hashes used "
-            "for binary checkpoint files (e.g. results/*_expected_membership.json "
-            "entries) - text hashes and checkpoint hashes are never "
-            "comparable to each other and are never conflated in this "
-            "repository's convention."
+            "for binary checkpoint files - text hashes and checkpoint "
+            "hashes are never comparable to each other and are never "
+            "conflated in this repository's convention."
         ),
+        "governing_artifacts": governing_artifacts,
+        "historical_or_supporting_artifacts": historical_or_supporting_artifacts,
         "n_files": len(entries),
         "all_files_exist": all_exist,
         "entries": entries,
     }
     OUT_PATH.write_text(json.dumps(manifest, indent=2))
-    print("Wrote", OUT_PATH, "-", len(entries), "files, all_exist:", all_exist)
+    print("Wrote", OUT_PATH, "-", len(entries), "files tracked,",
+          len(governing_artifacts), "governing, all_exist:", all_exist)
 
 
 if __name__ == "__main__":

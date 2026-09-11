@@ -18,7 +18,8 @@ from build_stage3_scientific_freeze_manifest import sha256_of  # noqa: E402
 def test_manifest_all_files_exist():
     d = json.loads((REPO_ROOT / "results" / "stage3_scientific_freeze_manifest.json").read_text())
     assert d["all_files_exist"] is True
-    assert d["n_files"] == len(d["entries"]) == 21
+    assert d["n_files"] == len(d["entries"])
+    assert d["n_files"] >= 21  # grew after Section 18-19 registry-derived expansion
 
 
 def test_manifest_is_distinct_from_day14_manifest():

@@ -1,10 +1,13 @@
-"""Section 16 regression test: the frozen governing-artifacts chain must
-never point to the superseded LBNP result as current/governing evidence,
-and every declared governing artifact must exist and hash-match."""
+"""Section 13/16 regression test (rewritten this sprint): the frozen
+governing-artifacts chain must never point to a superseded/historical/
+invalid/noncanonical/pending artifact - determined ENTIRELY from each
+artifact's own registry status metadata, never from a key-name substring
+heuristic (the prior version of this file contained exactly the
+`if "historical" in key.lower(): continue` anti-pattern Codex flagged as
+a governance-validation bypass - removed)."""
 
 from __future__ import annotations
 
-import hashlib
 import json
 import sys
 from pathlib import Path
@@ -19,17 +22,20 @@ def _load(name):
     return json.loads((REPO_ROOT / "results" / name).read_text())
 
 
+def _registry_status_by_path() -> dict:
+    registry = _load("stage3_governance_registry.json")
+    out = {}
+    for fam, fd in registry["families"].items():
+        for a in fd["artifacts"]:
+            out[a["path"]] = a["status"]
+    return out
+
+
 def test_governing_lbnp_artifact_is_not_the_superseded_result():
     d = _load("stage3_scientific_freeze_manifest.json")
-    governing = d["governing_artifacts"]["lbnp_eis_result"]
+    governing = d["governing_artifacts"]["lbnp_thoracic_eis"]
     assert governing == "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json"
     assert governing != "results/lbnp_thoracic_eis_stage3.json"
-
-
-def test_historical_lbnp_artifact_is_explicitly_labeled_as_such():
-    d = _load("stage3_scientific_freeze_manifest.json")
-    assert "historical" in d["governing_artifacts"]["lbnp_eis_result_historical_superseded"].lower() or \
-        _load("lbnp_thoracic_eis_stage3.json")["status"] == "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL"
 
 
 def test_all_governing_artifacts_exist_and_are_tracked_in_entries():
@@ -48,18 +54,14 @@ def test_all_entry_hashes_match_current_content():
         assert sha256_of(path) == e["sha256"], f"{e['path']} hash stale - freeze manifest not regenerated"
 
 
-def test_no_entry_marked_historical_is_a_governing_artifact():
-    """A file whose own status field says HISTORICAL/SUPERSEDED must never
-    simultaneously be declared as a 'governing' (non-historical-suffixed)
-    key in governing_artifacts."""
+def test_no_governing_artifact_has_a_non_governing_registry_status():
+    """Metadata-driven, no key-name exceptions of any kind: every path in
+    governing_artifacts must have registry status exactly GOVERNING."""
     d = _load("stage3_scientific_freeze_manifest.json")
+    status_by_path = _registry_status_by_path()
     for key, path in d["governing_artifacts"].items():
-        if "historical" in key.lower():
-            continue
-        full = REPO_ROOT / path
-        content = json.loads(full.read_text())
-        status = content.get("status", "")
-        assert "HISTORICAL" not in status and "SUPERSEDED" not in status, (
-            f"governing_artifacts['{key}'] = {path} has status={status!r}, "
-            "which should never be a non-historical governing pointer"
+        assert status_by_path[path] == "GOVERNING", (
+            f"governing_artifacts['{key}'] = {path} has registry status "
+            f"{status_by_path[path]!r}, not GOVERNING - this must never happen "
+            "regardless of what the dict key is named"
         )
