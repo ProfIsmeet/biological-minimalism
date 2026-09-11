@@ -1,0 +1,13 @@
+{
+  "purpose": "Section 26 remediation: ONE current, authoritative HMC download-state artifact, resolving the inconsistent 45/151 vs 52/151 counts found in other Stage 3 artifacts. This is a file-presence inventory only - no download was resumed or attempted this sprint (explicitly out of scope).",
+  "method": "Counted unique SNxxx recording IDs present under datasets/hmc-sleep-staging/ via real filesystem listing this sprint. Did NOT re-run SHA256 verification against PhysioNet's SHA256SUMS.txt this sprint (that would itself be HMC-adjacent work beyond this remediation's scope) - byte-level verification status for any file beyond what a prior sprint already recorded is NOT reconfirmed here.",
+  "n_recordings_present_on_disk": 59,
+  "n_total_cohort": 151,
+  "historical_counts_now_superseded": [
+    {"count": "45/151", "source": "results/sensor_value_master_matrix_stage3_complete.json, results/stage3_science_completion_manifest.json (some fields)"},
+    {"count": "52/151", "source": "docs/HMC_STAGE3_FULL_COHORT_STATUS.md, results/stage3_science_completion_manifest.json (other fields)"}
+  ],
+  "current_status": "PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
+  "explicit_scope_note": "This sprint's master prompt explicitly forbids resuming HMC download or training. This artifact only reconciles which count is CURRENT (59, by direct file-presence count), it does not advance HMC progress in any way.",
+  "recommendation": "A future sprint that resumes HMC work should re-run SHA256 verification for all 59 present files (or whatever count is current at that time) against PhysioNet's own SHA256SUMS.txt before trusting them for training, since this sprint did not reconfirm byte integrity for files beyond the prior sprint's own 52-count checkpoint."
+}

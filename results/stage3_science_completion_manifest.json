@@ -54,48 +54,51 @@
       "held_out_biological_n": 12,
       "optimization_seed_n": null,
       "fold_count": 12,
-      "completion_status": "COMPLETE",
+      "completion_status": "COMPLETE (protocol-compliant rerun, HIGH-03 remediation)",
       "replication_class": "COMPLETE_NEGATIVE",
-      "protocol_version": "results/lbnp_protocol_stage1b.json, real eligibility corrected this sprint (12/16 - pleth-NaN exclusion)",
+      "protocol_version": "results/lbnp_protocol_stage1b.json, real eligibility corrected this sprint (12/16 - pleth-NaN exclusion); HIGH-03: 0-60mmHg frozen range now enforced (200/607 out-of-scope windows excluded), C-control same-stage leakage fixed",
+      "current_result_path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+      "historical_result_path": "results/lbnp_thoracic_eis_stage3.json (OUT_OF_PROTOCOL_SCOPE_HISTORICAL, superseded, see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md)",
       "A": "ECG+pleth features",
       "B": "A + real thoracic EIS (log-mag+phase, 100 freq points)",
-      "C": "B with within-subject deranged EIS",
-      "target": "LBNP pressure stage (mmHg)",
+      "C": "B with within-subject deranged EIS (source_stage != target_stage enforced)",
+      "target": "LBNP pressure stage (mmHg), filtered to the frozen 0-60mmHg scope",
       "target_provenance": "protocol-assigned (real, externally-imposed chamber pressure, step-function looked up per real spectrum timestamp)",
       "metric": "MAE (mmHg)",
       "metric_direction": "lower is better",
       "aggregate_result": {
-        "A_mean": 27.62,
-        "B_mean": 29.86,
-        "C_mean": 29.83,
-        "A_minus_B_mean": -2.24,
-        "C_minus_B_mean": -0.033,
+        "A_mean": 20.973,
+        "B_mean": 21.425,
+        "C_mean": 20.132,
+        "A_minus_B_mean": -0.452,
+        "C_minus_B_mean": -1.293,
         "n_favor_B_over_A": 3,
-        "n_favor_B_over_C": 6,
+        "n_favor_B_over_C": 5,
         "n_total": 12
       },
       "per_fold_results": "N/A (LOSO)",
       "per_seed_results": "N/A (deterministic ridge regression)",
-      "per_subject_results": "results/lbnp_thoracic_eis_stage3.json per_subject_deltas - subjects 4 and 7 are extreme opposite-direction outliers",
+      "per_subject_results": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json per_subject_deltas - subjects 4 and 9 are extreme opposite-direction outliers on A_minus_B",
       "per_class_activity_stage_results": null,
-      "heterogeneity": "Severe - bimodal (subjects 4 and 7 nearly cancel in aggregate)",
-      "sensitivity": "Disclosed per-subject, real",
+      "heterogeneity": "A_minus_B is sign-sensitive under leave-one-out (excluding subject 9 flips its aggregate sign); C_minus_B is robust (no single-subject reversal) and is the more diagnostic comparison",
+      "sensitivity": "Full leave-one-subject-out sensitivity in results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json::leave_one_subject_out_sensitivity",
       "checkpoint_inventory": "N/A - linear model, no checkpoints scientifically necessary",
       "checkpoint_archive_status": "N/A",
-      "limitations": "n=12 (not the paper's 16) due to real pleth-quality exclusion; MAP/EIT/abdominal/arm sites out of scope",
-      "safe_claim": "Thoracic EIS did not add information beyond ECG+pleth for LBNP-stage estimation in this real, actual-file-verified cohort - a real negative result.",
+      "limitations": "n=12 (not the paper's 16) due to real pleth-quality exclusion; MAP/EIT/abdominal/arm sites out of scope; A_minus_B sign-sensitive to a single subject",
+      "safe_claim": "Real thoracic EIS did not add information beyond ECG+pleth for LBNP-stage estimation, and B performed reliably worse than its own within-subject deranged-EIS control (robust to leave-one-out) - a real negative result, now under a protocol-compliant (0-60mmHg-only, different-stage-enforced) rerun.",
       "unsafe_claims": [
         "Thoracic EIS is useless in general",
-        "Any astronaut/microgravity equivalence"
+        "Any astronaut/microgravity equivalence",
+        "Citing results/lbnp_thoracic_eis_stage3.json (historical, out-of-protocol-scope) as the current result"
       ],
       "blockers": [],
-      "source_commit": "this sprint, see git log"
+      "source_commit": "this sprint, see git log (HIGH-03 remediation)"
     },
     {
       "dataset": "HMC",
       "dataset_version": "PhysioNet hmc-sleep-staging 1.1",
-      "raw_data_identity": "52/151 recordings SHA256-verified against PhysioNet own SHA256SUMS.txt (real, partial, final count at session end)",
-      "actual_biological_n": 52,
+      "raw_data_identity": "59/151 recordings present on disk (Section 26 reconciliation this sprint - real file-presence count, resolving the prior inconsistent 45/151 vs 52/151 claims; see results/hmc_current_download_inventory.json. Byte-level SHA256 re-verification for files beyond the prior sprint's 52-count checkpoint was NOT reconfirmed this sprint - out of scope, no download/verification work performed)",
+      "actual_biological_n": 59,
       "held_out_biological_n": null,
       "optimization_seed_n": null,
       "fold_count": null,
@@ -141,10 +144,32 @@
   },
   "digital_twin_status": "conceptual, synthetic, not longitudinally validated",
   "test_suite": {
-    "ml_tests_passed": 454,
+    "ml_tests_passed": 482,
     "ml_tests_failed": 0,
     "ml_tests_skipped": 0
   },
   "final_verdict": "STAGE3_CORE_AND_PRIORITY_EXTERNAL_SCIENCE_COMPLETE_WITH_LOWER_PRIORITY_EXTERNAL_WORK_PENDING",
-  "final_verdict_rationale": "GalaxyPPG's corrected full 6-fold CV is now COMPLETE (EXTERNAL_REPLICATION_SUPPORTIVE) and all H-01/H-02/Section 26-33 Codex parent-audit remediation items are closed. HMC full-cohort training and ds003838 remain genuinely PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT (explicitly out of scope this sprint per the master prompt) - this verdict does NOT claim full Stage 3 completion. Whether HMC/ds003838 are required before Stage 4 is Emir's decision, not this remediation's."
+  "final_verdict_rationale": "GalaxyPPG's corrected full 6-fold CV is now COMPLETE (EXTERNAL_REPLICATION_SUPPORTIVE) and all H-01/H-02/Section 26-33 Codex parent-audit remediation items are closed. HMC full-cohort training and ds003838 remain genuinely PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT (explicitly out of scope this sprint per the master prompt) - this verdict does NOT claim full Stage 3 completion. Whether HMC/ds003838 are required before Stage 4 is Emir's decision, not this remediation's.",
+  "codex_fail_remediation_sprint": {
+    "branch": "stage3-codex-fail-remediation",
+    "high_findings_closed": [
+      "HIGH-01",
+      "HIGH-02",
+      "HIGH-03"
+    ],
+    "sections_closed": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      26,
+      29
+    ],
+    "status": "This manifest is the current, authoritative Stage 3 source of truth as of this sprint. Older status matrices referenced elsewhere are HISTORICAL/SUPERSEDED where they conflict with this file."
+  }
 }

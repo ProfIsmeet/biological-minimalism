@@ -17,5 +17,16 @@
   },
   "compared_against": "results/day10_frozen_environment_verification.json",
   "drift_since_day10": "NONE - all fields identical to the Day-10 EXACT_FROZEN_ENVIRONMENT verification.",
-  "environment_status": "EXACT_FROZEN_ENVIRONMENT_CONFIRMED_STAGE3"
+  "environment_status": "EXACT_FROZEN_ENVIRONMENT_CONFIRMED_STAGE3",
+  "codex_fail_remediation_sprint_binding": {
+    "note": "Section 33: this sprint (stage3-codex-fail-remediation branch) re-ran GalaxyPPG participant-C re-evaluation (HIGH-01, no retraining), the GalaxyPPG reference-ECG QC builder (HIGH-02), and the LBNP protocol-compliant rerun (HIGH-03) - all under this same venv, re-confirmed with identical versions to the original snapshot below (no drift).",
+    "reconfirmed_versions": {
+      "python_version": "3.13.0",
+      "torch": "2.6.0+cpu",
+      "numpy": "2.5.2",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.0"
+    },
+    "drift_since_original_snapshot": "NONE"
+  }
 }

@@ -1,0 +1,134 @@
+{
+  "purpose": "Stage 3 scientific freeze manifest (Codex fail remediation sprint) - the current Stage-3 science source-of-truth hash chain. This is a NEW manifest, distinct from and not a retrofit of results/scientific_freeze_manifest_day14.json (which covers a different, earlier science package).",
+  "hash_semantics_note": "All hashes here are computed on line-ending-normalized TEXT content (CRLF->LF), distinct from raw-byte SHA256 hashes used for binary checkpoint files (e.g. results/*_expected_membership.json entries) - text hashes and checkpoint hashes are never comparable to each other and are never conflated in this repository's convention.",
+  "n_files": 21,
+  "all_files_exist": true,
+  "entries": [
+    {
+      "path": "results/galaxyppg_reference_ecg_qc.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "e5dc29417fe56676eba77f386836b29010b8817507633c0a2e08a8491bf37bb5"
+    },
+    {
+      "path": "results/galaxyppg_corrected_eligibility.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "b7518fdb29c8ae21476dd8053abe6f7ca334d0061a430f8ca8fcf4d81f7c402c"
+    },
+    {
+      "path": "results/galaxyppg_corrected_full_cv_folds.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "0b5fb0ccba92d2f108a8ef01855fbd68f8aab0fadae1ce60d9fcce63c618f7ca"
+    },
+    {
+      "path": "results/galaxyppg_corrected_full_cv_result.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "12a9dc2dea70072f168bc0e321611a25af4fa90038fb0be5d0db18523487e5d0"
+    },
+    {
+      "path": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "0221ba4f452bf2032d2f27e193dd0a04d0c85aa8327487551a5e9263bdd4c387"
+    },
+    {
+      "path": "results/galaxyppg_hr_corrected_per_subject_stage3.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "d8815b511ec69d706d3f786767482d8223c829718b68e882c45b7b744872db0d"
+    },
+    {
+      "path": "results/galaxyppg_high01_strong_consistency_check.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "46a98648aa17fe0cdebe7decd51f0215e9944edc003422984385c10d7eb200cb"
+    },
+    {
+      "path": "results/galaxyppg_invalidated_evidence_registry.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "e38208c705294d88aa8820c26d07fd35dc482ed7794b2e3d96a4dd7e6ecec78c"
+    },
+    {
+      "path": "results/galaxyppg_correctedcv_v2_expected_membership.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "7d94eacd846d000f95696496711b3d7b90099eaf03f52575cb3a77964a6ac157"
+    },
+    {
+      "path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "7597d083d825a55e96a11025fc13d6d39e035362359a497b37dfea6441ffb030"
+    },
+    {
+      "path": "results/lbnp_target_stage_inventory.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "e01a64e38e5b7ac8918e70ee7c8059f53458320e1df7b44e4e85dd45ce526c6a"
+    },
+    {
+      "path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "cdad070fe35dff50d18a90e7cf2e41b8d5c7b5d0cb9f9765fc1dd6d911056b79"
+    },
+    {
+      "path": "results/lbnp_thoracic_eis_stage3.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "ee51893c7faaabef2d7d021b41a831aa7196d3f462f390bb5cb55b1f03731498"
+    },
+    {
+      "path": "results/lbnp_protocol_stage1b.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "4d7bdb439503a9b09e707cd0d17b979c12e6e61a3eb706ab70e7e8bf5533cac2"
+    },
+    {
+      "path": "results/sleep_v2_checkpoint_accepted_mapping.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "bf660c22859c006fe67a9191a88827ea5c8e58457c3d7c8e0db345a4f842ccd3"
+    },
+    {
+      "path": "results/sleep_edf_primary_seedfix_v2.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "27b939bc6e40105695c010b6137b04e3e2b97ed1ed010ac01f8a6dc24f825cae"
+    },
+    {
+      "path": "results/hmc_current_download_inventory.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "0be659e84c74d80b969031f5b17bde9b3c4b1acd9e018df2ab14286db4a83c52"
+    },
+    {
+      "path": "results/stage3_science_completion_manifest.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "7f8c058434b55621be8d292c63956ab87d536d43466f2bc181de26ba33c3c37f"
+    },
+    {
+      "path": "results/sensor_value_master_matrix_stage3_complete.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "bcdee14f9a79cac4b2caa247d4605469348e325ee61adc0504c7f6eedf30e417"
+    },
+    {
+      "path": "results/architecture_evidence_handoff_stage4.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "8e39399cc40389bb8cb55e3b8910eead1400862cf7076101f62bb07e9c62a665"
+    },
+    {
+      "path": "results/stage3_environment_snapshot.json",
+      "exists": true,
+      "hash_kind": "line_ending_normalized_sha256_of_text_content",
+      "sha256": "6fe59000962a09a0d41450a9e8b244faae264272ea28851f58bea835bde51aa3"
+    }
+  ]
+}
