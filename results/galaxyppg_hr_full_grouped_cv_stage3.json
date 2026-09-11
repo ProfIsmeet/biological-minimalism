@@ -1696,5 +1696,6 @@
       "n_subjects_favor_B": 14,
       "n_subjects_total": 24
     }
-  }
+  },
+  "status": "INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT"
 }

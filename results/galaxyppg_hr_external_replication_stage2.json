@@ -331,5 +331,6 @@
       "n_seeds_favor_B": 3,
       "n_seeds_total": 5
     }
-  }
+  },
+  "status": "INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT"
 }

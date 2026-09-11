@@ -1,110 +1,321 @@
 {
-  "purpose": "Section 12-15 remediation: the single, explicit governance registry for current Stage-3 scientific evidence. Every artifact referenced anywhere in the Stage-3 governance layer must have an explicit status here - governance is NEVER inferred from filename or key-name substrings (e.g. never 'skip if key contains historical'). ml/stage3_science_resolver.py is the only code path that should be used to resolve 'the current governing result' for a family; it reads this file and fails closed on any ambiguity.",
-  "valid_statuses": ["GOVERNING", "SUPPORTING", "HISTORICAL", "SUPERSEDED", "INVALIDATED", "NONCANONICAL_REPRODUCTION", "PENDING", "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL"],
+  "purpose": "Section 12-15 remediation (extended this sprint, Gate 3 closure): the single, explicit governance registry for current Stage-3 scientific evidence. Every artifact referenced anywhere in the Stage-3 governance layer must have an explicit registry status here - governance is NEVER inferred from filename or key-name substrings. Beyond the registry-level status, GOVERNING resolution additionally requires the artifact's OWN machine-readable content to independently corroborate governance-eligibility - see 'artifact_status_contract' below. This defends against the specific attack of flipping one registry status field without the underlying artifact supporting that claim. ml/stage3_science_resolver.py is the only code path that should be used to resolve 'the current governing result' for a family.",
+  "valid_statuses": [
+    "GOVERNING",
+    "SUPPORTING",
+    "HISTORICAL",
+    "SUPERSEDED",
+    "INVALIDATED",
+    "NONCANONICAL_REPRODUCTION",
+    "PENDING",
+    "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL"
+  ],
   "rule": "Within a family, exactly one artifact may have status GOVERNING. HISTORICAL, SUPERSEDED, INVALIDATED, NONCANONICAL_REPRODUCTION, and PENDING artifacts may never be treated as governing regardless of key name or position in this file.",
+  "artifact_status_contract": {
+    "purpose": "For every artifact, declares WHERE the resolver should independently read that artifact's own semantic status from, so a registry-level GOVERNING label alone is never sufficient. 'status_field' names a top-level JSON key in the artifact itself that the resolver re-reads live at resolution time; if present and its value contains a forbidden marker (see forbidden_semantic_markers), resolution fails regardless of the registry's declared status. 'artifact_semantic_status' is used ONLY when the artifact has no natural status-bearing field - it is a registry-asserted fallback, explicitly weaker (a determined attacker who controls the registry could still forge it), and is disclosed as such rather than presented as equivalent to a live field read.",
+    "forbidden_semantic_markers": [
+      "HISTORICAL",
+      "SUPERSEDED",
+      "INVALIDATED",
+      "NONCANONICAL",
+      "PENDING",
+      "OUT_OF_PROTOCOL",
+      "SUPPORTING_ONLY",
+      "SUPPORTING"
+    ],
+    "checked_field_names": [
+      "status",
+      "final_classification_status",
+      "governance_status"
+    ]
+  },
   "families": {
     "sleep_edf_primary_ab": {
       "artifacts": [
-        {"path": "results/sleep_edf_primary_seedfix_v2.json", "status": "GOVERNING", "notes": "Corrected A/B primary Sleep-EDF result."},
-        {"path": "results/claude_noncanonical_sleep_edf_primary_seedfix_v2_reproduction.json", "status": "NONCANONICAL_REPRODUCTION", "notes": "Mac-trained reproduction, supportive evidence only per docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md - never governing."}
+        {
+          "path": "results/sleep_edf_primary_seedfix_v2.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Corrected A/B primary Sleep-EDF result."
+        },
+        {
+          "path": "results/claude_noncanonical_sleep_edf_primary_seedfix_v2_reproduction.json",
+          "status": "NONCANONICAL_REPRODUCTION",
+          "status_field": "status",
+          "notes": "Mac-trained reproduction, supportive evidence only per docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md - never governing. Artifact's own 'status' field now says NONCANONICAL_REPRODUCTION_PENDING_ISMET_REVIEW."
+        }
       ]
     },
     "sleep_edf_shuffled_control_c": {
       "artifacts": [
-        {"path": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json", "status": "GOVERNING", "notes": "Corrected C (shuffled EOG) control result."}
+        {
+          "path": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Corrected C (shuffled EOG) control result."
+        }
       ]
     },
     "sleep_edf_interaction": {
       "artifacts": [
-        {"path": "results/sleep_edf_interaction_resp_seedfix_v2.json", "status": "GOVERNING", "notes": "Corrected EEGxEOGxResp interaction result."},
-        {"path": "results/sleep_edf_interaction_resp_day10.json", "status": "HISTORICAL", "notes": "Pre-V2-seedfix interaction result, superseded."}
+        {
+          "path": "results/sleep_edf_interaction_resp_seedfix_v2.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Corrected EEGxEOGxResp interaction result."
+        },
+        {
+          "path": "results/sleep_edf_interaction_resp_day10.json",
+          "status": "HISTORICAL",
+          "status_field": null,
+          "notes": "Pre-V2-seedfix interaction result, superseded. This file is frozen by results/scientific_freeze_manifest_day14.json (Day-14 historical package) and must never be modified - status is a registry-only assertion, not a live-read field, for this entry.",
+          "artifact_semantic_status": "HISTORICAL_PRE_SEEDFIX_V2"
+        }
       ]
     },
     "sleep_checkpoint_identity": {
       "artifacts": [
-        {"path": "results/sleep_v2_checkpoint_accepted_mapping.json", "status": "GOVERNING", "notes": "Authoritative SHA256-keyed checkpoint identity mapping (Section 24, prior sprint)."}
+        {
+          "path": "results/sleep_v2_checkpoint_accepted_mapping.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Authoritative SHA256-keyed checkpoint identity mapping (Section 24, prior sprint)."
+        }
       ]
     },
     "ppg_dalia_capacity_control": {
       "artifacts": [
-        {"path": "results/ppg_dalia_capacity_control.json", "status": "GOVERNING", "notes": "Governing capacity-controlled PPG-DaLiA result (A_cap->B ~0.605 bpm, C->B ~0.776 bpm, 5/5 seeds)."},
-        {"path": "results/sensor_marginal_value_contract.json", "status": "HISTORICAL", "notes": "Historical capacity-CONFOUNDED PPG-DaLiA figure (~20.6%/23%) - never governing, see H-02 remediation."}
+        {
+          "path": "results/ppg_dalia_capacity_control.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Governing capacity-controlled PPG-DaLiA result (A_cap->B ~0.605 bpm, C->B ~0.776 bpm, 5/5 seeds)."
+        },
+        {
+          "path": "results/sensor_marginal_value_contract.json",
+          "status": "HISTORICAL",
+          "status_field": null,
+          "notes": "Historical capacity-CONFOUNDED PPG-DaLiA figure (~20.6%/23%) - never governing, see H-02 remediation. This file is frozen by results/scientific_freeze_manifest_day14.json (Day-14 historical package) and must never be modified - status is a registry-only assertion, not a live-read field, for this entry.",
+          "artifact_semantic_status": "HISTORICAL_CAPACITY_CONFOUNDED"
+        }
       ]
     },
     "ptt_second_ppg_site": {
       "artifacts": [
-        {"path": "results/ptt_ppg_site_ablation.json", "status": "GOVERNING", "notes": "Governing PTT second-PPG-site result - fragile, n=4, s2-sensitive."}
+        {
+          "path": "results/ptt_ppg_site_ablation.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Governing PTT second-PPG-site result - fragile, n=4, s2-sensitive."
+        }
       ]
     },
     "qde_v2_leg_bioz": {
       "artifacts": [
-        {"path": "results/qde_v2_leg_bioz_stage2.json", "status": "GOVERNING", "notes": "Governing QDE V2 leg-BioZ result, n=10, single-outlier-dominated ambiguity disclosed."}
+        {
+          "path": "results/qde_v2_leg_bioz_stage2.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Governing QDE V2 leg-BioZ result, n=10, single-outlier-dominated ambiguity disclosed."
+        }
       ]
     },
     "galaxyppg_external_replication": {
       "artifacts": [
-        {"path": "results/galaxyppg_corrected_full_cv_result.json", "status": "GOVERNING", "notes": "Corrected full 6-fold CV, n=18, EXTERNAL_REPLICATION_SUPPORTIVE - the governing GalaxyPPG evidence."},
-        {"path": "results/galaxyppg_hr_corrected_eligibility_stage3.json", "status": "SUPPORTING", "notes": "Bounded single-fold diagnostic (same corrected 18-subject cohort) - real, valid, but supporting evidence only; the full CV supersedes it as the governing external-replication claim. Reused verbatim as fold 5 of the governing full-CV result."},
-        {"path": "results/galaxyppg_hr_external_replication_stage2.json", "status": "INVALIDATED", "notes": "Pre-reference-quality-fix single-fold result - INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT."},
-        {"path": "results/galaxyppg_hr_full_grouped_cv_stage3.json", "status": "INVALIDATED", "notes": "Pre-reference-quality-fix full 6-fold CV - INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT."}
+        {
+          "path": "results/galaxyppg_corrected_full_cv_result.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Corrected full 6-fold CV, n=18, EXTERNAL_REPLICATION_SUPPORTIVE - the governing GalaxyPPG evidence. Live-checked via final_classification field != any forbidden marker."
+        },
+        {
+          "path": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+          "status": "SUPPORTING",
+          "status_field": "status",
+          "notes": "Bounded single-fold diagnostic - supporting evidence only. Artifact's own 'status' field now says SUPPORTING_BOUNDED_DIAGNOSTIC."
+        },
+        {
+          "path": "results/galaxyppg_hr_external_replication_stage2.json",
+          "status": "INVALIDATED",
+          "status_field": "status",
+          "notes": "Pre-reference-quality-fix single-fold result. Artifact's own 'status' field now says INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT."
+        },
+        {
+          "path": "results/galaxyppg_hr_full_grouped_cv_stage3.json",
+          "status": "INVALIDATED",
+          "status_field": "status",
+          "notes": "Pre-reference-quality-fix full 6-fold CV. Artifact's own 'status' field now says INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT."
+        }
       ]
     },
     "galaxyppg_eligibility_qc": {
       "artifacts": [
-        {"path": "results/galaxyppg_corrected_eligibility.json", "status": "GOVERNING", "notes": "Corrected multi-dimensional eligibility (HIGH-02), 18/24."},
-        {"path": "results/galaxyppg_reference_ecg_qc.json", "status": "SUPPORTING", "notes": "Full raw QC evidence table underlying the eligibility decision above."},
-        {"path": "results/galaxyppg_eligibility_stage2.json", "status": "HISTORICAL", "notes": "Pre-BLOCKER-fix eligibility (24/24 eligible) - superseded."}
+        {
+          "path": "results/galaxyppg_corrected_eligibility.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Corrected multi-dimensional eligibility (HIGH-02), 18/24."
+        },
+        {
+          "path": "results/galaxyppg_reference_ecg_qc.json",
+          "status": "SUPPORTING",
+          "status_field": null,
+          "artifact_semantic_status": "SUPPORTING_ONLY",
+          "notes": "Full raw QC evidence table underlying the eligibility decision above."
+        },
+        {
+          "path": "results/galaxyppg_eligibility_stage2.json",
+          "status": "HISTORICAL",
+          "status_field": "status",
+          "notes": "Pre-BLOCKER-fix eligibility (24/24 eligible). Artifact's own 'status' field now says HISTORICAL_PRE_BLOCKER_FIX."
+        }
       ]
     },
     "lbnp_thoracic_eis": {
       "artifacts": [
-        {"path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json", "status": "GOVERNING", "notes": "Protocol-compliant rerun (HIGH-03), COMPLETE_MIXED - the governing LBNP evidence."},
-        {"path": "results/lbnp_thoracic_eis_stage3.json", "status": "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL", "notes": "607-window execution including 200 out-of-scope (>60mmHg) windows and a weaker same-stage-leaking C-control - never governing."}
+        {
+          "path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Protocol-compliant rerun (HIGH-03), COMPLETE_MIXED - the governing LBNP evidence. Live-checked via classification field != any forbidden marker."
+        },
+        {
+          "path": "results/lbnp_thoracic_eis_stage3.json",
+          "status": "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL",
+          "status_field": "status",
+          "notes": "607-window execution including 200 out-of-scope (>60mmHg) windows - never governing. Artifact's own 'status' field already says HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL."
+        }
       ]
     },
     "lbnp_target_stage_inventory": {
       "artifacts": [
-        {"path": "results/lbnp_target_stage_inventory.json", "status": "GOVERNING", "notes": "Real per-subject LBNP target-stage inventory underlying the HIGH-03 range-filtering fix."}
+        {
+          "path": "results/lbnp_target_stage_inventory.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Real per-subject LBNP target-stage inventory underlying the HIGH-03 range-filtering fix."
+        }
       ]
     },
     "hmc_bounded_diagnostic": {
       "artifacts": [
-        {"path": "results/hmc_sleep_external_replication_stage3_bounded_n7.json", "status": "GOVERNING", "notes": "Bounded n=7 HMC diagnostic - BOUNDED_DIAGNOSTIC status, not a full-cohort claim."}
+        {
+          "path": "results/hmc_sleep_external_replication_stage3_bounded_n7.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "BOUNDED_DIAGNOSTIC",
+          "notes": "Bounded n=7 HMC diagnostic - BOUNDED_DIAGNOSTIC status, not a full-cohort claim."
+        }
       ]
     },
     "hmc_current_download_state": {
       "artifacts": [
-        {"path": "results/hmc_current_download_inventory.json", "status": "GOVERNING", "notes": "Current three-way file-presence/complete-pair/hash-verified breakdown (59/58/52)."}
+        {
+          "path": "results/hmc_current_download_inventory.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Current three-way file-presence/complete-pair/hash-verified breakdown (59/58/52)."
+        }
       ]
     },
     "ds003838_bounded_diagnostic": {
       "artifacts": [
-        {"path": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json", "status": "GOVERNING", "notes": "Bounded n=3 ds003838 diagnostic, inconclusive by design."}
+        {
+          "path": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+          "status": "GOVERNING",
+          "status_field": "status",
+          "notes": "Bounded n=3 ds003838 diagnostic, inconclusive by design. Live-checked via its own 'status' field (DS003838_STAGE3_BOUNDED_DIAGNOSTIC_COMPLETE)."
+        }
       ]
     },
     "stage3_completion_manifest": {
       "artifacts": [
-        {"path": "results/stage3_science_completion_manifest.json", "status": "GOVERNING", "notes": "The single current Stage-3 completion manifest."}
+        {
+          "path": "results/stage3_science_completion_manifest.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "The single current Stage-3 completion manifest."
+        }
       ]
     },
     "stage3_consolidated_provenance": {
       "artifacts": [
-        {"path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json", "status": "GOVERNING", "notes": "Consolidated GalaxyPPG/LBNP provenance index."}
+        {
+          "path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Consolidated GalaxyPPG/LBNP provenance index."
+        }
       ]
     },
     "architecture_evidence_handoff": {
       "artifacts": [
-        {"path": "results/architecture_evidence_handoff_stage4.json", "status": "GOVERNING", "notes": "Current architecture evidence package for Stage 4 - final_architecture_status remains UNRESOLVED."}
+        {
+          "path": "results/architecture_evidence_handoff_stage4.json",
+          "status": "GOVERNING",
+          "status_field": "final_architecture_status",
+          "notes": "Current architecture evidence package for Stage 4. Live-checked: final_architecture_status=UNRESOLVED does not contain a forbidden marker (UNRESOLVED is a legitimate non-forbidden governance-eligible value, distinct from PENDING)."
+        }
       ]
     },
     "sensor_value_master_matrix": {
       "artifacts": [
-        {"path": "results/sensor_value_master_matrix_stage3_complete.json", "status": "GOVERNING", "notes": "Current sensor-value master matrix."}
+        {
+          "path": "results/sensor_value_master_matrix_stage3_complete.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Current sensor-value master matrix."
+        }
       ]
     },
     "environment_provenance": {
       "artifacts": [
-        {"path": "results/stage3_environment_snapshot.json", "status": "GOVERNING", "notes": "Current environment snapshot, bound to this and prior remediation sprints' reruns."}
+        {
+          "path": "results/stage3_environment_snapshot.json",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Current environment snapshot, bound to this and prior remediation sprints' reruns."
+        }
+      ]
+    },
+    "stage3_claims": {
+      "artifact_type": "markdown",
+      "artifacts": [
+        {
+          "path": "docs/STAGE3_SAFE_UNSAFE_CLAIMS.md",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Current safe/unsafe claims ledger - now under explicit governance instead of manual freeze-builder appending."
+        }
+      ]
+    },
+    "stage3_handoff": {
+      "artifact_type": "markdown",
+      "artifacts": [
+        {
+          "path": "docs/STAGE3_HANDOFF_TO_EMIR_AND_INTEGRATION_OWNER.md",
+          "status": "GOVERNING",
+          "status_field": null,
+          "artifact_semantic_status": "REAL_TRAINED_RESULT_CURRENT",
+          "notes": "Current Stage-3 handoff to Emir/Integration Owner - now under explicit governance instead of manual freeze-builder appending."
+        }
       ]
     }
   }

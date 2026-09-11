@@ -1,15 +1,21 @@
 #!/usr/bin/env python
-"""Section 18-19 remediation: the Stage-3 scientific freeze manifest is
-now GENERATED FROM results/stage3_governance_registry.json, not a
-separately, manually maintained parallel truth. governing_artifacts and
-historical_or_supporting_artifacts below are both derived directly from
-the registry's per-family artifact statuses - there is no second,
-independently-typed source of what counts as "governing" in this file.
+"""Section 18-19 remediation (extended this sprint for Gate 4 closure):
+the Stage-3 scientific freeze manifest is GENERATED FROM
+results/stage3_governance_registry.json - there is no second,
+independently maintained current-artifact list, and no manually appended
+"cross-cutting docs" list. Every current-facing document (claims ledger,
+handoff, architecture evidence, sensor-value matrix, completion manifest)
+is now its own governed registry family.
+
+HARD FAILURE (raises, does not silently skip) if any registry family has
+zero or more than one GOVERNING artifact - the prior version silently
+omitted a family with zero governing artifacts from governing_artifacts,
+which is itself a fail-open bug for a system whose entire purpose is
+fail-closed governance.
 
 Hashes line-ending-normalized content (CRLF->LF) so results are stable
 across Windows/Linux/macOS checkouts, distinct from the raw-byte
-checkpoint SHA256 hashes recorded elsewhere (checkpoints are binary and
-must be hashed as raw bytes; every target here is text/JSON/Markdown)."""
+checkpoint SHA256 hashes recorded elsewhere."""
 
 from __future__ import annotations
 
@@ -25,14 +31,9 @@ from ml.stage3_science_resolver import GOVERNING_STATUS, REGISTRY_PATH  # noqa: 
 
 OUT_PATH = REPO_ROOT / "results" / "stage3_scientific_freeze_manifest.json"
 
-# Cross-cutting current-facing docs not tracked per-family in the
-# governance registry (the registry covers RESULT artifacts; these are
-# narrative/claim documents that must also be frozen and hash-stable).
-CROSS_CUTTING_DOCS = [
-    "docs/STAGE3_SAFE_UNSAFE_CLAIMS.md",
-    "docs/STAGE3_HANDOFF_TO_EMIR_AND_INTEGRATION_OWNER.md",
-    "docs/STAGE3_SCIENCE_COMPLETION_REPORT.md",
-]
+
+class FreezeBuildError(RuntimeError):
+    pass
 
 
 def sha256_of(path: Path) -> str:
@@ -41,18 +42,28 @@ def sha256_of(path: Path) -> str:
 
 def main() -> None:
     registry = json.loads(REGISTRY_PATH.read_text())
+    required_families = sorted(registry["families"].keys())
 
     governing_artifacts: dict[str, str] = {}
     historical_or_supporting_artifacts: dict[str, list[dict]] = {}
-    all_tracked_paths: list[str] = [str(REGISTRY_PATH.relative_to(REPO_ROOT)).replace("\\", "/")]
+    all_tracked_paths: list[str] = []
+    try:
+        all_tracked_paths.append(str(REGISTRY_PATH.relative_to(REPO_ROOT)).replace("\\", "/"))
+    except ValueError:
+        pass  # REGISTRY_PATH outside REPO_ROOT (e.g. a test using an isolated temp registry)
 
-    for family_id, fd in registry["families"].items():
-        governing_for_family = [a for a in fd["artifacts"] for _ in [0] if a["status"] == GOVERNING_STATUS]
-        if len(governing_for_family) == 1:
-            governing_artifacts[family_id] = governing_for_family[0]["path"]
+    build_errors: list[str] = []
+
+    for family_id in required_families:
+        fd = registry["families"][family_id]
+        governing_for_family = [a for a in fd["artifacts"] if a["status"] == GOVERNING_STATUS]
+
+        if len(governing_for_family) == 0:
+            build_errors.append(f"family '{family_id}' has ZERO governing artifacts - HARD FAILURE, not silently skipped")
         elif len(governing_for_family) > 1:
-            raise RuntimeError(f"Freeze build aborted: family '{family_id}' has {len(governing_for_family)} GOVERNING artifacts - ambiguous.")
-        # else: family has zero GOVERNING artifacts (e.g. fully pending) - omitted from governing_artifacts, not an error here
+            build_errors.append(f"family '{family_id}' has {len(governing_for_family)} governing artifacts - AMBIGUOUS, HARD FAILURE")
+        else:
+            governing_artifacts[family_id] = governing_for_family[0]["path"]
 
         non_governing = [a for a in fd["artifacts"] if a["status"] != GOVERNING_STATUS]
         if non_governing:
@@ -61,7 +72,10 @@ def main() -> None:
         for a in fd["artifacts"]:
             all_tracked_paths.append(a["path"])
 
-    all_tracked_paths.extend(CROSS_CUTTING_DOCS)
+    if build_errors:
+        raise FreezeBuildError(
+            "Freeze build ABORTED - required-family validation failed:\n  " + "\n  ".join(build_errors)
+        )
 
     entries = []
     all_exist = True
@@ -79,13 +93,14 @@ def main() -> None:
     manifest = {
         "purpose": (
             "Stage 3 scientific freeze manifest, GENERATED FROM "
-            "results/stage3_governance_registry.json (Section 18-19 "
-            "remediation) - not a separately maintained parallel truth. "
-            "governing_artifacts and historical_or_supporting_artifacts "
-            "below are both derived directly from the registry; this file "
-            "does not independently decide what is governing."
+            "results/stage3_governance_registry.json - not a separately "
+            "maintained parallel truth, and no cross-cutting docs are "
+            "appended outside the registry; every current-facing document "
+            "is its own governed family."
         ),
         "source_of_truth": "results/stage3_governance_registry.json",
+        "required_families_count": len(required_families),
+        "required_families": required_families,
         "hash_semantics_note": (
             "All hashes here are computed on line-ending-normalized TEXT "
             "content (CRLF->LF), distinct from raw-byte SHA256 hashes used "
@@ -101,7 +116,8 @@ def main() -> None:
     }
     OUT_PATH.write_text(json.dumps(manifest, indent=2))
     print("Wrote", OUT_PATH, "-", len(entries), "files tracked,",
-          len(governing_artifacts), "governing, all_exist:", all_exist)
+          len(governing_artifacts), "governing, across", len(required_families),
+          "required families, all_exist:", all_exist)
 
 
 if __name__ == "__main__":

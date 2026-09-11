@@ -328,5 +328,6 @@
       "n_seeds_total": 5
     }
   },
-  "experiment_id_correction_note": "This file previously carried the stale experiment_id galaxyppg_hr_external_replication_stage2 (the INVALIDATED pre-fix experiment ID), found during Section 17/38 remediation. Corrected to a unique ID matching this file own name; no numeric result changed."
+  "experiment_id_correction_note": "This file previously carried the stale experiment_id galaxyppg_hr_external_replication_stage2 (the INVALIDATED pre-fix experiment ID), found during Section 17/38 remediation. Corrected to a unique ID matching this file own name; no numeric result changed.",
+  "status": "SUPPORTING_BOUNDED_DIAGNOSTIC"
 }
