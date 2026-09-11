@@ -53,19 +53,22 @@ the invalidated pre-fix single-fold or full-CV results
 (`results/galaxyppg_hr_external_replication_stage2.json`,
 `results/galaxyppg_hr_full_grouped_cv_stage3.json`) as current.
 
-## HMC (real access restored this sprint; full training PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT)
+## HMC (real access restored; full training FULL_COHORT_PENDING)
 
 **Safe**: "PhysioNet's certificate is confirmed renewed and full-cohort
-access is real and working. The full 151-recording download was resumed
-this sprint; [N] recordings were downloaded and byte-verified by the end
-of this session's time budget. Full-cohort A/B/C training is prepared
-(`ml/train_hmc_sleep_a_b_c_full_cohort.py`) but was not completed within
-this session — a genuine compute/time limit, not an access blocker or a
-design choice."
+access is real and working. Current download state
+(`results/hmc_current_download_inventory.json`): 59 edf files present,
+58 complete recording pairs (edf+annotation), 52 SHA256-verified against
+PhysioNet's own SHA256SUMS.txt, 1 partial (`SN060`). Full-cohort A/B/C
+training is prepared (`ml/train_hmc_sleep_a_b_c_full_cohort.py`) but has
+not been completed — a genuine compute/time-budget limit across multiple
+sprints, not an access blocker or a design choice."
 
 **Unsafe**: "HMC replicates or fails to replicate Sleep-EDF" (no full
-result exists yet this sprint). The n=7 bounded diagnostic remains
-retained as historical, not promoted.
+result exists yet). The n=7 bounded diagnostic
+(`results/hmc_sleep_external_replication_stage3_bounded_n7.json`) has
+status `BOUNDED_DIAGNOSTIC` — it is the only trained HMC evidence, not
+"historical," and must not be promoted to a full-cohort claim.
 
 ## ds003838 (unchanged, quantified blocker documented this sprint)
 

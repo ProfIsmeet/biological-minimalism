@@ -431,3 +431,76 @@ file on disk (verified: `test_real_registry_file_untouched_by_hostile_probes`).
    `docs/LBNP_STAGE3_HIGH03_REMEDIATION.md`, and `docs/LBNP_STAGE3_RESULTS.md`
    all fixed or banner-marked historical (Sections 3-5).
 
+---
+
+## Stage 3 Acceptance Gate Closure Sprint — Hostile Review
+
+The final acceptance audit found three still-open gates: the resolver
+trusted the registry's `GOVERNING` label without independently verifying
+the artifact's own content (Gate 3), the freeze builder silently omitted
+zero-governing families instead of hard-failing (Gate 4), and the current
+Stage-3 handoff's opening section still described LBNP as a plain
+negative result (Gate 5).
+
+### BLOCKER / HIGH
+
+None found or remaining.
+
+### Self-caught regression during this sprint's own implementation
+
+While adding real machine-readable `status` fields to known-bad artifacts
+(to give the resolver something live to independently check), two of the
+target files —
+`results/sensor_marginal_value_contract.json` and
+`results/sleep_edf_interaction_resp_day10.json` — turned out to be
+tracked by the **historical Day-14 freeze manifest**
+(`results/scientific_freeze_manifest_day14.json`). Modifying them broke
+that manifest's frozen hashes and were caught immediately by the existing
+test suite (`test_freeze_manifest_hashes_are_valid_and_current`,
+`test_contract_rebuild_is_deterministic`). Both files were reverted
+byte-for-byte (`git checkout --`) before this sprint's commit, and their
+registry entries were changed to use a registry-only
+`artifact_semantic_status` assertion instead of a live `status_field` -
+explicitly weaker, and disclosed as such, rather than touching a file
+frozen by an earlier, unrelated sprint's own freeze chain. This is
+exactly the kind of mistake this project's own test suite exists to
+catch, and it worked.
+
+### MEDIUM
+
+None found this sprint beyond the self-caught regression above (fixed
+before commit).
+
+### INFO — Gate 3/4/5 closure evidence
+
+1. **Gate 3 (resolver)**: `resolve_governing_path()` now performs an
+   independent semantic content check after the registry check. Verified
+   directly: relabeling the historical LBNP result as the sole GOVERNING
+   entry still fails, because the file's own `status` field says
+   `HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL` (`test_stage3_gate3_semantic_and_integrity.py`,
+   9 tests). Same defense verified for both invalidated Galaxy results,
+   the noncanonical Sleep reproduction, and the bounded Galaxy diagnostic.
+2. **Gate 4 (freeze)**: the freeze builder now raises `FreezeBuildError`
+   on any required family with zero or multiple governing artifacts,
+   rather than silently omitting it (`test_stage3_gate4_freeze_hard_fail.py`,
+   4 tests). Two new cross-cutting families (`stage3_claims`,
+   `stage3_handoff`) replace the manually appended `CROSS_CUTTING_DOCS`
+   list - both are now governed, frozen, and hash-verified like any other
+   artifact. Registry family count corrected from the stale "18" to the
+   actual **21**, read dynamically everywhere rather than hard-coded.
+3. **Gate 5 (narratives)**: the current handoff's opening "What is
+   COMPLETE" section itself now states `COMPLETE_MIXED` with the full
+   corrected values and sign-sensitivity disclosure - not an appended
+   correction. Searched the whole document for
+   `COMPLETE_NEGATIVE`/`stable negative`/old numbers presented as current
+   - zero hits outside explicit "do not cite" prohibitions.
+4. **`resolve_and_verify()` hash-mismatch**: verified directly against a
+   real (byte-for-byte-restored) governing file - corrupting
+   `lbnp_thoracic_eis_stage3_v2_protocol_compliant.json`'s `A_mean` field
+   and re-resolving raises `IntegrityVerificationError: HASH_MISMATCH`;
+   the file was confirmed restored to its original bytes afterward.
+5. **Science non-regression**: Galaxy A_cap-B=+0.834268, C-B=+0.916231;
+   LBNP A=20.972675, B=21.425060, C=20.131778, classification
+   `COMPLETE_MIXED` - all confirmed byte-identical to the values at this
+   sprint's base commit.
+
