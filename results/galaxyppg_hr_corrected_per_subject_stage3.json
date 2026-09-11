@@ -49,25 +49,25 @@
     },
     "C": {
       "P02": {
-        "seed42": 6.073957443237305,
-        "seed43": 7.978174686431885,
-        "seed44": 7.301119804382324,
-        "seed45": 6.754433631896973,
-        "seed46": 5.80436372756958
+        "seed42": 6.120575904846191,
+        "seed43": 7.986806392669678,
+        "seed44": 7.378364086151123,
+        "seed45": 6.878320693969727,
+        "seed46": 5.950897693634033
       },
       "P06": {
-        "seed42": 7.453671455383301,
-        "seed43": 7.286395072937012,
-        "seed44": 6.800787925720215,
-        "seed45": 6.825652599334717,
-        "seed46": 6.145059585571289
+        "seed42": 7.307287693023682,
+        "seed43": 7.175263404846191,
+        "seed44": 6.745410919189453,
+        "seed45": 6.735429763793945,
+        "seed46": 6.098856449127197
       },
       "P12": {
-        "seed42": 5.205653667449951,
-        "seed43": 7.150722503662109,
-        "seed44": 5.463461399078369,
-        "seed45": 5.7624125480651855,
-        "seed46": 5.4290618896484375
+        "seed42": 5.21005916595459,
+        "seed43": 7.108949184417725,
+        "seed44": 5.364677429199219,
+        "seed45": 5.865138530731201,
+        "seed46": 5.585055351257324
       }
     }
   },
@@ -76,25 +76,26 @@
       "n_windows": 1874,
       "A_cap_mae_mean": 6.38635950088501,
       "B_mae_mean": 4.332287263870239,
-      "C_mae_mean": 6.7824098587036135,
+      "C_mae_mean": 6.862992954254151,
       "A_to_B_mean": 2.05407223701477,
-      "C_to_B_mean": 2.450122594833374
+      "C_to_B_mean": 2.530705690383911
     },
     "P06": {
       "n_windows": 1881,
       "A_cap_mae_mean": 6.582336711883545,
       "B_mae_mean": 5.2915349960327145,
-      "C_mae_mean": 6.902313327789306,
+      "C_mae_mean": 6.812449645996094,
       "A_to_B_mean": 1.2908017158508303,
-      "C_to_B_mean": 1.6107783317565918
+      "C_to_B_mean": 1.5209146499633794
     },
     "P12": {
       "n_windows": 1930,
       "A_cap_mae_mean": 5.668173027038574,
       "B_mae_mean": 4.966836643218994,
-      "C_mae_mean": 5.80226240158081,
+      "C_mae_mean": 5.826775932312012,
       "A_to_B_mean": 0.7013363838195801,
-      "C_to_B_mean": 0.8354257583618159
+      "C_to_B_mean": 0.8599392890930178
     }
-  }
+  },
+  "high01_participant_c_correction_note": "HIGH-01 remediation: the per-participant condition-C evaluation previously supplied aligned test ACC to model_c instead of the deranged test ACC used by the (always-correct) fold-level C evaluation. Fixed by ml/fix_galaxyppg_participant_c_evaluation.py, which reconstructs the identical per-subject derangement (keyed by each subject's position in sorted(test_ids), matching deranged_acc_stable's internal indexing) and re-evaluates the already-trained, already-archived C checkpoints - no retraining. A strong-consistency check (concatenated corrected per-participant C predictions must reproduce the fold-level C MAE within 1e-4) passed for every fold/seed - see results/galaxyppg_high01_strong_consistency_check.json. Only C values changed; A_cap and B per-subject values are unchanged."
 }

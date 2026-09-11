@@ -20,7 +20,7 @@
       "metric": "MAE (bpm)",
       "metric_direction": "lower is better",
       "aggregate_result": {
-        "participant_level": "results/galaxyppg_corrected_full_cv_result.json aggregate_across_all_18_eligible_subjects: A_cap_mean=8.287, B_mean=7.452, C_mean=8.357, A_to_B_mean=+0.834 (12/18 favor B), C_to_B_mean=+0.904 (13/18 favor B)",
+        "participant_level": "results/galaxyppg_corrected_full_cv_result.json aggregate_across_all_18_eligible_subjects: A_cap_mean=8.287, B_mean=7.452, C_mean=8.369, A_to_B_mean=+0.834 (12/18 favor B), C_to_B_mean=+0.916 (13/18 favor B) (C values HIGH-01-corrected this sprint)",
         "window_weighted": "A_cap=8.156, B=7.310, C=8.230 (33,813 pooled test windows), A_to_B=+0.845, C_to_B=+0.920",
         "bounded_single_fold_diagnostic_superseded": "A_to_B=+1.342, C_to_B=+1.629 on 3/3 test subjects - retained as BOUNDED_EXTERNAL_REPLICATION_SUPPORTIVE_DIAGNOSTIC, not the final verdict"
       },

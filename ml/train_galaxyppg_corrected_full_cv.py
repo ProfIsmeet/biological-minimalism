@@ -62,6 +62,7 @@ from ml.train_galaxyppg_hr_external_replication import (  # noqa: E402
     normalize_fit,
     train_one,
 )
+from ml.fix_galaxyppg_participant_c_evaluation import deranged_acc_for_subject_at_index  # noqa: E402
 
 FOLDS_PATH = REPO_ROOT / "results" / "galaxyppg_corrected_full_cv_folds.json"
 SINGLE_FOLD_RESULT_PATH = REPO_ROOT / "results" / "galaxyppg_hr_corrected_eligibility_stage3.json"
@@ -130,18 +131,27 @@ def run_fold(fold_idx: int, folds: list[list[str]]) -> dict:
                 "size_bytes": len(ckpt_bytes), "sha256": hashlib.sha256(ckpt_bytes).hexdigest(),
             })
 
-        # per-subject breakdown for this fold/seed
+        # per-subject breakdown for this fold/seed. HIGH-01 fix: condition C
+        # must receive the same deranged test ACC used by the fold-level C
+        # evaluation above (test_acc_d), never the aligned acc_t - keyed by
+        # each subject's position in sorted(test_ids), matching
+        # deranged_acc_stable's own internal per-subject indexing exactly.
+        sorted_test_ids = sorted(test_ids)
         for pid in test_ids:
             w = build_participant_windows(DATA_DIR, pid)
             if len(w["hr"]) == 0:
                 continue
+            subject_index = sorted_test_ids.index(pid)
+            acc_c_t = torch.from_numpy(
+                deranged_acc_for_subject_at_index(w["acc_windows"], CONTROL_SHUFFLE_SEED_BASE + seed, subject_index)
+            )
             bvp_t = torch.from_numpy(w["bvp_windows"]).unsqueeze(1)
             acc_t = torch.from_numpy(w["acc_windows"])
             hr_true = w["hr"]
             with torch.no_grad():
                 pred_a = model_a(bvp_t, bvp_t).numpy() * hr_std + hr_mean
                 pred_b = model_b(bvp_t, acc_t).numpy() * hr_std + hr_mean
-                pred_c = model_c(bvp_t, acc_t).numpy() * hr_std + hr_mean
+                pred_c = model_c(bvp_t, acc_c_t).numpy() * hr_std + hr_mean
             per_subject_preds["A_cap"][pid][f"seed{seed}"] = float(np.abs(pred_a - hr_true).mean())
             per_subject_preds["B"][pid][f"seed{seed}"] = float(np.abs(pred_b - hr_true).mean())
             per_subject_preds["C"][pid][f"seed{seed}"] = float(np.abs(pred_c - hr_true).mean())
@@ -164,9 +174,9 @@ def main() -> None:
     per_subject_single = json.loads((REPO_ROOT / "results" / "galaxyppg_hr_corrected_per_subject_stage3.json").read_text())
 
     out: dict = {
-        "experiment_id": "galaxyppg_hr_full_grouped_cv_stage3",
+        "experiment_id": "galaxyppg_hr_corrected_eligibility_full_cv_v2",
         "frozen_folds": folds,
-        "fold5_reuse_note": "Fold 5 (test=P01/P04/P09/P21) is identical train/val/test membership to the prior sprint's single-fold diagnostic - reused verbatim, not retrained. See galaxyppg_hr_external_replication_stage2.json for its full per-seed detail.",
+        "fold5_reuse_note": "Fold 5 (test=P02/P06/P12) is identical train/val/test membership to the corrected-eligibility single-fold diagnostic - reused verbatim, not retrained. See results/galaxyppg_hr_corrected_eligibility_stage3.json for its full per-seed detail. (Section 16 fix: this note previously named the wrong test subjects P01/P04/P09/P21 and pointed to the invalidated pre-fix galaxyppg_hr_external_replication_stage2.json - both corrected; the underlying reused data itself, loaded from SINGLE_FOLD_RESULT_PATH, was always the correct corrected-eligibility file.)",
         "folds": {},
     }
 
@@ -174,7 +184,7 @@ def main() -> None:
     out["folds"]["5"] = {
         "test_subjects": folds[5], "val_subjects": folds[4],
         "train_subjects": [p for i, f in enumerate(folds) if i not in (5, 4) for p in f],
-        "reused_from": "galaxyppg_hr_external_replication_stage2.json",
+        "reused_from": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
         "runs": single_fold_result["runs"],
         "window_counts": single_fold_result["window_counts"],
         "per_subject": {pid: per_subject_single["per_subject_summary"][pid] for pid in folds[5]},

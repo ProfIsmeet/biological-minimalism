@@ -30,10 +30,11 @@ def test_excluded_subjects_below_threshold_eligible_above():
     d = _load("galaxyppg_corrected_eligibility.json")
     for e in d["excluded"]:
         if e["participant_id"] != "P01":
-            assert e["r_peaks_per_min"] < 40.0
-    # P01 is the closest excluded case, still clearly below the real gap
+            assert e["primary_r_peaks_per_min"] < 40.0
+    # P01 fails both independent dimensions of the HIGH-02 composite gate
     p01 = next(e for e in d["excluded"] if e["participant_id"] == "P01")
-    assert p01["r_peaks_per_min"] < 40.0
+    assert p01["primary_r_peaks_per_min"] < 40.0
+    assert p01["detector_agreement_ratio"] < 0.50
 
 
 def test_no_outcome_used_flag_present():

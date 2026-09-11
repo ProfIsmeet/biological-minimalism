@@ -1,5 +1,5 @@
 {
-  "experiment_id": "galaxyppg_hr_full_grouped_cv_stage3",
+  "experiment_id": "galaxyppg_hr_corrected_eligibility_full_cv_v2",
   "frozen_folds": [
     [
       "P08",
@@ -32,7 +32,7 @@
       "P12"
     ]
   ],
-  "fold5_reuse_note": "Fold 5 (test=P01/P04/P09/P21) is identical train/val/test membership to the prior sprint's single-fold diagnostic - reused verbatim, not retrained. See galaxyppg_hr_external_replication_stage2.json for its full per-seed detail.",
+  "fold5_reuse_note": "Fold 5 (test=P02/P06/P12) is identical train/val/test membership to the corrected-eligibility single-fold diagnostic - reused verbatim, not retrained. See results/galaxyppg_hr_corrected_eligibility_stage3.json for its full per-seed detail. (Section 16 fix: this note previously named the wrong test subjects P01/P04/P09/P21 and pointed to the invalidated pre-fix galaxyppg_hr_external_replication_stage2.json - both corrected post-hoc; the underlying reused DATA itself was always the correct corrected-eligibility file, loaded from SINGLE_FOLD_RESULT_PATH - this is a provenance-pointer/description fix only, no numeric result changed.)",
   "folds": {
     "5": {
       "test_subjects": [
@@ -59,7 +59,7 @@
         "P16",
         "P21"
       ],
-      "reused_from": "galaxyppg_hr_external_replication_stage2.json",
+      "reused_from": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
       "runs": {
         "A_cap": {
           "seed42": {
@@ -311,23 +311,44 @@
         "P08": {
           "A_cap_mae_mean": 6.4325159072875975,
           "B_mae_mean": 6.1027203559875485,
-          "C_mae_mean": 7.801017570495605,
+          "C_mae_mean": 7.880786609649658,
           "A_to_B_mean": 0.329795551300049,
-          "C_to_B_mean": 1.6982972145080568
+          "C_to_B_mean": 1.77806625366211,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 8.766281127929688,
+            "seed43": 8.375264167785645,
+            "seed44": 8.94876480102539,
+            "seed45": 7.981163024902344,
+            "seed46": 5.332459926605225
+          }
         },
         "P17": {
           "A_cap_mae_mean": 6.907194709777832,
           "B_mae_mean": 9.454726696014404,
-          "C_mae_mean": 7.362397861480713,
+          "C_mae_mean": 7.359162998199463,
           "A_to_B_mean": -2.5475319862365726,
-          "C_to_B_mean": -2.0923288345336912
+          "C_to_B_mean": -2.0955636978149412,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 7.538504123687744,
+            "seed43": 8.703856468200684,
+            "seed44": 6.788805961608887,
+            "seed45": 5.568815231323242,
+            "seed46": 8.195833206176758
+          }
         },
         "P18": {
           "A_cap_mae_mean": 9.73848361968994,
           "B_mae_mean": 7.295464420318604,
-          "C_mae_mean": 9.472707748413086,
+          "C_mae_mean": 9.615659141540528,
           "A_to_B_mean": 2.443019199371337,
-          "C_to_B_mean": 2.177243328094482
+          "C_to_B_mean": 2.320194721221924,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 9.014455795288086,
+            "seed43": 9.566082000732422,
+            "seed44": 10.439793586730957,
+            "seed45": 10.83622932434082,
+            "seed46": 8.221735000610352
+          }
         }
       },
       "checkpoint_manifest": [
@@ -589,23 +610,44 @@
         "P09": {
           "A_cap_mae_mean": 5.9856010437011715,
           "B_mae_mean": 6.2037276268005375,
-          "C_mae_mean": 6.461545658111572,
+          "C_mae_mean": 6.4262998580932615,
           "A_to_B_mean": -0.21812658309936594,
-          "C_to_B_mean": 0.257818031311035
+          "C_to_B_mean": 0.22257223129272408,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 7.256357669830322,
+            "seed43": 6.248571872711182,
+            "seed44": 6.740379810333252,
+            "seed45": 5.881757736206055,
+            "seed46": 6.004432201385498
+          }
         },
         "P11": {
           "A_cap_mae_mean": 12.908761787414551,
           "B_mae_mean": 10.188567352294921,
-          "C_mae_mean": 12.526466369628906,
+          "C_mae_mean": 12.486686706542969,
           "A_to_B_mean": 2.7201944351196303,
-          "C_to_B_mean": 2.337899017333985
+          "C_to_B_mean": 2.2981193542480476,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 12.30138111114502,
+            "seed43": 12.19495677947998,
+            "seed44": 13.3724365234375,
+            "seed45": 12.387120246887207,
+            "seed46": 12.177538871765137
+          }
         },
         "P13": {
           "A_cap_mae_mean": 7.602619934082031,
           "B_mae_mean": 7.3571062088012695,
-          "C_mae_mean": 8.37259521484375,
+          "C_mae_mean": 8.146133422851562,
           "A_to_B_mean": 0.24551372528076154,
-          "C_to_B_mean": 1.0154890060424808
+          "C_to_B_mean": 0.789027214050293,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 9.039958953857422,
+            "seed43": 9.99193286895752,
+            "seed44": 6.7235493659973145,
+            "seed45": 7.090715408325195,
+            "seed46": 7.884510517120361
+          }
         }
       },
       "checkpoint_manifest": [
@@ -867,23 +909,44 @@
         "P10": {
           "A_cap_mae_mean": 9.649023056030273,
           "B_mae_mean": 7.7763011932373045,
-          "C_mae_mean": 8.994703102111817,
+          "C_mae_mean": 9.003514671325684,
           "A_to_B_mean": 1.872721862792969,
-          "C_to_B_mean": 1.2184019088745126
+          "C_to_B_mean": 1.2272134780883794,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 9.064722061157227,
+            "seed43": 9.0466947555542,
+            "seed44": 8.217554092407227,
+            "seed45": 9.087750434875488,
+            "seed46": 9.600852012634277
+          }
         },
         "P14": {
           "A_cap_mae_mean": 7.435346412658691,
           "B_mae_mean": 7.99193172454834,
-          "C_mae_mean": 6.596525001525879,
+          "C_mae_mean": 6.595376205444336,
           "A_to_B_mean": -0.5565853118896484,
-          "C_to_B_mean": -1.395406723022461
+          "C_to_B_mean": -1.3965555191040036,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 6.173048973083496,
+            "seed43": 7.073263168334961,
+            "seed44": 6.7957282066345215,
+            "seed45": 6.106758117675781,
+            "seed46": 6.82808256149292
+          }
         },
         "P23": {
           "A_cap_mae_mean": 6.235623073577881,
           "B_mae_mean": 7.091044998168945,
-          "C_mae_mean": 5.410808753967285,
+          "C_mae_mean": 5.653999996185303,
           "A_to_B_mean": -0.8554219245910639,
-          "C_to_B_mean": -1.6802362442016596
+          "C_to_B_mean": -1.437045001983642,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 6.496007919311523,
+            "seed43": 4.899948596954346,
+            "seed44": 5.785924911499023,
+            "seed45": 5.419867515563965,
+            "seed46": 5.668251037597656
+          }
         }
       },
       "checkpoint_manifest": [
@@ -1145,23 +1208,44 @@
         "P04": {
           "A_cap_mae_mean": 10.094744300842285,
           "B_mae_mean": 7.203530120849609,
-          "C_mae_mean": 10.366004180908202,
+          "C_mae_mean": 10.56267261505127,
           "A_to_B_mean": 2.8912141799926756,
-          "C_to_B_mean": 3.162474060058593
+          "C_to_B_mean": 3.3591424942016603,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 10.628896713256836,
+            "seed43": 8.508750915527344,
+            "seed44": 11.049895286560059,
+            "seed45": 12.274653434753418,
+            "seed46": 10.351166725158691
+          }
         },
         "P16": {
           "A_cap_mae_mean": 8.703879356384277,
           "B_mae_mean": 5.485714626312256,
-          "C_mae_mean": 8.6771240234375,
+          "C_mae_mean": 8.587890625,
           "A_to_B_mean": 3.2181647300720213,
-          "C_to_B_mean": 3.191409397125244
+          "C_to_B_mean": 3.102175998687744,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 8.532831192016602,
+            "seed43": 8.750387191772461,
+            "seed44": 8.823022842407227,
+            "seed45": 8.860555648803711,
+            "seed46": 7.97265625
+          }
         },
         "P21": {
           "A_cap_mae_mean": 7.1419282913208,
           "B_mae_mean": 6.289180183410645,
-          "C_mae_mean": 6.86156005859375,
+          "C_mae_mean": 6.680877685546875,
           "A_to_B_mean": 0.8527481079101555,
-          "C_to_B_mean": 0.5723798751831053
+          "C_to_B_mean": 0.3916975021362301,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 5.987513542175293,
+            "seed43": 7.035971641540527,
+            "seed44": 8.498284339904785,
+            "seed45": 5.752009391784668,
+            "seed46": 6.130609512329102
+          }
         }
       },
       "checkpoint_manifest": [
@@ -1423,23 +1507,44 @@
         "P05": {
           "A_cap_mae_mean": 16.65153522491455,
           "B_mae_mean": 17.365346145629882,
-          "C_mae_mean": 16.856981658935545,
+          "C_mae_mean": 17.01786403656006,
           "A_to_B_mean": -0.713810920715332,
-          "C_to_B_mean": -0.5083644866943366
+          "C_to_B_mean": -0.3474821090698228,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 17.833181381225586,
+            "seed43": 16.928743362426758,
+            "seed44": 16.954639434814453,
+            "seed45": 17.645536422729492,
+            "seed46": 15.727219581604004
+          }
         },
         "P20": {
           "A_cap_mae_mean": 9.003432273864746,
           "B_mae_mean": 9.206635475158691,
-          "C_mae_mean": 8.717073822021485,
+          "C_mae_mean": 8.76814079284668,
           "A_to_B_mean": -0.2032032012939453,
-          "C_to_B_mean": -0.4895616531372067
+          "C_to_B_mean": -0.4384946823120117,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 9.531280517578125,
+            "seed43": 8.602706909179688,
+            "seed44": 8.532264709472656,
+            "seed45": 8.414963722229004,
+            "seed46": 8.759488105773926
+          }
         },
         "P24": {
           "A_cap_mae_mean": 6.033926200866699,
           "B_mae_mean": 4.54200496673584,
-          "C_mae_mean": 6.457073402404785,
+          "C_mae_mean": 6.364759159088135,
           "A_to_B_mean": 1.4919212341308592,
-          "C_to_B_mean": 1.9150684356689451
+          "C_to_B_mean": 1.8227541923522947,
+          "C_mae_mean_per_seed_HIGH01_corrected": {
+            "seed42": 5.397107124328613,
+            "seed43": 5.893495082855225,
+            "seed44": 7.555900573730469,
+            "seed45": 6.994113445281982,
+            "seed46": 5.983179569244385
+          }
         }
       },
       "checkpoint_manifest": [
@@ -1593,8 +1698,8 @@
       "n": 18
     },
     "C_mae": {
-      "mean": 8.356753889719645,
-      "sd_sample_ddof1": 2.756731706614676,
+      "mean": 8.36871167288886,
+      "sd_sample_ddof1": 2.791336875921234,
       "n": 18
     },
     "A_to_B": {
@@ -1605,8 +1710,8 @@
       "n_subjects_total": 18
     },
     "C_to_B": {
-      "mean": 0.904272723197937,
-      "sd_sample_ddof1": 1.6102097903638535,
+      "mean": 0.9162305063671538,
+      "sd_sample_ddof1": 1.5958112979200185,
       "n": 18,
       "n_subjects_favor_B": 13,
       "n_subjects_total": 18
@@ -1758,24 +1863,24 @@
       "P16": 3.2181647300720213
     },
     "per_subject_C_to_B_sorted": {
-      "P17": -2.0923288345336912,
-      "P23": -1.6802362442016596,
-      "P14": -1.395406723022461,
-      "P05": -0.5083644866943366,
-      "P20": -0.4895616531372067,
-      "P09": 0.257818031311035,
-      "P21": 0.5723798751831053,
+      "P17": -2.0955636978149412,
+      "P23": -1.437045001983642,
+      "P14": -1.3965555191040036,
+      "P20": -0.4384946823120117,
+      "P05": -0.3474821090698228,
+      "P09": 0.22257223129272408,
+      "P21": 0.3916975021362301,
+      "P13": 0.789027214050293,
       "P12": 0.8354257583618159,
-      "P13": 1.0154890060424808,
-      "P10": 1.2184019088745126,
+      "P10": 1.2272134780883794,
       "P06": 1.6107783317565918,
-      "P08": 1.6982972145080568,
-      "P24": 1.9150684356689451,
-      "P18": 2.177243328094482,
-      "P11": 2.337899017333985,
+      "P08": 1.77806625366211,
+      "P24": 1.8227541923522947,
+      "P11": 2.2981193542480476,
+      "P18": 2.320194721221924,
       "P02": 2.450122594833374,
-      "P04": 3.162474060058593,
-      "P16": 3.191409397125244
+      "P16": 3.102175998687744,
+      "P04": 3.3591424942016603
     },
     "n_subjects_favor_B_A_to_B": 12,
     "n_subjects_favor_B_C_to_B": 13,
@@ -1788,16 +1893,18 @@
       "sign_reversal_on_exclusion": false
     },
     "leave_one_out_sensitivity_C_to_B": {
-      "full_mean_n18": 0.904272723197937,
-      "most_extreme_subject": "P16",
-      "most_extreme_value": 3.191409397125244,
-      "mean_excluding_most_extreme_n17": 0.7697352717904484,
+      "full_mean_n18": 0.9162305063671538,
+      "most_extreme_subject": "P04",
+      "most_extreme_value": 3.3591424942016603,
+      "mean_excluding_most_extreme_n17": 0.7725298012004179,
       "sign_reversal_on_exclusion": false
     },
-    "window_vs_participant_weighting_agreement": "Window-weighted (A_to_B +0.845, C_to_B +0.920) and biological-participant-level (A_to_B +0.834, C_to_B +0.904) aggregates agree closely (<0.02 bpm difference) - the effect is not an artifact of window-count imbalance across subjects.",
+    "window_vs_participant_weighting_agreement": "Window-weighted (A_to_B +0.845, C_to_B +0.920) and biological-participant-level (A_to_B +0.834, C_to_B +0.916) aggregates agree closely (<0.02 bpm difference) - the effect is not an artifact of window-count imbalance across subjects. (Participant-level C_to_B corrected from a HIGH-01 evaluation bug this sprint; see high01_participant_c_correction_note.)",
     "no_sign_reversal_under_any_tested_aggregation_or_loo_exclusion": true,
-    "note_on_direction_vs_bounded_diagnostic": "The prior bounded single-fold diagnostic (fold 5 only, 3/3 subjects favored B) showed a larger effect (A_cap->B ~+1.342, C->B ~+1.629) than the full 6-fold result (A_cap->B ~+0.834-0.845, C->B ~+0.904-0.920). Direction is consistent (B favored) at both the aggregate and majority-subject level, but the full cohort reveals real subject heterogeneity (6/18 subjects favor A_cap over B) that the single fold's 3/3-favor-B result did not surface - this is exactly the kind of dilution a bounded diagnostic cannot rule out, and is why the master prompt required the full CV before any final classification."
+    "note_on_direction_vs_bounded_diagnostic": "The prior bounded single-fold diagnostic (fold 5 only, 3/3 subjects favored B for both A_to_B and C_to_B, confirmed after the HIGH-01 per-subject-C fix) showed a larger effect (A_cap->B ~+1.342, C->B ~+1.629, both from the always-correct fold-level/seed-pooled evaluation, unaffected by HIGH-01) than the full 6-fold result (A_cap->B ~+0.834-0.845, C->B ~+0.916-0.920). Direction is consistent (B favored) at both the aggregate and majority-subject level, but the full cohort reveals real subject heterogeneity (6/18 subjects favor A_cap over B, 5/18 favor C over B) that the single fold's 3/3-favor-B result did not surface - this is exactly the kind of dilution a bounded diagnostic cannot rule out, and is why the master prompt required the full CV before any final classification."
   },
   "final_classification": "EXTERNAL_REPLICATION_SUPPORTIVE",
-  "final_classification_rationale": "Aggregate MAE gap favors B at both the participant-level (A_cap->B +0.834 bpm, C->B +0.904 bpm, n=18) and window-weighted level (A_cap->B +0.845 bpm, C->B +0.920 bpm, 33,813 pooled test windows), with no sign reversal under either aggregation or under leave-one-out exclusion of the single most extreme subject. A majority of subjects favor B under both comparisons (12/18 for A_cap->B, 13/18 for C->B). This is directionally consistent with the prior bounded single-fold diagnostic and with the capacity-controlled PPG-DaLiA finding, though the full cohort's real heterogeneity (6/18 and 5/18 subjects respectively favor the opposite direction) means this is a real but moderate, heterogeneous effect - not a uniform one. Classified SUPPORTIVE rather than MIXED because no analysis performed (window- weighted, participant-level, or leave-one-out) reversed the aggregate sign."
+  "final_classification_rationale": "Aggregate MAE gap favors B at both the participant-level (A_cap->B +0.834 bpm, C->B +0.916 bpm, n=18) and window-weighted level (A_cap->B +0.845 bpm, C->B +0.920 bpm, 33,813 pooled test windows), with no sign reversal under either aggregation or under leave-one-out exclusion of the single most extreme subject (P16 for A_to_B, P04 for C_to_B). A majority of subjects favor B under both comparisons (12/18 for A_cap->B, 13/18 for C->B). This is directionally consistent with the prior bounded single-fold diagnostic and with the capacity-controlled PPG-DaLiA finding, though the full cohort's real heterogeneity (6/18 and 5/18 subjects respectively favor the opposite direction) means this is a real but moderate, heterogeneous effect - not a uniform one. Classified SUPPORTIVE rather than MIXED because no analysis performed (window-weighted, participant-level, or leave-one-out) reversed the aggregate sign. (Condition C's participant-level values were corrected this sprint under HIGH-01 remediation - see high01_participant_c_correction_note; the classification and its underlying direction were unchanged by the correction.)",
+  "high01_participant_c_correction_note": "HIGH-01 remediation: the per-participant condition-C evaluation previously supplied aligned test ACC to model_c instead of the deranged test ACC used by the (always-correct) fold-level C evaluation. Fixed by ml/fix_galaxyppg_participant_c_evaluation.py, which reconstructs the identical per-subject derangement (keyed by each subject's position in sorted(test_ids), matching deranged_acc_stable's internal indexing) and re-evaluates the already-trained, already-archived C checkpoints - no retraining. A strong-consistency check (concatenated corrected per-participant C predictions must reproduce the fold-level C MAE within 1e-4) passed for every fold/seed - see results/galaxyppg_high01_strong_consistency_check.json. Only C values changed; A_cap and B per-subject values are unchanged.",
+  "experiment_id_correction_note": "Section 18 fix: this experiment previously reused the identical experiment_id (galaxyppg_hr_full_grouped_cv_stage3) as the INVALIDATED pre-fix full-CV result (results/galaxyppg_hr_full_grouped_cv_stage3.json), a real ID collision that could let a naive consumer conflate the two. Assigned a unique versioned identity here; no numeric result changed."
 }

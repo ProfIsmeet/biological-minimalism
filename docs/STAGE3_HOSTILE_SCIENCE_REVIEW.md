@@ -113,7 +113,7 @@ None found this sprint.
 
 1. **Effect size shrank substantially from the bounded diagnostic to the
    full CV** (A_cap->B: +1.342 bpm on 3/3 subjects -> +0.834 bpm on 12/18
-   subjects; C->B: +1.629 -> +0.904 bpm). This is not a defect - it is
+   subjects; C->B: +1.629 -> +0.916 bpm). This is not a defect - it is
    exactly the risk a bounded single-fold diagnostic cannot rule out, and
    is why the master prompt required the full CV before any final
    classification. Disclosed prominently, not minimized: 6/18 subjects

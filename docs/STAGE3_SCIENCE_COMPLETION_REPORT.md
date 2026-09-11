@@ -11,7 +11,7 @@ narrative detail; this file is the tracked repository artifact.
   ECG) and fixed; corrected full 6-fold CV under
   `GALAXYPPG_CORRECTED_ELIGIBILITY_CV_PROTOCOL_V2` is now **COMPLETE**:
   `EXTERNAL_REPLICATION_SUPPORTIVE` (participant-level A_cap->B +0.834 bpm,
-  12/18 favor B; C->B +0.904 bpm, 13/18 favor B; window-weighted agrees to
+  12/18 favor B; C->B +0.916 bpm, 13/18 favor B; window-weighted agrees to
   <0.02 bpm; no sign reversal under leave-one-out). Real heterogeneity
   disclosed: 6/18 subjects favor A_cap over B. Both pre-fix results
   (single-fold + full 6-fold CV) remain marked

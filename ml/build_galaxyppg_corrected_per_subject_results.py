@@ -29,7 +29,9 @@ from ml.train_galaxyppg_corrected_eligibility import (  # noqa: E402
     PPGPlusIMUModel,
     SEEDS,
     SPLIT_PATH,
+    CONTROL_SHUFFLE_SEED_BASE,
 )
+from ml.fix_galaxyppg_participant_c_evaluation import deranged_acc_for_subject_at_index  # noqa: E402
 
 RESULT_PATH = REPO_ROOT / "results" / "galaxyppg_hr_corrected_eligibility_stage3.json"
 
@@ -59,15 +61,24 @@ def main() -> None:
         model_c.load_state_dict(torch.load(CKPT_DIR / f"galaxyppg_hr_corrected_C_seed{seed}.pt", map_location="cpu"))
         model_c.eval()
 
+        sorted_test_ids = sorted(split["test"])
         for pid, w in per_subject_test.items():
             bvp = torch.from_numpy(w["bvp_windows"]).unsqueeze(1)
             acc = torch.from_numpy(w["acc_windows"])
+            # HIGH-01 fix: condition C must receive the same deranged test
+            # ACC used by the fold-level C evaluation, keyed by this
+            # subject's position in sorted(test), matching
+            # deranged_acc_stable's own internal per-subject indexing.
+            subject_index = sorted_test_ids.index(pid)
+            acc_c = torch.from_numpy(
+                deranged_acc_for_subject_at_index(w["acc_windows"], CONTROL_SHUFFLE_SEED_BASE + seed, subject_index)
+            )
             hr_true = w["hr"]
 
             with torch.no_grad():
                 pred_a = (model_a(bvp, bvp).numpy() * hr_std + hr_mean)
                 pred_b = (model_b(bvp, acc).numpy() * hr_std + hr_mean)
-                pred_c = (model_c(bvp, acc).numpy() * hr_std + hr_mean)
+                pred_c = (model_c(bvp, acc_c).numpy() * hr_std + hr_mean)
 
             per_subject_results["A_cap"][pid][f"seed{seed}"] = float(np.abs(pred_a - hr_true).mean())
             per_subject_results["B"][pid][f"seed{seed}"] = float(np.abs(pred_b - hr_true).mean())
