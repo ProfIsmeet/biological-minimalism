@@ -21,7 +21,9 @@ import { DecisionInputsView } from "@/components/research/DecisionInputsView";
 import { EngineeringReadinessView } from "@/components/research/EngineeringReadinessView";
 import { FutureScienceHandoffCard } from "@/components/research/FutureScienceHandoffCard";
 import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
+import { Stage3EvidenceView } from "@/components/research/Stage3EvidenceView";
 import { Stage4EngineeringReadinessCard } from "@/components/research/Stage4EngineeringReadinessCard";
+import { Stage4ScienceManifestView } from "@/components/research/Stage4ScienceManifestView";
 import type {
   ResearchBreakdown,
   ResearchBreakdownEntry,
@@ -547,6 +549,13 @@ export function ResearchMode() {
     engineeringReadinessError,
     stage4EngineeringReadiness,
     stage4EngineeringReadinessError,
+    stage3Evidence,
+    stage3EvidenceError,
+    stage4ScienceManifest,
+    stage4ScienceManifestError,
+    stage4SensorValueMatrix,
+    stage4ScienceClaims,
+    stage4ArchitectureDecisionInputsScience,
     futureScienceManifest,
     experiments,
     selectedExperimentId,
@@ -635,6 +644,24 @@ export function ResearchMode() {
       {engineeringReadiness ? <EngineeringReadinessView readiness={engineeringReadiness} /> : null}
       {stage4EngineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 4 engineering readiness unavailable: {stage4EngineeringReadinessError}</p> : null}
       {stage4EngineeringReadiness ? <Stage4EngineeringReadinessCard readiness={stage4EngineeringReadiness} /> : null}
+      {stage4ScienceManifestError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Science Owner Stage 4 handoff unavailable: {stage4ScienceManifestError}</p> : null}
+      {stage4ScienceManifest ? (
+        <Stage4ScienceManifestView
+          manifest={stage4ScienceManifest}
+          sensorValueMatrix={stage4SensorValueMatrix}
+          claimLedger={stage4ScienceClaims}
+          architectureDecisionInputs={stage4ArchitectureDecisionInputsScience}
+        />
+      ) : null}
+      {stage3EvidenceError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 3 evidence unavailable: {stage3EvidenceError}</p> : null}
+      {stage3Evidence ? (
+        <div>
+          <p className="mb-1.5 text-[10px] uppercase tracking-wide text-slate-600">
+            Raw resolver verification (numeric cross-check, not the safe-wording narrative above)
+          </p>
+          <Stage3EvidenceView evidence={stage3Evidence} />
+        </div>
+      ) : null}
       {experimentList.length ? <MarginalValueTable experiments={experimentList} /> : null}
       {hardwareTopologyError || paretoReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Hardware architecture unavailable: {hardwareTopologyError ?? paretoReadinessError}</p> : null}
       {hardwareTopology && paretoReadiness && operationalCostCatalog ? <HardwareArchitectureView topology={hardwareTopology} catalog={operationalCostCatalog} readiness={paretoReadiness} /> : null}

@@ -135,6 +135,8 @@ KNOWN_ROUTES = {
     "GET /research/decision-inputs",
     "GET /research/operational-costs",
     "GET /research/operational-costs/{}",
+    "GET /research/stage3-evidence",
+    "GET /research/stage3-evidence/{}",
     "GET /digital-twin",
 }
 
@@ -146,8 +148,8 @@ def _normalize_route(api_surface: str) -> str:
     except ValueError:
         return api_surface
     segments = path.split("/")
-    # Replace a concrete experiment/component id in the last segment with {}.
-    if len(segments) > 3 and segments[-2] in {"experiments", "operational-costs"}:
+    # Replace a concrete experiment/component/family id in the last segment with {}.
+    if len(segments) > 3 and segments[-2] in {"experiments", "operational-costs", "stage3-evidence"}:
         segments[-1] = "{}"
     return f"{method} {'/'.join(segments)}"
 

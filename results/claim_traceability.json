@@ -70,9 +70,9 @@
     },
     {
       "claim_id": "sleep-eog-modest-positive",
-      "claim_text": "Adding aligned horizontal EOG to EEG improves 5-class sleep-stage macro-F1 in the primary test (0.7473->0.7693, 4/5 seeds) and again in a prospectively-frozen 8-subject secondary holdout (0.6530->0.6858, 5/5 seeds); same-dataset, replicated-with-control.",
+      "claim_text": "Adding aligned horizontal EOG to EEG improves 5-class sleep-stage macro-F1 in the primary test under the corrected H1 seed-before-model-init protocol (V2) (0.7365->0.7647, 4/5 seeds); same-dataset, replicated-with-control. The secondary holdout figures below are from the pre-V2 seeding protocol and have not yet been re-run under V2.",
       "evidence_level": "tier2_supported_limited",
-      "source_artifact": "results/sleep_edf_eeg_eog_ablation.json",
+      "source_artifact": "results/sleep_edf_primary_seedfix_v2.json",
       "source_field": "aggregate.delta_candidate_minus_baseline.mean",
       "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
       "frontend_surface": "Research Mode > Case 3 (EOG->sleep)",
@@ -87,10 +87,10 @@
     },
     {
       "claim_id": "sleep-eog-shuffled-control",
-      "claim_text": "Capacity-identical shuffled-EOG negative control is consistently worse than aligned EOG (C->B 5/5 seeds primary and secondary; A->C ~neutral) -> benefit depends on temporal alignment. Primary per-subject effect is concentrated in SC4011.",
+      "claim_text": "Capacity-identical shuffled-EOG negative control, corrected under the H1 seed-before-model-init protocol (V2), is consistently worse than aligned EOG (C->B 4/5 seeds, mean +0.0323 macro-F1); A->C is approximately neutral (mean -0.0041, 3/5 seeds) -> benefit depends on temporal alignment, not channel-count alone.",
       "evidence_level": "tier2_supported_limited",
-      "source_artifact": "results/sleep_edf_eeg_eog_control_analysis.json",
-      "source_field": "aggregate.C_to_B.n_seeds_favor_B",
+      "source_artifact": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json",
+      "source_field": "aggregate.C_to_B.mean",
       "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
       "frontend_surface": "Research Mode > Case 3 negative-control + primary per-subject breakdowns",
       "paper_section": "Results 4.3 (Sleep-EDF matched control)",
@@ -231,9 +231,9 @@
     },
     {
       "claim_id": "day10-interaction-approx-additive",
-      "claim_text": "One predeclared, capacity-fair (112 params/channel) factorial experiment (Sleep-EDF EEG x EOG x Resp) gives an interaction term of +0.0031 +/- 0.0434 macro-F1 (2/5 seeds positive): approximately additive / unresolved. Adding both EOG and respiration showed no stable extra benefit beyond their individual effects under this model and dataset. This does NOT prove sensor interactions are globally absent and is NOT an EOG+Resp synergy claim.",
+      "claim_text": "One predeclared, capacity-fair (112 params/channel) factorial experiment (Sleep-EDF EEG x EOG x Resp), corrected under the H1 seed-before-model-init protocol (V2), gives an interaction term of -0.0078 +/- 0.0363 macro-F1 (3/5 seeds positive, 2/5 negative): approximately additive / unresolved. Adding both EOG and respiration showed no stable extra benefit beyond their individual effects under this model and dataset. This does NOT prove sensor interactions are globally absent and is NOT an EOG+Resp synergy claim.",
       "evidence_level": "tier2_supported_limited",
-      "source_artifact": "results/sleep_edf_interaction_resp_day10.json",
+      "source_artifact": "results/sleep_edf_interaction_resp_seedfix_v2.json",
       "source_field": "aggregate.interaction_term.mean",
       "api_surface": "GET /research/experiments/sleep-edf-eeg-eog-ablation",
       "frontend_surface": "Research Mode > Case 3 interaction panel",
@@ -389,6 +389,66 @@
         33,
         40
       ],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "stage3-galaxyppg-external-replication-supportive",
+      "claim_text": "GalaxyPPG (n=24 source, 18 eligible after outcome-independent reference-quality QC) corrected full 6-fold grouped CV, all 18 eligible subjects tested exactly once: participant-level A_cap->B +0.834 bpm (12/18 favor B), C->B +0.916 bpm (13/18 favor B). Classification: EXTERNAL_REPLICATION_SUPPORTIVE (moderate, heterogeneous). This is external-dataset supportive evidence, not a universal or definitive replication claim.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/galaxyppg_corrected_full_cv_result.json",
+      "source_field": "aggregate_across_all_18_eligible_subjects.A_to_B.mean",
+      "api_surface": "GET /research/stage3-evidence/galaxyppg_external_replication",
+      "frontend_surface": "Research Mode > Stage 3 Accepted Governing Science",
+      "paper_section": "Results (GalaxyPPG external replication)",
+      "jury_question_ids": [],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "stage3-lbnp-thoracic-eis-complete-mixed",
+      "claim_text": "LBNP thoracic EIS, protocol-compliant V2 (n=12, 407 windows, stages 0/15/30/45/60 mmHg only): A(ECG+pleth)-B(+thoracic EIS) mean -0.452, 3/12 favor B over A and this comparison reverses sign under leave-one-subject-out; C(deranged EIS)-B mean -1.293, 5/12 favor B over C. Classification: COMPLETE_MIXED (negative-leaning, heterogeneous, sensitive to a single influential subject). The prior 607-window run (200 out-of-protocol windows at 70-100 mmHg) is HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL and must never be cited as current.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+      "source_field": "aggregate.A_minus_B_mean",
+      "api_surface": "GET /research/stage3-evidence/lbnp_thoracic_eis",
+      "frontend_surface": "Research Mode > Stage 3 Accepted Governing Science",
+      "paper_section": "Results (LBNP thoracic EIS)",
+      "jury_question_ids": [],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "stage3-qde-v2-leg-bioz-aggregate-negative",
+      "claim_text": "QDE V2 leg-BioZ (n=10 subjects, real LOSO ridge regression): A(arm+trunk)-B(arm+trunk+legs) mean -0.052 (7/10 favor B over A), C(deranged legs)-B mean -0.060 (7/10 favor B over C). Aggregate negative and heterogeneous; sensitivity-fragile. This does NOT establish universal BioZ uselessness \u2014 it is one dataset/protocol/target combination.",
+      "evidence_level": "tier2_supported_limited",
+      "source_artifact": "results/qde_v2_leg_bioz_stage2.json",
+      "source_field": "aggregate.A_minus_B_mean",
+      "api_surface": "GET /research/stage3-evidence/qde_v2_leg_bioz",
+      "frontend_surface": "Research Mode > Stage 3 Accepted Governing Science",
+      "paper_section": "Results (QDE V2 leg BioZ)",
+      "jury_question_ids": [],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "stage3-hmc-bounded-diagnostic-pending-full-replication",
+      "claim_text": "HMC sleep-staging external replication is a BOUNDED DIAGNOSTIC only (n=7 recordings of an intended n=151 cohort; PhysioNet TLS certificate expiry blocked the full download this sprint), B(EEG+EOG)-A(EEG only) mean -0.031 macro-F1 (2/5 seeds favor B). Full external replication on the complete cohort remains PENDING and this bounded result must not be presented as completed external replication.",
+      "evidence_level": "tier4_proposed",
+      "source_artifact": "results/hmc_sleep_external_replication_stage3_bounded_n7.json",
+      "source_field": "aggregate.B_minus_A.mean",
+      "api_surface": "GET /research/stage3-evidence/hmc_bounded_diagnostic",
+      "frontend_surface": "Research Mode > Stage 3 Accepted Governing Science",
+      "paper_section": "Results (HMC bounded diagnostic)",
+      "jury_question_ids": [],
+      "status": "frozen"
+    },
+    {
+      "claim_id": "stage3-ds003838-bounded-diagnostic-pending-full-experiment",
+      "claim_text": "ds003838 EEG-minimalism replication is a BOUNDED DIAGNOSTIC only (n=3 subjects actually downloaded, not the full n=65 Stage-2/3 cohort): B(full montage)-A(sparse-4) macro-F1 delta +0.050. The full experiment on the complete cohort remains PENDING and this bounded result must not be presented as a final EEG-architecture finding.",
+      "evidence_level": "tier4_proposed",
+      "source_artifact": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+      "source_field": "B_full_montage.macro_f1_mean",
+      "api_surface": "GET /research/stage3-evidence/ds003838_bounded_diagnostic",
+      "frontend_surface": "Research Mode > Stage 3 Accepted Governing Science",
+      "paper_section": "Results (ds003838 bounded diagnostic)",
+      "jury_question_ids": [],
       "status": "frozen"
     }
   ]

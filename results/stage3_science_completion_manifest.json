@@ -1,0 +1,181 @@
+{
+  "purpose": "Master Stage 3 science manifest. Unknown values are null, never zero-filled.",
+  "datasets": [
+    {
+      "dataset": "GalaxyPPG",
+      "dataset_version": "Zenodo 14635823",
+      "raw_data_identity": "GalaxyPPG.zip, 481594233 bytes, MD5 d9a48bfcd07928fb22b96dc40cf2e7d4",
+      "actual_biological_n": 24,
+      "held_out_biological_n": 18,
+      "optimization_seed_n": 5,
+      "fold_count": 6,
+      "completion_status": "COMPLETE (full corrected-eligibility 6-fold CV)",
+      "replication_class": "EXTERNAL_REPLICATION_SUPPORTIVE",
+      "protocol_version": "GALAXYPPG_CORRECTED_ELIGIBILITY_CV_PROTOCOL_V2 (18/24 eligible, real reference-ECG-quality gate; fold count 6 preserved from the original design, fold size 4->3)",
+      "A": "PPG-only, capacity-matched dual encoder (A_cap)",
+      "B": "PPG+aligned wrist ACC",
+      "C": "PPG+within-subject-deranged ACC",
+      "target": "HR (bpm)",
+      "target_provenance": "directly measured (real Polar H10 ECG R-peaks)",
+      "metric": "MAE (bpm)",
+      "metric_direction": "lower is better",
+      "aggregate_result": {
+        "participant_level": "results/galaxyppg_corrected_full_cv_result.json aggregate_across_all_18_eligible_subjects: A_cap_mean=8.287, B_mean=7.452, C_mean=8.369, A_to_B_mean=+0.834 (12/18 favor B), C_to_B_mean=+0.916 (13/18 favor B) (C values HIGH-01-corrected this sprint)",
+        "window_weighted": "A_cap=8.156, B=7.310, C=8.230 (33,813 pooled test windows), A_to_B=+0.845, C_to_B=+0.920",
+        "bounded_single_fold_diagnostic_superseded": "A_to_B=+1.342, C_to_B=+1.629 on 3/3 test subjects - retained as BOUNDED_EXTERNAL_REPLICATION_SUPPORTIVE_DIAGNOSTIC, not the final verdict"
+      },
+      "per_fold_results": "results/galaxyppg_corrected_full_cv_result.json folds.0-5 (fold 5 independently re-verified reuse of the bounded diagnostic)",
+      "per_seed_results": "results/galaxyppg_corrected_full_cv_result.json folds.*.runs",
+      "per_subject_results": "results/galaxyppg_corrected_full_cv_result.json folds.*.per_subject and heterogeneity_and_sensitivity - all 18 subjects, one test appearance each",
+      "per_class_activity_stage_results": null,
+      "heterogeneity": "Real, disclosed: 6/18 subjects favor A_cap over B, 5/18 favor C over B - not uniform, unlike the bounded single-fold diagnostic's 3/3",
+      "sensitivity": "Window-weighted vs participant-level aggregation agree to <0.02 bpm; leave-one-out exclusion of the most extreme subject (P16) does not reverse the aggregate sign for either A_to_B or C_to_B",
+      "checkpoint_inventory": "75/75 verified locally + externally archived + independently redownload-verified (galaxyppg-corrected-fullcv-v2-checkpoint-archive-v1); bounded diagnostic's 15/15 remain separately archived (galaxyppg-corrected-eligibility-checkpoint-archive-v1)",
+      "checkpoint_archive_status": "EXTERNALLY_ARCHIVED_AND_VERIFIED",
+      "limitations": "Real, moderate, heterogeneous effect - not uniform across subjects; smaller in magnitude than the earlier bounded single-fold diagnostic, which the full cohort shows was not representative",
+      "safe_claim": "Aligned wrist IMU added a real but moderate and heterogeneous HR-estimation benefit under a capacity-near-matched comparison on GalaxyPPG (full corrected 6-fold CV, n=18, no aggregate sign reversal) - qualitatively consistent with PPG-DaLiA's capacity-controlled finding.",
+      "unsafe_claims": [
+        "GalaxyPPG replicates PPG-DaLiA (use 'qualitatively consistent')",
+        "The effect is uniform across subjects (6/18 favor A_cap over B)",
+        "Citing the bounded single-fold diagnostic's larger effect size as the current/final GalaxyPPG result"
+      ],
+      "blockers": [],
+      "historical_invalidated_artifacts": [
+        "results/galaxyppg_hr_external_replication_stage2.json (prior sprint single-fold, INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT)",
+        "results/galaxyppg_hr_full_grouped_cv_stage3.json (this sprint full 6-fold, INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT)"
+      ],
+      "source_commit": "this sprint, see git log"
+    },
+    {
+      "dataset": "LBNP",
+      "dataset_version": "Zenodo 10119428",
+      "raw_data_identity": "Mayo_LBNP_raw_data.zip, 712958490 bytes, MD5 376ddafa9ea162e223474a6a4aea39d9",
+      "actual_biological_n": 12,
+      "held_out_biological_n": 12,
+      "optimization_seed_n": null,
+      "fold_count": 12,
+      "completion_status": "COMPLETE (protocol-compliant rerun, HIGH-03 remediation)",
+      "replication_class": "COMPLETE_MIXED",
+      "protocol_version": "results/lbnp_protocol_stage1b.json, real eligibility corrected this sprint (12/16 - pleth-NaN exclusion); HIGH-03: 0-60mmHg frozen range now enforced (200/607 out-of-scope windows excluded), C-control same-stage leakage fixed",
+      "current_result_path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+      "historical_result_path": "results/lbnp_thoracic_eis_stage3.json (OUT_OF_PROTOCOL_SCOPE_HISTORICAL, superseded, see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md)",
+      "A": "ECG+pleth features",
+      "B": "A + real thoracic EIS (log-mag+phase, 100 freq points)",
+      "C": "B with within-subject deranged EIS (source_stage != target_stage enforced)",
+      "target": "LBNP pressure stage (mmHg), filtered to the frozen 0-60mmHg scope",
+      "target_provenance": "protocol-assigned (real, externally-imposed chamber pressure, step-function looked up per real spectrum timestamp)",
+      "metric": "MAE (mmHg)",
+      "metric_direction": "lower is better",
+      "aggregate_result": {
+        "A_mean": 20.973,
+        "B_mean": 21.425,
+        "C_mean": 20.132,
+        "A_minus_B_mean": -0.452,
+        "C_minus_B_mean": -1.293,
+        "n_favor_B_over_A": 3,
+        "n_favor_B_over_C": 5,
+        "n_total": 12
+      },
+      "per_fold_results": "N/A (LOSO)",
+      "per_seed_results": "N/A (deterministic ridge regression)",
+      "per_subject_results": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json per_subject_deltas - subjects 4 and 9 are extreme opposite-direction outliers on A_minus_B",
+      "per_class_activity_stage_results": null,
+      "heterogeneity": "Both key comparisons are substantially influenced by a single subject (9): A_minus_B SIGN-REVERSES when subject 9 is excluded via leave-one-out; C_minus_B remains negative under leave-one-out but SHRINKS SUBSTANTIALLY without subject 9 - neither comparison is a stable, cohort-wide effect. This is why the governing classification is COMPLETE_MIXED, not COMPLETE_NEGATIVE.",
+      "sensitivity": "Full leave-one-subject-out sensitivity in results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json::leave_one_subject_out_sensitivity",
+      "checkpoint_inventory": "N/A - linear model, no checkpoints scientifically necessary",
+      "checkpoint_archive_status": "N/A",
+      "limitations": "n=12 (not the paper's 16) due to real pleth-quality exclusion; MAP/EIT/abdominal/arm sites out of scope; A_minus_B sign-sensitive to a single subject",
+      "safe_claim": "Corrected LBNP shows no stable aggregate incremental thoracic EIS benefit over ECG+pleth under the frozen terrestrial 0-60 mmHg protocol, with substantial subject heterogeneity - a real but heterogeneous (COMPLETE_MIXED) result, not a uniform negative.",
+      "unsafe_claims": [
+        "Thoracic EIS is useless in general",
+        "Any astronaut/microgravity equivalence",
+        "Citing results/lbnp_thoracic_eis_stage3.json (historical, out-of-protocol-scope) as the current result",
+        "Thoracic EIS definitively worsens prediction for all subjects",
+        "Old 607-window LBNP result is governing"
+      ],
+      "blockers": [],
+      "source_commit": "this sprint, see git log (HIGH-03 remediation)"
+    },
+    {
+      "dataset": "HMC",
+      "dataset_version": "PhysioNet hmc-sleep-staging 1.1",
+      "raw_data_identity": "58/151 complete recording pairs (edf+annotation) present on disk; 59 raw .edf files present but 1 (SN060) is a partial/incomplete download (missing annotation, file size far below complete-recording range) - see results/hmc_current_download_inventory.json for the full file-presence/complete-pair/hash-verified breakdown. Of the 58 complete pairs, 52 were SHA256-verified against PhysioNet own SHA256SUMS.txt in a prior sprint; the remaining 6 are complete but not independently re-verified this sprint (no verification work performed - out of scope).",
+      "actual_biological_n": 58,
+      "held_out_biological_n": null,
+      "optimization_seed_n": null,
+      "fold_count": null,
+      "completion_status": "FULL_COHORT_PENDING (n=7 bounded diagnostic is BOUNDED_DIAGNOSTIC status, not historical - it remains the only trained HMC evidence)",
+      "replication_class": "UNRESOLVED (full cohort not trained; n=7 BOUNDED_DIAGNOSTIC is the only trained HMC evidence, too small to conclude full-cohort replication either way)",
+      "protocol_version": "results/hmc_split_stage3_full_cohort.json (106/23/22, frozen)",
+      "A": "EEG only",
+      "B": "EEG+aligned EOG",
+      "C": "EEG+deranged EOG",
+      "target": "5-class sleep stage",
+      "target_provenance": "directly measured (technician hypnogram)",
+      "metric": "Macro-F1",
+      "metric_direction": "higher is better",
+      "aggregate_result": null,
+      "limitations": "Real access restored this sprint (certificate renewed); full 151-recording download and full-cohort training not completed within this session's time budget",
+      "safe_claim": "HMC full-cohort access is real and working; current state (results/hmc_current_download_inventory.json): 59 edf files present, 58 complete recording pairs, 52 SHA256-verified, 1 partial (SN060); full training remains pending.",
+      "unsafe_claims": [
+        "HMC replicates or fails to replicate Sleep-EDF (no full result exists)"
+      ],
+      "blockers": [
+        "Compute/session time limit - NOT an access blocker (access is restored)"
+      ],
+      "source_commit": "this sprint (partial), see git log"
+    },
+    {
+      "dataset": "ds003838",
+      "completion_status": "PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
+      "actual_biological_n": 3,
+      "limitations": "Full 65-subject cohort requires ~93GB/~9.4h additional download - quantified this sprint, not attempted (lower priority than GalaxyPPG/LBNP/HMC)",
+      "safe_claim": "n=3 bounded diagnostic (prior sprint) remains the best available real evidence.",
+      "source_commit": "prior sprint, unchanged; blocker quantified this sprint"
+    },
+    {
+      "dataset": "Sleep-EDF V2 / QDE V2 / PPG-DaLiA / PTT",
+      "completion_status": "HISTORICAL - COMPLETE, preserved unchanged",
+      "safe_claim": "Governing results unchanged from prior sprints - see respective result artifacts.",
+      "source_commit": "prior sprints, unchanged"
+    }
+  ],
+  "architecture": {
+    "final_architecture": "UNRESOLVED",
+    "formal_pareto": "NOT_READY"
+  },
+  "digital_twin_status": "conceptual, synthetic, not longitudinally validated",
+  "test_suite": {
+    "static_inventory_previous": 539,
+    "tests_added_this_sprint": 13,
+    "static_inventory_current": 552,
+    "ml_tests_passed": 552,
+    "ml_tests_failed": 0,
+    "ml_tests_skipped": 0,
+    "reconciliation_note": "Gate 3 final resolver closure sprint (stage3-gate3-final-resolver-closure) added 13 new tests reproducing the independent auditors exact corrupted-resolve_current attack and verifying both public current-resolution APIs now reject it identically. Static inventory 539 -> 552, confirmed by direct collection and execution (552 collected, 552 passed, 0 failed, 0 skipped)."
+  },
+  "final_verdict": "STAGE3_CORE_AND_PRIORITY_EXTERNAL_SCIENCE_COMPLETE_WITH_LOWER_PRIORITY_EXTERNAL_WORK_PENDING",
+  "final_verdict_rationale": "GalaxyPPG's corrected full 6-fold CV is now COMPLETE (EXTERNAL_REPLICATION_SUPPORTIVE) and all H-01/H-02/Section 26-33 Codex parent-audit remediation items are closed. HMC full-cohort training and ds003838 remain genuinely PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT (explicitly out of scope this sprint per the master prompt) - this verdict does NOT claim full Stage 3 completion. Whether HMC/ds003838 are required before Stage 4 is Emir's decision, not this remediation's.",
+  "codex_fail_remediation_sprint": {
+    "branch": "stage3-codex-fail-remediation",
+    "high_findings_closed": [
+      "HIGH-01",
+      "HIGH-02",
+      "HIGH-03"
+    ],
+    "sections_closed": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      26,
+      29
+    ],
+    "status": "This manifest is the current, authoritative Stage 3 source of truth as of this sprint. Older status matrices referenced elsewhere are HISTORICAL/SUPERSEDED where they conflict with this file."
+  }
+}

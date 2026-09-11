@@ -1,0 +1,333 @@
+{
+  "experiment_id": "galaxyppg_hr_corrected_eligibility_stage3",
+  "scope_disclosure": "BOUNDED_TO_SINGLE_FOLD - see docs/GALAXYPPG_SPLIT_STRATEGY_DEVIATION.md for the ORIGINAL 24-subject 16/4/4 design this doc describes (superseded). This file's actual real split is the CORRECTED 18-subject-eligible 12/3/3 subject-held-out split (results/galaxyppg_split_stage3_corrected_eligibility.json) - NOT the frozen protocol's full 6-fold grouped CV (compute-infeasible this sprint; full CV completed separately, see results/galaxyppg_corrected_full_cv_result.json). Section 12 fix: this field previously stated the stale pre-correction 16/4/4 split description.",
+  "frozen_protocol_reference": "results/galaxyppg_protocol_stage1b.json",
+  "split": {
+    "purpose": "Corrected single-fold split over the REAL 18-subject eligible cohort (after fixing the reference-ECG-quality BLOCKER this sprint - see docs/GALAXYPPG_REFERENCE_SIGNAL_QUALITY_BLOCKER.md). Neutral seed-42 shuffle, same convention as all other frozen splits this project.",
+    "n_eligible": 18,
+    "train": [
+      "P04",
+      "P08",
+      "P09",
+      "P10",
+      "P11",
+      "P13",
+      "P14",
+      "P16",
+      "P17",
+      "P18",
+      "P21",
+      "P23"
+    ],
+    "val": [
+      "P05",
+      "P20",
+      "P24"
+    ],
+    "test": [
+      "P02",
+      "P06",
+      "P12"
+    ]
+  },
+  "reference": "Polar H10 raw ECG R-peaks (Pan-Tompkins-lite), never device-derived HR",
+  "window_seconds": 8.0,
+  "stride_seconds": 2.0,
+  "hr_normalization": {
+    "mean": 88.03630828857422,
+    "std": 22.91017723083496,
+    "fit_on": "train split only"
+  },
+  "parameter_counts": {
+    "A_cap": 28865,
+    "B_and_C": 29089
+  },
+  "window_counts": {
+    "train": 22756,
+    "val": 5372,
+    "test": 5685
+  },
+  "runs": {
+    "A_cap": {
+      "seed42": {
+        "mae": 5.891868591308594,
+        "rmse": 11.529970169067383,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed43": {
+        "mae": 6.3166046142578125,
+        "rmse": 11.940999031066895,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed44": {
+        "mae": 7.0874552726745605,
+        "rmse": 12.93354320526123,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed45": {
+        "mae": 5.961544036865234,
+        "rmse": 11.875407218933105,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed46": {
+        "mae": 5.779453754425049,
+        "rmse": 11.199309349060059,
+        "n_windows": 5685,
+        "train_history_len": 20
+      }
+    },
+    "B": {
+      "seed42": {
+        "mae": 4.930902481079102,
+        "rmse": 9.80851936340332,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed43": {
+        "mae": 5.966744899749756,
+        "rmse": 10.495896339416504,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed44": {
+        "mae": 3.8813118934631348,
+        "rmse": 7.034847736358643,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed45": {
+        "mae": 4.53723669052124,
+        "rmse": 8.432931900024414,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed46": {
+        "mae": 5.00929069519043,
+        "rmse": 8.982917785644531,
+        "n_windows": 5685,
+        "train_history_len": 20
+      }
+    },
+    "C": {
+      "seed42": {
+        "mae": 6.204112529754639,
+        "rmse": 12.464285850524902,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed43": {
+        "mae": 7.420267105102539,
+        "rmse": 11.445135116577148,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed44": {
+        "mae": 6.485312461853027,
+        "rmse": 12.240480422973633,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed45": {
+        "mae": 6.487077236175537,
+        "rmse": 12.798531532287598,
+        "n_windows": 5685,
+        "train_history_len": 20
+      },
+      "seed46": {
+        "mae": 5.875653266906738,
+        "rmse": 11.634636878967285,
+        "n_windows": 5685,
+        "train_history_len": 20
+      }
+    }
+  },
+  "checkpoint_manifest": [
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed42",
+      "config": "A_cap",
+      "seed": 42,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_A_cap_seed42.pt",
+      "size_bytes": 137623,
+      "sha256": "20d68ba9750c0e2a1d80115131d8c87161e9be602462b2cd6cba64ef8d4ec515"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed42",
+      "config": "B",
+      "seed": 42,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_B_seed42.pt",
+      "size_bytes": 138147,
+      "sha256": "83055b952921bdf3d401e4bd9b83332a14426b83a2ac7e89e8fb4cd6e7c0b571"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed42",
+      "config": "C",
+      "seed": 42,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_C_seed42.pt",
+      "size_bytes": 138147,
+      "sha256": "fc7ee6386a54ebc18389732f75aecfa484fa4e9919fdb2f55e3a502e806cab25"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed43",
+      "config": "A_cap",
+      "seed": 43,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_A_cap_seed43.pt",
+      "size_bytes": 137623,
+      "sha256": "28c4be7cdbc616484394f9bad0ec9b41f183bd1aee2d001dd99b32f9a810084e"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed43",
+      "config": "B",
+      "seed": 43,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_B_seed43.pt",
+      "size_bytes": 138147,
+      "sha256": "6a0618f55cc1cd08d3a7e8e8e86cb4d61e058a3095f28cb4e04eb42ccbc95efe"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed43",
+      "config": "C",
+      "seed": 43,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_C_seed43.pt",
+      "size_bytes": 138147,
+      "sha256": "3106727922fb1d36aeb19d73889343aed8afd27db409738dfc9c456f7aedf13f"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed44",
+      "config": "A_cap",
+      "seed": 44,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_A_cap_seed44.pt",
+      "size_bytes": 137623,
+      "sha256": "1c5e0a17caee81337d7e229ddaa8f7079b5fee28868caff90a04dacd4e72bc91"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed44",
+      "config": "B",
+      "seed": 44,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_B_seed44.pt",
+      "size_bytes": 138147,
+      "sha256": "e89a8e872cd9dfba70c8aa0a31ce05d8d150ce2379cbb2fa30b50362b129a59b"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed44",
+      "config": "C",
+      "seed": 44,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_C_seed44.pt",
+      "size_bytes": 138147,
+      "sha256": "78140cdb90437836053edfee564118266f2ca08c5dd11b769630fd995a5fc516"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed45",
+      "config": "A_cap",
+      "seed": 45,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_A_cap_seed45.pt",
+      "size_bytes": 137623,
+      "sha256": "e0818ef3664f13770a3f3213053757e43cba0f0e10b91342a3bc3c7177acb2f8"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed45",
+      "config": "B",
+      "seed": 45,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_B_seed45.pt",
+      "size_bytes": 138147,
+      "sha256": "e81f6dfa437c92f06ac865c42f4ac504d77cfceb6d168130ee91ea69dbfd9d69"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed45",
+      "config": "C",
+      "seed": 45,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_C_seed45.pt",
+      "size_bytes": 138147,
+      "sha256": "7396171d39c5dacd49a6a48c8086433069a7380a2c07fe0397dede73367f98b5"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed46",
+      "config": "A_cap",
+      "seed": 46,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_A_cap_seed46.pt",
+      "size_bytes": 137623,
+      "sha256": "e1da77904a731cf3c919a481b3ce25598c457c5962c10fb2c4a7c5f7b6a8df60"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed46",
+      "config": "B",
+      "seed": 46,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_B_seed46.pt",
+      "size_bytes": 138147,
+      "sha256": "1a1fde6d054875c685a542ad6f7e4f4b4f495f95502cc15c45fac8206ffc65e7"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed46",
+      "config": "C",
+      "seed": 46,
+      "path": "ml\\checkpoints\\galaxyppg_hr_corrected_C_seed46.pt",
+      "size_bytes": 138147,
+      "sha256": "5c5fd19c52cf14a4942baca4257a59d03954cdbb48747b7229bed09cd8c1db20"
+    }
+  ],
+  "aggregate": {
+    "A_cap_mae": {
+      "mean": 6.20738525390625,
+      "sd_sample_ddof1": 0.5314052463119975,
+      "per_seed": {
+        "seed42": 5.891868591308594,
+        "seed43": 6.3166046142578125,
+        "seed44": 7.0874552726745605,
+        "seed45": 5.961544036865234,
+        "seed46": 5.779453754425049
+      }
+    },
+    "B_mae": {
+      "mean": 4.865097332000732,
+      "sd_sample_ddof1": 0.7606043315138428,
+      "per_seed": {
+        "seed42": 4.930902481079102,
+        "seed43": 5.966744899749756,
+        "seed44": 3.8813118934631348,
+        "seed45": 4.53723669052124,
+        "seed46": 5.00929069519043
+      }
+    },
+    "C_mae": {
+      "mean": 6.494484519958496,
+      "sd_sample_ddof1": 0.5754303611010363,
+      "per_seed": {
+        "seed42": 6.204112529754639,
+        "seed43": 7.420267105102539,
+        "seed44": 6.485312461853027,
+        "seed45": 6.487077236175537,
+        "seed46": 5.875653266906738
+      }
+    },
+    "A_to_B": {
+      "mean": 1.3422879219055175,
+      "sd_sample_ddof1": 1.1111178246588493,
+      "per_seed": {
+        "seed42": 0.9609661102294922,
+        "seed43": 0.34985971450805664,
+        "seed44": 3.206143379211426,
+        "seed45": 1.4243073463439941,
+        "seed46": 0.7701630592346191
+      },
+      "n_seeds_favor_B": 5,
+      "n_seeds_total": 5
+    },
+    "C_to_B": {
+      "mean": 1.6293871879577637,
+      "sd_sample_ddof1": 0.6694323728765783,
+      "per_seed": {
+        "seed42": 1.273210048675537,
+        "seed43": 1.4535222053527832,
+        "seed44": 2.6040005683898926,
+        "seed45": 1.9498405456542969,
+        "seed46": 0.8663625717163086
+      },
+      "n_seeds_favor_B": 5,
+      "n_seeds_total": 5
+    }
+  },
+  "experiment_id_correction_note": "This file previously carried the stale experiment_id galaxyppg_hr_external_replication_stage2 (the INVALIDATED pre-fix experiment ID), found during Section 17/38 remediation. Corrected to a unique ID matching this file own name; no numeric result changed.",
+  "status": "SUPPORTING_BOUNDED_DIAGNOSTIC"
+}

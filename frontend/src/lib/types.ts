@@ -1005,6 +1005,145 @@ export interface Stage4EngineeringReadinessEnvelope {
   error: string | null;
 }
 
+// --- Stage-3 accepted governing science (Stage 4 controlled integration) --
+// Every entry here was resolved LIVE through the integrity-verified
+// resolver (registry + semantic + hash checks) — never a hard-coded path,
+// never the private unverified helper. All fields are `| null` on purpose:
+// missing evidence must render as missing, never as a fabricated zero
+// (governing prompt §26).
+
+export interface Stage3EvidenceEntry {
+  family_id: string;
+  artifact_path: string;
+  artifact_type: "json" | "markdown";
+  experiment_id: string | null;
+  classification: string | null;
+  biological_subject_n: number | null;
+  held_out_or_reduced_n: number | null;
+  full_cohort_target_n: number | null;
+  optimization_seed_n: number | null;
+  primary_comparison_label: string | null;
+  primary_effect_value: number | null;
+  primary_effect_unit: string | null;
+  secondary_comparison_label: string | null;
+  secondary_effect_value: number | null;
+  secondary_effect_unit: string | null;
+  heterogeneity_note: string | null;
+  limitation: string | null;
+  summary: string | null;
+  provenance_doc: string | null;
+}
+
+export interface Stage3EvidenceEnvelope {
+  schema_version: string;
+  source_registry: string;
+  source_freeze_manifest: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  entries: Stage3EvidenceEntry[];
+}
+
+// --- Science Owner's Stage-4 handoff package -------------------------------
+// AUTHORITATIVE safe-wording/classification surface (governing prompt Part
+// XI). Unlike Stage3EvidenceEntry above (Integration Owner's raw resolver
+// passthrough, used for numeric cross-verification), every string here is
+// Science-Owner-authored and must be rendered verbatim — never paraphrased,
+// never strengthened.
+
+export interface Stage4ScienceFamilyEntry {
+  family_id: string;
+  governing_artifact: string;
+  experiment_protocol_version: string;
+  biological_n: number | string | null;
+  held_out_test_biological_n: number | string | null;
+  note_on_n: string | null;
+  optimization_seed_n: number | string | null;
+  a_b_c_definitions: Record<string, string>;
+  primary_metric: string | null;
+  governing_numeric_result: Record<string, unknown> | string;
+  heterogeneity: string | null;
+  sensitivity: string | null;
+  evidence_classification: string;
+  strongest_safe_claim: string;
+  prohibited_overclaim: string;
+  architecture_relevance: string | null;
+  consumption_status: string;
+  provenance_hash_reference: string | null;
+  unresolved_limitation: string | null;
+}
+
+export interface Stage4ScienceConsumptionManifest {
+  purpose: string;
+  accepted_stage3_reference: { branch: string; sha: string; accepted_state: string };
+  consumption_rule: string;
+  families: Stage4ScienceFamilyEntry[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4SensorModality {
+  modality: string;
+  anatomical_site: string;
+  supported_target_use: string;
+  strongest_positive_evidence: string;
+  strongest_negative_evidence: string;
+  external_replication_status: string;
+  heterogeneity: string;
+  incremental_value_status: string;
+  burden_relevance: string;
+  confidence_tier: string;
+  unresolved_evidence: string;
+  architecture_implication: string;
+}
+
+export interface Stage4SensorValueMatrix {
+  purpose: string;
+  accepted_stage3_sha: string;
+  final_architecture_status: string;
+  modalities: Stage4SensorModality[];
+}
+
+export interface Stage4ScienceClaim {
+  claim_id: string;
+  exact_safe_wording: string;
+  strength: string;
+  governing_evidence: string[];
+  relevant_numeric_result: string;
+  scope_limitation: string;
+  prohibited_stronger_wording: string;
+  stage4_consumer_guidance: string;
+}
+
+export interface Stage4ScienceClaimLedger {
+  purpose: string;
+  accepted_stage3_sha: string;
+  strength_enum: string[];
+  claims: Stage4ScienceClaim[];
+}
+
+export interface Stage4ArchitectureDecisionCandidate {
+  modality: string;
+  scientific_value: string;
+  independent_replication_status: string;
+  consistency: string;
+  heterogeneity: string;
+  negative_evidence: string;
+  strongest_supported_endpoint: string;
+  weakest_supported_endpoint: string;
+  evidence_maturity: string;
+  additional_engineering_burden_to_compare: string;
+  pending_science_that_could_change_decision: string;
+  decision_sensitivity_to_pending_science: string;
+}
+
+export interface Stage4ArchitectureDecisionInputsScience {
+  purpose: string;
+  accepted_stage3_sha: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  candidates: Stage4ArchitectureDecisionCandidate[];
+}
+
 // --- Phase 2/3: future-science ingestion contract (Stage 2-4 handoff) ------
 // No manifest satisfying this contract exists yet (Ismet's science-completion
 // sprint is in progress). A consumer must ONLY read `display_projections` —

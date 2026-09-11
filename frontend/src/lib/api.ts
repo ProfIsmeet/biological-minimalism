@@ -18,7 +18,13 @@ import type {
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
   SensorHealthSnapshot,
+  Stage3EvidenceEnvelope,
+  Stage3EvidenceEntry,
+  Stage4ArchitectureDecisionInputsScience,
   Stage4EngineeringReadinessEnvelope,
+  Stage4ScienceClaimLedger,
+  Stage4ScienceConsumptionManifest,
+  Stage4SensorValueMatrix,
   SensorName,
   SensorStatus,
   SimulationStateResponse,
@@ -124,4 +130,20 @@ export const api = {
 
   getStage4EngineeringReadiness: () =>
     request<Stage4EngineeringReadinessEnvelope>("/research/stage4-engineering-readiness"),
+
+  getStage3Evidence: () => request<Stage3EvidenceEnvelope>("/research/stage3-evidence"),
+
+  getStage3EvidenceFamily: (familyId: string) =>
+    request<Stage3EvidenceEntry>(`/research/stage3-evidence/${familyId}`),
+
+  getStage4ScienceManifest: () =>
+    request<Stage4ScienceConsumptionManifest>("/research/stage4-science-manifest"),
+
+  getStage4SensorValueMatrix: () =>
+    request<Stage4SensorValueMatrix>("/research/stage4-sensor-value-matrix"),
+
+  getStage4ScienceClaims: () => request<Stage4ScienceClaimLedger>("/research/stage4-science-claims"),
+
+  getStage4ArchitectureDecisionInputsScience: () =>
+    request<Stage4ArchitectureDecisionInputsScience>("/research/stage4-architecture-decision-inputs-science"),
 };

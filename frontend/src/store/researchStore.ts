@@ -11,7 +11,12 @@ import type {
   ResearchExperiment,
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
+  Stage3EvidenceEnvelope,
+  Stage4ArchitectureDecisionInputsScience,
   Stage4EngineeringReadiness,
+  Stage4ScienceClaimLedger,
+  Stage4ScienceConsumptionManifest,
+  Stage4SensorValueMatrix,
 } from "@/lib/types";
 
 interface ResearchState {
@@ -29,6 +34,13 @@ interface ResearchState {
   engineeringReadinessError: string | null;
   stage4EngineeringReadiness: Stage4EngineeringReadiness | null;
   stage4EngineeringReadinessError: string | null;
+  stage3Evidence: Stage3EvidenceEnvelope | null;
+  stage3EvidenceError: string | null;
+  stage4ScienceManifest: Stage4ScienceConsumptionManifest | null;
+  stage4ScienceManifestError: string | null;
+  stage4SensorValueMatrix: Stage4SensorValueMatrix | null;
+  stage4ScienceClaims: Stage4ScienceClaimLedger | null;
+  stage4ArchitectureDecisionInputsScience: Stage4ArchitectureDecisionInputsScience | null;
   // Stored as the WHOLE envelope (not decomposed into data/error) because its
   // 3-way status (PENDING_SCIENCE_HANDOFF / INGESTION_FAILED / INGESTED) is
   // not a simple success/failure — PENDING is an honest, expected state, not
@@ -57,6 +69,13 @@ export const useResearchStore = create<ResearchState>((set) => ({
   engineeringReadinessError: null,
   stage4EngineeringReadiness: null,
   stage4EngineeringReadinessError: null,
+  stage3Evidence: null,
+  stage3EvidenceError: null,
+  stage4ScienceManifest: null,
+  stage4ScienceManifestError: null,
+  stage4SensorValueMatrix: null,
+  stage4ScienceClaims: null,
+  stage4ArchitectureDecisionInputsScience: null,
   futureScienceManifest: null,
   experiments: {},
   selectedExperimentId: null,
@@ -102,6 +121,11 @@ export const useResearchStore = create<ResearchState>((set) => ({
         readinessEnvelope,
         engineeringEnvelope,
         stage4EngineeringEnvelope,
+        stage3EvidenceEnvelope,
+        stage4ScienceManifestResult,
+        stage4SensorValueMatrixResult,
+        stage4ScienceClaimsResult,
+        stage4ArchitectureDecisionInputsScienceResult,
         futureScienceEnvelope,
       ] = await Promise.all([
         optional(api.getOperationalCosts()),
@@ -110,6 +134,11 @@ export const useResearchStore = create<ResearchState>((set) => ({
         optional(api.getParetoReadiness()),
         optional(api.getEngineeringReadiness()),
         optional(api.getStage4EngineeringReadiness()),
+        optional(api.getStage3Evidence()),
+        optional(api.getStage4ScienceManifest()),
+        optional(api.getStage4SensorValueMatrix()),
+        optional(api.getStage4ScienceClaims()),
+        optional(api.getStage4ArchitectureDecisionInputsScience()),
         optional(api.getFutureScienceManifest()),
       ]);
       const unavailable = [
@@ -155,6 +184,15 @@ export const useResearchStore = create<ResearchState>((set) => ({
               ? stage4EngineeringEnvelope.value.error ?? "Stage 4 engineering readiness unavailable."
               : null)
           : stage4EngineeringEnvelope.error,
+        stage3Evidence: stage3EvidenceEnvelope.ok ? stage3EvidenceEnvelope.value : null,
+        stage3EvidenceError: stage3EvidenceEnvelope.ok ? null : stage3EvidenceEnvelope.error,
+        stage4ScienceManifest: stage4ScienceManifestResult.ok ? stage4ScienceManifestResult.value : null,
+        stage4ScienceManifestError: stage4ScienceManifestResult.ok ? null : stage4ScienceManifestResult.error,
+        stage4SensorValueMatrix: stage4SensorValueMatrixResult.ok ? stage4SensorValueMatrixResult.value : null,
+        stage4ScienceClaims: stage4ScienceClaimsResult.ok ? stage4ScienceClaimsResult.value : null,
+        stage4ArchitectureDecisionInputsScience: stage4ArchitectureDecisionInputsScienceResult.ok
+          ? stage4ArchitectureDecisionInputsScienceResult.value
+          : null,
         // A transport/network failure is folded into the same envelope shape
         // as a content-level INGESTION_FAILED, rather than a bare null — the
         // panel always has an honest status string to render, never silence.
@@ -193,6 +231,13 @@ export const useResearchStore = create<ResearchState>((set) => ({
         paretoReadinessError: error instanceof Error ? error.message : "Pareto readiness could not be loaded.",
         engineeringReadiness: null,
         engineeringReadinessError: error instanceof Error ? error.message : "Engineering readiness could not be loaded.",
+        stage3Evidence: null,
+        stage3EvidenceError: error instanceof Error ? error.message : "Stage 3 evidence could not be loaded.",
+        stage4ScienceManifest: null,
+        stage4ScienceManifestError: error instanceof Error ? error.message : "Stage 4 science manifest could not be loaded.",
+        stage4SensorValueMatrix: null,
+        stage4ScienceClaims: null,
+        stage4ArchitectureDecisionInputsScience: null,
         futureScienceManifest: null,
       });
     }

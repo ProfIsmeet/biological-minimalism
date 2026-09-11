@@ -1,0 +1,29 @@
+{
+  "purpose": "Section 17 remediation: machine-readable registry of GalaxyPPG artifacts that must NEVER be resolved as current governing evidence. A resolver (ml/galaxyppg_evidence_resolver.py) refuses to consume any path or experiment_id listed here.",
+  "invalidated": [
+    {
+      "path": "results/galaxyppg_hr_external_replication_stage2.json",
+      "experiment_id": "galaxyppg_hr_external_replication_stage2",
+      "status": "INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT",
+      "reason": "Pre-fix single-fold result computed before the real reference-ECG-quality gate existed; 6/24 subjects had corrupted reference ECG."
+    },
+    {
+      "path": "results/galaxyppg_hr_full_grouped_cv_stage3.json",
+      "experiment_id": "galaxyppg_hr_full_grouped_cv_stage3",
+      "status": "INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT",
+      "reason": "Pre-fix full 6-fold CV computed before the real reference-ECG-quality gate existed; 6/24 subjects had corrupted reference ECG."
+    }
+  ],
+  "current_governing_evidence": {
+    "bounded_single_fold_diagnostic": {
+      "path": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+      "experiment_id": "galaxyppg_hr_corrected_eligibility_stage3",
+      "status": "BOUNDED_EXTERNAL_REPLICATION_SUPPORTIVE_DIAGNOSTIC"
+    },
+    "full_corrected_6fold_cv": {
+      "path": "results/galaxyppg_corrected_full_cv_result.json",
+      "experiment_id": "galaxyppg_hr_corrected_eligibility_full_cv_v2",
+      "status": "EXTERNAL_REPLICATION_SUPPORTIVE"
+    }
+  }
+}

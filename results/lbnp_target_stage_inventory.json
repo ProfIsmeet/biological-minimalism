@@ -1,0 +1,207 @@
+{
+  "purpose": "Section 19 remediation: real per-subject LBNP target-stage inventory, built before any target-range filtering decision, to determine whether out-of-scope (>60 mmHg) targets actually entered any reported result.",
+  "frozen_scope": "0-60 mmHg (results/lbnp_protocol_stage1b.json: 'focused on the 0-60 mmHg range', stages 0/15/30/45/60)",
+  "eligible_subjects": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "per_subject": {
+    "4": {
+      "n_windows_total": 51,
+      "n_windows_in_scope_0_60": 36,
+      "n_windows_out_of_scope_above_60": 15,
+      "stage_histogram": {
+        "0.0": 13,
+        "15.0": 6,
+        "30.0": 5,
+        "45.0": 6,
+        "60.0": 6,
+        "70.0": 5,
+        "80.0": 10
+      }
+    },
+    "5": {
+      "n_windows_total": 42,
+      "n_windows_in_scope_0_60": 31,
+      "n_windows_out_of_scope_above_60": 11,
+      "stage_histogram": {
+        "0.0": 9,
+        "15.0": 6,
+        "30.0": 5,
+        "45.0": 6,
+        "60.0": 5,
+        "70.0": 11
+      }
+    },
+    "6": {
+      "n_windows_total": 38,
+      "n_windows_in_scope_0_60": 30,
+      "n_windows_out_of_scope_above_60": 8,
+      "stage_histogram": {
+        "0.0": 8,
+        "15.0": 5,
+        "30.0": 6,
+        "45.0": 6,
+        "60.0": 5,
+        "70.0": 8
+      }
+    },
+    "7": {
+      "n_windows_total": 47,
+      "n_windows_in_scope_0_60": 30,
+      "n_windows_out_of_scope_above_60": 17,
+      "stage_histogram": {
+        "0.0": 8,
+        "15.0": 6,
+        "30.0": 5,
+        "45.0": 6,
+        "60.0": 5,
+        "70.0": 6,
+        "80.0": 11
+      }
+    },
+    "8": {
+      "n_windows_total": 35,
+      "n_windows_in_scope_0_60": 35,
+      "n_windows_out_of_scope_above_60": 0,
+      "stage_histogram": {
+        "0.0": 9,
+        "15.0": 6,
+        "30.0": 6,
+        "45.0": 5,
+        "60.0": 9
+      }
+    },
+    "9": {
+      "n_windows_total": 54,
+      "n_windows_in_scope_0_60": 36,
+      "n_windows_out_of_scope_above_60": 18,
+      "stage_histogram": {
+        "0.0": 14,
+        "15.0": 5,
+        "30.0": 6,
+        "45.0": 5,
+        "60.0": 6,
+        "70.0": 5,
+        "80.0": 13
+      }
+    },
+    "10": {
+      "n_windows_total": 51,
+      "n_windows_in_scope_0_60": 36,
+      "n_windows_out_of_scope_above_60": 15,
+      "stage_histogram": {
+        "0.0": 14,
+        "15.0": 5,
+        "30.0": 6,
+        "45.0": 6,
+        "60.0": 5,
+        "70.0": 6,
+        "80.0": 9
+      }
+    },
+    "11": {
+      "n_windows_total": 53,
+      "n_windows_in_scope_0_60": 32,
+      "n_windows_out_of_scope_above_60": 21,
+      "stage_histogram": {
+        "0.0": 10,
+        "15.0": 6,
+        "30.0": 5,
+        "45.0": 6,
+        "60.0": 5,
+        "70.0": 6,
+        "80.0": 6,
+        "90.0": 9
+      }
+    },
+    "12": {
+      "n_windows_total": 62,
+      "n_windows_in_scope_0_60": 42,
+      "n_windows_out_of_scope_above_60": 20,
+      "stage_histogram": {
+        "0.0": 20,
+        "15.0": 5,
+        "30.0": 6,
+        "45.0": 5,
+        "60.0": 6,
+        "70.0": 5,
+        "80.0": 6,
+        "90.0": 9
+      }
+    },
+    "13": {
+      "n_windows_total": 64,
+      "n_windows_in_scope_0_60": 35,
+      "n_windows_out_of_scope_above_60": 29,
+      "stage_histogram": {
+        "0.0": 13,
+        "15.0": 5,
+        "30.0": 6,
+        "45.0": 5,
+        "60.0": 6,
+        "70.0": 6,
+        "80.0": 5,
+        "90.0": 6,
+        "100.0": 12
+      }
+    },
+    "14": {
+      "n_windows_total": 56,
+      "n_windows_in_scope_0_60": 32,
+      "n_windows_out_of_scope_above_60": 24,
+      "stage_histogram": {
+        "0.0": 10,
+        "15.0": 6,
+        "30.0": 5,
+        "45.0": 6,
+        "60.0": 5,
+        "70.0": 6,
+        "80.0": 5,
+        "90.0": 13
+      }
+    },
+    "15": {
+      "n_windows_total": 54,
+      "n_windows_in_scope_0_60": 32,
+      "n_windows_out_of_scope_above_60": 22,
+      "stage_histogram": {
+        "0.0": 9,
+        "15.0": 6,
+        "30.0": 6,
+        "45.0": 5,
+        "60.0": 6,
+        "70.0": 5,
+        "80.0": 6,
+        "90.0": 11
+      }
+    }
+  },
+  "cohort_totals": {
+    "n_windows_total": 607,
+    "n_windows_in_scope_0_60": 407,
+    "n_windows_out_of_scope_above_60": 200,
+    "all_real_stage_values_seen": [
+      0.0,
+      15.0,
+      30.0,
+      45.0,
+      60.0,
+      70.0,
+      80.0,
+      90.0,
+      100.0
+    ]
+  },
+  "finding": "200/607 windows (33%) are at stages 70/80/90/100 mmHg, outside the frozen 0-60 mmHg scope. These entered results/lbnp_thoracic_eis_stage3.json (the original, now-historical result) - see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md."
+}

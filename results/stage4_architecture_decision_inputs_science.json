@@ -1,0 +1,92 @@
+{
+  "purpose": "Science-side inputs to the eventual Stage-4/5 architecture decision. Does NOT choose the final architecture. final_architecture_status remains UNRESOLVED, formal_pareto remains NOT_READY.",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY",
+  "candidates": [
+    {
+      "modality": "wrist PPG + wrist IMU",
+      "scientific_value": "Two-dataset, capacity-controlled, externally-replicated positive incremental value for HR estimation.",
+      "independent_replication_status": "EXTERNAL_REPLICATION_SUPPORTIVE (GalaxyPPG, independent device/subject family from PPG-DaLiA)",
+      "consistency": "Consistent direction across both datasets; magnitude differs (PPG-DaLiA +0.605 bpm vs GalaxyPPG +0.834 bpm participant-level).",
+      "heterogeneity": "GalaxyPPG: 6/18 subjects favor no-IMU; PPG-DaLiA: 5/5 seeds favor IMU (lower seed-level heterogeneity, no biological-subject heterogeneity reported at that granularity in this artifact).",
+      "negative_evidence": "None beyond the disclosed participant heterogeneity in GalaxyPPG.",
+      "strongest_supported_endpoint": "HR estimation from wrist PPG+IMU.",
+      "weakest_supported_endpoint": "No evidence yet for other IMU-adjacent targets (e.g. activity classification, sleep/wake from wrist IMU).",
+      "evidence_maturity": "HIGH (two datasets, controlled, externally replicated)",
+      "additional_engineering_burden_to_compare": "IMU co-locates with PPG in the same wearable module - Integration Owner should compare near-zero marginal burden against the two-dataset positive evidence.",
+      "pending_science_that_could_change_decision": "None identified that would materially change this candidate's standing.",
+      "decision_sensitivity_to_pending_science": "LOW"
+    },
+    {
+      "modality": "frontal EEG + EOG",
+      "scientific_value": "Genuine, control-verified same-dataset incremental value for sleep staging.",
+      "independent_replication_status": "PENDING_EXTERNAL_VALIDATION (HMC full-cohort training not complete; bounded n=7 HMC diagnostic is inconclusive, not a negative replication)",
+      "consistency": "Consistent within Sleep-EDF (A/B and A/B/C both show ~4/5 seeds favor B); the bounded HMC diagnostic disagrees but is statistically underpowered.",
+      "heterogeneity": "Sleep-EDF: consistent (4/5 seeds, two independent comparisons). HMC bounded: only 2/5 seeds favor B, but n=1 test recording.",
+      "negative_evidence": "HMC bounded n=7 diagnostic shows B_minus_A=-0.031 (did not reproduce at this bounded scale).",
+      "strongest_supported_endpoint": "Same-dataset sleep-stage classification improvement.",
+      "weakest_supported_endpoint": "External/cross-cohort generalization - genuinely unresolved.",
+      "evidence_maturity": "MEDIUM (strong same-dataset signal with valid control, external validity open)",
+      "additional_engineering_burden_to_compare": "EOG may share EEG's amplifier/reference/electrode infrastructure - Integration Owner should evaluate whether this reduces marginal burden versus treating EOG as a fully independent module.",
+      "pending_science_that_could_change_decision": "HMC full-cohort training (151 recordings) could materially raise or lower confidence in EOG's independent, externally-replicated value.",
+      "decision_sensitivity_to_pending_science": "HIGH"
+    },
+    {
+      "modality": "thoracic BioZ/EIS",
+      "scientific_value": "No demonstrated incremental value for the tested LBNP-stage target; real but heterogeneous negative-leaning evidence.",
+      "independent_replication_status": "N/A (single dataset, new experiment - no second dataset attempted)",
+      "consistency": "Both A_minus_B and C_minus_B point negative on aggregate, but both are substantially influenced by one subject (9).",
+      "heterogeneity": "HIGH - A_minus_B sign-reverses and C_minus_B shrinks substantially excluding subject 9.",
+      "negative_evidence": "A_minus_B=-0.452 mmHg, C_minus_B=-1.293 mmHg (COMPLETE_MIXED, negative-leaning).",
+      "strongest_supported_endpoint": "None positively supported.",
+      "weakest_supported_endpoint": "LBNP-stage estimation via thoracic EIS specifically - the only endpoint tested, and it is the one shown negative-leaning.",
+      "evidence_maturity": "MEDIUM (real n=12 experiment with protocol-compliance fixes applied, but high subject-sensitivity)",
+      "additional_engineering_burden_to_compare": "Requires a dedicated EIS acquisition module distinct from PPG/ECG - Integration Owner should weigh this real added burden against the current lack of demonstrated benefit for this target.",
+      "pending_science_that_could_change_decision": "A larger cohort, a different target (e.g. a different physiological stress marker), or a different site (abdominal/arm) could plausibly change the picture - none of these are currently planned Stage-3 work.",
+      "decision_sensitivity_to_pending_science": "LOW (no specific pending Stage-3 experiment would resolve this; would require new experimental design, out of current scope)"
+    },
+    {
+      "modality": "leg BioZ",
+      "scientific_value": "No demonstrated stable aggregate incremental value; heterogeneous, single-outlier-dominated.",
+      "independent_replication_status": "N/A (single dataset, new experiment)",
+      "consistency": "Aggregate mean disfavors addition, but a majority of subjects (7/10) individually favor it - a real, disclosed tension.",
+      "heterogeneity": "HIGH - single-outlier-dominated per the governing artifact's own disclosure.",
+      "negative_evidence": "A_minus_B=-0.052 kg (aggregate), C_minus_B=-0.060 kg.",
+      "strongest_supported_endpoint": "None clearly positively supported at the aggregate level.",
+      "weakest_supported_endpoint": "Aggregate-level body-mass-change estimation given the single-outlier sensitivity.",
+      "evidence_maturity": "LOW-MEDIUM (n=10, single-outlier-dominated ambiguity)",
+      "additional_engineering_burden_to_compare": "Requires bilateral leg electrode placement - real added contact-region burden.",
+      "pending_science_that_could_change_decision": "A larger or outlier-robust-redesigned cohort could resolve the aggregate/per-subject tension - not currently planned.",
+      "decision_sensitivity_to_pending_science": "LOW (no specific pending Stage-3 experiment addresses this)"
+    },
+    {
+      "modality": "second-site PPG",
+      "scientific_value": "No demonstrated incremental value; aggregate negative, fragile to subject exclusion.",
+      "independent_replication_status": "N/A (single dataset)",
+      "consistency": "Consistently worse on aggregate (B_minus_A=+1.462 MAE), but per-seed deltas vary widely (0.07-2.11).",
+      "heterogeneity": "HIGH - n=4 test subjects, sign-sensitive to exclusion per prior sprints.",
+      "negative_evidence": "B_minus_A=+1.462 MAE (worse).",
+      "strongest_supported_endpoint": "None positively supported.",
+      "weakest_supported_endpoint": "PTT-based estimation via a second PPG site - the only endpoint tested.",
+      "evidence_maturity": "LOW (n=4 held-out test subjects, sign-sensitive)",
+      "additional_engineering_burden_to_compare": "Requires an additional PPG measurement site/module - real added burden with no demonstrated benefit per current evidence.",
+      "pending_science_that_could_change_decision": "A larger held-out test set could stabilize the direction - not currently planned.",
+      "decision_sensitivity_to_pending_science": "LOW (no specific pending Stage-3 experiment addresses this)"
+    },
+    {
+      "modality": "sparse vs. full-montage EEG (ds003838-adjacent)",
+      "scientific_value": "Not established at n=3 - genuinely open question.",
+      "independent_replication_status": "PENDING_EXTERNAL_VALIDATION (full ~65-subject cohort not attempted)",
+      "consistency": "N/A - inconclusive by design at n=3.",
+      "heterogeneity": "Not meaningfully assessable at n=3.",
+      "negative_evidence": "None established either way.",
+      "strongest_supported_endpoint": "N/A.",
+      "weakest_supported_endpoint": "N/A - no endpoint is currently supported at this sample size.",
+      "evidence_maturity": "VERY LOW (n=3 diagnostic only)",
+      "additional_engineering_burden_to_compare": "Sparse EEG (4-channel) vs full montage is itself a burden trade-off within the EEG module - not yet informed by adequate evidence either way.",
+      "pending_science_that_could_change_decision": "The full ~65-subject ds003838 cohort (quantified: ~93GB/~9.4h additional download) could materially inform sparse-vs-full EEG channel-count architecture confidence.",
+      "decision_sensitivity_to_pending_science": "HIGH"
+    }
+  ]
+}

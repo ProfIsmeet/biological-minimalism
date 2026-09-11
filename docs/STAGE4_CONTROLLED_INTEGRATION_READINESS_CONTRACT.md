@@ -1,5 +1,16 @@
 # Stage 4 Controlled-Integration Readiness Contract
 
+> **Superseded by `docs/STAGE4_CONTROLLED_INTEGRATION_DELTA_IMPORT.md`.**
+> `PROJECT_COORDINATOR` (Emir) has since explicitly authorized controlled
+> Stage-4 integration against the independently-accepted Stage-3 SHA
+> `5c381014af61e5d10d41223963831b25b9ff23e6` (`stage3-gate3-final-resolver-closure`),
+> resolving preconditions #1/#2/#3/#4/#8/#9/#10 below for that specific SHA.
+> The precondition table underneath reflects state as of the prior sprint and
+> is kept for historical record, not current status. This does NOT mean
+> Ismet's separate, still-in-progress Stage-4 *science package* (broader
+> GalaxyPPG replication, LBNP retry, HMC/ds003838 full cohorts) has arrived —
+> that remains pending and untouched, per `docs/STAGE4_CONTROLLED_INTEGRATION_DELTA_IMPORT.md`.
+
 Defines what must be true before controlled final-science integration begins.
 This document does **not** execute that integration — it is the checklist
 `PROJECT_COORDINATOR` (Emir) reviews before authorizing it. Nothing in this

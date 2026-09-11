@@ -1,0 +1,319 @@
+{
+  "experiment_id": "lbnp_thoracic_eis_stage3",
+  "frozen_protocol_reference": "results/lbnp_protocol_stage1b.json",
+  "real_eligibility_finding": "Only 12/16 subjects have valid (non-NaN) pleth data (predeclared data-quality rule, not outcome-based). Final cohort after also requiring >=5 usable windows: n=12.",
+  "eligible_subject_indices_0based": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "target": "Real LBNP pressure stage (mmHg), step-function looked up at each real EIS spectrum's timestamp",
+  "window_seconds": 20.0,
+  "n_subjects": 12,
+  "condition_A_ecg_pleth": {
+    "per_subject": {
+      "4": {
+        "n_points": 51,
+        "mae": 64.58284653971813,
+        "selected_alpha": 30.0
+      },
+      "5": {
+        "n_points": 42,
+        "mae": 20.42553809369902,
+        "selected_alpha": 100.0
+      },
+      "6": {
+        "n_points": 38,
+        "mae": 18.69632842133485,
+        "selected_alpha": 300.0
+      },
+      "7": {
+        "n_points": 47,
+        "mae": 21.232986671216437,
+        "selected_alpha": 300.0
+      },
+      "8": {
+        "n_points": 35,
+        "mae": 16.58969583842877,
+        "selected_alpha": 300.0
+      },
+      "9": {
+        "n_points": 54,
+        "mae": 25.11347024413125,
+        "selected_alpha": 300.0
+      },
+      "10": {
+        "n_points": 51,
+        "mae": 32.9291048296321,
+        "selected_alpha": 1000.0
+      },
+      "11": {
+        "n_points": 53,
+        "mae": 27.6749344827898,
+        "selected_alpha": 300.0
+      },
+      "12": {
+        "n_points": 62,
+        "mae": 25.724855249580983,
+        "selected_alpha": 300.0
+      },
+      "13": {
+        "n_points": 64,
+        "mae": 30.060507894958068,
+        "selected_alpha": 300.0
+      },
+      "14": {
+        "n_points": 56,
+        "mae": 24.914838200531687,
+        "selected_alpha": 300.0
+      },
+      "15": {
+        "n_points": 54,
+        "mae": 23.537633816594393,
+        "selected_alpha": 300.0
+      }
+    },
+    "subject_macro_mae_mean": 27.623561690217954,
+    "subject_macro_mae_sd_ddof1": 12.5339872040661
+  },
+  "condition_B_plus_thoracic_eis": {
+    "per_subject": {
+      "4": {
+        "n_points": 51,
+        "mae": 21.27671492818102,
+        "selected_alpha": 1000.0
+      },
+      "5": {
+        "n_points": 42,
+        "mae": 21.127394085468822,
+        "selected_alpha": 1000.0
+      },
+      "6": {
+        "n_points": 38,
+        "mae": 21.032699503794685,
+        "selected_alpha": 1000.0
+      },
+      "7": {
+        "n_points": 47,
+        "mae": 57.69404245009462,
+        "selected_alpha": 1000.0
+      },
+      "8": {
+        "n_points": 35,
+        "mae": 25.558565522780725,
+        "selected_alpha": 1000.0
+      },
+      "9": {
+        "n_points": 54,
+        "mae": 26.471695217208637,
+        "selected_alpha": 1000.0
+      },
+      "10": {
+        "n_points": 51,
+        "mae": 31.007246889646378,
+        "selected_alpha": 1000.0
+      },
+      "11": {
+        "n_points": 53,
+        "mae": 42.083452608857186,
+        "selected_alpha": 10.0
+      },
+      "12": {
+        "n_points": 62,
+        "mae": 27.44512036153906,
+        "selected_alpha": 1000.0
+      },
+      "13": {
+        "n_points": 64,
+        "mae": 29.8624823450328,
+        "selected_alpha": 300.0
+      },
+      "14": {
+        "n_points": 56,
+        "mae": 28.031725083227563,
+        "selected_alpha": 1000.0
+      },
+      "15": {
+        "n_points": 54,
+        "mae": 26.73841259110083,
+        "selected_alpha": 1000.0
+      }
+    },
+    "subject_macro_mae_mean": 29.860795965577694,
+    "subject_macro_mae_sd_ddof1": 10.454302281690376
+  },
+  "condition_C_deranged_eis": {
+    "per_subject": {
+      "4": {
+        "n_points": 51,
+        "mae": 58.00546633257139,
+        "selected_alpha": 100.0
+      },
+      "5": {
+        "n_points": 42,
+        "mae": 21.218410138631718,
+        "selected_alpha": 300.0
+      },
+      "6": {
+        "n_points": 38,
+        "mae": 23.401635574877588,
+        "selected_alpha": 100.0
+      },
+      "7": {
+        "n_points": 47,
+        "mae": 31.74822551355276,
+        "selected_alpha": 1000.0
+      },
+      "8": {
+        "n_points": 35,
+        "mae": 23.313232465881452,
+        "selected_alpha": 1000.0
+      },
+      "9": {
+        "n_points": 54,
+        "mae": 25.274731337459464,
+        "selected_alpha": 1000.0
+      },
+      "10": {
+        "n_points": 51,
+        "mae": 32.364253404997896,
+        "selected_alpha": 1000.0
+      },
+      "11": {
+        "n_points": 53,
+        "mae": 31.196579675623013,
+        "selected_alpha": 100.0
+      },
+      "12": {
+        "n_points": 62,
+        "mae": 27.545412262974807,
+        "selected_alpha": 1000.0
+      },
+      "13": {
+        "n_points": 64,
+        "mae": 33.136341841103345,
+        "selected_alpha": 1000.0
+      },
+      "14": {
+        "n_points": 56,
+        "mae": 27.33265704883625,
+        "selected_alpha": 1000.0
+      },
+      "15": {
+        "n_points": 54,
+        "mae": 23.391408052050846,
+        "selected_alpha": 300.0
+      }
+    },
+    "subject_macro_mae_mean": 29.827362804046714,
+    "subject_macro_mae_sd_ddof1": 9.762506642727262
+  },
+  "aggregate": {
+    "A_mean": 27.623561690217954,
+    "B_mean": 29.860795965577694,
+    "C_mean": 29.827362804046714,
+    "A_minus_B_mean": -2.2372342753597394,
+    "C_minus_B_mean": -0.033433161530979305,
+    "n_subjects_favoring_B_over_A": 3,
+    "n_subjects_favoring_B_over_C": 6,
+    "n_subjects_total": 12
+  },
+  "per_subject_deltas": {
+    "4": {
+      "A_mae": 64.58284653971813,
+      "B_mae": 21.27671492818102,
+      "C_mae": 58.00546633257139,
+      "A_minus_B": 43.30613161153711,
+      "C_minus_B": 36.728751404390366
+    },
+    "5": {
+      "A_mae": 20.42553809369902,
+      "B_mae": 21.127394085468822,
+      "C_mae": 21.218410138631718,
+      "A_minus_B": -0.7018559917698006,
+      "C_minus_B": 0.09101605316289607
+    },
+    "6": {
+      "A_mae": 18.69632842133485,
+      "B_mae": 21.032699503794685,
+      "C_mae": 23.401635574877588,
+      "A_minus_B": -2.3363710824598343,
+      "C_minus_B": 2.368936071082903
+    },
+    "7": {
+      "A_mae": 21.232986671216437,
+      "B_mae": 57.69404245009462,
+      "C_mae": 31.74822551355276,
+      "A_minus_B": -36.46105577887818,
+      "C_minus_B": -25.94581693654186
+    },
+    "8": {
+      "A_mae": 16.58969583842877,
+      "B_mae": 25.558565522780725,
+      "C_mae": 23.313232465881452,
+      "A_minus_B": -8.968869684351954,
+      "C_minus_B": -2.2453330568992733
+    },
+    "9": {
+      "A_mae": 25.11347024413125,
+      "B_mae": 26.471695217208637,
+      "C_mae": 25.274731337459464,
+      "A_minus_B": -1.3582249730773874,
+      "C_minus_B": -1.1969638797491733
+    },
+    "10": {
+      "A_mae": 32.9291048296321,
+      "B_mae": 31.007246889646378,
+      "C_mae": 32.364253404997896,
+      "A_minus_B": 1.921857939985724,
+      "C_minus_B": 1.357006515351518
+    },
+    "11": {
+      "A_mae": 27.6749344827898,
+      "B_mae": 42.083452608857186,
+      "C_mae": 31.196579675623013,
+      "A_minus_B": -14.408518126067385,
+      "C_minus_B": -10.886872933234173
+    },
+    "12": {
+      "A_mae": 25.724855249580983,
+      "B_mae": 27.44512036153906,
+      "C_mae": 27.545412262974807,
+      "A_minus_B": -1.7202651119580779,
+      "C_minus_B": 0.10029190143574596
+    },
+    "13": {
+      "A_mae": 30.060507894958068,
+      "B_mae": 29.8624823450328,
+      "C_mae": 33.136341841103345,
+      "A_minus_B": 0.19802554992526922,
+      "C_minus_B": 3.2738594960705463
+    },
+    "14": {
+      "A_mae": 24.914838200531687,
+      "B_mae": 28.031725083227563,
+      "C_mae": 27.33265704883625,
+      "A_minus_B": -3.1168868826958764,
+      "C_minus_B": -0.6990680343913134
+    },
+    "15": {
+      "A_mae": 23.537633816594393,
+      "B_mae": 26.73841259110083,
+      "C_mae": 23.391408052050846,
+      "A_minus_B": -3.2007787745064356,
+      "C_minus_B": -3.3470045390499834
+    }
+  },
+  "status": "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL",
+  "high03_disclosure": "HIGH-03 remediation found this result included 200/607 windows (33%) at stages 70/80/90/100 mmHg, outside the frozen protocol scope (0-60 mmHg), and its C-control had real same-stage leakage (13-25% of deranged windows retained the same stage). Superseded by the protocol-compliant results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json - see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md. Preserved unchanged as a disclosed historical artifact, never deleted.",
+  "governing_evidence_note": "This result MUST NOT be consumed as current/governing LBNP evidence by any artifact, resolver, or report. The current governing LBNP result is results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json (classification: COMPLETE_MIXED). This file is preserved unchanged, never deleted, purely as a disclosed historical record of the out-of-protocol execution that preceded HIGH-03 remediation."
+}

@@ -1,0 +1,70 @@
+{
+  "status": "DS003838_STAGE3_BOUNDED_DIAGNOSTIC_COMPLETE",
+  "scope_disclosure": "NOT the full n=65 Stage-2/3 cohort - bounded diagnostic on real, actually-downloaded subjects only, per docs/DS003838_STAGE3_BOUNDED_DIAGNOSTIC.md.",
+  "n_subjects": 3,
+  "subject_ids": [
+    "sub-032",
+    "sub-033",
+    "sub-034"
+  ],
+  "frozen_sparse_channels": [
+    "AF7",
+    "AF8",
+    "TP9",
+    "TP10"
+  ],
+  "A_sparse4": {
+    "per_subject": {
+      "sub-032": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.21666666666666667
+      },
+      "sub-033": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.23476791846682177
+      },
+      "sub-034": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.22735460310410346
+      }
+    },
+    "macro_f1_mean": 0.22626306274586397,
+    "macro_f1_sd_ddof1": 0.009099858485075673
+  },
+  "B_full_montage": {
+    "per_subject": {
+      "sub-032": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.31271392973520634
+      },
+      "sub-033": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.30016341018882886
+      },
+      "sub-034": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.21666666666666667
+      }
+    },
+    "macro_f1_mean": 0.2765146688635673,
+    "macro_f1_sd_ddof1": 0.052208394061119774
+  },
+  "C_deranged_extra_channels": {
+    "per_subject": {
+      "sub-032": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.21666666666666667
+      },
+      "sub-033": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.21666666666666667
+      },
+      "sub-034": {
+        "n_test_epochs": 972,
+        "macro_f1": 0.21666666666666667
+      }
+    },
+    "macro_f1_mean": 0.21666666666666667,
+    "macro_f1_sd_ddof1": 0.0
+  }
+}
