@@ -1,3 +1,27 @@
+# HISTORICAL — SUPERSEDED — OUT OF FROZEN 0–60 MMHG PROTOCOL
+
+**governance_status: `HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL`** — this
+entire document describes `results/lbnp_thoracic_eis_stage3.json`
+(trainer `ml/train_lbnp_thoracic_eis.py`), which included **200 of 607
+windows (33%) at stages 70/80/90/100 mmHg — outside the frozen 0-60 mmHg
+primary protocol** — and used a C-control with real same-stage leakage.
+**This result is non-governing and MUST NOT be consumed by Stage 4 or any
+integration work.**
+
+The authoritative, protocol-compliant result is
+`results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json`
+(trainer `ml/train_lbnp_thoracic_eis_v2_protocol_compliant.py`),
+classification **`COMPLETE_MIXED`** — see
+`docs/LBNP_STAGE3_HIGH03_REMEDIATION.md` and
+`results/stage3_science_completion_manifest.json` for the current,
+governing account. Resolve LBNP evidence only through
+`ml/stage3_science_resolver.py::resolve_current("lbnp_thoracic_eis")`.
+
+The content below is preserved unmodified as a historical record of the
+out-of-protocol execution.
+
+---
+
 # LBNP Thoracic EIS — Real Results (Stage 3, Priority 2)
 
 **Status: `COMPLETE_NEGATIVE`.** Trainer: `ml/train_lbnp_thoracic_eis.py`.

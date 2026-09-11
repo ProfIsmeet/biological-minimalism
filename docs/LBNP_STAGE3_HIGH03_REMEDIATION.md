@@ -29,13 +29,12 @@ protocol-compliant dataset and control.
 ## Disposition of the old result
 
 `results/lbnp_thoracic_eis_stage3.json` is **preserved unchanged** and is
-now understood as `OUT_OF_PROTOCOL_SCOPE_HISTORICAL` — its aggregate
+now understood as `HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL` — its aggregate
 numbers (A_minus_B=-2.24, C_minus_B=-0.033, `COMPLETE_NEGATIVE`) were
 computed over a mix of in-scope and out-of-scope target data, and its
-C-control had real (though partial) same-stage leakage. It is not deleted,
-and its `COMPLETE_NEGATIVE` classification was not far from the corrected
-result's own — but it must not be cited as the compliant/current LBNP
-result.
+C-control had real (though partial) same-stage leakage. It is not
+deleted, but it must never be resolved as governing evidence — see
+`ml/stage3_science_resolver.py`, which fails closed against this path.
 
 ## The new, protocol-compliant result
 
@@ -53,15 +52,22 @@ result.
   A_minus_B=-0.452 (A slightly better than B — real EIS does not help),
   C_minus_B=-1.293 (B is *worse* than its own deranged-EIS control, robust
   under leave-one-subject-out).
-- **Classification: `COMPLETE_NEGATIVE`.** The C-vs-B comparison is the
-  more diagnostic one (B and C share identical architecture/capacity,
-  differing only in whether the EIS branch carries real stage-aligned
-  information) and is robust to leave-one-out exclusion of any single
-  subject. The A-vs-B comparison is real but sign-sensitive (excluding
-  subject 9, an extreme outlier, flips its aggregate sign) — disclosed
-  explicitly in `leave_one_subject_out_sensitivity`, not hidden, but does
-  not change the overall classification since C-vs-B alone is sufficient
-  to reject an EIS-value claim.
+- **Classification: `COMPLETE_MIXED`** (revised by the final
+  source-of-truth remediation sprint from this document's original
+  `COMPLETE_NEGATIVE` call). The C-vs-B comparison is the more diagnostic
+  one (B and C share identical architecture/capacity, differing only in
+  whether the EIS branch carries real stage-aligned information), and
+  remains negative under leave-one-out exclusion of any single subject —
+  but it SHRINKS SUBSTANTIALLY without subject 9, meaning even this more
+  diagnostic comparison is not a uniform, subject-independent effect. The
+  A-vs-B comparison is sign-sensitive (excluding subject 9 flips its
+  aggregate sign) — disclosed explicitly in
+  `leave_one_subject_out_sensitivity`. Given both key comparisons are
+  substantially influenced by one subject, `COMPLETE_NEGATIVE` overstated
+  the finding's stability; `COMPLETE_MIXED` (negative-leaning,
+  heterogeneous) is the accurate governing classification — see
+  `results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json`'s own
+  `classification_history` field for the full correction record.
 
 ## Heterogeneity disclosed (not smoothed over)
 

@@ -80,7 +80,29 @@ participant-level C evaluation, P01 eligibility justification, LBNP
 target-range/C-control protocol compliance). All three are now CLOSED —
 see `docs/STAGE3_CODEX_FAIL_REMEDIATION_REPORT.md` for the full account,
 including which numbers changed (GalaxyPPG C_to_B +0.904→+0.916 bpm; LBNP
-now a protocol-compliant rerun with COMPLETE_NEGATIVE unchanged) and which
-did not (GalaxyPPG A_cap/B untouched). Recommend routing this branch
-(`stage3-codex-fail-remediation`) for a second independent Codex delta
-audit before any further acceptance decision.
+now a protocol-compliant rerun) and which did not (GalaxyPPG A_cap/B
+untouched).
+
+## Update: Final source-of-truth + governance/freeze closure sprints
+
+**Current LBNP governing result** (superseding this doc's own prior
+"COMPLETE_NEGATIVE" statement above, which described an earlier
+intermediate interpretation): `results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json`,
+classification **`COMPLETE_MIXED`** (negative-leaning, heterogeneous —
+not a uniform negative). A_minus_B=-0.452 mmHg (sign-reverses excluding
+subject 9); C_minus_B=-1.293 mmHg (remains negative but shrinks
+substantially excluding subject 9). The old 607-window execution
+(`results/lbnp_thoracic_eis_stage3.json`) is
+**`HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL`** and **MUST NOT** be consumed
+by Stage 4 or any integration work — resolve LBNP evidence only through
+`ml/stage3_science_resolver.py::resolve_current("lbnp_thoracic_eis")`,
+which fails closed against the old result.
+
+**Current Galaxy governing result**: `results/galaxyppg_corrected_full_cv_result.json`
+(full corrected 6-fold CV, n=18, `EXTERNAL_REPLICATION_SUPPORTIVE`,
+moderate + heterogeneous). The bounded single-fold diagnostic
+(`results/galaxyppg_hr_corrected_eligibility_stage3.json`) is
+**SUPPORTING** evidence, not governing — the full CV supersedes it.
+
+Recommend routing `stage3-final-governance-freeze-closure` for the final
+independent Codex acceptance audit.

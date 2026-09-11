@@ -23,18 +23,35 @@ abdominal/arm EIS sites (untested). Citing the old 607-window execution
 (`results/lbnp_thoracic_eis_stage3.json`, A−B≈−2.24, `COMPLETE_NEGATIVE`,
 `HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL`) as governing.
 
-## GalaxyPPG (full 6-fold grouped CV, this sprint)
+## GalaxyPPG (corrected full 6-fold grouped CV, COMPLETE - CURRENT)
 
-**Safe**: see `docs/GALAXYPPG_STAGE3_FULL_CV_RESULTS.md` once written
-(pending final aggregate) — will state the exact classification from
-{SUPPORTIVE, MIXED, NEGATIVE, UNRESOLVED} based on all 24 real subjects'
-held-out evaluation, never forced toward agreement/disagreement with
-PPG-DaLiA.
+**Current state**: source cohort n=24; 6 excluded for a real corrupted-
+reference-ECG data-integrity defect (multi-dimensional QC, HIGH-02),
+leaving 18 real eligible participants. Full 6-fold grouped CV complete —
+every one of the 18 eligible subjects tested exactly once. Governing
+result: `results/galaxyppg_corrected_full_cv_result.json`, classification
+`EXTERNAL_REPLICATION_SUPPORTIVE`. Participant-level A_cap→B=+0.834268
+bpm (12/18 favor B); C→B=+0.916231 bpm (13/18 favor B, HIGH-01-corrected).
+Window-weighted aggregation agrees to <0.02 bpm. No sign reversal under
+leave-one-out exclusion of the most extreme subject, but real,
+disclosed heterogeneity: 6/18 subjects favor A_cap over B, 5/18 favor C
+over B.
 
-**Unsafe**: "IMU always improves HR." "GalaxyPPG replicates/refutes
-PPG-DaLiA" (even the full CV remains one dataset/device family; "did not
-reproduce" / "reproduced under an independent protocol" is the correct
-language per this project's established convention, never "replicated").
+**Safe**: "In the independently corrected 18-participant GalaxyPPG
+cohort, aligned IMU provided a modest aggregate improvement over the
+capacity-near-matched PPG-only baseline and deranged-IMU control, with
+meaningful participant heterogeneity."
+
+**Unsafe**: "IMU always improves HR" / universal or all-subject benefit.
+"GalaxyPPG replicates/refutes PPG-DaLiA" (even the full CV remains one
+dataset/device family; "qualitatively consistent with" / "did not
+reproduce" is the correct language per this project's established
+convention, never "replicated"). "24/24 subjects eligible" (6 were
+excluded for a real data-integrity defect). Any astronaut/microgravity
+validation claim. Any claim of causal necessity for IMU inclusion. Citing
+the invalidated pre-fix single-fold or full-CV results
+(`results/galaxyppg_hr_external_replication_stage2.json`,
+`results/galaxyppg_hr_full_grouped_cv_stage3.json`) as current.
 
 ## HMC (real access restored this sprint; full training PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT)
 

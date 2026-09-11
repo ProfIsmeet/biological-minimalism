@@ -20,13 +20,20 @@ narrative detail; this file is the tracked repository artifact.
   `BOUNDED_EXTERNAL_REPLICATION_SUPPORTIVE_DIAGNOSTIC`, not the final
   verdict. 75 new checkpoints externally archived and independently
   redownload-SHA256-verified (75/75 exact match).
-- **LBNP**: real training complete. `COMPLETE_NEGATIVE` (thoracic EIS did
-  not help; B indistinguishable from its own deranged control). Real
-  eligibility correction: n=16→n=12 (pleth-quality).
-- **HMC**: real access restored (PhysioNet certificate renewed). 45/151
-  recordings downloaded+verified. Full training:
-  `PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT`. n=7 bounded diagnostic
-  (prior sprint) retained as historical.
+- **LBNP**: real training complete under the frozen 0-60mmHg protocol.
+  `COMPLETE_MIXED` (thoracic EIS shows no stable aggregate incremental
+  value beyond ECG+pleth: A_minus_B=-0.452 mmHg sign-reverses without
+  subject 9; C_minus_B=-1.293 mmHg remains negative but shrinks
+  substantially without subject 9 — real, disclosed subject
+  heterogeneity, not a uniform negative). Real eligibility correction:
+  n=16→n=12 (pleth-quality). Governing result:
+  `results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json`.
+- **HMC**: real access restored (PhysioNet certificate renewed). Current
+  state (`results/hmc_current_download_inventory.json`): 59 edf files
+  present, 58 complete recording pairs, 52 SHA256-verified, 1 partial
+  (SN060). Full training: `FULL_COHORT_PENDING`. n=7 bounded diagnostic
+  (prior sprint) remains the only trained HMC evidence
+  (`BOUNDED_DIAGNOSTIC`).
 - **ds003838**: unchanged (n=3 bounded diagnostic); full-cohort blocker
   quantified this sprint (~93GB/~9.4h).
 - Architecture: `UNRESOLVED`. Pareto: `NOT_READY`.
