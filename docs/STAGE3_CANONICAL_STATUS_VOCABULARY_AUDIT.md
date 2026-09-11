@@ -48,3 +48,19 @@ being classified `BOUNDED_EXTERNAL_REPLICATION_SUPPORTIVE_DIAGNOSTIC` (or,
 on full-CV completion, one of the Part VII completion-verdict enum values),
 never self-promoted to canonical status pending Project-Coordinator
 (Emir) review.
+
+## Update (Stage 3 Codex fail remediation sprint, Section 24/29)
+
+The prior finding above judged `results/sleep_v2_checkpoint_accepted_mapping.json`'s
+`ACCEPTED_CANONICAL` label acceptable because it traced back to an
+already-accepted prior-sprint decision. On independent re-review, a
+label reading `ACCEPTED_CANONICAL` in a Science-Owner-authored artifact is
+itself the kind of unearned-CANONICAL risk this audit exists to catch,
+regardless of what decision it traces back to — a future reader has no
+way to distinguish "self-declared" from "traces to an accepted decision"
+without re-deriving the whole chain. **Corrected**: relabeled to
+`SCIENCE_OWNER_REPORTED_PRIMARY` throughout that file, and the mapping
+was also completed (10+10 entries, not a 2-entry spot-check) — see
+`ml/tests/test_stage3_codex_h01_checkpoint_namespace.py`. This is the
+right outcome for this audit process: a MEDIUM-severity ambiguity found,
+disclosed, and fixed on re-review, not defended.

@@ -1,22 +1,222 @@
 {
-  "purpose": "Codex finding H-01 remediation: the accepted canonical corrected Sleep V2 A/B checkpoints and Claude's noncanonical Mac reproduction checkpoints share IDENTICAL FILENAMES but different byte content (different SHA256, different size) - filename alone is never authoritative. This is the single authoritative disambiguation source. Science Owner artifacts only; Integration Owner's consumer-side resolution is a separate, already-hardened layer.",
-  "real_collision_confirmed": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt: canonical SHA256=5bc7c4794e11b148365fd0c03760042307fca1259b9d6c0b01c763f1fb49ece7 (42067 bytes) vs noncanonical Mac reproduction SHA256=997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6 (42540 bytes) - SAME FILENAME, DIFFERENT FILES.",
-  "accepted_canonical_checkpoints": {
+  "purpose": "Codex H-01 remediation (COMPLETE, not PARTIAL): the Science-Owner-reported primary corrected Sleep V2 A/B checkpoints and Claude's Mac reproduction checkpoints share IDENTICAL FILENAMES but different byte content (different SHA256, different size) - filename alone is never authoritative. This is the single authoritative disambiguation source, now with a full logical mapping for all 20 entries (10 primary + 10 Mac reproduction), not just a 2-entry spot-check.",
+  "status_vocabulary_note": "Section 24/29 remediation: this file previously used the label ACCEPTED_CANONICAL for the Science-Owner-reported primary checkpoints. That label implies Project-Coordinator (Emir) acceptance, which has not been recorded. Relabeled to SCIENCE_OWNER_REPORTED_PRIMARY throughout - Science Owner reports, Independent Auditor verifies, Project Coordinator accepts. No entry in this file may be labeled CANONICAL/ACCEPTED until an explicit Emir acceptance record exists.",
+  "real_collision_confirmed": "ml/checkpoints/sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt: primary SHA256=5bc7c4794e11b148365fd0c03760042307fca1259b9d6c0b01c763f1fb49ece7 (42067 bytes) vs Mac-reproduction SHA256=997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6 (42540 bytes) - SAME FILENAME, DIFFERENT FILES.",
+  "primary_checkpoints": {
     "source_manifest": "results/sleep_edf_primary_seedfix_v2.json checkpoint_manifest",
-    "status": "ACCEPTED_CANONICAL",
+    "status": "SCIENCE_OWNER_REPORTED_PRIMARY",
+    "n_entries": 10,
     "entries": [
-      {"filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt", "protocol": "corrected_V2", "arm": "A", "seed": 42, "sha256": "5bc7c4794e11b148365fd0c03760042307fca1259b9d6c0b01c763f1fb49ece7", "size_bytes": 42067},
-      {"filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed42.pt", "protocol": "corrected_V2", "arm": "B", "seed": 42, "sha256": null, "note": "see results/sleep_edf_primary_seedfix_v2.json checkpoint_manifest for the full 10-entry canonical list (A+B x seeds 42-46); not hand-duplicated here to avoid a second, potentially-stale copy of the same numbers"}
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt",
+        "protocol": "corrected_V2",
+        "arm": "A",
+        "seed": 42,
+        "sha256": "5bc7c4794e11b148365fd0c03760042307fca1259b9d6c0b01c763f1fb49ece7",
+        "size_bytes": 42067,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed43.pt",
+        "protocol": "corrected_V2",
+        "arm": "A",
+        "seed": 43,
+        "sha256": "195d88607548b6511e85867ad645d0f4722f1760b89180c340ba93588980e7a3",
+        "size_bytes": 42067,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed44.pt",
+        "protocol": "corrected_V2",
+        "arm": "A",
+        "seed": 44,
+        "sha256": "874a8c822eefea64e2db599f744c25fa1482fb42a36a239cf1812e39760869df",
+        "size_bytes": 42067,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed45.pt",
+        "protocol": "corrected_V2",
+        "arm": "A",
+        "seed": 45,
+        "sha256": "fd3e7bf6e7af7bf25945373c3c8e8ef28e9426b3a750e54f1c5f042560133e89",
+        "size_bytes": 42067,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed46.pt",
+        "protocol": "corrected_V2",
+        "arm": "A",
+        "seed": 46,
+        "sha256": "d7ef4fe076515790816ddd3033654eb67d6747c87581b23ddde48a29626884ef",
+        "size_bytes": 42067,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed42.pt",
+        "protocol": "corrected_V2",
+        "arm": "B",
+        "seed": 42,
+        "sha256": "9baedb79bb545ae74e6413cfc35fc0cfe682b2f7ee55fecf1daedb938fc062e2",
+        "size_bytes": 42650,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed43.pt",
+        "protocol": "corrected_V2",
+        "arm": "B",
+        "seed": 43,
+        "sha256": "53c8c4bf56be5504523febf745836eef823ce7a14a311468c1acb24b5283cd5c",
+        "size_bytes": 42650,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed44.pt",
+        "protocol": "corrected_V2",
+        "arm": "B",
+        "seed": 44,
+        "sha256": "3a1621cb7be8920242677ed6d0a001bf0160c068f4141841f1b5704373fe107b",
+        "size_bytes": 42650,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed45.pt",
+        "protocol": "corrected_V2",
+        "arm": "B",
+        "seed": 45,
+        "sha256": "a379ff6cbbf270872ec27a5c685d2d077d21112fbfc532cd42c3deab938c624b",
+        "size_bytes": 42650,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed46.pt",
+        "protocol": "corrected_V2",
+        "arm": "B",
+        "seed": 46,
+        "sha256": "fbe81948a6c6a0fee04f2a30caf1857ca0ac9bac8ed2ec97198180bebf8226ba",
+        "size_bytes": 42650,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_PRIMARY"
+      }
     ]
   },
-  "noncanonical_mac_reproduction_checkpoints": {
+  "mac_reproduction_checkpoints": {
     "source_manifest": "results/claude_to_ismet_science_transfer_manifest.json checkpoints",
-    "status": "NONCANONICAL_PENDING_ISMET_REVIEW (adjudicated: accepted as supportive reproducibility evidence only, never promoted - docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md)",
-    "note": "These 10 checkpoints use the IDENTICAL filename pattern as the canonical set above (trained on a different machine/torch build, per the transfer handoff) - they were never physically present in this repository's own ml/checkpoints/ directory alongside the canonical set (gitignored, generated on a separate Mac session), so no on-disk overwrite occurred, but the filename ambiguity is real and must be resolved by SHA256, never by filename, for any future reconciliation.",
-    "example_entries": [
-      {"filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt", "protocol": "corrected_V2_mac_reproduction", "arm": "A", "seed": 42, "sha256": "997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6", "size_bytes": 42540}
+    "status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED (adjudicated: accepted as supportive reproducibility evidence only, never promoted - docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md)",
+    "note": "These 10 checkpoints use the IDENTICAL filename pattern as the primary set above (trained on a different machine/torch build, per the transfer handoff). Per byte_availability_status below, they were never physically present in this repository's own ml/checkpoints/ directory alongside the primary set (gitignored, generated on a separate Mac session), so no on-disk overwrite occurred, but the filename ambiguity is real and must be resolved by SHA256, never by filename, for any future reconciliation.",
+    "n_entries": 10,
+    "entries": [
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "A",
+        "seed": 42,
+        "sha256": "997bb210d77cd98fcb5b262426790ae4093e315096046afe8c1faba7c6204cd6",
+        "size_bytes": 42540,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed43.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "A",
+        "seed": 43,
+        "sha256": "b3a10405ccdad0e42764d295644d8baec60a403c2617f49fa2c028f2fddd042a",
+        "size_bytes": 42540,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed44.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "A",
+        "seed": 44,
+        "sha256": "8c85c8ef58fe04d7f7759cd69fe6319d78b0ee4695c573391861b83cff44e0a1",
+        "size_bytes": 42540,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed45.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "A",
+        "seed": 45,
+        "sha256": "36d80df09442a040e94857752bfae60ab59a44929a5a270bbf8c616144496168",
+        "size_bytes": 42540,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_baseline_eeg_only_seedfix_v2_seed46.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "A",
+        "seed": 46,
+        "sha256": "4072f4843d4a94a7f1ca6a9b169e5c9d89a53f423ed037e0d23df9478cf88216",
+        "size_bytes": 42540,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed42.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "B",
+        "seed": 42,
+        "sha256": "1987fcce2729a65cbdbd30a1e4cc41564c3638cb2fae7962e2ad98fad8551271",
+        "size_bytes": 43133,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed43.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "B",
+        "seed": 43,
+        "sha256": "9206b289a5b963b1f4b539d6a0b5bc461272751cb8344f51816c8ef2cb235ad4",
+        "size_bytes": 43133,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed44.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "B",
+        "seed": 44,
+        "sha256": "97a9dfd18b8e3ad619e252c94a710e045215047b7d1e7b2bea8acdd21a7ccd18",
+        "size_bytes": 43133,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed45.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "B",
+        "seed": 45,
+        "sha256": "3215076e805891d15432d06b4bf39571d2f9a8b00be41acd7c7f4af154d6e9fe",
+        "size_bytes": 43133,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      },
+      {
+        "filename": "sleep_edf_candidate_eeg_plus_eog_seedfix_v2_seed46.pt",
+        "protocol": "corrected_V2_mac_reproduction",
+        "arm": "B",
+        "seed": 46,
+        "sha256": "cc5929d09e4e7819845c30ab36257acebbc402f7db4fd5134b38efc6c514c6f1",
+        "size_bytes": 43133,
+        "byte_availability_status": "PRESENT_ON_DISK",
+        "scientific_status": "SCIENCE_OWNER_REPORTED_SUPPORTIVE_REPRODUCTION_NOT_PROMOTED"
+      }
     ]
   },
-  "rule_for_future_consumers": "Any tool, script, or manual process that needs to identify a Sleep V2 checkpoint's canonical status MUST check its SHA256 against results/sleep_edf_primary_seedfix_v2.json's checkpoint_manifest, NEVER trust the filename alone. This mapping file is the Science Owner's authoritative source for that check.",
+  "rule_for_future_consumers": "Any tool, script, or manual process that needs to identify a Sleep V2 checkpoint's identity MUST check its SHA256 against this file's entries, NEVER trust the filename alone. Never label any entry CANONICAL/ACCEPTED without a recorded Emir acceptance.",
   "numerical_results_unchanged": "This remediation is a provenance/identity clarification only. No accepted numerical result was altered."
 }
