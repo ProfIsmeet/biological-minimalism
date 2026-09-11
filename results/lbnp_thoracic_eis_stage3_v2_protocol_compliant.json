@@ -1,0 +1,483 @@
+{
+  "experiment_id": "lbnp_thoracic_eis_stage3_v2_protocol_compliant",
+  "supersedes": "results/lbnp_thoracic_eis_stage3.json (HISTORICAL, OUT_OF_PROTOCOL_SCOPE - see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md)",
+  "frozen_protocol_reference": "results/lbnp_protocol_stage1b.json",
+  "high03_fixes_applied": [
+    "target_range_enforcement: filtered to stage <= 60 mmHg per the frozen protocol's own '0-60 mmHg range' scope; 200 out-of-scope windows (70/80/90/100 mmHg) excluded before any feature/model construction",
+    "c_control_different_stage_enforcement: deranged_eis_different_stage() guarantees source_stage != target_stage for every window (0 same-stage collisions remaining, verified programmatically)"
+  ],
+  "real_eligibility_finding": "Only 12/16 subjects have valid (non-NaN) pleth data. Final cohort after also requiring >=5 in-scope usable windows: n=12.",
+  "eligible_subject_indices_0based": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "target": "Real LBNP pressure stage (mmHg), step-function looked up at each real EIS spectrum's timestamp, filtered to the frozen 0-60 mmHg scope",
+  "window_seconds": 20.0,
+  "n_subjects": 12,
+  "condition_A_ecg_pleth": {
+    "per_subject": {
+      "4": {
+        "n_points": 36,
+        "mae": 34.05363846135625,
+        "selected_alpha": 30.0
+      },
+      "5": {
+        "n_points": 31,
+        "mae": 19.16458684165121,
+        "selected_alpha": 100.0
+      },
+      "6": {
+        "n_points": 30,
+        "mae": 16.276979908304266,
+        "selected_alpha": 100.0
+      },
+      "7": {
+        "n_points": 30,
+        "mae": 19.35291544519426,
+        "selected_alpha": 100.0
+      },
+      "8": {
+        "n_points": 35,
+        "mae": 21.374261604888204,
+        "selected_alpha": 300.0
+      },
+      "9": {
+        "n_points": 36,
+        "mae": 19.52510180990299,
+        "selected_alpha": 300.0
+      },
+      "10": {
+        "n_points": 36,
+        "mae": 25.933553376286774,
+        "selected_alpha": 300.0
+      },
+      "11": {
+        "n_points": 32,
+        "mae": 18.779171284291042,
+        "selected_alpha": 100.0
+      },
+      "12": {
+        "n_points": 42,
+        "mae": 20.468091095745354,
+        "selected_alpha": 300.0
+      },
+      "13": {
+        "n_points": 35,
+        "mae": 19.62916751872502,
+        "selected_alpha": 100.0
+      },
+      "14": {
+        "n_points": 32,
+        "mae": 18.339716519451308,
+        "selected_alpha": 100.0
+      },
+      "15": {
+        "n_points": 32,
+        "mae": 18.77491595478733,
+        "selected_alpha": 100.0
+      }
+    },
+    "subject_macro_mae_mean": 20.97267498504867,
+    "subject_macro_mae_sd_ddof1": 4.71510827487838
+  },
+  "condition_B_plus_thoracic_eis": {
+    "per_subject": {
+      "4": {
+        "n_points": 36,
+        "mae": 18.88585917834166,
+        "selected_alpha": 1000.0
+      },
+      "5": {
+        "n_points": 31,
+        "mae": 19.091651370966222,
+        "selected_alpha": 1000.0
+      },
+      "6": {
+        "n_points": 30,
+        "mae": 17.536099498351902,
+        "selected_alpha": 1000.0
+      },
+      "7": {
+        "n_points": 30,
+        "mae": 19.65199569515862,
+        "selected_alpha": 1000.0
+      },
+      "8": {
+        "n_points": 35,
+        "mae": 23.451733971990834,
+        "selected_alpha": 1000.0
+      },
+      "9": {
+        "n_points": 36,
+        "mae": 34.40740649374884,
+        "selected_alpha": 1000.0
+      },
+      "10": {
+        "n_points": 36,
+        "mae": 25.984323949776492,
+        "selected_alpha": 300.0
+      },
+      "11": {
+        "n_points": 32,
+        "mae": 19.54947067972933,
+        "selected_alpha": 1000.0
+      },
+      "12": {
+        "n_points": 42,
+        "mae": 19.69764519787008,
+        "selected_alpha": 1000.0
+      },
+      "13": {
+        "n_points": 35,
+        "mae": 20.351070296496175,
+        "selected_alpha": 1000.0
+      },
+      "14": {
+        "n_points": 32,
+        "mae": 19.62913793188692,
+        "selected_alpha": 1000.0
+      },
+      "15": {
+        "n_points": 32,
+        "mae": 18.864324792202222,
+        "selected_alpha": 300.0
+      }
+    },
+    "subject_macro_mae_mean": 21.42505992137661,
+    "subject_macro_mae_sd_ddof1": 4.681041794018473
+  },
+  "condition_C_deranged_eis": {
+    "per_subject": {
+      "4": {
+        "n_points": 36,
+        "mae": 20.535414192729085,
+        "selected_alpha": 1000.0
+      },
+      "5": {
+        "n_points": 31,
+        "mae": 19.277848253199835,
+        "selected_alpha": 300.0
+      },
+      "6": {
+        "n_points": 30,
+        "mae": 17.660672558604276,
+        "selected_alpha": 300.0
+      },
+      "7": {
+        "n_points": 30,
+        "mae": 19.455944863053183,
+        "selected_alpha": 300.0
+      },
+      "8": {
+        "n_points": 35,
+        "mae": 21.87587091164947,
+        "selected_alpha": 1000.0
+      },
+      "9": {
+        "n_points": 36,
+        "mae": 20.4223716751236,
+        "selected_alpha": 1000.0
+      },
+      "10": {
+        "n_points": 36,
+        "mae": 23.018357286647213,
+        "selected_alpha": 1000.0
+      },
+      "11": {
+        "n_points": 32,
+        "mae": 19.41297113253267,
+        "selected_alpha": 300.0
+      },
+      "12": {
+        "n_points": 42,
+        "mae": 21.039918127748567,
+        "selected_alpha": 1000.0
+      },
+      "13": {
+        "n_points": 35,
+        "mae": 20.223055863559857,
+        "selected_alpha": 300.0
+      },
+      "14": {
+        "n_points": 32,
+        "mae": 19.51279079371355,
+        "selected_alpha": 1000.0
+      },
+      "15": {
+        "n_points": 32,
+        "mae": 19.146125398790932,
+        "selected_alpha": 300.0
+      }
+    },
+    "subject_macro_mae_mean": 20.13177842144602,
+    "subject_macro_mae_sd_ddof1": 1.4018904486820731
+  },
+  "c_control_derangement_diagnostics": {
+    "4": {
+      "n_windows": 36,
+      "same_stage_collisions_remaining": 0
+    },
+    "5": {
+      "n_windows": 31,
+      "same_stage_collisions_remaining": 0
+    },
+    "6": {
+      "n_windows": 30,
+      "same_stage_collisions_remaining": 0
+    },
+    "7": {
+      "n_windows": 30,
+      "same_stage_collisions_remaining": 0
+    },
+    "8": {
+      "n_windows": 35,
+      "same_stage_collisions_remaining": 0
+    },
+    "9": {
+      "n_windows": 36,
+      "same_stage_collisions_remaining": 0
+    },
+    "10": {
+      "n_windows": 36,
+      "same_stage_collisions_remaining": 0
+    },
+    "11": {
+      "n_windows": 32,
+      "same_stage_collisions_remaining": 0
+    },
+    "12": {
+      "n_windows": 42,
+      "same_stage_collisions_remaining": 0
+    },
+    "13": {
+      "n_windows": 35,
+      "same_stage_collisions_remaining": 0
+    },
+    "14": {
+      "n_windows": 32,
+      "same_stage_collisions_remaining": 0
+    },
+    "15": {
+      "n_windows": 32,
+      "same_stage_collisions_remaining": 0
+    }
+  },
+  "aggregate": {
+    "A_mean": 20.97267498504867,
+    "B_mean": 21.42505992137661,
+    "C_mean": 20.13177842144602,
+    "A_minus_B_mean": -0.45238493632794174,
+    "C_minus_B_mean": -1.2932814999305933,
+    "n_subjects_favoring_B_over_A": 3,
+    "n_subjects_favoring_B_over_C": 5,
+    "n_subjects_total": 12
+  },
+  "per_subject_deltas": {
+    "4": {
+      "A_mae": 34.05363846135625,
+      "B_mae": 18.88585917834166,
+      "C_mae": 20.535414192729085,
+      "A_minus_B": 15.167779283014589,
+      "C_minus_B": 1.649555014387424
+    },
+    "5": {
+      "A_mae": 19.16458684165121,
+      "B_mae": 19.091651370966222,
+      "C_mae": 19.277848253199835,
+      "A_minus_B": 0.07293547068498896,
+      "C_minus_B": 0.18619688223361308
+    },
+    "6": {
+      "A_mae": 16.276979908304266,
+      "B_mae": 17.536099498351902,
+      "C_mae": 17.660672558604276,
+      "A_minus_B": -1.2591195900476357,
+      "C_minus_B": 0.12457306025237358
+    },
+    "7": {
+      "A_mae": 19.35291544519426,
+      "B_mae": 19.65199569515862,
+      "C_mae": 19.455944863053183,
+      "A_minus_B": -0.2990802499643621,
+      "C_minus_B": -0.1960508321054384
+    },
+    "8": {
+      "A_mae": 21.374261604888204,
+      "B_mae": 23.451733971990834,
+      "C_mae": 21.87587091164947,
+      "A_minus_B": -2.0774723671026294,
+      "C_minus_B": -1.5758630603413621
+    },
+    "9": {
+      "A_mae": 19.52510180990299,
+      "B_mae": 34.40740649374884,
+      "C_mae": 20.4223716751236,
+      "A_minus_B": -14.882304683845849,
+      "C_minus_B": -13.985034818625238
+    },
+    "10": {
+      "A_mae": 25.933553376286774,
+      "B_mae": 25.984323949776492,
+      "C_mae": 23.018357286647213,
+      "A_minus_B": -0.05077057348971792,
+      "C_minus_B": -2.9659666631292794
+    },
+    "11": {
+      "A_mae": 18.779171284291042,
+      "B_mae": 19.54947067972933,
+      "C_mae": 19.41297113253267,
+      "A_minus_B": -0.7702993954382862,
+      "C_minus_B": -0.13649954719665658
+    },
+    "12": {
+      "A_mae": 20.468091095745354,
+      "B_mae": 19.69764519787008,
+      "C_mae": 21.039918127748567,
+      "A_minus_B": 0.7704458978752733,
+      "C_minus_B": 1.3422729298784866
+    },
+    "13": {
+      "A_mae": 19.62916751872502,
+      "B_mae": 20.351070296496175,
+      "C_mae": 20.223055863559857,
+      "A_minus_B": -0.721902777771156,
+      "C_minus_B": -0.1280144329363182
+    },
+    "14": {
+      "A_mae": 18.339716519451308,
+      "B_mae": 19.62913793188692,
+      "C_mae": 19.51279079371355,
+      "A_minus_B": -1.2894214124356118,
+      "C_minus_B": -0.11634713817337072
+    },
+    "15": {
+      "A_mae": 18.77491595478733,
+      "B_mae": 18.864324792202222,
+      "C_mae": 19.146125398790932,
+      "A_minus_B": -0.08940883741489358,
+      "C_minus_B": 0.2818006065887104
+    }
+  },
+  "leave_one_subject_out_sensitivity": {
+    "A_minus_B": {
+      "full_mean": -0.45238493632794086,
+      "per_subject_loo": {
+        "4": {
+          "loo_mean_excluding_this_subject": -1.8723998653590799,
+          "sign_reversal": false
+        },
+        "5": {
+          "loo_mean_excluding_this_subject": -0.5001413369654799,
+          "sign_reversal": false
+        },
+        "6": {
+          "loo_mean_excluding_this_subject": -0.37904542235342314,
+          "sign_reversal": false
+        },
+        "7": {
+          "loo_mean_excluding_this_subject": -0.4663217259973571,
+          "sign_reversal": false
+        },
+        "8": {
+          "loo_mean_excluding_this_subject": -0.3046497153484237,
+          "sign_reversal": false
+        },
+        "9": {
+          "loo_mean_excluding_this_subject": 0.8594259498100508,
+          "sign_reversal": true
+        },
+        "10": {
+          "loo_mean_excluding_this_subject": -0.48889533294959747,
+          "sign_reversal": false
+        },
+        "11": {
+          "loo_mean_excluding_this_subject": -0.423483621863364,
+          "sign_reversal": false
+        },
+        "12": {
+          "loo_mean_excluding_this_subject": -0.5635513758009604,
+          "sign_reversal": false
+        },
+        "13": {
+          "loo_mean_excluding_this_subject": -0.42788331437855764,
+          "sign_reversal": false
+        },
+        "14": {
+          "loo_mean_excluding_this_subject": -0.3762907112272435,
+          "sign_reversal": false
+        },
+        "15": {
+          "loo_mean_excluding_this_subject": -0.4853827635018542,
+          "sign_reversal": false
+        }
+      },
+      "any_single_subject_reverses_sign": true
+    },
+    "C_minus_B": {
+      "full_mean": -1.293281499930588,
+      "per_subject_loo": {
+        "4": {
+          "loo_mean_excluding_this_subject": -1.5608120921413162,
+          "sign_reversal": false
+        },
+        "5": {
+          "loo_mean_excluding_this_subject": -1.427779534672788,
+          "sign_reversal": false
+        },
+        "6": {
+          "loo_mean_excluding_this_subject": -1.4221773690381299,
+          "sign_reversal": false
+        },
+        "7": {
+          "loo_mean_excluding_this_subject": -1.393029742460147,
+          "sign_reversal": false
+        },
+        "8": {
+          "loo_mean_excluding_this_subject": -1.267592267165972,
+          "sign_reversal": false
+        },
+        "9": {
+          "loo_mean_excluding_this_subject": -0.1394857436856198,
+          "sign_reversal": false
+        },
+        "10": {
+          "loo_mean_excluding_this_subject": -1.1412192123670706,
+          "sign_reversal": false
+        },
+        "11": {
+          "loo_mean_excluding_this_subject": -1.3984434956336727,
+          "sign_reversal": false
+        },
+        "12": {
+          "loo_mean_excluding_this_subject": -1.5328773571859584,
+          "sign_reversal": false
+        },
+        "13": {
+          "loo_mean_excluding_this_subject": -1.3992148696573397,
+          "sign_reversal": false
+        },
+        "14": {
+          "loo_mean_excluding_this_subject": -1.4002755328176077,
+          "sign_reversal": false
+        },
+        "15": {
+          "loo_mean_excluding_this_subject": -1.4364707823414333,
+          "sign_reversal": false
+        }
+      },
+      "any_single_subject_reverses_sign": false
+    }
+  },
+  "classification": "COMPLETE_NEGATIVE",
+  "classification_rationale": "Real thoracic EIS (condition B) does not outperform the ECG+pleth baseline (condition A): A_minus_B_mean=-0.452 (A better), and B is also reliably worse than its own within-subject deranged-EIS control (C_minus_B_mean=-1.293, C better than B). The C-vs-B comparison is ROBUST under leave-one-subject-out (no single subject reverses its sign) and is the more diagnostic comparison for EIS value, since B and C share identical architecture/capacity and differ only in whether the EIS branch carries real stage-aligned information - B performing worse than its own shuffled-input version is direct evidence against real EIS carrying useful stage-discriminative signal here, not merely a capacity/noise artifact both conditions would share. The A-vs-B comparison, by contrast, IS sign-sensitive: excluding subject 9 (an extreme outlier, A_minus_B=-14.88) flips the aggregate A_minus_B from negative to positive. This heterogeneity is disclosed, not hidden - see leave_one_subject_out_sensitivity - but does not change the overall classification, since the independently robust C-vs-B comparison alone is sufficient to reject an EIS-value claim."
+}

@@ -312,5 +312,7 @@
       "A_minus_B": -3.2007787745064356,
       "C_minus_B": -3.3470045390499834
     }
-  }
+  },
+  "status": "OUT_OF_PROTOCOL_SCOPE_HISTORICAL",
+  "high03_disclosure": "HIGH-03 remediation found this result included 200/607 windows (33%) at stages 70/80/90/100 mmHg, outside the frozen protocol scope (0-60 mmHg), and its C-control had real same-stage leakage (13-25% of deranged windows retained the same stage). Superseded by the protocol-compliant results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json - see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md. Preserved unchanged as a disclosed historical artifact, never deleted."
 }
