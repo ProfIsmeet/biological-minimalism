@@ -204,7 +204,7 @@ def main() -> None:
     print(f"A_cap params: {a_params} | B/C params: {b_params}")
 
     out: dict = {
-        "experiment_id": "galaxyppg_hr_external_replication_stage2",
+        "experiment_id": "galaxyppg_hr_corrected_eligibility_stage3",
         "scope_disclosure": "BOUNDED_TO_SINGLE_FOLD - see docs/GALAXYPPG_SPLIT_STRATEGY_DEVIATION.md. Real 16/4/4 subject-held-out split, NOT the frozen protocol's full 6-fold grouped CV (compute-infeasible this sprint).",
         "frozen_protocol_reference": "results/galaxyppg_protocol_stage1b.json",
         "split": split,
