@@ -1,0 +1,81 @@
+{
+  "purpose": "The scientific methodology for translating Stage-3 accepted evidence into architecture-decision inputs. Defines confidence tiers, decision states, required evidence fields, and pending-science handling rules. Does NOT select a final architecture. References results/stage4_science_consumption_manifest.json (by family_id) rather than duplicating numeric results.",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "prior_stage4_package": {
+    "branch": "stage4-science-handoff",
+    "head": "5730efd246df8a898d77ea60a32d04235078c215",
+    "referenced_artifacts": [
+      "results/stage4_science_consumption_manifest.json",
+      "results/stage4_scientific_sensor_value_matrix.json",
+      "results/stage4_science_claim_ledger.json",
+      "results/stage4_architecture_decision_inputs_science.json",
+      "results/stage4_integration_science_allowlist.json"
+    ]
+  },
+  "confidence_dimensions": {
+    "A_biological_sample_strength": {
+      "definition": "Biological n, number held out, subject/session independence, whether every eligible subject contributes held-out evidence.",
+      "fields_required": ["biological_n", "held_out_test_biological_n", "every_eligible_subject_held_out_once"]
+    },
+    "B_replication_level": {
+      "definition": "The evidentiary tier of independent confirmation.",
+      "allowed_values": ["INTERNAL_ONLY", "INDEPENDENT_DATASET_SUPPORTIVE", "BOUNDED_DIAGNOSTIC", "EXTERNAL_FULL_REPLICATION", "PENDING_EXTERNAL_REPLICATION"]
+    },
+    "C_control_quality": {
+      "definition": "Which confounds the governing experiment actually controlled for.",
+      "fields_required": ["capacity_matched", "temporal_correspondence_controlled", "shuffled_or_deranged_control_present", "subject_leakage_excluded", "protocol_confound_addressed"]
+    },
+    "D_aggregate_effect": {
+      "definition": "The direction of the governing aggregate result.",
+      "allowed_values": ["POSITIVE", "NEUTRAL", "MIXED", "NEGATIVE"]
+    },
+    "E_consistency": {
+      "definition": "How consistent the effect is across seeds/subjects/folds.",
+      "fields_required": ["seed_consistency_fraction", "subject_consistency_fraction", "fold_consistency_note"]
+    },
+    "F_sensitivity": {
+      "definition": "Whether the result depends on one influential subject/dataset/protocol choice.",
+      "fields_required": ["influential_subject_present", "exclusion_sensitivity", "protocol_sensitivity", "single_dataset_dependence"]
+    },
+    "G_endpoint_relevance": {
+      "definition": "How directly the tested endpoint maps to the proposed wearable role - a qualitative judgment, not a number."
+    },
+    "H_external_validity": {
+      "definition": "Explicitly separated tiers - conflating them is the single most common overclaim risk in this project.",
+      "allowed_values": ["TERRESTRIAL_EXPERIMENTAL_EVIDENCE", "GENERAL_PHYSIOLOGICAL_PLAUSIBILITY", "SPACEFLIGHT_VALIDATION"],
+      "note": "No governing Stage-3 evidence currently reaches SPACEFLIGHT_VALIDATION. This must never be asserted without new spaceflight data."
+    }
+  },
+  "confidence_tiers": {
+    "TIER_A_REPLICATED_SUPPORT": {
+      "mechanical_definition": "D=POSITIVE AND B in {EXTERNAL_FULL_REPLICATION, INDEPENDENT_DATASET_SUPPORTIVE with a second independent dataset also POSITIVE} AND C has at least capacity_matched=true AND shuffled_or_deranged_control_present=true.",
+      "current_occupants": ["ppg_dalia_capacity_control + galaxyppg_external_replication (jointly, as the wrist PPG+IMU case)"]
+    },
+    "TIER_B_CONTROLLED_SUPPORT": {
+      "mechanical_definition": "D=POSITIVE AND control_quality has capacity_matched=true or shuffled_or_deranged_control_present=true AND B=INTERNAL_ONLY or BOUNDED_DIAGNOSTIC (i.e. controlled but not yet externally replicated).",
+      "current_occupants": ["sleep_edf_primary_ab + sleep_edf_shuffled_control_c (jointly, EOG same-dataset case)"]
+    },
+    "TIER_C_BOUNDED_SUPPORT": {
+      "mechanical_definition": "B=BOUNDED_DIAGNOSTIC AND sample size is explicitly too small for the tier above, regardless of direction.",
+      "current_occupants": ["hmc_bounded_diagnostic", "ds003838_bounded_diagnostic"]
+    },
+    "TIER_D_MIXED_OR_FRAGILE": {
+      "mechanical_definition": "D=MIXED, OR (D=POSITIVE/NEGATIVE but F shows influential_subject_present=true with a documented sign-reversal or substantial-magnitude-change under leave-one-out).",
+      "current_occupants": ["lbnp_thoracic_eis", "qde_v2_leg_bioz", "sleep_edf_interaction"]
+    },
+    "TIER_E_NEGATIVE_OR_DEPRIORITIZED": {
+      "mechanical_definition": "D=NEGATIVE AND no single-subject exclusion is documented to reverse the sign (i.e. the negative direction is not merely an artifact of one subject).",
+      "current_occupants": ["ptt_second_ppg_site"]
+    },
+    "TIER_P_PENDING": {
+      "mechanical_definition": "B=PENDING_EXTERNAL_REPLICATION for the specific claim in question, or no governing Stage-3 experiment exists for the modality/endpoint at all.",
+      "current_occupants": ["wrist temperature", "wrist light (no governing experiment exists)"]
+    }
+  },
+  "tier_assignment_rule": "Every tier assignment must be traceable to the mechanical_definition above applied to the specific family's fields in results/stage4_science_consumption_manifest.json - never assigned by qualitative impression. Where a modality's evidence spans two families (e.g. wrist PPG+IMU spans ppg_dalia_capacity_control and galaxyppg_external_replication), the tier reflects the joint evidence, with the joint reasoning stated explicitly.",
+  "pending_science_handling": {
+    "rule": "A family with B=PENDING_EXTERNAL_REPLICATION or BOUNDED_DIAGNOSTIC must never be silently promoted to TIER_A or TIER_B. Its current tier (C or P) stands until new accepted Stage-3 evidence changes B. This framework defines the RULE for re-tiering; it does not pre-compute what a hypothetical future result would yield (see results/stage4_sensor_decision_sensitivity.json for the specific decision-flip conditions)."
+  },
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}

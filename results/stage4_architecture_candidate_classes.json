@@ -1,0 +1,50 @@
+{
+  "purpose": "Scientifically meaningful candidate architecture CLASSES (not a final architecture, not a winner). Each class is composable from the evidence in results/stage4_science_consumption_manifest.json and results/stage4_scientific_sensor_value_matrix.json.",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "explicit_non_goal": "No class is marked as selected, recommended, or winning. final_architecture_status remains UNRESOLVED.",
+  "classes": [
+    {
+      "class_id": "MINIMAL_CORE",
+      "description": "Only the sensors with TIER_A_REPLICATED_SUPPORT evidence.",
+      "sensors": ["wrist PPG", "wrist IMU", "chest ECG (as reference/ground-truth signal, not itself under incremental-value test)", "frontal EEG"],
+      "anatomical_regions": ["wrist", "chest (if ECG retained as a monitoring signal, not just reference)", "head (frontal, if EEG retained as a monitoring signal)"],
+      "scientific_capabilities": ["HR estimation with capacity-controlled, externally-replicated IMU benefit"],
+      "evidence_confidence": "TIER_A for the PPG+IMU pairing; EEG/ECG themselves are foundation signals not under incremental-value test in this evidence set",
+      "unresolved_dependencies": "None for the included sensors themselves.",
+      "pending_science_exposure": "NONE - this class does not depend on any HIGH-decision-sensitivity pending result."
+    },
+    {
+      "class_id": "CORE_PLUS_CONTEXT",
+      "description": "Minimal Core plus modalities with bounded-but-controlled same-dataset support, assuming low marginal burden via shared infrastructure.",
+      "sensors": ["MINIMAL_CORE sensors", "EOG (if sharing EEG AFE/reference infrastructure)"],
+      "anatomical_regions": ["wrist", "chest", "head (frontal + peri-orbital, sharing EEG module)"],
+      "scientific_capabilities": ["MINIMAL_CORE capabilities", "same-dataset sleep-stage classification improvement from EOG"],
+      "evidence_confidence": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+      "unresolved_dependencies": "EOG's external validity (HMC full-cohort training pending) and whether shared-AFE co-location is engineering-confirmed (Integration Owner's determination, not yet made).",
+      "pending_science_exposure": "HIGH - EOG's standing in this class is directly sensitive to HMC full-cohort results (see results/stage4_sensor_decision_sensitivity.json scenarios HMC-1/2/3)."
+    },
+    {
+      "class_id": "EVIDENCE_EXTENDED",
+      "description": "Core+Context plus modalities with real but not fully replicated, or genuinely mixed/heterogeneous, evidence - included on the basis that the tested endpoint is mission-relevant even though the evidence itself does not yet clearly support inclusion.",
+      "sensors": ["CORE_PLUS_CONTEXT sensors", "thoracic BioZ/EIS", "leg BioZ"],
+      "anatomical_regions": ["CORE_PLUS_CONTEXT regions", "thorax", "legs (bilateral)"],
+      "scientific_capabilities": ["CORE_PLUS_CONTEXT capabilities", "central hypovolemic stress / body-mass-change proxy signal acquisition (capability exists; demonstrated incremental value does not)"],
+      "evidence_confidence": "TIER_D_MIXED_OR_FRAGILE for both thoracic EIS and leg BioZ",
+      "unresolved_dependencies": "Neither modality has demonstrated stable incremental value in current governing evidence; inclusion in this class is a scope/mission-relevance argument, not an evidence-strength argument.",
+      "pending_science_exposure": "LOW for both - no currently-planned Stage-3 experiment would resolve either modality's ambiguity further (per results/stage4_sensor_decision_sensitivity.json)."
+    },
+    {
+      "class_id": "EXPERIMENTAL_EXTENDED",
+      "description": "Evidence-Extended plus modalities with negative-leaning, unresolved, or entirely untested status - included only for explicit experimental/exploratory purposes, never presented as evidence-supported.",
+      "sensors": ["EVIDENCE_EXTENDED sensors", "second-site PPG", "wrist temperature", "wrist light"],
+      "anatomical_regions": ["EVIDENCE_EXTENDED regions", "secondary PPG site (per PTT protocol)"],
+      "scientific_capabilities": ["EVIDENCE_EXTENDED capabilities", "PTT-based estimation (capability exists; demonstrated value is currently NEGATIVE)", "untested wrist temperature/light signal acquisition"],
+      "evidence_confidence": "TIER_E_NEGATIVE_OR_DEPRIORITIZED for second-site PPG; TIER_P_PENDING for wrist temperature/light",
+      "unresolved_dependencies": "Second-site PPG has a demonstrated negative result, not merely an absence of evidence - its inclusion here is explicitly experimental/exploratory, not evidence-driven.",
+      "pending_science_exposure": "LOW for second-site PPG (no planned experiment); MEDIUM for wrist temperature/light (any new experiment would be informative given the complete absence of current evidence)."
+    }
+  ],
+  "note_on_composability": "Each class is defined as a strict superset of the prior class for clarity of presentation; this is a simplification for readability, not a claim that a real architecture decision must proceed monotonically through these tiers - the Coordinator may select any subset consistent with the acceptance gates in results/stage4_architecture_acceptance_gates.json.",
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}

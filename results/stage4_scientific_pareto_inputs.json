@@ -1,0 +1,99 @@
+{
+  "purpose": "Science-only axes for the eventual Pareto analysis (engineering burden axes are Integration Owner's responsibility, supplied separately). Multi-objective reasoning is preserved deliberately - no single collapsed score is computed here.",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "explicit_non_goal": "This artifact does NOT compute TOTAL_SCORE = SCIENCE + MASS + POWER or any other arbitrary-weighted composite. It defines the science-side axes so the eventual Pareto process can compare configurations without hiding tradeoffs.",
+  "scientific_pareto_axes": {
+    "incremental_value": {
+      "definition": "Does the modality measurably improve a target beyond an appropriate (capacity-matched where applicable) baseline?",
+      "scale": "POSITIVE / NEUTRAL / MIXED / NEGATIVE (from confidence_dimensions.D_aggregate_effect in results/stage4_architecture_science_decision_framework.json)"
+    },
+    "breadth": {
+      "definition": "How many meaningful, distinct physiological targets does the modality support across the current governing evidence set?",
+      "scale": "count of distinct target/endpoint entries in results/stage4_science_consumption_manifest.json referencing this modality"
+    },
+    "evidence_maturity": {
+      "definition": "Internal / external / bounded / pending, per the confidence tier system.",
+      "scale": "TIER_A..TIER_E, TIER_P (results/stage4_architecture_science_decision_framework.json)"
+    },
+    "robustness": {
+      "definition": "Consistency across subjects, seeds, datasets, and conditions.",
+      "scale": "qualitative, drawn from each family's heterogeneity/sensitivity fields in results/stage4_science_consumption_manifest.json"
+    },
+    "uniqueness": {
+      "definition": "Does another already-present modality capture materially the same information?",
+      "scale": "qualitative judgment per modality pair, see shared_resource_analysis below"
+    },
+    "dependency": {
+      "definition": "Does the sensor's utility depend strongly on another sensor being present (e.g. IMU's value is defined relative to PPG-only)?",
+      "scale": "qualitative, explicit per modality"
+    },
+    "decision_fragility": {
+      "definition": "Could one subject, one dataset, or one control choice reversal alter the conclusion?",
+      "scale": "drawn directly from results/stage4_sensor_decision_sensitivity.json's decision_sensitivity field"
+    },
+    "mission_relevance": {
+      "definition": "How important is the supported physiological endpoint to the project's stated scope (autonomic/cardiovascular/cognitive/fluid-shift monitoring during spaceflight-analog conditions)?",
+      "scale": "qualitative, explicit per modality; distinguishes terrestrial-analog relevance from established spaceflight relevance per the H_external_validity dimension"
+    }
+  },
+  "per_modality_axis_values": [
+    {
+      "modality": "wrist PPG + wrist IMU",
+      "incremental_value": "POSITIVE",
+      "breadth": "1 (HR estimation) - IMU's tested value is specific to HR estimation, not broader activity/motion targets in this evidence set",
+      "evidence_maturity": "TIER_A_REPLICATED_SUPPORT",
+      "robustness": "HIGH within tested datasets (5/5 and 12/18-13/18 favorable directions); real but modest heterogeneity disclosed",
+      "uniqueness": "IMU is the only tested source of temporal-correspondence/motion-artifact-context information in this evidence set - not redundant with PPG alone",
+      "dependency": "IMU's tested value is defined relative to a PPG-only baseline (A_cap); it has no independently-tested value without PPG in this evidence set",
+      "decision_fragility": "LOW",
+      "mission_relevance": "HR estimation is a core autonomic/cardiovascular monitoring target for the project's stated scope"
+    },
+    {
+      "modality": "EOG (with EEG)",
+      "incremental_value": "POSITIVE (same-dataset); PENDING (external)",
+      "breadth": "1 (5-class sleep-stage classification)",
+      "evidence_maturity": "TIER_B_CONTROLLED_SUPPORT (same-dataset); TIER_C_BOUNDED_SUPPORT (external)",
+      "robustness": "Consistent same-dataset (4/5 seeds, two independent comparisons); external evidence underpowered (n=7, 1 test recording)",
+      "uniqueness": "EOG captures eye-movement information not present in EEG alone - the primary basis for its own testing as an addition",
+      "dependency": "Tested only as an addition to EEG; no independently-tested standalone value in this evidence set",
+      "decision_fragility": "HIGH",
+      "mission_relevance": "Sleep-stage monitoring is a stated cognitive/circadian target for the project's scope"
+    },
+    {
+      "modality": "thoracic BioZ/EIS",
+      "incremental_value": "MIXED (negative-leaning)",
+      "breadth": "1 (LBNP-stage/central hypovolemic stress estimation) - the only tested target",
+      "evidence_maturity": "TIER_D_MIXED_OR_FRAGILE",
+      "robustness": "LOW - both key comparisons substantially subject-9-influenced",
+      "uniqueness": "Would be the only tested source of thoracic-impedance information; ECG+pleth alone does not capture this signal type",
+      "dependency": "Tested only as an addition to ECG+pleth; no standalone value tested",
+      "decision_fragility": "HIGH",
+      "mission_relevance": "Central hypovolemic stress / fluid-shift-adjacent monitoring is a stated project target, but current evidence does not support this specific modality/target pairing"
+    },
+    {
+      "modality": "leg BioZ",
+      "incremental_value": "MIXED",
+      "breadth": "1 (baseline-relative body-mass-change proxy) - the only tested target",
+      "evidence_maturity": "TIER_D_MIXED_OR_FRAGILE",
+      "robustness": "LOW - single-outlier-dominated, aggregate/per-subject-direction tension",
+      "uniqueness": "Would add lower-body fluid/tissue information not captured by arms+trunk BioZ alone",
+      "dependency": "Tested only as an addition to arms+trunk BioZ; no standalone value tested",
+      "decision_fragility": "HIGH",
+      "mission_relevance": "Body-mass/fluid-shift monitoring is a stated project target; current evidence for THIS specific extension (legs beyond arms+trunk) is inconclusive"
+    },
+    {
+      "modality": "second-site PPG",
+      "incremental_value": "NEGATIVE",
+      "breadth": "1 (PTT-based estimation) - the only tested target",
+      "evidence_maturity": "TIER_E_NEGATIVE_OR_DEPRIORITIZED",
+      "robustness": "LOW - n=4 test subjects, fragile per-seed deltas",
+      "uniqueness": "A second PPG site would in principle add pulse-transit-time information not available from a single site, but the tested implementation did not realize this benefit",
+      "dependency": "Tested only as an addition to a primary PPG site; no standalone value tested",
+      "decision_fragility": "LOW (consistently negative; not a single-subject artifact per prior sprints)",
+      "mission_relevance": "PTT-based estimation (e.g. for BP-adjacent monitoring) is a stated project interest, but current evidence does not support this specific implementation"
+    }
+  ],
+  "shared_resource_analysis_reference": "See results/stage4_architecture_candidate_classes.json and docs/STAGE4_ARCHITECTURE_DECISION_FRAMEWORK_HANDOFF.md Part V for the PPG+IMU / EEG+EOG / ECG+thoracic-BioZ / trunk+leg-BioZ shared-resource discussion - not duplicated here to avoid a second inconsistent copy.",
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}
