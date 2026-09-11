@@ -290,3 +290,70 @@ tests. See `docs/STAGE3_CODEX_FAIL_REMEDIATION_REPORT.md` for full detail.
 16. **Freeze-manifest incompleteness**: new Section-32 manifest covers 21
     current-package files, verified all-exist and hash-stable.
 
+---
+
+## Stage 3 Final Source-of-Truth Remediation Sprint — Hostile Review
+
+A second independent Codex re-audit found the corrected LBNP execution
+itself valid, but found stale governing references to the superseded
+607-window LBNP result still active in integration-facing artifacts, an
+imprecise LBNP classification, an HMC count that conflated file-presence
+with hash-verification, a stale Galaxy split description, and a
+test-count inconsistency between two current documents. All addressed.
+
+### BLOCKER / HIGH
+
+None found or remaining.
+
+### MEDIUM
+
+1. **LBNP classification was too strong**: `COMPLETE_NEGATIVE` implied a
+   uniform effect, but both A_minus_B (sign-reverses without subject 9)
+   and C_minus_B (shrinks substantially without subject 9) are
+   substantially influenced by one subject. Corrected to `COMPLETE_MIXED`
+   with the sensitivity disclosed, not smoothed into either a clean
+   positive or clean negative framing.
+2. **HMC count conflated three different claims**: file-presence (59
+   .edf), complete recording pairs (58 - SN060 is a partial download,
+   missing its annotation and far smaller than a complete recording), and
+   SHA256-verified count (52, unchanged from a prior sprint, not
+   re-verified this sprint). Publishing a bare "N/151" number without
+   this breakdown is itself a real precision defect - fixed by
+   `results/hmc_current_download_inventory.json`'s three-way split.
+
+### LOW
+
+1. Section 20 (quarantine transfer-history correction): searched the
+   entire current `docs/*.md` corpus for "cherry-pick"/"file-by-file"/
+   "individually selected" language specifically describing the ten-file
+   quarantine package - no such live claim was found (the one
+   "cherry-picked" hit, in `docs/CLAUDE_AB_REPRODUCTION_ADJUDICATION.md`,
+   is an unrelated statement about NOT cherry-picking a result). Recorded
+   as verified-clean rather than fabricating a fix for a claim that does
+   not currently exist.
+
+### INFO — attack vectors checked
+
+1. **Stale LBNP values search** (`27.62`, `29.86`, `29.83`, `-2.24`,
+   `-2.237`, `COMPLETE_NEGATIVE`): every current-governing-artifact hit
+   was either fixed to the corrected numbers/classification, or confirmed
+   to sit inside an explicit `HISTORICAL`/`SUPERSEDED`/`OUT_OF_PROTOCOL`
+   disclosure - zero stale-current hits remain (Section 22, verified by
+   `test_no_current_governing_artifact_cites_old_lbnp_numbers_uncontextualized`).
+2. **Count reconciliation** (`45/151`, `52/151`, `59/151`, `482`, `486`,
+   `16/4/4`, `12/3/3`): HMC's three-way count published; test count
+   reconciled to 500 (the true current re-run count after this sprint's
+   own additions); Galaxy bounded-diagnostic split description corrected
+   from the stale `16/4/4` (a leftover from the pre-correction 24-subject
+   design) to the real `12/3/3` used by the actual corrected 18-subject
+   split.
+3. **Freeze self-consistency**: added a test
+   (`test_no_entry_marked_historical_is_a_governing_artifact`) that fails
+   if any non-historical `governing_artifacts` key in the freeze manifest
+   points to a file whose own `status` field says HISTORICAL/SUPERSEDED -
+   directly enforces Section 16's requirement, not merely asserted in
+   prose.
+4. **Architecture overclaim**: `final_architecture_status` remains
+   `UNRESOLVED`, `formal_pareto` remains `NOT_READY` after all this
+   sprint's wording/classification updates - verified directly.
+

@@ -67,7 +67,17 @@ def main() -> None:
             "sha256": sha256_of(path) if exists else None,
         })
 
+    governing_artifacts = {
+        "lbnp_eis_result": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+        "lbnp_eis_result_historical_superseded": "results/lbnp_thoracic_eis_stage3.json",
+        "galaxyppg_full_cv_result": "results/galaxyppg_corrected_full_cv_result.json",
+        "galaxyppg_bounded_diagnostic": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+        "hmc_current_state": "results/hmc_current_download_inventory.json",
+        "stage3_manifest": "results/stage3_science_completion_manifest.json",
+    }
+
     manifest = {
+        "governing_artifacts": governing_artifacts,
         "purpose": (
             "Stage 3 scientific freeze manifest (Codex fail remediation "
             "sprint) - the current Stage-3 science source-of-truth hash "

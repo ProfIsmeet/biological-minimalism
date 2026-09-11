@@ -1,4 +1,12 @@
 {
+  "governing_artifacts": {
+    "lbnp_eis_result": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+    "lbnp_eis_result_historical_superseded": "results/lbnp_thoracic_eis_stage3.json",
+    "galaxyppg_full_cv_result": "results/galaxyppg_corrected_full_cv_result.json",
+    "galaxyppg_bounded_diagnostic": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
+    "hmc_current_state": "results/hmc_current_download_inventory.json",
+    "stage3_manifest": "results/stage3_science_completion_manifest.json"
+  },
   "purpose": "Stage 3 scientific freeze manifest (Codex fail remediation sprint) - the current Stage-3 science source-of-truth hash chain. This is a NEW manifest, distinct from and not a retrofit of results/scientific_freeze_manifest_day14.json (which covers a different, earlier science package).",
   "hash_semantics_note": "All hashes here are computed on line-ending-normalized TEXT content (CRLF->LF), distinct from raw-byte SHA256 hashes used for binary checkpoint files (e.g. results/*_expected_membership.json entries) - text hashes and checkpoint hashes are never comparable to each other and are never conflated in this repository's convention.",
   "n_files": 21,
@@ -8,7 +16,7 @@
       "path": "results/galaxyppg_reference_ecg_qc.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "e5dc29417fe56676eba77f386836b29010b8817507633c0a2e08a8491bf37bb5"
+      "sha256": "d5534d2b5c1f3a1d0002bc6063977da165bf6fb7cea5c1cf81c61b391bbf5343"
     },
     {
       "path": "results/galaxyppg_corrected_eligibility.json",
@@ -32,7 +40,7 @@
       "path": "results/galaxyppg_hr_corrected_eligibility_stage3.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "0221ba4f452bf2032d2f27e193dd0a04d0c85aa8327487551a5e9263bdd4c387"
+      "sha256": "0620e6c2ee80d2abcea75bc5d46eea6c216493ed8ccbc2fdaa74605e1d104d4e"
     },
     {
       "path": "results/galaxyppg_hr_corrected_per_subject_stage3.json",
@@ -62,7 +70,7 @@
       "path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "7597d083d825a55e96a11025fc13d6d39e035362359a497b37dfea6441ffb030"
+      "sha256": "61d34359206d10b47fb5a0b2f50cf632e35cb217e17cab197ac6b4c14a9b4e63"
     },
     {
       "path": "results/lbnp_target_stage_inventory.json",
@@ -74,13 +82,13 @@
       "path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "cdad070fe35dff50d18a90e7cf2e41b8d5c7b5d0cb9f9765fc1dd6d911056b79"
+      "sha256": "fe67ccadb63434177d4a6f6fb3a8d90dcb85d32f6677959a82e6d35efbffb035"
     },
     {
       "path": "results/lbnp_thoracic_eis_stage3.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "ee51893c7faaabef2d7d021b41a831aa7196d3f462f390bb5cb55b1f03731498"
+      "sha256": "c2a68d2abb45b3ac429a2ec05fb5db1859a03ee4f0540cdf401d43132ef3c32f"
     },
     {
       "path": "results/lbnp_protocol_stage1b.json",
@@ -104,25 +112,25 @@
       "path": "results/hmc_current_download_inventory.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "0be659e84c74d80b969031f5b17bde9b3c4b1acd9e018df2ab14286db4a83c52"
+      "sha256": "81530dd9c691b29cb27ae99f8e3391b1050d184656d7d7a26410d57eff31a140"
     },
     {
       "path": "results/stage3_science_completion_manifest.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "7f8c058434b55621be8d292c63956ab87d536d43466f2bc181de26ba33c3c37f"
+      "sha256": "8d15991b36c2d943a1cad73288dbacd2e794ec07375835554c2953abe0202f78"
     },
     {
       "path": "results/sensor_value_master_matrix_stage3_complete.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "bcdee14f9a79cac4b2caa247d4605469348e325ee61adc0504c7f6eedf30e417"
+      "sha256": "0e631135d27e325561ab9e5b804aae19a4bea509c4f131aaa0d0823eff7db199"
     },
     {
       "path": "results/architecture_evidence_handoff_stage4.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "8e39399cc40389bb8cb55e3b8910eead1400862cf7076101f62bb07e9c62a665"
+      "sha256": "914ea11249bcddbc94581017d7097bc1cdfff2cf0f904c51a22964cd50a3f862"
     },
     {
       "path": "results/stage3_environment_snapshot.json",

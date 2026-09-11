@@ -78,7 +78,7 @@ def test_v2_result_has_zero_same_stage_collisions_on_real_data():
 
 def test_old_result_marked_historical_out_of_scope():
     d = _load("lbnp_thoracic_eis_stage3.json")
-    assert d["status"] == "OUT_OF_PROTOCOL_SCOPE_HISTORICAL"
+    assert d["status"] == "HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL"
 
 
 def test_v2_classification_is_valid_and_disclosed():
