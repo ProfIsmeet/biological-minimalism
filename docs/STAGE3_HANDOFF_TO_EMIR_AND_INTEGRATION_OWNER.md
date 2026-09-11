@@ -1,16 +1,23 @@
 # Stage 3 Handoff to Emir and Integration Owner
 
 Self-contained — no chat history required. Branch:
-`stage3-acceptance-gate-closure`. **Not canonical** — pending both the
-ongoing Codex independent audit of
+`stage3-gate3-final-resolver-closure`. **Not canonical** — pending both
+the ongoing Codex independent audit of
 `ab798815882ac0723491dc489de2375f8bf5b774` (untouched) and Emir's own
 review of this sprint's work.
 
 Resolve all current Stage-3 evidence only through
-`ml/stage3_science_resolver.py` (`resolve_current(family_id)` or
-`resolve_and_verify(family_id)`) — never by reading a result file
-directly by guessed filename. The resolver fails closed against every
-historical/superseded/invalidated/noncanonical/pending artifact.
+`ml/stage3_science_resolver.py`, calling `resolve_current(family_id)` —
+this is the single authoritative, integrity-verified current-science
+resolution path (`resolve_and_verify(family_id)` is the same
+implementation; `resolve_current` is a direct alias, not a separate,
+lower-safety route). Never read a result file directly by guessed
+filename, and never call the private `_resolve_current_unverified()`
+helper — it exists only for internal debugging, performs no hash
+verification, and must never be used for science consumption or by
+Stage-4 code. The resolver fails closed against every historical/
+superseded/invalidated/noncanonical/pending artifact, and against any
+governing artifact whose content no longer matches its frozen hash.
 
 ## What is COMPLETE and may eventually be surfaced (once accepted)
 

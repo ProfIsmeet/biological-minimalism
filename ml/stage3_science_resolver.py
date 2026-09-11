@@ -23,10 +23,25 @@ even if someone edits the registry to mark the old, superseded LBNP
 result as the sole GOVERNING entry, that file's own 'status' field still
 says HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL, and resolution fails.
 
-resolve_and_verify() additionally cross-checks the resolved file's
-line-ending-normalized content hash against the frozen hash recorded in
+Both PUBLIC current-resolution routes - resolve_current() and
+resolve_and_verify() - cross-check the resolved file's line-ending-
+normalized content hash against the frozen hash recorded in
 results/stage3_scientific_freeze_manifest.json, failing closed on any
 mismatch (a governing file modified after the freeze was generated).
+resolve_current() is a direct alias for resolve_and_verify() - there is
+exactly one verified resolution path, not two routes with different
+safety semantics (Gate 3 final closure: an earlier version of this module
+let resolve_current() skip hash verification, which an independent audit
+demonstrated could return corrupted governing content through a
+documented API).
+
+resolve_by_path_or_status() also enforces hash verification for any path
+whose registry status is GOVERNING, for the same reason.
+
+_resolve_current_unverified() exists ONLY as a private, unverified
+internal helper (registry + semantic check, no hash check) - it is never
+exported as a safe current-science API, never recommended in the Stage-3
+handoff, and must never be used by Stage-4 consumers.
 """
 
 from __future__ import annotations
@@ -164,16 +179,42 @@ def resolve_governing_path(family_id: str) -> str:
     return entry["path"]
 
 
-def resolve_current(family_id: str) -> dict:
-    """Returns the loaded JSON content of the current governing artifact
-    for a family (JSON families only - markdown families should use
-    resolve_governing_path + Path.read_text)."""
-    path = resolve_governing_path(family_id)
-    return json.loads((REPO_ROOT / path).read_text())
+def _verify_integrity(path: str) -> None:
+    """Cross-checks a resolved path's line-ending-normalized content hash
+    against the frozen hash recorded in the freeze manifest. Raises
+    IntegrityVerificationError on any mismatch or missing freeze entry.
+    Shared by every public route that returns governing content, so
+    there is exactly one hash-verification implementation, never
+    duplicated per-caller."""
+    full_path = REPO_ROOT / path
+    freeze = json.loads(FREEZE_PATH.read_text())
+    entry = next((e for e in freeze["entries"] if e["path"] == path), None)
+    if entry is None:
+        raise IntegrityVerificationError(
+            f"No freeze-manifest entry found for governing artifact '{path}' "
+            f"- cannot verify integrity. Regenerate the freeze manifest."
+        )
+    live_hash = _sha256_of(full_path)
+    if live_hash != entry["sha256"]:
+        raise IntegrityVerificationError(
+            f"HASH_MISMATCH for '{path}': live hash {live_hash} != frozen "
+            f"hash {entry['sha256']} - this governing artifact was modified "
+            f"after the freeze was generated. Refusing to resolve."
+        )
+
+
+def _load_resolved_content(family_id: str, path: str) -> dict:
+    registry = _load_registry()
+    is_markdown = registry["families"][family_id].get("artifact_type") == "markdown"
+    full_path = REPO_ROOT / path
+    if is_markdown:
+        return {"path": path, "text": full_path.read_text()}
+    return json.loads(full_path.read_text())
 
 
 def resolve_and_verify(family_id: str) -> dict:
-    """Full governance + integrity resolution:
+    """Full governance + integrity resolution - THE authoritative current-
+    science resolution path:
       1. resolve exactly one governing artifact (registry + semantic check);
       2. confirm the path exists (done inside resolve_governing_path);
       3. locate its frozen integrity record in the freeze manifest;
@@ -185,37 +226,36 @@ def resolve_and_verify(family_id: str) -> dict:
          families, {"path": ..., "text": ...}).
     """
     path = resolve_governing_path(family_id)
-    full_path = REPO_ROOT / path
+    _verify_integrity(path)
+    return _load_resolved_content(family_id, path)
 
-    freeze = json.loads(FREEZE_PATH.read_text())
-    entry = next((e for e in freeze["entries"] if e["path"] == path), None)
-    if entry is None:
-        raise IntegrityVerificationError(
-            f"No freeze-manifest entry found for governing artifact '{path}' "
-            f"- cannot verify integrity. Regenerate the freeze manifest."
-        )
 
-    live_hash = _sha256_of(full_path)
-    if live_hash != entry["sha256"]:
-        raise IntegrityVerificationError(
-            f"HASH_MISMATCH for '{path}': live hash {live_hash} != frozen "
-            f"hash {entry['sha256']} - this governing artifact was modified "
-            f"after the freeze was generated. Refusing to resolve."
-        )
+def resolve_current(family_id: str) -> dict:
+    """PUBLIC current-science API. This is a direct alias for
+    resolve_and_verify() - Gate 3 final closure removed the prior
+    unverified implementation that let corrupted governing content pass
+    through undetected. There is exactly one verified resolution path;
+    this function exists only for call-site readability."""
+    return resolve_and_verify(family_id)
 
-    registry = _load_registry()
-    is_markdown = registry["families"][family_id].get("artifact_type") == "markdown"
-    if is_markdown:
-        return {"path": path, "text": full_path.read_text()}
-    return json.loads(full_path.read_text())
+
+def _resolve_current_unverified(family_id: str) -> dict:
+    """PRIVATE, UNVERIFIED helper. Performs registry + semantic validation
+    ONLY - no hash/integrity check. NEVER use this for science consumption,
+    NEVER export it as a public API, NEVER recommend it in the Stage-3
+    handoff, NEVER call it from Stage-4 code. It exists solely for
+    internal debugging (e.g. inspecting a governing artifact's content
+    when the freeze manifest is intentionally stale/being rebuilt)."""
+    path = resolve_governing_path(family_id)
+    return _load_resolved_content(family_id, path)
 
 
 def resolve_by_path_or_status(path_str: str) -> dict:
     """Given an explicit repo-relative path, look it up in the registry
     (any family) and refuse to load it if its recorded status is not
-    GOVERNING, or if it fails the independent semantic content check. If
-    the path is not in the registry at all, it is loaded without a
-    governance opinion."""
+    GOVERNING, if it fails the independent semantic content check, or if
+    it fails hash-integrity verification. If the path is not in the
+    registry at all, it is loaded without a governance opinion."""
     registry = _load_registry()
     normalized = path_str.replace("\\", "/")
     for fam, fd in registry["families"].items():
@@ -232,5 +272,6 @@ def resolve_by_path_or_status(path_str: str) -> dict:
                 if not is_markdown:
                     loaded = json.loads((REPO_ROOT / normalized).read_text())
                 _semantic_check(a, loaded)
+                _verify_integrity(normalized)
                 return loaded if loaded is not None else {"path": normalized}
     return json.loads((REPO_ROOT / normalized).read_text())

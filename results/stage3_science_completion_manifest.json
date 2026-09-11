@@ -146,13 +146,13 @@
   },
   "digital_twin_status": "conceptual, synthetic, not longitudinally validated",
   "test_suite": {
-    "static_inventory_previous": 526,
+    "static_inventory_previous": 539,
     "tests_added_this_sprint": 13,
-    "static_inventory_current": 539,
-    "ml_tests_passed": 539,
+    "static_inventory_current": 552,
+    "ml_tests_passed": 552,
     "ml_tests_failed": 0,
     "ml_tests_skipped": 0,
-    "reconciliation_note": "Section 23 remediation: this sprint (stage3-acceptance-gate-closure) added 13 net new tests (Gate 3 semantic/integrity verification + Gate 4 freeze hard-fail), bringing the static inventory from 526 to 539, confirmed by direct collection and execution (539 collected, 539 passed, 0 failed, 0 skipped)."
+    "reconciliation_note": "Gate 3 final resolver closure sprint (stage3-gate3-final-resolver-closure) added 13 new tests reproducing the independent auditors exact corrupted-resolve_current attack and verifying both public current-resolution APIs now reject it identically. Static inventory 539 -> 552, confirmed by direct collection and execution (552 collected, 552 passed, 0 failed, 0 skipped)."
   },
   "final_verdict": "STAGE3_CORE_AND_PRIORITY_EXTERNAL_SCIENCE_COMPLETE_WITH_LOWER_PRIORITY_EXTERNAL_WORK_PENDING",
   "final_verdict_rationale": "GalaxyPPG's corrected full 6-fold CV is now COMPLETE (EXTERNAL_REPLICATION_SUPPORTIVE) and all H-01/H-02/Section 26-33 Codex parent-audit remediation items are closed. HMC full-cohort training and ds003838 remain genuinely PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT (explicitly out of scope this sprint per the master prompt) - this verdict does NOT claim full Stage 3 completion. Whether HMC/ds003838 are required before Stage 4 is Emir's decision, not this remediation's.",

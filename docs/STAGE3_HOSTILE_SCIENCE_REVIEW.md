@@ -504,3 +504,68 @@ before commit).
    `COMPLETE_MIXED` - all confirmed byte-identical to the values at this
    sprint's base commit.
 
+---
+
+## Gate 3 Final Resolver Closure Sprint — Hostile Review
+
+The final acceptance audit found exactly one open item: `resolve_current()`
+lacked the hash-integrity verification `resolve_and_verify()` performed,
+so a corrupted governing file could be consumed through a documented
+public API. Demonstrated exactly: `resolve_current: ACCEPTED_CORRUPTED
+999.0` vs `resolve_and_verify: REJECTED IntegrityVerificationError
+HASH_MISMATCH`.
+
+### BLOCKER / HIGH
+
+None found or remaining.
+
+### The fix
+
+Extracted the hash-verification logic into a single shared
+`_verify_integrity()` helper. `resolve_and_verify()` now calls it (no
+behavior change). `resolve_current()` is now a literal one-line alias for
+`resolve_and_verify()` - there is exactly one implementation, not two
+routes that could drift apart again. `resolve_by_path_or_status()` was
+also audited (Section 9's "search for every public route") and found to
+have the same gap for its GOVERNING-status success path; fixed
+identically. A private `_resolve_current_unverified()` helper was added
+for internal debugging only, named and documented to make its lack of
+integrity verification unmistakable, never exported or recommended.
+
+### Reproduction of the auditor's exact attack
+
+Corrupted `lbnp_thoracic_eis_stage3_v2_protocol_compliant.json`'s
+`A_mean` field, called both public APIs:
+
+```
+resolve_current: REJECTED IntegrityVerificationError HASH_MISMATCH
+resolve_and_verify: REJECTED IntegrityVerificationError HASH_MISMATCH
+```
+
+File confirmed restored byte-for-byte afterward. Made permanent as
+`ml/tests/test_stage3_gate3_final_resolver_closure.py::test_reproduces_auditors_exact_attack_both_apis_reject`.
+
+### Tests A-H (master prompt Section 10)
+
+All 8 explicitly required scenarios pass: valid resolution through both
+APIs (A/B), corrupted governing LBNP rejected through both APIs (C/D),
+historical LBNP / invalid Galaxy / noncanonical Sleep relabeled-governing
+all rejected through both APIs (E/F/G), zero/duplicate governing remain
+fail-closed through both APIs (H).
+
+### Non-regression confirmed
+
+- Gate 4 unchanged: 21 registry families, 21 governing paths, 31 tracked
+  frozen files (the handoff doc's hash legitimately changed and was
+  regenerated - no stale freeze hash left behind).
+- Science unchanged: Galaxy A_cap-B=+0.834268, C-B=+0.916231; LBNP
+  A=20.972675, B=21.425060, C=20.131778, `COMPLETE_MIXED`.
+
+### Final self-test (Section 14)
+
+Assertion: "No documented/public CURRENT science resolution route can
+return modified governing content whose bytes/text no longer match the
+frozen integrity record." Verified true for `resolve_current`,
+`resolve_and_verify`, and `resolve_by_path_or_status` - all three now
+share the same `_verify_integrity()` call.
+

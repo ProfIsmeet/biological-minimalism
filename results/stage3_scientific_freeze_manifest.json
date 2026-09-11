@@ -295,7 +295,7 @@
       "path": "results/stage3_science_completion_manifest.json",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "c296bb608c07bd94509e74c43ad120fbb166335854799b523300e0973b7f7686"
+      "sha256": "30c039db0232a20f5da4784f14a0b8121dfd13f91e7e73b7ab397c5bd90e5ced"
     },
     {
       "path": "results/stage3_galaxyppg_lbnp_consolidated_provenance.json",
@@ -307,7 +307,7 @@
       "path": "docs/STAGE3_HANDOFF_TO_EMIR_AND_INTEGRATION_OWNER.md",
       "exists": true,
       "hash_kind": "line_ending_normalized_sha256_of_text_content",
-      "sha256": "827cbb9059268748ef683be94973cad8176d9e5150b8afa14da5c001c22afe58"
+      "sha256": "7e5ea83ea3a8209898f184e271018cdac266c9762ef7743656995df6554528e2"
     }
   ]
 }
