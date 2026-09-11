@@ -58,14 +58,14 @@
       ],
       "positive_evidence": [],
       "negative_evidence": [
-        "LBNP thoracic EIS did not add information beyond ECG+pleth (A-B=-2.24 mmHg MAE, only 3/12 subjects favor B; B indistinguishable from its own within-subject-deranged control, C-B~=-0.03) - real, complete, COMPLETE_NEGATIVE result, real n=12 actual-file-verified cohort"
+        "LBNP thoracic EIS did not show stable aggregate incremental value beyond ECG+pleth under the frozen terrestrial 0-60 mmHg protocol (A-B=-0.452 mmHg MAE, 3/12 favor B - SIGN-REVERSES if subject 9 excluded; C-B=-1.293 mmHg, B worse than its own deranged-EIS control but this shrinks substantially without subject 9) - real, complete, COMPLETE_MIXED (substantial subject heterogeneity, not a uniform negative), real n=12 actual-file-verified cohort. See results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json (current, protocol-compliant). The prior 607-window execution (results/lbnp_thoracic_eis_stage3.json, A-B=-2.24) included 200 windows outside the frozen 0-60mmHg scope and is HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL - never cite its numbers as current."
       ],
       "replication": "N/A (single dataset, new experiment)",
       "biological_n": "12 real actual-file-verified eligible (of 16 enrolled - 4 excluded for real missing pleth data)",
       "burden_known": "distinct module/contact-region from ECG/pleth - real added burden if adopted (established)",
       "body_region": "thorax (also abdomen/arm sites available but out of frozen scope)",
       "contact_module_impact": "would require a dedicated EIS acquisition module distinct from this project's existing PPG/ECG modules - and per this sprint's real negative result, unclear benefit to justify that burden for this specific target",
-      "key_uncertainty": "Resolved for this specific target/protocol (real negative) - abdominal/arm sites and other targets remain untested"
+      "key_uncertainty": "Not fully resolved for this specific target/protocol - the effect is real but subject-heterogeneous (COMPLETE_MIXED, not a clean negative); a larger cohort or per-subject-covariate analysis might clarify whether subject 9 represents a distinguishable subpopulation or noise. Abdominal/arm sites and other targets remain untested."
     },
     {
       "sensor_site": "sparse frontal+mastoid EEG (AF7/AF8/TP9/TP10, Muse-matched) vs full montage",

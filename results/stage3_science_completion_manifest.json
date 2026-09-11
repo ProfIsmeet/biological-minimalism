@@ -55,7 +55,7 @@
       "optimization_seed_n": null,
       "fold_count": 12,
       "completion_status": "COMPLETE (protocol-compliant rerun, HIGH-03 remediation)",
-      "replication_class": "COMPLETE_NEGATIVE",
+      "replication_class": "COMPLETE_MIXED",
       "protocol_version": "results/lbnp_protocol_stage1b.json, real eligibility corrected this sprint (12/16 - pleth-NaN exclusion); HIGH-03: 0-60mmHg frozen range now enforced (200/607 out-of-scope windows excluded), C-control same-stage leakage fixed",
       "current_result_path": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
       "historical_result_path": "results/lbnp_thoracic_eis_stage3.json (OUT_OF_PROTOCOL_SCOPE_HISTORICAL, superseded, see docs/LBNP_STAGE3_HIGH03_REMEDIATION.md)",
@@ -80,16 +80,18 @@
       "per_seed_results": "N/A (deterministic ridge regression)",
       "per_subject_results": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json per_subject_deltas - subjects 4 and 9 are extreme opposite-direction outliers on A_minus_B",
       "per_class_activity_stage_results": null,
-      "heterogeneity": "A_minus_B is sign-sensitive under leave-one-out (excluding subject 9 flips its aggregate sign); C_minus_B is robust (no single-subject reversal) and is the more diagnostic comparison",
+      "heterogeneity": "Both key comparisons are substantially influenced by a single subject (9): A_minus_B SIGN-REVERSES when subject 9 is excluded via leave-one-out; C_minus_B remains negative under leave-one-out but SHRINKS SUBSTANTIALLY without subject 9 - neither comparison is a stable, cohort-wide effect. This is why the governing classification is COMPLETE_MIXED, not COMPLETE_NEGATIVE.",
       "sensitivity": "Full leave-one-subject-out sensitivity in results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json::leave_one_subject_out_sensitivity",
       "checkpoint_inventory": "N/A - linear model, no checkpoints scientifically necessary",
       "checkpoint_archive_status": "N/A",
       "limitations": "n=12 (not the paper's 16) due to real pleth-quality exclusion; MAP/EIT/abdominal/arm sites out of scope; A_minus_B sign-sensitive to a single subject",
-      "safe_claim": "Real thoracic EIS did not add information beyond ECG+pleth for LBNP-stage estimation, and B performed reliably worse than its own within-subject deranged-EIS control (robust to leave-one-out) - a real negative result, now under a protocol-compliant (0-60mmHg-only, different-stage-enforced) rerun.",
+      "safe_claim": "Corrected LBNP shows no stable aggregate incremental thoracic EIS benefit over ECG+pleth under the frozen terrestrial 0-60 mmHg protocol, with substantial subject heterogeneity - a real but heterogeneous (COMPLETE_MIXED) result, not a uniform negative.",
       "unsafe_claims": [
         "Thoracic EIS is useless in general",
         "Any astronaut/microgravity equivalence",
-        "Citing results/lbnp_thoracic_eis_stage3.json (historical, out-of-protocol-scope) as the current result"
+        "Citing results/lbnp_thoracic_eis_stage3.json (historical, out-of-protocol-scope) as the current result",
+        "Thoracic EIS definitively worsens prediction for all subjects",
+        "Old 607-window LBNP result is governing"
       ],
       "blockers": [],
       "source_commit": "this sprint, see git log (HIGH-03 remediation)"
@@ -97,8 +99,8 @@
     {
       "dataset": "HMC",
       "dataset_version": "PhysioNet hmc-sleep-staging 1.1",
-      "raw_data_identity": "59/151 recordings present on disk (Section 26 reconciliation this sprint - real file-presence count, resolving the prior inconsistent 45/151 vs 52/151 claims; see results/hmc_current_download_inventory.json. Byte-level SHA256 re-verification for files beyond the prior sprint's 52-count checkpoint was NOT reconfirmed this sprint - out of scope, no download/verification work performed)",
-      "actual_biological_n": 59,
+      "raw_data_identity": "58/151 complete recording pairs (edf+annotation) present on disk; 59 raw .edf files present but 1 (SN060) is a partial/incomplete download (missing annotation, file size far below complete-recording range) - see results/hmc_current_download_inventory.json for the full file-presence/complete-pair/hash-verified breakdown. Of the 58 complete pairs, 52 were SHA256-verified against PhysioNet own SHA256SUMS.txt in a prior sprint; the remaining 6 are complete but not independently re-verified this sprint (no verification work performed - out of scope).",
+      "actual_biological_n": 58,
       "held_out_biological_n": null,
       "optimization_seed_n": null,
       "fold_count": null,
@@ -144,9 +146,10 @@
   },
   "digital_twin_status": "conceptual, synthetic, not longitudinally validated",
   "test_suite": {
-    "ml_tests_passed": 482,
+    "ml_tests_passed": 500,
     "ml_tests_failed": 0,
-    "ml_tests_skipped": 0
+    "ml_tests_skipped": 0,
+    "reconciliation_note": "Section 11 remediation: reconciled the prior 482 vs 486 inconsistency to 486 (confirmed by direct re-run), then this sprint added 20 more tests (LBNP source-of-truth + freeze self-consistency) bringing the current count to 500. This is the single current authoritative count as of stage3-final-source-of-truth-remediation."
   },
   "final_verdict": "STAGE3_CORE_AND_PRIORITY_EXTERNAL_SCIENCE_COMPLETE_WITH_LOWER_PRIORITY_EXTERNAL_WORK_PENDING",
   "final_verdict_rationale": "GalaxyPPG's corrected full 6-fold CV is now COMPLETE (EXTERNAL_REPLICATION_SUPPORTIVE) and all H-01/H-02/Section 26-33 Codex parent-audit remediation items are closed. HMC full-cohort training and ds003838 remain genuinely PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT (explicitly out of scope this sprint per the master prompt) - this verdict does NOT claim full Stage 3 completion. Whether HMC/ds003838 are required before Stage 4 is Emir's decision, not this remediation's.",

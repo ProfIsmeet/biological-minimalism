@@ -105,15 +105,15 @@
       "C": "+deranged EIS",
       "metric": "MAE (mmHg)",
       "sign_convention": "lower = better",
-      "exact_result": "STAGE 3 UPDATE: REAL TRAINING COMPLETE. Real eligibility correction: only 12/16 subjects have valid pleth (4 excluded, real data-quality finding). LOSO (n=12): A=27.62, B=29.86, C=29.83 (MAE mmHg). A-B=-2.24 (only 3/12 favor B). C-B=-0.033 (B indistinguishable from its own deranged control). COMPLETE_NEGATIVE. Real per-subject heterogeneity: subjects 4 and 7 are extreme opposite-direction outliers. See docs/LBNP_STAGE3_RESULTS.md.",
-      "n_subjects": "16 usable per Stage 1B metadata (not actual-file-verified)",
+      "exact_result": "STAGE 3 UPDATE (protocol-compliant rerun, HIGH-03 remediation): REAL TRAINING COMPLETE under the frozen 0-60mmHg scope. Real eligibility: 12/16 subjects have valid pleth (4 excluded, real data-quality finding). 200/607 windows excluded for being outside the frozen 0-60mmHg scope (407 in-scope windows used). LOSO (n=12): A=20.973, B=21.425, C=20.132 (MAE mmHg). A-B=-0.452 (3/12 favor B, SIGN-REVERSES if subject 9 excluded). C-B=-1.293 (5/12 favor B over C; B worse than its own different-stage-enforced deranged control, but shrinks substantially without subject 9). COMPLETE_MIXED (substantial subject heterogeneity, not a uniform negative). Real per-subject heterogeneity: subjects 4 and 9 are extreme opposite-direction outliers on A-B. The prior 607-window execution (A=27.62, B=29.86, C=29.83, A-B=-2.24, subjects 4/7 framing, COMPLETE_NEGATIVE) included 200 out-of-scope windows and a C-control with same-stage leakage - HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL, never cite its numbers as current. See results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json and docs/LBNP_STAGE3_HIGH03_REMEDIATION.md.",
+      "n_subjects": "16 enrolled, 12 real actual-file-verified eligible (pleth-quality exclusion)",
       "seeds": "N/A - not trained",
-      "sensitivity": "Severe, bimodal - subjects 4 (+43.3) and 7 (-36.5) nearly cancel in the aggregate mean",
+      "sensitivity": "A-B sign-reverses under leave-one-out exclusion of subject 9 (an extreme outlier); C-B remains negative under leave-one-out but shrinks substantially without subject 9 - both key comparisons are partly driven by one influential subject, not a stable cohort-wide effect. Subjects 4 and 9 are the extreme opposite-direction outliers on A-B (not subjects 4/7, which was the prior out-of-protocol run's framing under a different, larger window set).",
       "negative_finding": true,
-      "replication_state": "COMPLETE_NEGATIVE",
+      "replication_state": "COMPLETE_MIXED",
       "burden_relevance": "thoracic EIS electrodes are a real, distinct contact-region/module burden from ECG/pleth",
-      "limitations": "n=12 (not 16) due to real pleth-quality exclusion; only thoracic site tested",
-      "safe_claim": "Thoracic EIS did not add information beyond ECG+pleth for LBNP-stage estimation in this real cohort - a real negative result."
+      "limitations": "n=12 (not 16) due to real pleth-quality exclusion; only thoracic site tested; both A-B and C-B comparisons are subject-9-sensitive",
+      "safe_claim": "Corrected LBNP shows no stable aggregate incremental thoracic EIS benefit over ECG+pleth under the frozen terrestrial 0-60 mmHg protocol, with substantial subject heterogeneity - a real but heterogeneous (COMPLETE_MIXED), not uniformly negative, result."
     },
     {
       "experiment": "ds003838 sparse EEG (AF7/AF8/TP9/TP10) -> full 63ch",

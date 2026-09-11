@@ -1,20 +1,27 @@
 # Stage 3 Safe / Unsafe Claims
 
-## LBNP (complete this sprint)
+## LBNP (protocol-compliant rerun, HIGH-03/final-source-of-truth remediation - CURRENT)
 
-**Safe**: "Under a real, frozen LOSO protocol on the actual-file-verified
-usable cohort (n=12 of 16 — 4 subjects excluded for real missing pleth
-data, a predeclared data-quality rule), thoracic EIS did not add
-predictive information about LBNP-stage beyond ECG+pleth alone (A−B
-mean −2.24 mmHg MAE, only 3/12 subjects favor B; B is statistically
-indistinguishable from its own within-subject-deranged control C,
-C−B ≈ −0.03). Two subjects (indices 4 and 7) are extreme, opposite-
-direction outliers, disclosed explicitly."
+**Safe with limitation**: "Corrected LBNP shows no stable aggregate
+incremental thoracic EIS benefit over ECG+pleth under the frozen
+terrestrial 0-60 mmHg protocol, with substantial subject heterogeneity."
+Full detail: real, frozen LOSO protocol on the actual-file-verified usable
+cohort (n=12 of 16 — 4 subjects excluded for real missing pleth data, a
+predeclared data-quality rule), with the frozen 0-60 mmHg target range
+enforced (407/607 in-scope windows; 200 out-of-scope 70-100mmHg windows
+excluded) and a different-stage-enforced C-control (0 same-stage
+collisions). A−B mean −0.452 mmHg MAE (3/12 subjects favor B) — this
+SIGN-REVERSES if subject 9 is excluded via leave-one-out. C−B mean −1.293
+mmHg (5/12 favor B over C) — remains negative under leave-one-out but
+shrinks substantially without subject 9. Classification: `COMPLETE_MIXED`.
 
-**Unsafe**: "Thoracic EIS is useless for hypovolemic-stress monitoring in
-general." "This proves central hypovolemia cannot be detected via
-impedance." Any microgravity/astronaut/spaceflight equivalence. Any claim
-about abdominal/arm EIS sites (untested).
+**Unsafe**: "Thoracic BioZ is useless [in general]." "Thoracic EIS
+definitively worsens prediction for all subjects." "This proves central
+hypovolemia cannot be detected via impedance." Any microgravity/
+astronaut/spaceflight fluid-shift-disproven equivalence. Any claim about
+abdominal/arm EIS sites (untested). Citing the old 607-window execution
+(`results/lbnp_thoracic_eis_stage3.json`, A−B≈−2.24, `COMPLETE_NEGATIVE`,
+`HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL`) as governing.
 
 ## GalaxyPPG (full 6-fold grouped CV, this sprint)
 

@@ -478,6 +478,13 @@
       "any_single_subject_reverses_sign": false
     }
   },
-  "classification": "COMPLETE_NEGATIVE",
-  "classification_rationale": "Real thoracic EIS (condition B) does not outperform the ECG+pleth baseline (condition A): A_minus_B_mean=-0.452 (A better), and B is also reliably worse than its own within-subject deranged-EIS control (C_minus_B_mean=-1.293, C better than B). The C-vs-B comparison is ROBUST under leave-one-subject-out (no single subject reverses its sign) and is the more diagnostic comparison for EIS value, since B and C share identical architecture/capacity and differ only in whether the EIS branch carries real stage-aligned information - B performing worse than its own shuffled-input version is direct evidence against real EIS carrying useful stage-discriminative signal here, not merely a capacity/noise artifact both conditions would share. The A-vs-B comparison, by contrast, IS sign-sensitive: excluding subject 9 (an extreme outlier, A_minus_B=-14.88) flips the aggregate A_minus_B from negative to positive. This heterogeneity is disclosed, not hidden - see leave_one_subject_out_sensitivity - but does not change the overall classification, since the independently robust C-vs-B comparison alone is sufficient to reject an EIS-value claim."
+  "classification": "COMPLETE_MIXED",
+  "classification_rationale": "GOVERNING CLASSIFICATION (revised this sprint per second independent Codex re-audit): COMPLETE_MIXED, not COMPLETE_NEGATIVE. Real thoracic EIS (condition B) does not clearly outperform the ECG+pleth baseline (condition A): A_minus_B_mean=-0.452 (A better on average), but this comparison REVERSES SIGN when subject 9 (an extreme outlier, A_minus_B=-14.88) is excluded via leave-one-out - the aggregate direction for A-vs-B is not stable across the cohort. B is also worse than its own within-subject deranged-EIS control (C_minus_B_mean=-1.293); this comparison remains negative under leave-one-out but SHRINKS SUBSTANTIALLY without subject 9 (see leave_one_subject_out_sensitivity), meaning even the more diagnostic C-vs-B evidence is partly driven by one influential subject rather than being uniformly negative across the cohort. Given real, substantial subject heterogeneity in both key comparisons - not a uniform negative result - COMPLETE_MIXED (equivalently: NEGATIVE_LEANING_HETEROGENEOUS) is the honest classification. B favors A in 9/12 subjects and favors C in 7/12 subjects (i.e. B is the worst of the three for a majority of subjects), but the magnitude and even the sign of the effect is subject-dependent, not a stable cohort-wide negative.",
+  "classification_history": [
+    {
+      "classification": "COMPLETE_NEGATIVE",
+      "sprint": "stage3-codex-fail-remediation",
+      "superseded_reason": "Did not adequately weight that BOTH A_minus_B (sign-reversing) and C_minus_B (magnitude-shrinking) are substantially influenced by a single subject (9) under leave-one-out - a uniform NEGATIVE label overstated the stability of the finding."
+    }
+  ]
 }
