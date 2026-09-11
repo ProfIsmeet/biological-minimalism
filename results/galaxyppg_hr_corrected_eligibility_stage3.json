@@ -1,6 +1,6 @@
 {
   "experiment_id": "galaxyppg_hr_corrected_eligibility_stage3",
-  "scope_disclosure": "BOUNDED_TO_SINGLE_FOLD - see docs/GALAXYPPG_SPLIT_STRATEGY_DEVIATION.md. Real 16/4/4 subject-held-out split, NOT the frozen protocol's full 6-fold grouped CV (compute-infeasible this sprint).",
+  "scope_disclosure": "BOUNDED_TO_SINGLE_FOLD - see docs/GALAXYPPG_SPLIT_STRATEGY_DEVIATION.md for the ORIGINAL 24-subject 16/4/4 design this doc describes (superseded). This file's actual real split is the CORRECTED 18-subject-eligible 12/3/3 subject-held-out split (results/galaxyppg_split_stage3_corrected_eligibility.json) - NOT the frozen protocol's full 6-fold grouped CV (compute-infeasible this sprint; full CV completed separately, see results/galaxyppg_corrected_full_cv_result.json). Section 12 fix: this field previously stated the stale pre-correction 16/4/4 split description.",
   "frozen_protocol_reference": "results/galaxyppg_protocol_stage1b.json",
   "split": {
     "purpose": "Corrected single-fold split over the REAL 18-subject eligible cohort (after fixing the reference-ECG-quality BLOCKER this sprint - see docs/GALAXYPPG_REFERENCE_SIGNAL_QUALITY_BLOCKER.md). Neutral seed-42 shuffle, same convention as all other frozen splits this project.",

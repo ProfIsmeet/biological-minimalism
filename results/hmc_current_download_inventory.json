@@ -1,13 +1,30 @@
 {
-  "purpose": "Section 26 remediation: ONE current, authoritative HMC download-state artifact, resolving the inconsistent 45/151 vs 52/151 counts found in other Stage 3 artifacts. This is a file-presence inventory only - no download was resumed or attempted this sprint (explicitly out of scope).",
-  "method": "Counted unique SNxxx recording IDs present under datasets/hmc-sleep-staging/ via real filesystem listing this sprint. Did NOT re-run SHA256 verification against PhysioNet's SHA256SUMS.txt this sprint (that would itself be HMC-adjacent work beyond this remediation's scope) - byte-level verification status for any file beyond what a prior sprint already recorded is NOT reconfirmed here.",
-  "n_recordings_present_on_disk": 59,
+  "purpose": "Section 9-10 remediation: ONE current, authoritative HMC download-state artifact, resolving the inconsistent 45/151 vs 52/151 vs (this sprint's initial pass) 59/151 counts found across Stage 3 artifacts. Distinguishes file presence, complete recording pairs, and hash-verification status - a bare file count conflates three different, non-interchangeable claims.",
+  "method": "Real filesystem listing under datasets/hmc-sleep-staging/raw/ this sprint. Did NOT re-run SHA256 verification against PhysioNet's SHA256SUMS.txt for any file beyond what a prior sprint already recorded as verified - that would itself be HMC-adjacent work beyond this remediation's explicit scope (no download or verification work performed this sprint).",
+  "n_edf_files_present": 59,
+  "n_complete_recording_pairs_edf_plus_annotation": 58,
+  "incomplete_recordings": [
+    {"id": "SN060", "reason": "SN060.edf present (6.4MB) but SN060_sleepscoring.txt annotation is missing, and the .edf file size (6.4MB) is far smaller than every complete recording's .edf (92-129MB range observed for SN058/SN059) - real evidence this is a partial/interrupted download, not a complete recording."}
+  ],
+  "n_sha256_verified_against_physionet": {
+    "value": 52,
+    "source": "prior sprint's own recorded verification checkpoint (docs/HMC_STAGE3_FULL_COHORT_STATUS.md) - NOT re-confirmed or extended this sprint",
+    "note": "This repository's records identify a VERIFIED COUNT (52) from a prior sprint, not a verified ID LIST - the download script (datasets/hmc-sleep-staging/download_full_cohort.sh) iterates recordings in SHA256SUMS.txt order, which is not confirmed to be strictly sequential SN001..SN052. Therefore exactly which 6 of the 58 complete pairs (plus the incomplete SN060) remain unverified cannot be stated by ID without re-running verification - only the COUNT gap (58 complete - 52 verified = 6 unverified) is established. This is disclosed as a real gap, not silently assumed verified."
+  },
   "n_total_cohort": 151,
   "historical_counts_now_superseded": [
-    {"count": "45/151", "source": "results/sensor_value_master_matrix_stage3_complete.json, results/stage3_science_completion_manifest.json (some fields)"},
-    {"count": "52/151", "source": "docs/HMC_STAGE3_FULL_COHORT_STATUS.md, results/stage3_science_completion_manifest.json (other fields)"}
+    {"count": "45/151", "source": "results/sensor_value_master_matrix_stage3_complete.json, results/stage3_science_completion_manifest.json (some fields, prior sprint)"},
+    {"count": "52/151", "source": "docs/HMC_STAGE3_FULL_COHORT_STATUS.md - this was actually the SHA256-VERIFIED count, not the file-presence count; conflating the two caused the prior inconsistency"},
+    {"count": "59/151", "source": "this sprint's own first-pass reconciliation (prior commit) - was a raw .edf file count that did not check for the matching annotation file or partial-download evidence; superseded by the 58-complete/59-present split below"}
   ],
+  "current_authoritative_state": {
+    "n_edf_files_present": 59,
+    "n_complete_usable_recordings": 58,
+    "n_sha256_verified": 52,
+    "n_unverified_but_complete": 6,
+    "n_incomplete": 1
+  },
   "current_status": "PENDING_DUE_TO_COMPUTE_OR_SESSION_LIMIT",
-  "explicit_scope_note": "This sprint's master prompt explicitly forbids resuming HMC download or training. This artifact only reconciles which count is CURRENT (59, by direct file-presence count), it does not advance HMC progress in any way.",
-  "recommendation": "A future sprint that resumes HMC work should re-run SHA256 verification for all 59 present files (or whatever count is current at that time) against PhysioNet's own SHA256SUMS.txt before trusting them for training, since this sprint did not reconfirm byte integrity for files beyond the prior sprint's own 52-count checkpoint."
+  "explicit_scope_note": "This sprint's master prompt explicitly forbids resuming HMC download or training. This artifact only reconciles which counts are CURRENT and what each one actually means, it does not advance HMC progress in any way.",
+  "recommendation": "A future sprint that resumes HMC work should (1) re-run SHA256 verification for the 6 unverified-but-complete recordings (SN053-SN058, or whichever range is unverified at that time) against PhysioNet's own SHA256SUMS.txt, and (2) either complete or discard SN060's partial download, before trusting the full set for training."
 }

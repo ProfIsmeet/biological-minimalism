@@ -4,6 +4,13 @@
 working — this is a compute/time limit, not an external blocker or a
 design choice).
 
+**Count note**: the "52 of 151" figure below is this document's own
+historical snapshot from the sprint it describes. For the CURRENT,
+reconciled file-presence/complete-pair/hash-verified breakdown, see
+`results/hmc_current_download_inventory.json` (as of the Stage 3
+final-source-of-truth remediation sprint: 59 .edf files present, 58
+complete recording pairs, 52 of those SHA256-verified).
+
 ## What happened this sprint
 
 1. Real access recheck: PhysioNet's TLS certificate confirmed renewed

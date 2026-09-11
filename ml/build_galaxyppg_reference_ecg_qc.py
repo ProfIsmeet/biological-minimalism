@@ -128,7 +128,10 @@ def main() -> None:
     for pid in participants:
         raw = load_raw_ecg(pid)
         if raw is None:
-            table.append({"participant_id": pid, "ecg_present": False})
+            table.append({
+                "participant_id": pid, "ecg_present": False,
+                "final_qc_status": "EXCLUDED", "exclusion_reason": "reference ECG file missing",
+            })
             continue
         ecg_val, ecg_t = raw
         duration_min = (ecg_t[-1] - ecg_t[0]) / 60.0 if len(ecg_t) > 1 else 0.0
@@ -140,16 +143,33 @@ def main() -> None:
         secondary_rate = len(secondary_peaks) / duration_min if duration_min > 0 else 0.0
         agreement_ratio = (primary_rate / secondary_rate) if secondary_rate > 0 else (float("inf") if primary_rate > 0 else 1.0)
 
+        passes_primary = primary_rate >= 40.0
+        passes_agreement = agreement_ratio >= 0.50
+        final_qc_status = "ELIGIBLE" if (passes_primary and passes_agreement) else "EXCLUDED"
+        if final_qc_status == "EXCLUDED":
+            reasons = []
+            if not passes_primary:
+                reasons.append(f"primary_r_peaks_per_min {primary_rate:.2f} < 40.0")
+            if not passes_agreement:
+                reasons.append(f"detector_agreement_ratio {agreement_ratio:.3f} < 0.50")
+            exclusion_reason = " AND ".join(reasons)
+        else:
+            exclusion_reason = None
+
         table.append({
             "participant_id": pid,
             "ecg_present": True,
             "recording_duration_min": duration_min,
+            "primary_r_peak_count": len(primary_peaks),
+            "secondary_r_peak_count": len(secondary_peaks),
             "primary_r_peaks_per_min": primary_rate,
             "secondary_r_peaks_per_min": secondary_rate,
             "detector_agreement_ratio_primary_over_secondary": agreement_ratio,
             "rr_implausible_fraction_primary": rr_implausible_fraction(primary_peaks),
             "clipping_fraction": clipping_fraction(ecg_val),
             "signal_snr_proxy": signal_snr_proxy(ecg_val, primary_peaks, ecg_t),
+            "final_qc_status": final_qc_status,
+            "exclusion_reason": exclusion_reason,
         })
         print(pid, f"primary={primary_rate:.2f}/min secondary={secondary_rate:.2f}/min "
                     f"agreement={agreement_ratio:.2f} rr_bad={table[-1]['rr_implausible_fraction_primary']:.3f} "
