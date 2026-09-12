@@ -26,6 +26,19 @@ def _load(rel: str) -> dict:
 
 
 v1 = json.loads(GATE_D_PATH.read_text())  # the existing NOT_READY assessment - preserved verbatim below
+
+# Idempotency guard: this script is meant to run exactly ONCE, wrapping the
+# v1.0.0 (NOT_READY) record into assessment_history. Running it again would
+# read its OWN v2.0.0 output as if it were "v1", silently destroying the
+# real v1.0.0/NOT_READY history that master prompt Part X Section 35
+# explicitly requires to be preserved (this exact bug was caught and fixed
+# during this sprint's own hostile review, Part XII Attack A/D).
+if v1.get("schema_version") != "1.0.0":
+    raise SystemExit(
+        f"REFUSING TO RUN: {GATE_D_PATH} is already schema_version={v1.get('schema_version')!r}, not the "
+        "expected v1.0.0 source record. This script must only run once, against the original NOT_READY "
+        "assessment. Re-running it against its own output would destroy the preserved history."
+    )
 contact_burden = _load("results/stage4_contact_electrode_burden.json")
 battery_scenarios = _load("results/stage4_battery_topology_scenarios.json")
 burden_matrix = _load("results/stage4_candidate_burden_matrix.json")
@@ -207,6 +220,24 @@ output["new_artifacts_this_sprint"] = [
     "results/stage4_candidate_burden_matrix.json",
 ]
 output["gate_d_burden_completeness"] = GATE_D_STATUS_V2
+
+# ---------------------------------------------------------------------------
+# Hostile-review guard (master prompt Part XII Attack A): a status of READY
+# or CONDITIONALLY_READY must be IMPOSSIBLE to write while any known_unknown
+# is both unbounded AND could_be_decision_changing. This is a hard-fail
+# generation-time check, not a discipline convention - if a future edit adds
+# a new decision-changing unknown without bounding it, this script refuses
+# to write the file rather than silently shipping an inconsistent verdict.
+# ---------------------------------------------------------------------------
+_unsafe_unknowns = [
+    u for u in new_known_unknowns if u["could_be_decision_changing"] and not u["bounded"]
+]
+if GATE_D_STATUS_V2 in ("READY", "CONDITIONALLY_READY") and _unsafe_unknowns:
+    raise SystemExit(
+        f"REFUSING TO WRITE: gate_d_burden_completeness={GATE_D_STATUS_V2!r} but "
+        f"{len(_unsafe_unknowns)} known_unknown(s) are unbounded AND decision-changing: "
+        f"{[u['item'] for u in _unsafe_unknowns]}. Bound them or downgrade the status to NOT_READY."
+    )
 output["rationale"] = RATIONALE_V2
 output["what_would_close_it"] = WHAT_WOULD_CLOSE_IT_TO_READY_V2
 output["final_architecture_status"] = "UNRESOLVED"
