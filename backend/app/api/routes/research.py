@@ -15,6 +15,14 @@ from app.research.stage3_evidence import (
     get_stage3_evidence_entry,
     get_stage3_evidence_envelope,
 )
+from app.research.stage4_architecture_decision import stage4_architecture_decision
+from app.research.stage4_architecture_framework import (
+    get_architecture_acceptance_gates,
+    get_architecture_candidate_classes,
+    get_architecture_science_decision_framework,
+    get_scientific_pareto_inputs,
+    get_sensor_decision_sensitivity,
+)
 from app.research.stage4_engineering import stage4_engineering_readiness
 from app.research.stage4_science_manifest import (
     Stage4ScienceManifestDrift,
@@ -32,6 +40,20 @@ from app.schemas.operational_cost import (
     OperationalCostComponentEnvelope,
 )
 from app.schemas.stage3_evidence import Stage3EvidenceEntry, Stage3EvidenceEnvelope
+from app.schemas.stage4_architecture_decision import (
+    Stage4ArchitectureDecisionProjectionEnvelope,
+    Stage4CandidateClassBurdenComparisonEnvelope,
+    Stage4FinalArchitectureDecisionPacketEnvelope,
+    Stage4GateDBurdenCompletenessEnvelope,
+    Stage4GateECoordinatorOptionsEnvelope,
+)
+from app.schemas.stage4_architecture_framework import (
+    Stage4ArchitectureAcceptanceGates,
+    Stage4ArchitectureCandidateClasses,
+    Stage4ArchitectureScienceDecisionFramework,
+    Stage4ScientificParetoInputs,
+    Stage4SensorDecisionSensitivity,
+)
 from app.schemas.stage4_engineering import Stage4EngineeringReadinessEnvelope
 from app.schemas.stage4_science_manifest import (
     Stage4ArchitectureDecisionInputsScience,
@@ -243,3 +265,93 @@ def get_stage4_science_claims() -> Stage4ScienceClaimLedger:
 )
 def get_stage4_architecture_decision_inputs_science() -> Stage4ArchitectureDecisionInputsScience:
     return get_architecture_decision_inputs_science()
+
+
+@router.get(
+    "/stage4-architecture-science-decision-framework",
+    response_model=Stage4ArchitectureScienceDecisionFramework,
+    summary="Read the Science Owner's confidence-tier framework (TIER_A..TIER_P mechanical definitions) from the second, parallel Stage-4 package.",
+)
+def get_stage4_architecture_science_decision_framework() -> Stage4ArchitectureScienceDecisionFramework:
+    return get_architecture_science_decision_framework()
+
+
+@router.get(
+    "/stage4-sensor-decision-sensitivity",
+    response_model=Stage4SensorDecisionSensitivity,
+    summary="Read per-decision-unit HIGH/MEDIUM/LOW decision sensitivity and decision-flip scenarios (EOG/HMC, sparse-vs-full EEG/ds003838, etc.).",
+)
+def get_stage4_sensor_decision_sensitivity() -> Stage4SensorDecisionSensitivity:
+    return get_sensor_decision_sensitivity()
+
+
+@router.get(
+    "/stage4-scientific-pareto-inputs",
+    response_model=Stage4ScientificParetoInputs,
+    summary="Read the 8 science-only Pareto axes per modality (no composite score - engineering burden axes are Integration Owner's separate deliverable).",
+)
+def get_stage4_scientific_pareto_inputs() -> Stage4ScientificParetoInputs:
+    return get_scientific_pareto_inputs()
+
+
+@router.get(
+    "/stage4-architecture-acceptance-gates",
+    response_model=Stage4ArchitectureAcceptanceGates,
+    summary="Read acceptance gates A-H (severity, owner, current readiness, what closes it) that must pass before a final architecture freeze.",
+)
+def get_stage4_architecture_acceptance_gates() -> Stage4ArchitectureAcceptanceGates:
+    return get_architecture_acceptance_gates()
+
+
+@router.get(
+    "/stage4-architecture-candidate-classes",
+    response_model=Stage4ArchitectureCandidateClasses,
+    summary="Read the 4 candidate architecture classes (MINIMAL_CORE..EXPERIMENTAL_EXTENDED) - no winner selected.",
+)
+def get_stage4_architecture_candidate_classes() -> Stage4ArchitectureCandidateClasses:
+    return get_architecture_candidate_classes()
+
+
+@router.get(
+    "/stage4-gate-d-burden-completeness",
+    response_model=Stage4GateDBurdenCompletenessEnvelope,
+    summary="Read the Integration Owner's honest Gate D (burden completeness) readiness assessment - NOT_READY unless every burden dimension is genuinely bounded.",
+)
+def get_stage4_gate_d_burden_completeness() -> Stage4GateDBurdenCompletenessEnvelope:
+    return stage4_architecture_decision.gate_d_burden_completeness()
+
+
+@router.get(
+    "/stage4-candidate-class-burden-comparison",
+    response_model=Stage4CandidateClassBurdenComparisonEnvelope,
+    summary="Read the per-candidate-class power/data-rate/mass burden comparison (PARETO_RELEVANT/POTENTIALLY_DOMINATED/BURDEN_DATA_INCOMPLETE flags only, no composite score, no winner).",
+)
+def get_stage4_candidate_class_burden_comparison() -> Stage4CandidateClassBurdenComparisonEnvelope:
+    return stage4_architecture_decision.candidate_class_burden_comparison()
+
+
+@router.get(
+    "/stage4-architecture-decision-projection",
+    response_model=Stage4ArchitectureDecisionProjectionEnvelope,
+    summary="Read the single authoritative per-decision-unit architecture-decision projection (science + burden + coordinator-decision-requirement, joined).",
+)
+def get_stage4_architecture_decision_projection() -> Stage4ArchitectureDecisionProjectionEnvelope:
+    return stage4_architecture_decision.architecture_decision_projection()
+
+
+@router.get(
+    "/stage4-gate-e-coordinator-options",
+    response_model=Stage4GateECoordinatorOptionsEnvelope,
+    summary="Read the WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE options for every current HIGH-sensitivity pending-science item - no option selected.",
+)
+def get_stage4_gate_e_coordinator_options() -> Stage4GateECoordinatorOptionsEnvelope:
+    return stage4_architecture_decision.gate_e_coordinator_options()
+
+
+@router.get(
+    "/stage4-final-architecture-decision-packet",
+    response_model=Stage4FinalArchitectureDecisionPacketEnvelope,
+    summary="Read the Coordinator-facing final architecture decision packet - an aggregation for decision-making, NOT the final architecture itself.",
+)
+def get_stage4_final_architecture_decision_packet() -> Stage4FinalArchitectureDecisionPacketEnvelope:
+    return stage4_architecture_decision.final_architecture_decision_packet()
