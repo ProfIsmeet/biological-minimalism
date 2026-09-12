@@ -23,7 +23,7 @@ PCB/enclosure/attachment/wiring from `MISSING` to `REFERENCE_SELECTED` at a
 | Enclosure | `MISSING` | `REFERENCE_SELECTED` (generic polymer shell mass allowance per module: 1.5–3.0 g) | `ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE` |
 | Attachment | `MISSING` (geometry/material) | `REFERENCE_SELECTED` (generic strap/patch/headband mass allowance: 3.0–4.0 g) | `ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE` |
 | Wiring | `MISSING` | `REFERENCE_SELECTED` (generic per-module interconnect mass allowance: 0.2–0.8 g) | `ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE` |
-| Battery | `REFERENCE_SELECTED` (capacity/mass/dims unknown) | `REFERENCE_SELECTED` (150 mAh / 3.7 V Li-Po class, 190 Wh/kg → 0.293 g per module instance) | `ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE` |
+| Battery | `REFERENCE_SELECTED` (capacity/mass/dims unknown) | `REFERENCE_SELECTED` (150 mAh / 3.7 V Li-Po class, 190 Wh/kg → 2.921 g per module instance) | `ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE` |
 
 Sensing ICs (MAX86141, BMI270, TMP117, OPT3001-Q1, ADS1292R, ADS1299-4-class,
 AD5940-class) remain exactly as Day-11 Part-2 left them — `REFERENCE_SELECTED`

@@ -27,13 +27,13 @@ definitions:
 
 | Module | Component ICs | PCB | Battery | Enclosure | Attachment | Wiring | **Module total** |
 |---|---|---|---|---|---|---|---|
-| Wrist (`wrist_module`) | 0.040 g (4 ICs × 10 mg) | 0.6 g | 0.293 g | 3.0 g | 4.0 g (elastomer strap) | 0.2 g | **8.133 g** |
-| Chest (`chest_module`) | 0.020 g (2 ICs) | 0.8 g | 0.293 g | 2.0 g | 3.0 g (adhesive patch set) | 0.8 g | **6.913 g** |
-| Head (`head_module`) | 0.010 g (1 IC) | 0.7 g | 0.293 g | 2.5 g | 3.5 g (headband + peri-ocular ext.) | 0.6 g | **7.603 g** |
-| Leg (`leg_module`, EXPERIMENTAL) | 0.010 g (1 IC) | 0.5 g | 0.293 g | 1.5 g | 3.0 g (strap) | 0.5 g | 5.803 g — **excluded from system total** (rule 47) |
+| Wrist (`wrist_module`) | 0.040 g (4 ICs × 10 mg) | 0.6 g | 2.921 g | 3.0 g | 4.0 g (elastomer strap) | 0.2 g | **10.761 g** |
+| Chest (`chest_module`) | 0.020 g (2 ICs) | 0.8 g | 2.921 g | 2.0 g | 3.0 g (adhesive patch set) | 0.8 g | **9.541 g** |
+| Head (`head_module`) | 0.010 g (1 IC) | 0.7 g | 2.921 g | 2.5 g | 3.5 g (headband + peri-ocular ext.) | 0.6 g | **10.231 g** |
+| Leg (`leg_module`, EXPERIMENTAL) | 0.010 g (1 IC) | 0.5 g | 2.921 g | 1.5 g | 3.0 g (strap) | 0.5 g | 8.431 g — **excluded from system total** (rule 47) |
 
 Battery reference: 150 mAh / 3.7 V Li-Po class (0.555 Wh), 190 Wh/kg reference
-energy density → **0.293 g per module instance**. This is a per-module battery
+energy density → **2.921 g per module instance**. This is a per-module battery
 assumption (each module carries its own reference cell) because the module
 boundary question (shared hub vs. standalone per-module electronics) remains
 open, per Day-11 Part-2's own `optical_site_evaluation_branch` note — this
