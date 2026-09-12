@@ -1,0 +1,198 @@
+{
+  "artifact_id": "biological-minimalism-stage4-candidate-class-burden-comparison-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_CLOSURE_PREP",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "Multi-objective burden comparison across the Science Owner's 4 candidate architecture classes (results/stage4_architecture_candidate_classes.json). No winner selected, no composite score computed.",
+  "explicit_non_goal": "Does NOT compute TOTAL_SCORE = SCIENCE - MASS - POWER or any weighted composite. Does NOT select a final architecture.",
+  "derivation_note": "frontal_eeg_only_derived (1.125 mW) = head_afe_eeg_eog.average_power_mw (1.5) - eog_incremental_power_mw (0.375), both already-published ENGINEERING_ASSUMPTION values in results/stage4_engineering_readiness.json - a single disclosed subtraction, not a new measurement or a re-labeled datasheet fact.",
+  "source_artifacts": [
+    "results/stage4_engineering_readiness.json",
+    "results/stage4_architecture_candidate_classes.json",
+    "results/stage4_scientific_pareto_inputs.json",
+    "results/stage4_gate_d_burden_completeness.json"
+  ],
+  "classes": [
+    {
+      "class_id": "MINIMAL_CORE",
+      "description": "Only the sensors with TIER_A_REPLICATED_SUPPORT evidence.",
+      "sensors": [
+        "wrist PPG",
+        "wrist IMU",
+        "chest ECG (as reference/ground-truth signal, not itself under incremental-value test)",
+        "frontal EEG"
+      ],
+      "evidence_confidence": "TIER_A for the PPG+IMU pairing; EEG/ECG themselves are foundation signals not under incremental-value test in this evidence set",
+      "pending_science_exposure": "NONE - this class does not depend on any HIGH-decision-sensitivity pending result.",
+      "power": {
+        "sensor_components_mw": {
+          "wrist_ppg_incl_led": 0.786,
+          "wrist_imu": 0.018,
+          "ecg_chest_afe": 0.67,
+          "frontal_eeg_only_derived": 1.125
+        },
+        "sensor_subtotal_mw": 2.599,
+        "shared_infrastructure_mcu_radio_mw": 1.824207,
+        "note": "Regulator efficiency (0.85) not applied here at the per-class level; see results/stage4_engineering_readiness.json for the system-level battery-side conversion. shared_infrastructure applies once regardless of class (every configuration needs one MCU+radio)."
+      },
+      "data_rate_raw_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000
+      },
+      "mass": {
+        "modules_required": [
+          "wrist_module",
+          "chest_module (shares thoracic BioZ circuitry - see limitation)",
+          "head_module"
+        ],
+        "status": "BURDEN_DATA_INCOMPLETE",
+        "limitation": "Module mass (wrist_module/chest_module/head_module/leg_module) is reported as a single per-module allowance in results/stage4_engineering_readiness.json and cannot be decomposed per sensor within a shared module (see results/stage4_gate_d_burden_completeness.json shared_resource_accounting.ecg_plus_thoracic_bioz). Where a class excludes a sensor that shares a module with an included sensor (e.g. MINIMAL_CORE excludes thoracic BioZ but includes ECG, both in chest_module), this comparison reports the FULL published module mass for every class that includes at least one sensor from that module, and flags the resulting mass figure BURDEN_DATA_INCOMPLETE for classes that would, in reality, have a smaller (but currently unquantifiable) module."
+      },
+      "dominance_flag": "PARETO_RELEVANT",
+      "dominance_reason": "Tier-A evidence only; no HIGH-decision-sensitivity dependency; lowest sensor count."
+    },
+    {
+      "class_id": "CORE_PLUS_CONTEXT",
+      "description": "Minimal Core plus modalities with bounded-but-controlled same-dataset support, assuming low marginal burden via shared infrastructure.",
+      "sensors": [
+        "MINIMAL_CORE sensors",
+        "EOG (if sharing EEG AFE/reference infrastructure)"
+      ],
+      "evidence_confidence": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+      "pending_science_exposure": "HIGH - EOG's standing in this class is directly sensitive to HMC full-cohort results (see results/stage4_sensor_decision_sensitivity.json scenarios HMC-1/2/3).",
+      "power": {
+        "sensor_components_mw": {
+          "wrist_ppg_incl_led": 0.786,
+          "wrist_imu": 0.018,
+          "ecg_chest_afe": 0.67,
+          "head_afe_eeg_plus_eog": 1.5
+        },
+        "sensor_subtotal_mw": 2.974,
+        "shared_infrastructure_mcu_radio_mw": 1.824207,
+        "note": "Regulator efficiency (0.85) not applied here at the per-class level; see results/stage4_engineering_readiness.json for the system-level battery-side conversion. shared_infrastructure applies once regardless of class (every configuration needs one MCU+radio)."
+      },
+      "data_rate_raw_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "head_eeg_eog_scientific": 4800
+      },
+      "mass": {
+        "modules_required": [
+          "wrist_module",
+          "chest_module (shares thoracic BioZ circuitry - see limitation)",
+          "head_module"
+        ],
+        "status": "BURDEN_DATA_INCOMPLETE",
+        "limitation": "Module mass (wrist_module/chest_module/head_module/leg_module) is reported as a single per-module allowance in results/stage4_engineering_readiness.json and cannot be decomposed per sensor within a shared module (see results/stage4_gate_d_burden_completeness.json shared_resource_accounting.ecg_plus_thoracic_bioz). Where a class excludes a sensor that shares a module with an included sensor (e.g. MINIMAL_CORE excludes thoracic BioZ but includes ECG, both in chest_module), this comparison reports the FULL published module mass for every class that includes at least one sensor from that module, and flags the resulting mass figure BURDEN_DATA_INCOMPLETE for classes that would, in reality, have a smaller (but currently unquantifiable) module."
+      },
+      "dominance_flag": "PARETO_RELEVANT",
+      "dominance_reason": "EOG's isolated incremental burden (+0.375 mW, +0.4 g) is small; HIGH decision sensitivity to pending HMC full-cohort result (Gate E), not a burden concern."
+    },
+    {
+      "class_id": "EVIDENCE_EXTENDED",
+      "description": "Core+Context plus modalities with real but not fully replicated, or genuinely mixed/heterogeneous, evidence - included on the basis that the tested endpoint is mission-relevant even though the evidence itself does not yet clearly support inclusion.",
+      "sensors": [
+        "CORE_PLUS_CONTEXT sensors",
+        "thoracic BioZ/EIS",
+        "leg BioZ"
+      ],
+      "evidence_confidence": "TIER_D_MIXED_OR_FRAGILE for both thoracic EIS and leg BioZ",
+      "pending_science_exposure": "LOW for both - no currently-planned Stage-3 experiment would resolve either modality's ambiguity further (per results/stage4_sensor_decision_sensitivity.json).",
+      "power": {
+        "sensor_components_mw": {
+          "wrist_ppg_incl_led": 0.786,
+          "wrist_imu": 0.018,
+          "ecg_chest_afe": 0.67,
+          "head_afe_eeg_plus_eog": 1.5,
+          "thoracic_bioz": 1.33485,
+          "leg_bioz": 1.33485
+        },
+        "sensor_subtotal_mw": 5.6437,
+        "shared_infrastructure_mcu_radio_mw": 1.824207,
+        "note": "Regulator efficiency (0.85) not applied here at the per-class level; see results/stage4_engineering_readiness.json for the system-level battery-side conversion. shared_infrastructure applies once regardless of class (every configuration needs one MCU+radio)."
+      },
+      "data_rate_raw_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "head_eeg_eog_scientific": 4800,
+        "thoracic_bioz": 16.0,
+        "leg_bioz": 16.0
+      },
+      "mass": {
+        "modules_required": [
+          "wrist_module",
+          "chest_module",
+          "head_module",
+          "leg_module (new body region)"
+        ],
+        "status": "BURDEN_DATA_INCOMPLETE",
+        "limitation": "Module mass (wrist_module/chest_module/head_module/leg_module) is reported as a single per-module allowance in results/stage4_engineering_readiness.json and cannot be decomposed per sensor within a shared module (see results/stage4_gate_d_burden_completeness.json shared_resource_accounting.ecg_plus_thoracic_bioz). Where a class excludes a sensor that shares a module with an included sensor (e.g. MINIMAL_CORE excludes thoracic BioZ but includes ECG, both in chest_module), this comparison reports the FULL published module mass for every class that includes at least one sensor from that module, and flags the resulting mass figure BURDEN_DATA_INCOMPLETE for classes that would, in reality, have a smaller (but currently unquantifiable) module."
+      },
+      "dominance_flag": "POTENTIALLY_DOMINATED",
+      "dominance_reason": "leg BioZ adds a genuinely new body region + attachment/contact burden (leg_module, 8.431 g, excluded from every base total) for TIER_D_MIXED_OR_FRAGILE evidence (pareto_inputs incremental_value=MIXED, decision_fragility=HIGH); thoracic BioZ adds real, non-trivial power (1.33485 mW - one of the largest single contributors) for MIXED/negative-leaning evidence with no new body region. Per the Science Owner's own governing rule ('low burden does not transform weak evidence into strong evidence'), both warrant scrutiny; confirmed DOMINATED status requires Integration Owner's engineering burden confirmation (module-boundary, electrode counts) that Gate D has not yet closed."
+    },
+    {
+      "class_id": "EXPERIMENTAL_EXTENDED",
+      "description": "Evidence-Extended plus modalities with negative-leaning, unresolved, or entirely untested status - included only for explicit experimental/exploratory purposes, never presented as evidence-supported.",
+      "sensors": [
+        "EVIDENCE_EXTENDED sensors",
+        "second-site PPG",
+        "wrist temperature",
+        "wrist light"
+      ],
+      "evidence_confidence": "TIER_E_NEGATIVE_OR_DEPRIORITIZED for second-site PPG; TIER_P_PENDING for wrist temperature/light",
+      "pending_science_exposure": "LOW for second-site PPG (no planned experiment); MEDIUM for wrist temperature/light (any new experiment would be informative given the complete absence of current evidence).",
+      "power": {
+        "sensor_components_mw": {
+          "wrist_ppg_incl_led": 0.786,
+          "wrist_imu": 0.018,
+          "ecg_chest_afe": 0.67,
+          "head_afe_eeg_plus_eog": 1.5,
+          "thoracic_bioz": 1.33485,
+          "leg_bioz": 1.33485,
+          "second_ppg_site_incl_led": 9.018,
+          "skin_temperature": 0.01155,
+          "light_sensor": 0.00594
+        },
+        "sensor_subtotal_mw": 14.67919,
+        "shared_infrastructure_mcu_radio_mw": 1.824207,
+        "note": "Regulator efficiency (0.85) not applied here at the per-class level; see results/stage4_engineering_readiness.json for the system-level battery-side conversion. shared_infrastructure applies once regardless of class (every configuration needs one MCU+radio)."
+      },
+      "data_rate_raw_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "head_eeg_eog_scientific": 4800,
+        "thoracic_bioz": 16.0,
+        "leg_bioz": 16.0,
+        "second_ppg_site": 28500,
+        "skin_temperature": 16,
+        "light_sensor": 1.6
+      },
+      "mass": {
+        "modules_required": [
+          "wrist_module",
+          "chest_module",
+          "head_module",
+          "leg_module (new body region)",
+          "optical_site_evaluation_branch (OPEN_BOUNDARY - module boundary unresolved)"
+        ],
+        "status": "BURDEN_DATA_INCOMPLETE",
+        "limitation": "Module mass (wrist_module/chest_module/head_module/leg_module) is reported as a single per-module allowance in results/stage4_engineering_readiness.json and cannot be decomposed per sensor within a shared module (see results/stage4_gate_d_burden_completeness.json shared_resource_accounting.ecg_plus_thoracic_bioz). Where a class excludes a sensor that shares a module with an included sensor (e.g. MINIMAL_CORE excludes thoracic BioZ but includes ECG, both in chest_module), this comparison reports the FULL published module mass for every class that includes at least one sensor from that module, and flags the resulting mass figure BURDEN_DATA_INCOMPLETE for classes that would, in reality, have a smaller (but currently unquantifiable) module."
+      },
+      "dominance_flag": "POTENTIALLY_DOMINATED",
+      "dominance_reason": "second-site PPG adds a new physical/optical sensing site with real burden (9.018 mW, 28500 bps - both larger than several already-included modalities) for a TIER_E_NEGATIVE_OR_DEPRIORITIZED, consistently-negative result (pareto_inputs incremental_value=NEGATIVE). Wrist temperature/light are TIER_P_PENDING with no governing experiment at all. This class is explicitly exploratory per the Science Owner's own candidate_classes.json, never evidence-supported."
+    }
+  ],
+  "allowed_dominance_flags": [
+    "PARETO_RELEVANT",
+    "POTENTIALLY_DOMINATED",
+    "BURDEN_DATA_INCOMPLETE"
+  ],
+  "note_on_dominance": "PARETO_RELEVANT/POTENTIALLY_DOMINATED here are flags for further analysis, not final dominance rulings - GATE_D_BURDEN_COMPLETENESS is NOT_READY (results/stage4_gate_d_burden_completeness.json), so no configuration is confirmed DOMINATED.",
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}
