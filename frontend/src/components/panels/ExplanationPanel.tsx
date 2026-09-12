@@ -8,6 +8,7 @@ import { RefreshCw, Sparkles } from "lucide-react";
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import type { AIExplanation } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
 const DIRECTION_COLOR = {
   increased_risk: "#ff5c66",
@@ -23,11 +24,17 @@ interface ExplanationPanelProps {
 }
 
 export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 4000 }: ExplanationPanelProps) {
+  const isReplay = useDatasetReplayMode();
   const [explanation, setExplanation] = useState<AIExplanation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (isReplay) {
+      setExplanation(null);
+      setError(null);
+      return;
+    }
     setLoading(true);
     try {
       const result = await api.getExplanation(target);
@@ -38,13 +45,17 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
     } finally {
       setLoading(false);
     }
-  }, [target]);
+  }, [isReplay, target]);
 
   useEffect(() => {
+    if (isReplay) {
+      setExplanation(null);
+      return;
+    }
     load();
     const id = setInterval(load, refreshIntervalMs);
     return () => clearInterval(id);
-  }, [load, refreshIntervalMs]);
+  }, [isReplay, load, refreshIntervalMs]);
 
   const maxAbs = Math.max(1, ...(explanation?.contributions.map((c) => Math.abs(c.shap_value)) ?? [1]));
 
@@ -65,7 +76,9 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
         </button>
       }
     >
-      {error ? (
+      {isReplay ? (
+        <p className="text-sm text-slate-500">Unavailable in replay mode — SHAP explanations are not validated for the integrated heart-rate model.</p>
+      ) : error ? (
         <p className="text-sm text-signal-critical">{error}</p>
       ) : !explanation ? (
         <p className="text-sm text-slate-500">Computing SHAP attribution…</p>

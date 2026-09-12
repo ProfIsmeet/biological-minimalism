@@ -1,0 +1,81 @@
+{
+  "artifact_id": "biological-minimalism-pareto-readiness-blockers-v1",
+  "schema_version": "1.0.0",
+  "pareto_status": "NOT_READY",
+  "formal_pareto_calculated": false,
+  "statement": "Structured, jury-facing explanation of WHY a formal Pareto frontier is not computed. No frontier is fabricated. Source of truth: results/pareto_decision_inputs.json readiness block.",
+  "blockers": [
+    {
+      "id": "cross_dataset_incomparability",
+      "severity": "BLOCKER",
+      "summary": "Benefits are measured on different datasets/targets with different metrics (HR MAE vs sleep macro-F1); raw magnitudes are not rankable coordinates.",
+      "unlock": "Define a per-target comparable benefit frame; never rank raw MAE against macro-F1."
+    },
+    {
+      "id": "power_partial",
+      "severity": "HIGH",
+      "summary": "Only component-IC operating points exist; deployable average power and daily energy are unquantified for every candidate.",
+      "unlock": "A compatible operating point + explicit state schedule per candidate to derive average power."
+    },
+    {
+      "id": "mass_missing",
+      "severity": "HIGH",
+      "summary": "Incremental finished mass is missing for every candidate (no component/PCB/enclosure selection).",
+      "unlock": "Frozen component + module mechanical selection."
+    },
+    {
+      "id": "interaction_evidence_incomplete",
+      "severity": "MEDIUM",
+      "status": "PARTIALLY_ADDRESSED",
+      "summary": "Interaction evidence is now PARTIAL, not absent. One predeclared factorial (Sleep-EDF EEG x EOG x Resp: M0/M_A/M_B/M_AB, 5 seeds, capacity-fair) was run; interaction term approximately zero and unresolved (+0.0031 +/- 0.0434). This covers ONE candidate pair on ONE target and does NOT prove global subset optimality; most candidates remain untested for interaction.",
+      "unlock_met": "The prior unlock ('at least one factorial experiment within one dataset/target/protocol') is now satisfied. Remaining: interaction coverage across the other candidate pairs/targets.",
+      "source": "results/sleep_edf_interaction_resp_day10.json"
+    },
+    {
+      "id": "module_bom_unresolved",
+      "severity": "HIGH",
+      "summary": "MCU, radio, battery, regulator, enclosure, attachment, and (for second PPG site) module boundary are not selected.",
+      "unlock": "A frozen reference BOM / module boundary with shared-resource allocation."
+    },
+    {
+      "id": "sleep_single_dataset_scope",
+      "severity": "MEDIUM",
+      "status": "INTEGRATED_BUT_STILL_SINGLE_DATASET",
+      "summary": "Sleep/EOG shuffled control, per-subject decomposition, and prospective n=8 secondary holdout are now COMPLETE and integrated (no longer pending), and reproduced exactly from frozen checkpoints in Day-10. The remaining limitation is scope: all Sleep-EDF, same cassette protocol — NOT independent-dataset or cross-population replication. Primary (n=3) and secondary (n=8) are never pooled.",
+      "unlock": "Independent-dataset / cross-population sleep replication (out of Day-10 scope; not attempted)."
+    },
+    {
+      "id": "targets_incomplete",
+      "severity": "MEDIUM",
+      "summary": "Only heart rate and (preliminary) sleep stage have marginal-value evidence; other mission-relevant targets are unvalidated.",
+      "unlock": "Additional target-specific marginal-value experiments."
+    }
+  ],
+  "component_evidence_completeness": {
+    "note": "Mirror of results/pareto_decision_inputs.json readiness.component_matrix (HR components only).",
+    "wrist_imu": {"scientific_benefit": "AVAILABLE", "power": "PARTIAL", "mass": "MISSING", "contact_burden": "AVAILABLE", "module_burden": "AVAILABLE", "compute_data_burden": "AVAILABLE", "robustness_evidence": "AVAILABLE"},
+    "second_ppg_site": {"scientific_benefit": "AVAILABLE", "power": "PARTIAL", "mass": "MISSING", "contact_burden": "PARTIAL", "module_burden": "MISSING", "compute_data_burden": "AVAILABLE", "robustness_evidence": "MISSING"},
+    "frontal_eog_horizontal": {"scientific_benefit": "AVAILABLE", "power": "MISSING", "mass": "MISSING", "contact_burden": "PARTIAL", "module_burden": "PARTIAL", "compute_data_burden": "AVAILABLE", "robustness_evidence": "MISSING", "note": "Day-10: scientific_benefit upgraded from AVAILABLE_PRELIMINARY (shuffled control + secondary holdout + exact reproduction integrated). contact_burden/module_burden MISSING -> PARTIAL via results/eog_operational_burden_day10.json (2 incremental sensing electrodes, shared-reference head-module path, no new module). compute_data_burden PARTIAL -> AVAILABLE (+112 params/channel, 1 ch x 100 Hz x 24-bit). power/mass remain MISSING (NOT_READY)."}
+  },
+  "day10_updates": {
+    "interaction_evidence": "unavailable -> partial (one controlled EEG x EOG x Resp pair; approximately additive/unresolved)",
+    "eog_burden": "MISSING -> PARTIAL (results/eog_operational_burden_day10.json)",
+    "reference_bom_readiness": "results/reference_bom_readiness_day10.json (datasheet-backed component classes; SYSTEM_AVERAGE_POWER_NOT_READY / SYSTEM_MASS_NOT_READY / FINAL_BOM_NOT_SELECTED)",
+    "scientific_reproduction": "SCIENTIFIC_REPRODUCTION_PASS (results/day10_scientific_reproduction.json)",
+    "pareto_status_unchanged": "NOT_READY — cross-dataset incomparability, missing system power/mass, incomplete module BOM, and incomplete global interaction coverage remain."
+  },
+  "day11_part2_updates": {
+    "source": "results/pareto_blocker_progress_day11_part2.json (Part-2 engineering evidence, integrated in Day-11 Part-3)",
+    "blocker_deltas": {
+      "cross_dataset_incomparability": "BLOCKER, unchanged. Engineering cannot address scientific incomparability; MUST NOT be downgraded.",
+      "power_partial": "HIGH (PARTIAL_IMPROVED). Added reference points: IMU ~0.018 mW (band 0.018-0.378), TMP117 0.01155 mW, OPT3001 0.00594 mW, ECG AFE 0.67 mW, MAX86141 AFE floor <=0.018 mW (LED-excluded), wrist sensing-electronics LED-excluded lower bound, and reference MCU/radio/regulator classes. Still HIGH: LED power, EEG/EOG head-AFE point, thoracic+leg BioZ point, deployable duty, regulator efficiency, battery, and the system average power all remain open.",
+      "mass_missing": "HIGH, unchanged. Only the Tier-0..4 framework + per-module contributor classification were formalised (all Tier 0). No mass number exists (no material model / board design / cell).",
+      "module_bom_unresolved": "HIGH (PARTIALLY_ADDRESSED). MCU/radio/regulator/battery MISSING -> REFERENCE_SELECTED (class, final=false). NOT downgraded to MEDIUM: enclosure/PCB/electrode materials/attachment and the 2nd-PPG module boundary are still unselected, and REFERENCE_SELECTED != final component.",
+      "interaction_evidence_incomplete": "MEDIUM, unchanged (no new scientific interaction evidence in Part-2).",
+      "sleep_single_dataset_scope": "MEDIUM, unchanged (no new dataset).",
+      "targets_incomplete": "MEDIUM, unchanged (no new target experiments)."
+    },
+    "data_compute_axis": "Not a blocker; strengthened by explicit raw payloads (results/reference_data_rate_budget_day11.json; PARTIAL system raw total ~48068 bps, radio rate NOT_READY).",
+    "pareto_status_unchanged": "NOT_READY / FORMAL_PARETO_NOT_READY. No severity was downgraded; benefit axes remain cross-target incomparable and system power/mass remain incomplete, so no formal frontier is computed."
+  }
+}

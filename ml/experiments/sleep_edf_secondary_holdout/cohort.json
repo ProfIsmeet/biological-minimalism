@@ -1,0 +1,41 @@
+{
+  "frozen_before_evaluation": true,
+  "frozen_before_download": true,
+  "source_dataset": "PhysioNet Sleep-EDFx sleep-cassette (same distribution already used by this project, not a new dataset)",
+  "primary_split_reference": "ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json",
+  "inclusion_criteria": [
+    "subject index 18-25 inclusive",
+    "E-batch (first recording round), first night (N=1) only",
+    "PSG + hypnogram both present on PhysioNet",
+    "downloaded file size matches server Content-Length exactly"
+  ],
+  "exclusion_criteria": [
+    "subject index already used in primary train/val/test (00-17)",
+    "same person as an already-used subject under a different filename (night-2 recordings of subjects 00-17, e.g. SC4002 = subject 00 night 2)",
+    "F/G-batch subjects (different recording round)",
+    "any subject failing download integrity verification"
+  ],
+  "cohort": [
+    {"subject_prefix": "SC4181", "psg": "SC4181E0-PSG.edf", "hypnogram": "SC4181EC-Hypnogram.edf"},
+    {"subject_prefix": "SC4191", "psg": "SC4191E0-PSG.edf", "hypnogram": "SC4191EP-Hypnogram.edf"},
+    {"subject_prefix": "SC4201", "psg": "SC4201E0-PSG.edf", "hypnogram": "SC4201EC-Hypnogram.edf"},
+    {"subject_prefix": "SC4211", "psg": "SC4211E0-PSG.edf", "hypnogram": "SC4211EC-Hypnogram.edf"},
+    {"subject_prefix": "SC4221", "psg": "SC4221E0-PSG.edf", "hypnogram": "SC4221EJ-Hypnogram.edf"},
+    {"subject_prefix": "SC4231", "psg": "SC4231E0-PSG.edf", "hypnogram": "SC4231EJ-Hypnogram.edf"},
+    {"subject_prefix": "SC4241", "psg": "SC4241E0-PSG.edf", "hypnogram": "SC4241EC-Hypnogram.edf"},
+    {"subject_prefix": "SC4251", "psg": "SC4251E0-PSG.edf", "hypnogram": "SC4251EP-Hypnogram.edf"}
+  ],
+  "cohort_size": 8,
+  "primary_train_subjects": ["SC4001", "SC4031", "SC4051", "SC4061", "SC4071", "SC4091", "SC4101", "SC4111", "SC4121", "SC4141", "SC4161", "SC4171"],
+  "primary_val_subjects": ["SC4021", "SC4041", "SC4151"],
+  "primary_test_subjects": ["SC4011", "SC4081", "SC4131"],
+  "checkpoints_to_reuse": {
+    "model_a_baseline_eeg_only": "ml/checkpoints/sleep_edf_baseline_eeg_only_seed{42..46}.pt",
+    "model_b_candidate_eeg_plus_eog": "ml/checkpoints/sleep_edf_candidate_eeg_plus_eog_seed{42..46}.pt",
+    "model_c_shuffled_eog_control": "ml/checkpoints/sleep_edf_model_c_shuffled_eog_seed{42..46}.pt"
+  },
+  "seeds": [42, 43, 44, 45, 46],
+  "no_retraining": true,
+  "no_hyperparameter_tuning": true,
+  "no_outcome_based_seed_selection": true
+}

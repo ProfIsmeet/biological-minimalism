@@ -8,6 +8,20 @@ Haydarpaşa Lisesi Ekibi — F. Atila, E. H. Sünbül, I. Y. Virdil, P. Özdemir
 
 > Bu dosya, projenin temelinden IAC sunumuna kadar olan tüm süreci tek bir yerde toplar. Jüri, ekip üyesi, yatırımcı veya bu konuya yabancı biri — bu dosyayı okuyan herkes projeyi, kararların gerekçesini ve yol haritasını buradan anlayabilir.
 
+> ⚠️ **TARİHSEL PLANLAMA BELGESİ (Day-0/1 tasarım hipotezi).** Bu dosya projenin
+> *özgün* çerçevesini kayıt altına alır ve provenans için korunmaktadır. Bazı fikirler,
+> yürürlükteki kanıta-dayalı metodoloji tarafından **güncellenmiştir/aşılmıştır**:
+> - "Yalnızca dört sensör" (EEG/PPG/sıcaklık/BioZ) **tarihsel bir tasarım hipotezidir**,
+>   doğrulanmış veya seçilmiş minimal bir küme değildir. Güncel mimari karar durumu:
+>   **`NOT_READY`**.
+> - "%90 azaltım" gibi hedefler ve tek-seed "%23" IMU faydası **tarihsel** değerlerdir;
+>   tekrarlanan çok-seed IMU faydası **≈%20,6**'dır. Bu proje **sahte kesinlik üretmeyi
+>   reddeder**: toplam sistem gücü/kütlesi/BOM gibi bilinmeyenler `null` bırakılır.
+> - IDI (Bilgi Yoğunluğu İndeksi) **önerilmiş fakat benimsenmemiş** bir kavramdır.
+>
+> **Güncel doğruluk kaynağı:** kök dizindeki `README.md`, araştırma API'si
+> (`backend/app/research/`) ve `results/` içindeki değişmez artefaktlar.
+
 ---
 
 ## 1. Proje Nedir? (Herkesin Anlayacağı Dilde)

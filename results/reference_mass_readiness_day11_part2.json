@@ -1,0 +1,138 @@
+{
+  "artifact_id": "biological-minimalism-reference-mass-readiness-day11-part2-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "statement": "Honest mass-readiness advancement: the tier framework and per-module contributor classification are formalised, but NO module or component mass number is asserted. Package dimensions are not mass; no material model or board design is frozen. All modules remain Tier 0.",
+  "tier_definitions": {
+    "Tier0": "unknown",
+    "Tier1": "component/package-only known",
+    "Tier2": "electronics-subassembly estimate",
+    "Tier3": "reference module mechanical estimate",
+    "Tier4": "prototype measured mass"
+  },
+  "no_measured_mass_exists": true,
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "components": [
+        "MAX86141",
+        "BMI270",
+        "TMP117",
+        "OPT3001-Q1 (LOCATION_UNRESOLVED)"
+      ],
+      "tier": "Tier0",
+      "tier_rationale": "Component package DIMENSIONS are datasheet-known for several parts, but package MASS is not published and no material model is frozen (dimensions != mass). No PCB area/design, battery cell, enclosure geometry, electrode/adhesive/strap, or wiring is selected. Tier-1 (component mass known) is therefore NOT met.",
+      "known_contributors": [],
+      "estimated_contributors": [],
+      "unknown_contributors": [
+        "component/package mass",
+        "PCB mass",
+        "battery mass",
+        "enclosure mass",
+        "electrodes/adhesives/straps",
+        "wiring/connectors"
+      ],
+      "module_mass_available": false,
+      "confidence": "N/A (no mass asserted)",
+      "next_action": "To reach Tier 2: freeze a PCB area estimate from component/connector footprints + documented FR-4 area-density model (labelled estimate); select component packages' masses from vendor mass data if available."
+    },
+    {
+      "module_id": "chest_module",
+      "components": [
+        "ADS1292R",
+        "AD5940-class (thoracic BioZ)"
+      ],
+      "tier": "Tier0",
+      "tier_rationale": "Component package DIMENSIONS are datasheet-known for several parts, but package MASS is not published and no material model is frozen (dimensions != mass). No PCB area/design, battery cell, enclosure geometry, electrode/adhesive/strap, or wiring is selected. Tier-1 (component mass known) is therefore NOT met.",
+      "known_contributors": [],
+      "estimated_contributors": [],
+      "unknown_contributors": [
+        "component/package mass",
+        "PCB mass",
+        "battery mass",
+        "enclosure mass",
+        "electrodes/adhesives/straps",
+        "wiring/connectors"
+      ],
+      "module_mass_available": false,
+      "confidence": "N/A (no mass asserted)",
+      "next_action": "To reach Tier 2: freeze electrode montage/count + adhesive materials, PCB area, AFE package masses."
+    },
+    {
+      "module_id": "head_module",
+      "components": [
+        "ADS1299-4-class (EEG)",
+        "EOG +2 ocular electrodes on shared AFE"
+      ],
+      "tier": "Tier0",
+      "tier_rationale": "Component package DIMENSIONS are datasheet-known for several parts, but package MASS is not published and no material model is frozen (dimensions != mass). No PCB area/design, battery cell, enclosure geometry, electrode/adhesive/strap, or wiring is selected. Tier-1 (component mass known) is therefore NOT met.",
+      "known_contributors": [],
+      "estimated_contributors": [],
+      "unknown_contributors": [
+        "component/package mass",
+        "PCB mass",
+        "battery mass",
+        "enclosure mass",
+        "electrodes/adhesives/straps",
+        "wiring/connectors"
+      ],
+      "module_mass_available": false,
+      "confidence": "N/A (no mass asserted)",
+      "next_action": "To reach Tier 2: select EEG electrode count/material + EOG 2 ocular electrode/lead materials; AFE package mass; head attachment."
+    },
+    {
+      "module_id": "leg_module",
+      "components": [
+        "AD5940-class (separate instance)"
+      ],
+      "tier": "Tier0",
+      "tier_rationale": "Component package DIMENSIONS are datasheet-known for several parts, but package MASS is not published and no material model is frozen (dimensions != mass). No PCB area/design, battery cell, enclosure geometry, electrode/adhesive/strap, or wiring is selected. Tier-1 (component mass known) is therefore NOT met.",
+      "known_contributors": [],
+      "estimated_contributors": [],
+      "unknown_contributors": [
+        "component/package mass",
+        "PCB mass",
+        "battery mass",
+        "enclosure mass",
+        "electrodes/adhesives/straps",
+        "wiring/connectors"
+      ],
+      "module_mass_available": false,
+      "confidence": "N/A (no mass asserted)",
+      "next_action": "Lowest priority. To reach Tier 1: obtain AFE package mass; then electrodes/PCB/attachment."
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "components": [
+        "MAX86141-class extension + optical stack"
+      ],
+      "tier": "Tier0",
+      "tier_rationale": "Component package DIMENSIONS are datasheet-known for several parts, but package MASS is not published and no material model is frozen (dimensions != mass). No PCB area/design, battery cell, enclosure geometry, electrode/adhesive/strap, or wiring is selected. Tier-1 (component mass known) is therefore NOT met.",
+      "known_contributors": [],
+      "estimated_contributors": [],
+      "unknown_contributors": [
+        "component/package mass",
+        "PCB mass",
+        "battery mass",
+        "enclosure mass",
+        "electrodes/adhesives/straps",
+        "wiring/connectors"
+      ],
+      "module_mass_available": false,
+      "confidence": "N/A (no mass asserted)",
+      "next_action": "Module boundary (shared/tethered/standalone) must be frozen first \u2014 it determines whether a separate enclosure/battery mass exists at all."
+    }
+  ],
+  "system_mass_status": "SYSTEM_MASS_NOT_READY",
+  "per_module_answer": {
+    "wrist_module": "Tier0",
+    "chest_module": "Tier0",
+    "head_module": "Tier0",
+    "leg_module": "Tier0",
+    "optical_site_evaluation_branch": "Tier0"
+  },
+  "eog_incremental_mass": {
+    "status": "SYSTEM_MASS_NOT_READY",
+    "note": "+2 ocular electrodes + leads; materials not selected. Not zero, not quantified. See eog_operational_burden_day10.json."
+  }
+}

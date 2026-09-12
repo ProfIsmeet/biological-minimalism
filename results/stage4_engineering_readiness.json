@@ -1,0 +1,431 @@
+{
+  "artifact_id": "biological-minimalism-stage4-engineering-readiness-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_PARALLEL_ENGINEERING_AND_CLEAN_INTEGRATION_PREPARATION",
+  "generated_role": "INTEGRATION_OWNER",
+  "statement": "Advances Day-11 Part-2/3 engineering readiness from NOT_READY toward PARTIAL_READY by filling in explicit ENGINEERING_ASSUMPTION operating scenarios for every previously-open blocker (LED power, EEG/EOG AFE power, thoracic/leg BioZ power, MCU/radio/regulator numeric points, duty schedule, mass tiers). This is NOT a final architecture, NOT a final BOM, and NOT a guaranteed-minimum power/mass figure. All component-level DATASHEET_DIRECT/DATASHEET_CALCULATED values are carried over unchanged from results/reference_power_budget_day11_part2.json and results/reference_data_rate_budget_day11.json; only previously-NOT_READY fields are newly populated here, each tagged with its own evidence_class so a reader can distinguish datasheet fact from engineering assumption at every field.",
+  "prohibited": [
+    "Do NOT present system_average_power_battery_side_mw as a guaranteed minimum or maximum.",
+    "Do NOT include leg_bioz or second_ppg_site in any 'base system' total.",
+    "Do NOT relabel ENGINEERING_ASSUMPTION fields (head AFE power, BioZ power, MCU/radio/regulator numeric points, mass allowances) as DATASHEET_DIRECT or DATASHEET_CALCULATED.",
+    "Do NOT treat this artifact as FINAL_ARCHITECTURE=RESOLVED or FORMAL_PARETO=READY."
+  ],
+  "power": {
+    "wrist_ppg": {
+      "afe_reference_power_mw": {
+        "value": 0.018,
+        "unit": "mW",
+        "evidence_class": "DATASHEET_CALCULATED",
+        "note": "frozen Day-11 Part-2 value, LED-excluded"
+      },
+      "led_scenario": {
+        "n_active_leds": 2,
+        "i_led_peak_ma": 20.0,
+        "v_led_forward_v": 3.0,
+        "t_pulse_seconds": 0.0001,
+        "f_pulse_hz": 64.0,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "formula": "P_LED_avg = N_active_LEDs * I_LED_peak * V_LED_forward * (t_pulse * f_pulse)",
+        "duty_factor": 0.0064,
+        "led_average_power_mw": {
+          "value": 0.768,
+          "unit": "mW",
+          "evidence_class": "ENGINEERING_ASSUMPTION",
+          "note": "computed via ml/engineering/ppg_led_power.compute_led_power"
+        }
+      },
+      "total_incl_led_mw": {
+        "value": 0.786,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "AFE (datasheet) + LED (engineering assumption); LED contribution kept visible, not merged silently"
+      }
+    },
+    "wrist_imu": {
+      "value": 0.018,
+      "unit": "mW",
+      "evidence_class": "DATASHEET_CALCULATED",
+      "note": "frozen Day-11 Part-2 reference operating point, accel-only low-power, unchanged"
+    },
+    "skin_temperature": {
+      "value": 0.01155,
+      "unit": "mW",
+      "evidence_class": "DATASHEET_CALCULATED",
+      "note": "frozen, unchanged"
+    },
+    "light_sensor": {
+      "value": 0.00594,
+      "unit": "mW",
+      "evidence_class": "DATASHEET_CALCULATED",
+      "note": "frozen, unchanged, wrist case"
+    },
+    "ecg_chest_afe": {
+      "value": 0.67,
+      "unit": "mW",
+      "evidence_class": "DATASHEET_CALCULATED",
+      "note": "frozen, unchanged"
+    },
+    "thoracic_bioz": {
+      "scenario": {
+        "excitation_freq_hz": 50000,
+        "active_current_ma": 4.0,
+        "standby_current_ma": 0.005,
+        "supply_v": 3.3,
+        "measurement_window_s": 0.1,
+        "measurement_period_s": 1.0,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "lbnp_science_dependency_note": "Excitation frequency/electrode configuration is a general tetrapolar bioimpedance engineering reference, independent of any specific experiment. The 1 Hz measurement CADENCE, however, is an engineering placeholder \u2014 the cadence appropriate for detecting LBNP-induced fluid shifts specifically depends on the physiological time constant that Ismet's LBNP Stage-3 science will characterize; this value must be revisited once that evidence lands."
+      },
+      "average_power_mw": {
+        "value": 1.33485,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "duty-folded average"
+      }
+    },
+    "leg_bioz": {
+      "note": "Same AD5940-class engineering assumption as thoracic_bioz, separate instance. EXPERIMENTAL \u2014 excluded from base system total (rule 47).",
+      "average_power_mw": {
+        "value": 1.33485,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION"
+      },
+      "included_in_base_total": false
+    },
+    "head_afe_eeg_eog": {
+      "scenario": {
+        "active_channels": 2,
+        "per_channel_current_ua": 150.0,
+        "fixed_overhead_current_ua": 300.0,
+        "supply_v": 2.5,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "Day-11 Part-2 explicitly could not verify an exact ADS1299 per-channel power-dissipation table row in its environment (no PDF text extraction available). This environment has the same limitation. This is therefore an explicit order-of-magnitude ENGINEERING_ASSUMPTION for 2 active channels (1 EEG + 1 shared EOG) + internal reference + bias at the already-frozen AVDD-bipolar (2.5V) supply point \u2014 NOT a verified datasheet table value. Supersede with the exact datasheet figure or bench measurement when available. SCOPE: analog (AVDD) current only \u2014 DVDD digital-supply current (3.3V, also frozen in Day-11 Part-2) is NOT included in this power figure, matching the same AFE-only convention already used for wrist_ppg/ecg_chest above."
+      },
+      "average_power_mw": {
+        "value": 1.5,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION"
+      },
+      "eog_incremental_power_mw": {
+        "value": 0.375,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "2nd-channel increment over 1-EEG-channel-only baseline; shares reference/bias, adds no new module"
+      }
+    },
+    "mcu": {
+      "scenario": {
+        "supply_v": 3.3,
+        "active_current_ma": 5.0,
+        "sleep_current_ma": 0.002,
+        "active_duty_fraction": 0.1,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "reference_class": "Cortex-M4F BLE SoC class (nRF52840-class), matches Day-11 Part-2 BOM REFERENCE_SELECTED entry"
+      },
+      "average_power_mw": {
+        "value": 1.65594,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION"
+      }
+    },
+    "radio": {
+      "scenario": {
+        "supply_v": 3.3,
+        "tx_rx_current_ma": 5.0,
+        "idle_current_ma": 0.001,
+        "active_duty_fraction": 0.01,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "reference_class": "BLE (scenario-level), matches Day-11 Part-2 BOM REFERENCE_SELECTED entry"
+      },
+      "average_power_mw": {
+        "value": 0.168267,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION"
+      }
+    },
+    "regulator": {
+      "efficiency": {
+        "value": 0.85,
+        "unit": "fraction",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "reference buck / high-efficiency-LDO assumption; applied once at the power-tree boundary"
+      },
+      "reference_class": "multi-rail PMIC/LDO, matches Day-11 Part-2 BOM REFERENCE_SELECTED entry"
+    },
+    "duty_schedule": {
+      "wrist_ppg": {
+        "state": "active_acquisition",
+        "duty_fraction": 1.0,
+        "note": "continuous optical acquisition"
+      },
+      "wrist_imu": {
+        "state": "active_acquisition",
+        "duty_fraction": 1.0,
+        "note": "continuous, required for PPG motion-artifact correction"
+      },
+      "skin_temperature": {
+        "state": "periodic_acquisition",
+        "duty_fraction": 1.0,
+        "note": "1 Hz continuous conversion (already folded into frozen 0.01155 mW figure)"
+      },
+      "light_sensor": {
+        "state": "periodic_acquisition",
+        "duty_fraction": 1.0,
+        "note": "continuous low-rate polling (already folded into frozen 0.00594 mW figure); context-only role, not promoted to predictive necessity"
+      },
+      "ecg_chest": {
+        "state": "active_acquisition",
+        "duty_fraction": 1.0,
+        "note": "continuous cardiac monitoring"
+      },
+      "thoracic_bioz": {
+        "state": "periodic_acquisition",
+        "duty_fraction": 0.1,
+        "note": "100 ms measurement burst per 1 s; duty already folded into bioz_avg_power_mw"
+      },
+      "head_afe_eeg_eog": {
+        "state": "active_acquisition",
+        "duty_fraction": 1.0,
+        "note": "continuous, required for sleep-staging scientific use case"
+      },
+      "mcu": {
+        "state": "processing",
+        "duty_fraction": 0.1,
+        "note": "periodic feature-extraction/fusion burst; duty already folded into mcu_avg_power_mw"
+      },
+      "radio": {
+        "state": "transmission",
+        "duty_fraction": 0.01,
+        "note": "low-duty-cycle BLE connection-interval streaming; duty already folded into radio_avg_power_mw"
+      }
+    },
+    "system_average_power": {
+      "status": "PARTIAL_READY",
+      "reason": "Every previously-listed blocker (LED, EEG/EOG AFE, thoracic BioZ, MCU/radio/regulator numeric points, duty cycles) now has an explicit engineering-assumption value. Remains PARTIAL (not READY) because: (a) every closed value is ENGINEERING_ASSUMPTION not measured/vendor-verified, (b) battery selection is reference-class only, (c) leg BioZ and second PPG site are deliberately excluded from this total.",
+      "base_topology_load_side_mw": {
+        "value": 6.150547,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "sum of base-topology module average powers, pre-regulator"
+      },
+      "base_topology_battery_side_mw": {
+        "value": 7.235938,
+        "unit": "mW",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "load-side total / regulator efficiency (0.85)"
+      },
+      "contributors_mw": {
+        "wrist_ppg_total_incl_led": 0.786,
+        "wrist_imu": 0.018,
+        "skin_temperature": 0.01155,
+        "light_sensor": 0.00594,
+        "ecg_chest_afe": 0.67,
+        "thoracic_bioz": 1.33485,
+        "head_afe_eeg_eog": 1.5,
+        "mcu": 1.65594,
+        "radio": 0.168267
+      },
+      "excluded_from_base_total": {
+        "leg_bioz_mw": 1.33485,
+        "second_ppg_site_incl_led_mw": 9.018
+      },
+      "not_included_in_any_total": [
+        "enclosure/thermal effects on component current",
+        "battery self-discharge",
+        "charging circuit power",
+        "manufacturing/process variation"
+      ]
+    }
+  },
+  "data_rate": {
+    "statement": "Extends results/reference_data_rate_budget_day11.json. Frozen DATASHEET_CALCULATED rows are reused unchanged (cited by value, not recomputed). Only previously-NOT_READY rows (light_sensor, thoracic_bioz, leg_bioz) and the transmitted/radio rate are newly computed here.",
+    "newly_closed_modalities": {
+      "light_sensor": {
+        "channels": 1,
+        "sample_rate_hz": 0.1,
+        "bits_per_sample": 16,
+        "raw_payload_bit_rate_bps": 1.6,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "note": "1 sample / 10 s context-only cadence"
+      },
+      "thoracic_bioz": {
+        "channels": 1,
+        "sample_rate_hz": 1.0,
+        "bits_per_sample": 16,
+        "raw_payload_bit_rate_bps": 16.0,
+        "evidence_class": "ENGINEERING_ASSUMPTION"
+      },
+      "leg_bioz": {
+        "channels": 1,
+        "sample_rate_hz": 1.0,
+        "bits_per_sample": 16,
+        "raw_payload_bit_rate_bps": 16.0,
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "included_in_base_total": false,
+        "note": "EXPERIMENTAL leg module, excluded from base total"
+      }
+    },
+    "base_topology_raw_bps": {
+      "wrist_ppg": 1216,
+      "wrist_imu": 1536,
+      "skin_temperature": 16,
+      "light_sensor": 1.6,
+      "ecg_chest": 12000,
+      "thoracic_bioz": 16.0,
+      "head_eeg_eog_scientific": 4800
+    },
+    "system_raw_total_bps": {
+      "value": 19585.6,
+      "unit": "bps",
+      "evidence_class": "ENGINEERING_ASSUMPTION",
+      "note": "sum of base-topology raw contributions; excludes leg_bioz and second_ppg_site"
+    },
+    "protocol_overhead": {
+      "fraction": 0.2,
+      "evidence_class": "ENGINEERING_ASSUMPTION",
+      "note": "commonly-cited order-of-magnitude BLE notification/ATT/L2CAP overhead reference for small payloads; NOT a specific BLE stack's measured overhead"
+    },
+    "system_transmitted_bps": {
+      "value": 23502.72,
+      "unit": "bps",
+      "evidence_class": "ENGINEERING_ASSUMPTION",
+      "note": "raw x (1 + protocol_overhead_fraction); still excludes compression, retransmission, connection-event scheduling loss"
+    },
+    "processed_data_rate_status": "NOT_READY",
+    "processed_data_rate_reason": "No on-device feature-extraction/compression pipeline data-reduction factor is frozen; processed rate remains NOT_READY (not assumed equal to raw or to transmitted).",
+    "excluded_from_base_total_bps": {
+      "second_ppg_site": 28500,
+      "leg_bioz": 16.0
+    }
+  },
+  "mass": {
+    "statement": "Advances all 4 base-topology modules (wrist, chest, head, leg-characterized-but-excluded) from Tier0 to Tier2 (electronics-subassembly estimate) using generic small-IC/PCB/enclosure/strap engineering allowances. NOT vendor mass data, NOT measured (no Tier3/Tier4 claimed).",
+    "tier_achieved": "Tier2",
+    "tier_definition": "electronics-subassembly estimate (per results/reference_mass_readiness_day11_part2.json tier_definitions)",
+    "evidence_class": "ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE",
+    "allowances_used": {
+      "ic_package_mass_mg_per_ic": 10.0,
+      "battery_reference": {
+        "capacity_mah": 150.0,
+        "voltage_v": 3.7,
+        "energy_density_wh_per_kg": 190.0,
+        "computed_mass_g": 2.921
+      }
+    },
+    "modules": {
+      "wrist_module": {
+        "component_ic_mass_g": 0.04,
+        "pcb_mass_g": 0.6,
+        "battery_mass_g": 2.921,
+        "enclosure_mass_g": 3.0,
+        "attachment_mass_g": 4.0,
+        "wiring_mass_g": 0.2,
+        "module_total_g": 10.761
+      },
+      "chest_module": {
+        "component_ic_mass_g": 0.02,
+        "pcb_mass_g": 0.8,
+        "battery_mass_g": 2.921,
+        "enclosure_mass_g": 2.0,
+        "attachment_mass_g": 3.0,
+        "wiring_mass_g": 0.8,
+        "module_total_g": 9.541
+      },
+      "head_module": {
+        "component_ic_mass_g": 0.01,
+        "pcb_mass_g": 0.7,
+        "battery_mass_g": 2.921,
+        "enclosure_mass_g": 2.5,
+        "attachment_mass_g": 3.5,
+        "wiring_mass_g": 0.6,
+        "module_total_g": 10.231
+      },
+      "leg_module": {
+        "component_ic_mass_g": 0.01,
+        "pcb_mass_g": 0.5,
+        "battery_mass_g": 2.921,
+        "enclosure_mass_g": 1.5,
+        "attachment_mass_g": 3.0,
+        "wiring_mass_g": 0.5,
+        "module_total_g": 8.431
+      }
+    },
+    "eog_incremental_mass_g": {
+      "value": 0.4,
+      "unit": "g",
+      "evidence_class": "ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE",
+      "note": "+2 ocular electrodes + leads only; shares module/AFE/battery, so this is the ONLY incremental mass EOG adds"
+    },
+    "system_mass_base_topology_excl_leg_g": {
+      "value": 30.533,
+      "unit": "g",
+      "evidence_class": "ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE",
+      "note": "wrist + chest + head modules only; leg_module computed but excluded (EXPERIMENTAL, rule 47)"
+    },
+    "system_mass_status": "PARTIAL",
+    "not_included": [
+      "inter-module wiring harness beyond per-module wiring allowance",
+      "external cabling to a central hub (module boundary still OPEN for optical evaluation branch)",
+      "manufacturing tolerance/process mass",
+      "adhesive/gel consumables mass beyond the modeled patch allowance"
+    ]
+  },
+  "bom": {
+    "statement": "Advances MCU/radio/regulator/battery from class-only REFERENCE_SELECTED (Day-11 Part-2) to REFERENCE_SELECTED with an attached numeric operating point (this artifact). PCB/enclosure/attachment/wiring move from MISSING to REFERENCE_SELECTED at a generic allowance level (mass only, not a specific vendor part).",
+    "not_a_final_bom": true,
+    "final": false,
+    "items_advanced": [
+      {
+        "item": "mcu",
+        "from": "REFERENCE_SELECTED (class only)",
+        "to": "REFERENCE_SELECTED (class + numeric operating point)"
+      },
+      {
+        "item": "radio",
+        "from": "REFERENCE_SELECTED (class only)",
+        "to": "REFERENCE_SELECTED (class + numeric operating point)"
+      },
+      {
+        "item": "regulator",
+        "from": "REFERENCE_SELECTED (efficiency NOT frozen)",
+        "to": "REFERENCE_SELECTED (efficiency = 0.85 engineering assumption)"
+      },
+      {
+        "item": "pcb",
+        "from": "MISSING",
+        "to": "REFERENCE_SELECTED (generic small-PCB mass allowance, no specific stackup/vendor)"
+      },
+      {
+        "item": "enclosure",
+        "from": "MISSING",
+        "to": "REFERENCE_SELECTED (generic polymer shell mass allowance)"
+      },
+      {
+        "item": "attachment",
+        "from": "MISSING (geometry/material)",
+        "to": "REFERENCE_SELECTED (generic strap/patch/headband mass allowance)"
+      },
+      {
+        "item": "wiring",
+        "from": "MISSING",
+        "to": "REFERENCE_SELECTED (generic per-module interconnect mass allowance)"
+      }
+    ],
+    "still_missing": [
+      "sensing_ic_bioz active operating point beyond engineering assumption (thoracic + leg)",
+      "head AFE exact datasheet power table value",
+      "electrode materials/montage exact count for EEG (count remains OPEN; only +2 EOG increment is defensible)",
+      "second_ppg_site module boundary (shared/tethered/standalone)",
+      "vendor-specific part numbers for MCU/radio/regulator/battery (class-level only)"
+    ]
+  },
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "FORMAL_PARETO_NOT_READY",
+  "source_artifacts": [
+    "results/reference_power_budget_day11_part2.json",
+    "results/reference_data_rate_budget_day11.json",
+    "results/reference_mass_readiness_day11_part2.json",
+    "results/reference_bom_readiness_day11_part2.json",
+    "ml/engineering/ppg_led_power.py"
+  ]
+}

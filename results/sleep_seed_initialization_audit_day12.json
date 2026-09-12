@@ -1,0 +1,83 @@
+{
+  "purpose": "H1 real reproduction probe - actual SleepStageClassifier weights, not a metadata assertion.",
+  "run_seed_used": 42,
+  "probe_1_buggy_order_same_seed_different_ambient_state": {
+    "ambient_ops_before_a": 0,
+    "ambient_ops_before_b": 17,
+    "fingerprint_a": [
+      0.0429864227771759,
+      -0.02904592454433441,
+      -0.20370915532112122,
+      -0.03313101828098297,
+      0.24693015217781067,
+      0.07915568351745605,
+      -0.22381123900413513,
+      0.04103270173072815
+    ],
+    "fingerprint_b": [
+      0.07937982678413391,
+      -0.17671531438827515,
+      -0.13043713569641113,
+      0.10260418057441711,
+      0.2125048041343689,
+      -0.0730448067188263,
+      -0.10972920060157776,
+      -0.24166718125343323
+    ],
+    "weights_differ": true,
+    "conclusion": "CONFIRMS H1: same recorded seed produces DIFFERENT initial weights under the current (buggy) construction order."
+  },
+  "probe_2_corrected_order_same_seed_different_ambient_state": {
+    "ambient_ops_before_a": 0,
+    "ambient_ops_before_b": 17,
+    "fingerprint_a": [
+      0.20433151721954346,
+      0.22182893753051758,
+      -0.06261195242404938,
+      0.24550917744636536,
+      -0.0585578978061676,
+      0.053930819034576416,
+      -0.1301174759864807,
+      0.15695789456367493
+    ],
+    "fingerprint_b": [
+      0.20433151721954346,
+      0.22182893753051758,
+      -0.06261195242404938,
+      0.24550917744636536,
+      -0.0585578978061676,
+      0.053930819034576416,
+      -0.1301174759864807,
+      0.15695789456367493
+    ],
+    "weights_identical": true,
+    "conclusion": "CONFIRMS FIX: same recorded seed produces IDENTICAL initial weights under the corrected order, regardless of ambient RNG state."
+  },
+  "probe_3_corrected_order_different_seeds_sanity_check": {
+    "seed_a": 42,
+    "seed_b": 43,
+    "fingerprint_a": [
+      0.20433151721954346,
+      0.22182893753051758,
+      -0.06261195242404938,
+      0.24550917744636536,
+      -0.0585578978061676,
+      0.053930819034576416,
+      -0.1301174759864807,
+      0.15695789456367493
+    ],
+    "fingerprint_b": [
+      -0.02460499107837677,
+      -0.16223224997520447,
+      0.22505304217338562,
+      -0.08222074806690216,
+      -0.18810498714447021,
+      -0.22138911485671997,
+      0.04861125349998474,
+      -0.23201681673526764
+    ],
+    "weights_differ": true,
+    "conclusion": "Sanity check: the corrected protocol is not a constant - different seeds still produce different weights."
+  },
+  "overall_h1_confirmed": true
+}

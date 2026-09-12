@@ -1,0 +1,69 @@
+{
+  "purpose": "Golden integration reference. If the backend replay -> inference pipeline receives this exact real window (same dataset, subject, window index), its predicted HR should numerically match expected_model_hr_prediction_bpm below (within float32 tolerance, e.g. 1e-3 bpm). A mismatch indicates wrong window boundaries, wrong IMU axis order, wrong normalization, wrong checkpoint, or wrong HR de-normalization - see docs/MODEL_CONTRACT_PPG_DALIA_HR.md.",
+  "dataset": "PPG-DaLiA",
+  "dataset_source": "https://archive.ics.uci.edu/dataset/495/ppg+dalia (original per-subject distribution)",
+  "subject_id": "S14",
+  "subject_role": "held-out TEST subject (never used in training) - see ml/experiments/ppg_dalia_imu_ablation/subject_split.json",
+  "checkpoint_path": "ml/checkpoints/model_b_ppg_plus_imu_ppg_dalia.pt",
+  "checkpoint_size_bytes": 138086,
+  "checkpoint_sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
+  "checkpoint_note": "Gitignored, NOT committed - must be transferred to teammates separately (see docs/MODEL_CONTRACT_PPG_DALIA_HR.md and the Day 2 report's checkpoint-transfer section).",
+  "model_class": "PPGPlusIMUHRModel (ml/train_ppg_dalia_imu_ablation.py)",
+  "model_embedding_dim": 32,
+  "preprocessing_version": "ml/datasets/ppg_dalia.py zscore_ppg_window/zscore_imu_window, as of commit day2-ml branch",
+  "hr_denormalization": {
+    "mean": 86.34466552734375,
+    "std": 21.048254013061523
+  },
+  "sample_rates_hz": {
+    "ppg": 64.0,
+    "imu": 32.0
+  },
+  "software_commit": "day2-ml branch (see git log)",
+  "windows": [
+    {
+      "window_index": 100,
+      "window_start_seconds": 200.0,
+      "ppg_sample_count": 512,
+      "imu_sample_count": 256,
+      "imu_axes": 3,
+      "expected_model_hr_prediction_bpm": 57.420155,
+      "expected_model_normalized_output": -1.37419999,
+      "ground_truth_hr_label_bpm": 58.54312515258789,
+      "prediction_error_bpm": 1.123
+    },
+    {
+      "window_index": 200,
+      "window_start_seconds": 400.0,
+      "ppg_sample_count": 512,
+      "imu_sample_count": 256,
+      "imu_axes": 3,
+      "expected_model_hr_prediction_bpm": 57.455015,
+      "expected_model_normalized_output": -1.37254381,
+      "ground_truth_hr_label_bpm": 60.87820816040039,
+      "prediction_error_bpm": 3.4232
+    },
+    {
+      "window_index": 300,
+      "window_start_seconds": 600.0,
+      "ppg_sample_count": 512,
+      "imu_sample_count": 256,
+      "imu_axes": 3,
+      "expected_model_hr_prediction_bpm": 57.296622,
+      "expected_model_normalized_output": -1.38006902,
+      "ground_truth_hr_label_bpm": 59.428382873535156,
+      "prediction_error_bpm": 2.1318
+    },
+    {
+      "window_index": 400,
+      "window_start_seconds": 800.0,
+      "ppg_sample_count": 512,
+      "imu_sample_count": 256,
+      "imu_axes": 3,
+      "expected_model_hr_prediction_bpm": 83.829032,
+      "expected_model_normalized_output": -0.11951746,
+      "ground_truth_hr_label_bpm": 85.86966705322266,
+      "prediction_error_bpm": 2.0406
+    }
+  ]
+}

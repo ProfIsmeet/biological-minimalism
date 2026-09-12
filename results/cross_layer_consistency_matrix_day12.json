@@ -1,0 +1,173 @@
+{
+  "artifact_id": "biological-minimalism-cross-layer-consistency-matrix-day12",
+  "schema_version": "1.0.0",
+  "purpose": "Audit §43. One machine-readable matrix asserting that each headline fact resolves consistently across layers (artifact / backend / frontend / paper / jury) after Day-12 remediation. This is a Day-12 remediation-candidate snapshot; scientific rows remain SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2 (Ismet).",
+  "layers": ["artifact", "backend", "frontend", "paper", "jury"],
+  "rows": [
+    {
+      "row": "ppg_controlled_effect",
+      "value": "Capacity-controlled A_cap->B ~0.605 bpm (5/5); shuffled control C->B ~0.776 bpm (5/5). Uncontrolled A->B is HISTORICAL_CAPACITY_CONFOUNDED_RESULT only.",
+      "artifact": "results/ppg_dalia_capacity_control.json::primary_comparisons",
+      "backend": "catalog._ppg_controlled_comparisons -> marginal_result.controlled_comparisons + headline delta -0.605",
+      "frontend": "ResearchMode controlled-comparisons block (HEADLINE / HISTORICAL badges)",
+      "paper": "FURKAN_PAPER_HANDOFF_DAY11 / capacity-control results",
+      "jury": "JURY_DEFENSE_MASTER (capacity-control revision)",
+      "resolves": true
+    },
+    {
+      "row": "ptt_status",
+      "value": "Aggregate negative / heterogeneous (s2-driven); DEPRIORITIZE_FOR_TARGET, not global removal.",
+      "artifact": "results/ptt_ppg_site_ablation.json",
+      "backend": "catalog.adapt_ptt_site_ablation (result_class negative_marginal_result)",
+      "frontend": "ResearchMode PTT experiment card",
+      "paper": "table2_main_marginal_value_results",
+      "jury": "JURY_DEFENSE_MASTER (second PPG site)",
+      "resolves": true
+    },
+    {
+      "row": "sleep_primary",
+      "value": "Modest positive EOG, capacity-matched (macro-F1, higher-is-better).",
+      "artifact": "results/sleep_edf_eeg_eog_ablation.json",
+      "backend": "catalog.adapt_sleep_edf_ablation (metric_directionality higher_is_better)",
+      "frontend": "ResearchMode Sleep experiment card",
+      "paper": "table2_main_marginal_value_results",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true,
+      "freeze_note": "SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2 (Ismet owns final Sleep metrics)"
+    },
+    {
+      "row": "sleep_secondary_holdout",
+      "value": "Prospective secondary holdout supported (within-population generalization, not independent-dataset replication).",
+      "artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+      "backend": "catalog Sleep adapter secondary-holdout fields",
+      "frontend": "ResearchMode Sleep breakdowns",
+      "paper": "SLEEP_EDF_SECONDARY_HOLDOUT_RESULTS.md",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true,
+      "freeze_note": "SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2"
+    },
+    {
+      "row": "interaction",
+      "value": "One controlled pair tested (Sleep EEG x EOG x Resp); approximately additive / unresolved; global coverage PARTIAL. Not global factorial evidence.",
+      "artifact": "results/sleep_edf_interaction_resp_day10.json + contract.interaction_effects (partial_one_controlled_pair)",
+      "backend": "catalog._repro_interaction (informational; excluded from overall verdict)",
+      "frontend": "ResearchMode interaction panel",
+      "paper": "table5_interaction_experiment",
+      "jury": "JURY_DEFENSE_MASTER interaction Q&A",
+      "resolves": true
+    },
+    {
+      "row": "reproduction",
+      "value": "Artifact-driven typed component statuses; overall computed worst-of, never default PASS. Currently PASS from real evidence.",
+      "artifact": "results/day10_scientific_reproduction.json",
+      "backend": "catalog._reproducibility (ReproComponent typed schema)",
+      "frontend": "ResearchMode status-dependent reproducibility panel",
+      "paper": "table4_reproducibility_provenance",
+      "jury": "JURY_DEFENSE_MASTER reproduction Q&A (RECORDED_ENVIRONMENT_MATCH_FOR_CHECKED_FIELDS)",
+      "resolves": true
+    },
+    {
+      "row": "checkpoint_count",
+      "value": "60 checkpoints (50 Day-8 + 10 Day-14), all externally archived.",
+      "artifact": "results/final_checkpoint_inventory_day14.json::summary",
+      "backend": "catalog._repro_checkpoint_durability (60/60 externally archived)",
+      "frontend": "ResearchMode reproducibility checkpoint_durability component",
+      "paper": "table4_reproducibility_provenance",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "imu_burden",
+      "value": "0 new body region, 0 new module, 0 new sensing contact (colocated wrist reference).",
+      "artifact": "results/day11_part3_engineering_inputs.json (wrist_imu)",
+      "backend": "engineering_readiness wrist_imu Quantity (contacts AVAILABLE 0)",
+      "frontend": "EngineeringReadinessView wrist_imu",
+      "paper": "DAY11_PART2_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER engineering Q&A",
+      "resolves": true
+    },
+    {
+      "row": "eog_burden",
+      "value": "+2 lateral-ocular sensing contacts on shared ADS1299-class head AFE; 0 new module (reference shared-head case).",
+      "artifact": "results/day11_part3_engineering_inputs.json (frontal_eog_horizontal) + eog_operational_burden_day10.json",
+      "backend": "engineering_readiness frontal_eog_horizontal Quantity (contacts AVAILABLE 2)",
+      "frontend": "EngineeringReadinessView frontal_eog_horizontal",
+      "paper": "DAY11_PART2_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "second_ppg_burden",
+      "value": "+1 optical site, +1 contact region, highest raw data-rate increment (28500 bps). Negative HR result does not zero this burden.",
+      "artifact": "results/day11_part3_engineering_inputs.json (second_ppg_site)",
+      "backend": "engineering_readiness second_ppg_site Quantity",
+      "frontend": "EngineeringReadinessView second_ppg_site",
+      "paper": "DAY11_PART2_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "wrist_power_semantics",
+      "value": "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED: calculated reference scenario from datasheet-typical values, NOT a guaranteed lower bound.",
+      "artifact": "results/reference_power_budget_day11_part2.json (power_semantic_class=CALCULATED_REFERENCE_SCENARIO_LED_EXCLUDED)",
+      "backend": "engineering_readiness panel note (reference scenario)",
+      "frontend": "EngineeringReadinessView power panel",
+      "paper": "FURKAN_PAPER_HANDOFF_DAY11 / DAY11_PART2_HANDOFF (reference scenario)",
+      "jury": "JURY_DEFENSE_MASTER (reference scenario, not guaranteed bound)",
+      "resolves": true
+    },
+    {
+      "row": "system_power",
+      "value": "SYSTEM_AVERAGE_POWER_NOT_READY (no defensible system total).",
+      "artifact": "reference_power_budget_day11_part2.json::system_average_power.status",
+      "backend": "engineering_readiness system_average_power_status",
+      "frontend": "EngineeringReadinessView panel (Not ready)",
+      "paper": "DAY11_CANONICAL_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "system_mass",
+      "value": "SYSTEM_MASS_NOT_READY (all modules Tier 0).",
+      "artifact": "reference_mass_readiness_day11_part2.json",
+      "backend": "engineering_readiness system_mass_status",
+      "frontend": "EngineeringReadinessView panel (Not ready)",
+      "paper": "DAY11_CANONICAL_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "architecture",
+      "value": "UNRESOLVED (no RETAIN outcome; cross-target incomparability + incomplete system power/mass/BOM).",
+      "artifact": "results/architecture_decision_matrix.json",
+      "backend": "engineering_readiness final_architecture_status=UNRESOLVED",
+      "frontend": "EngineeringReadinessView final architecture row",
+      "paper": "DAY11_CANONICAL_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "pareto",
+      "value": "FORMAL_PARETO_NOT_READY (benefit axes not comparable across targets; burden dimensions incomplete).",
+      "artifact": "results/pareto_readiness_blockers.json",
+      "backend": "engineering_readiness formal_pareto_status + /research/pareto-readiness",
+      "frontend": "ResearchMode Pareto readiness panel",
+      "paper": "DAY11_CANONICAL_HANDOFF",
+      "jury": "JURY_DEFENSE_MASTER",
+      "resolves": true
+    },
+    {
+      "row": "digital_twin",
+      "value": "Synthetic, conceptual, untrained, unvalidated. TorchInferenceEngine runs NO forward pass (torch_v1_mock_passthrough). Would-learn phrasing only.",
+      "artifact": "n/a (frontend illustration + backend engine flag)",
+      "backend": "inference.TorchInferenceEngine.runs_real_inference=False",
+      "frontend": "digital-twin page (would learn / simulated, not learned)",
+      "paper": "n/a",
+      "jury": "JURY_DEFENSE_MASTER (Digital Twin is conceptual)",
+      "resolves": true
+    }
+  ],
+  "all_rows_resolve": true,
+  "remaining_contradictions": [],
+  "scientific_freeze_status": "SCIENTIFIC_FREEZE_HOLD_PENDING_H1_H2"
+}

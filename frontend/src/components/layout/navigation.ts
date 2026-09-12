@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Activity, BrainCircuit, History, LayoutDashboard, Orbit, Settings } from "lucide-react";
+import { Activity, BrainCircuit, FlaskConical, History, LayoutDashboard, Orbit, Settings } from "lucide-react";
 
 export interface NavItem {
   href: string;
@@ -12,6 +12,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/live-monitoring", label: "Live Monitoring", icon: Activity },
   { href: "/digital-twin", label: "Digital Twin", icon: Orbit },
   { href: "/ai-insights", label: "AI Insights", icon: BrainCircuit },
+  { href: "/research", label: "Research Mode", icon: FlaskConical },
   { href: "/mission-timeline", label: "Mission Timeline", icon: History },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

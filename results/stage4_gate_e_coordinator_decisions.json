@@ -1,0 +1,45 @@
+{
+  "artifact_id": "biological-minimalism-stage4-gate-e-coordinator-decisions-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_FINAL_ARCHITECTURE_CLOSURE",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "Records the Project Coordinator's explicit decisions for every current HIGH-decision-sensitivity pending-science item, closing GATE_E_PENDING_SCIENCE_SENSITIVITY. Supersedes the no_option_selected state in results/stage4_gate_e_coordinator_options.json (which remains a valid historical record of what was prepared) with actual recorded decisions.",
+  "gate_reference": "results/stage4_architecture_acceptance_gates.json#GATE_E_PENDING_SCIENCE_SENSITIVITY",
+  "source_artifacts": [
+    "results/stage4_gate_e_coordinator_options.json",
+    "results/stage4_sensor_decision_sensitivity.json"
+  ],
+  "decisions": [
+    {
+      "item": "EOG external validity (HMC full-cohort)",
+      "decision": "FREEZE_CONDITIONALLY",
+      "architecture_disposition": "EOG is INCLUDED in the final Stage-4 architecture (CORE_PLUS_CONTEXT), on the basis of TIER_B_CONTROLLED_SUPPORT same-dataset evidence and TIER_C_BOUNDED_SUPPORT (bounded, underpowered n=7) external evidence, sharing the head_module's EEG AFE/reference/ground infrastructure per results/stage4_gate_d_burden_completeness.json eeg_eog_shared_afe_confirmation.",
+      "claim_limitations": "Any public/jury-facing claim about EOG must cite TIER_B_CONTROLLED_SUPPORT (same-dataset) / TIER_C_BOUNDED_SUPPORT (external) exactly as the claim ledger requires (GATE_C/GATE_G) - never presented as externally validated pending the full-cohort result.",
+      "what_could_trigger_revision": "A stable, majority-consistent NEGATIVE HMC full-cohort result (scenario HMC-3) if EOG was included; OR a strong external-replication result (scenario HMC-1) if EOG was excluded pending more evidence.",
+      "revision_trigger": {
+        "condition": "Full-cohort HMC shows a stable, majority-consistent NEGATIVE B-A delta across held-out recordings (EOG measurably hurts external sleep-stage classification), not attributable to a single-recording artifact.",
+        "action_if_triggered": "Reopen EOG architecture inclusion for re-evaluation (per HMC-3's own implication_if_observed: EOG's architecture candidacy should downgrade toward CONDITIONAL_CANDIDATE or EXPERIMENTAL_CANDIDATE - same-dataset support alone would no longer be sufficient given a real external negative signal, and the burden-vs-evidence case would need re-examination even under a shared-AFE assumption.)",
+        "source_scenario": "results/stage4_gate_e_coordinator_options.json high_sensitivity_items[EOG].decision_flip_scenarios.HMC-3_external_negative_result"
+      },
+      "near_zero_result_note": "A near-zero/inconclusive HMC-2 result may trigger Coordinator review but is NOT an automatic removal condition - only a stable, majority-consistent HMC-3-equivalent negative result reopens inclusion, per this decision's own governing scope.",
+      "decided_by": "PROJECT_COORDINATOR (Emir)"
+    },
+    {
+      "item": "Sparse-vs-full EEG electrode-count minimization (ds003838 full cohort)",
+      "decision": "FREEZE_CONDITIONALLY",
+      "architecture_disposition": "The current sparse/minimal frontal EEG architecture (1 active EEG signal channel + shared reference/ground, per results/stage4_contact_electrode_burden.json frontal_eeg most_likely=3 total contacts) is retained as-is. This is NOT presented as a population-validated minimization result - it is the already-frozen engineering design point, continued under explicit condition.",
+      "claim_limitations": "Any claim about electrode-count sufficiency must be scoped to 'n=3 bounded diagnostic, inconclusive by design' (TIER_C_BOUNDED_SUPPORT) - never presented as population-validated minimization.",
+      "what_could_trigger_revision": "A materially-worse sparse-EEG result at full cohort (DS-2) if a sparse montage was selected; or strong subject heterogeneity (DS-3) surfacing a need for a conditional/adaptive channel-count class regardless of which fixed count was initially selected.",
+      "revision_trigger": {
+        "condition_ds2": "Full-cohort comparison shows sparse EEG meaningfully and consistently worse than full montage (a gap well beyond seed/subject noise) across the majority of subjects.",
+        "condition_ds3": "Full-cohort comparison shows some subjects with near-equal sparse/full performance and others with a large gap, without a consistent population-level direction.",
+        "action_if_triggered": "Reopen EEG channel-count architecture for re-evaluation (per DS-2's implication: Would weaken aggressive EEG channel minimization as a scientifically-supported choice. — or per DS-3's implication: May justify a CONDITIONAL architecture (e.g. adaptive or subject-calibrated channel count) rather than a single universal configuration - this is a real, distinct architecture class worth defining (see results/stage4_architecture_candidate_classes.json).)",
+        "source_scenario": "results/stage4_gate_e_coordinator_options.json high_sensitivity_items[EEG].decision_flip_scenarios.{DS-2,DS-3}"
+      },
+      "decided_by": "PROJECT_COORDINATOR (Emir)"
+    }
+  ],
+  "no_option_selected": false,
+  "gate_e_pending_science_sensitivity": "CLOSED_BY_COORDINATOR_DECISION",
+  "pending_science_still_pending": "HMC full-cohort and ds003838 full-cohort training remain LOWER_PRIORITY_EXTERNAL_WORK_PENDING and are explicitly NOT run, NOT marked complete, and NOT required for Stage-4 closure under this conditional-freeze decision."
+}

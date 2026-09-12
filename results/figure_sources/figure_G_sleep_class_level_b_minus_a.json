@@ -1,0 +1,82 @@
+{
+  "title": "Sleep-EDF: per-class F1 delta (B-A), primary and secondary, plus N3 diagnostic",
+  "metric": "delta per-class F1",
+  "sample_unit": "class (Wake/N1/N2/N3/REM) - NOT independent statistical replicates, different base-rate sub-tasks",
+  "primary_class_deltas": {
+    "Wake": 0.9823544903871477,
+    "N1": 0.4501510574018127,
+    "N2": 0.7964125560538117,
+    "N3": 0.9016266460108443,
+    "REM": 0.6736
+  },
+  "secondary_class_deltas": {
+    "Wake": {
+      "A_mean_f1": 0.9685935711397378,
+      "B_mean_f1": 0.9752987616336899,
+      "C_mean_f1": 0.970344076445147,
+      "B_minus_A": 0.006705190493952129,
+      "B_minus_C": 0.004954685188542918
+    },
+    "N1": {
+      "A_mean_f1": 0.37744782751301387,
+      "B_mean_f1": 0.40358532547301806,
+      "C_mean_f1": 0.382878945088042,
+      "B_minus_A": 0.026137497960004197,
+      "B_minus_C": 0.020706380384976075
+    },
+    "N2": {
+      "A_mean_f1": 0.7710981789585984,
+      "B_mean_f1": 0.7958303720514913,
+      "C_mean_f1": 0.7805488028822546,
+      "B_minus_A": 0.024732193092892873,
+      "B_minus_C": 0.01528156916923673
+    },
+    "N3": {
+      "A_mean_f1": 0.6311756147072874,
+      "B_mean_f1": 0.5876783736899267,
+      "C_mean_f1": 0.6039719751127178,
+      "B_minus_A": -0.043497241017360744,
+      "B_minus_C": -0.016293601422791126
+    },
+    "REM": {
+      "A_mean_f1": 0.5165131555073935,
+      "B_mean_f1": 0.6664765431292162,
+      "C_mean_f1": 0.5403314265819632,
+      "B_minus_A": 0.1499633876218227,
+      "B_minus_C": 0.12614511654725302
+    }
+  },
+  "n3_false_positive_breakdown": {
+    "count_A_by_true_class": [
+      71,
+      12,
+      2427,
+      0,
+      30
+    ],
+    "count_B_by_true_class": [
+      353,
+      33,
+      3032,
+      0,
+      66
+    ],
+    "delta_B_minus_A_by_true_class": [
+      282,
+      21,
+      605,
+      0,
+      36
+    ],
+    "n2_to_n3_delta": 605,
+    "n2_share_of_all_new_n3_false_positives": 0.6408898305084746,
+    "wake_to_n3_delta": 282,
+    "wake_to_n3_meaningful": true
+  },
+  "uncertainty_meaning": "descriptive per-class deltas only; no significance testing across classes (multiple-comparison caution, see STATISTICAL_REPORTING_STANDARD_DAY11.md)",
+  "claim_boundary": "N3 regresses in the secondary cohort (disclose this, do not omit); REM shows the largest gain in both cohorts.",
+  "provenance": [
+    "results/sleep_edf_secondary_holdout_evaluation.json",
+    "results/sleep_n3_extended_diagnostic_day11.json"
+  ]
+}

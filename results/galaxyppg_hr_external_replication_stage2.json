@@ -1,0 +1,336 @@
+{
+  "experiment_id": "galaxyppg_hr_external_replication_stage2",
+  "scope_disclosure": "BOUNDED_TO_SINGLE_FOLD - see docs/GALAXYPPG_SPLIT_STRATEGY_DEVIATION.md. Real 16/4/4 subject-held-out split, NOT the frozen protocol's full 6-fold grouped CV (compute-infeasible this sprint).",
+  "frozen_protocol_reference": "results/galaxyppg_protocol_stage1b.json",
+  "split": {
+    "train": [
+      "P02",
+      "P03",
+      "P06",
+      "P07",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P14",
+      "P15",
+      "P16",
+      "P17",
+      "P18",
+      "P19",
+      "P22",
+      "P24"
+    ],
+    "val": [
+      "P05",
+      "P08",
+      "P20",
+      "P23"
+    ],
+    "test": [
+      "P01",
+      "P04",
+      "P09",
+      "P21"
+    ]
+  },
+  "reference": "Polar H10 raw ECG R-peaks (Pan-Tompkins-lite), never device-derived HR",
+  "window_seconds": 8.0,
+  "stride_seconds": 2.0,
+  "hr_normalization": {
+    "mean": 89.47038269042969,
+    "std": 21.64248275756836,
+    "fit_on": "train split only"
+  },
+  "parameter_counts": {
+    "A_cap": 28865,
+    "B_and_C": 29089
+  },
+  "window_counts": {
+    "train": 21059,
+    "val": 7222,
+    "test": 6872
+  },
+  "runs": {
+    "A_cap": {
+      "seed42": {
+        "mae": 11.44039535522461,
+        "rmse": 21.044279098510742,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed43": {
+        "mae": 10.950566291809082,
+        "rmse": 20.08604621887207,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed44": {
+        "mae": 11.874549865722656,
+        "rmse": 21.277475357055664,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed45": {
+        "mae": 11.440978050231934,
+        "rmse": 20.799280166625977,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed46": {
+        "mae": 11.1897611618042,
+        "rmse": 20.576583862304688,
+        "n_windows": 6872,
+        "train_history_len": 20
+      }
+    },
+    "B": {
+      "seed42": {
+        "mae": 12.418703079223633,
+        "rmse": 20.207368850708008,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed43": {
+        "mae": 10.36950397491455,
+        "rmse": 18.78373146057129,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed44": {
+        "mae": 10.925883293151855,
+        "rmse": 19.784208297729492,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed45": {
+        "mae": 11.793801307678223,
+        "rmse": 20.078643798828125,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed46": {
+        "mae": 10.131987571716309,
+        "rmse": 18.651893615722656,
+        "n_windows": 6872,
+        "train_history_len": 20
+      }
+    },
+    "C": {
+      "seed42": {
+        "mae": 11.693129539489746,
+        "rmse": 20.041547775268555,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed43": {
+        "mae": 11.380242347717285,
+        "rmse": 19.99846649169922,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed44": {
+        "mae": 12.73301887512207,
+        "rmse": 21.698074340820312,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed45": {
+        "mae": 11.56809139251709,
+        "rmse": 20.989206314086914,
+        "n_windows": 6872,
+        "train_history_len": 20
+      },
+      "seed46": {
+        "mae": 12.007665634155273,
+        "rmse": 21.515514373779297,
+        "n_windows": 6872,
+        "train_history_len": 20
+      }
+    }
+  },
+  "checkpoint_manifest": [
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed42",
+      "config": "A_cap",
+      "seed": 42,
+      "path": "ml\\checkpoints\\galaxyppg_hr_A_cap_seed42.pt",
+      "size_bytes": 137013,
+      "sha256": "efd21df27c7f7ad514cc1ac8c86c91b817ce77a8b3905bab7ccc9c1054fd8431"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed42",
+      "config": "B",
+      "seed": 42,
+      "path": "ml\\checkpoints\\galaxyppg_hr_B_seed42.pt",
+      "size_bytes": 137473,
+      "sha256": "bf91d7e9138c8e02e3399e59e6a03a46a7faa43b0a551c607441da298b944afd"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed42",
+      "config": "C",
+      "seed": 42,
+      "path": "ml\\checkpoints\\galaxyppg_hr_C_seed42.pt",
+      "size_bytes": 137473,
+      "sha256": "f18cf5eb4d8e7c7d456722c0f34af41cc369fe30fd9bf6dfbcc3c04c9d3c6d19"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed43",
+      "config": "A_cap",
+      "seed": 43,
+      "path": "ml\\checkpoints\\galaxyppg_hr_A_cap_seed43.pt",
+      "size_bytes": 137013,
+      "sha256": "1f0c3c3fc7544a727d73ed43f12f538a64f4efd610f96fcfbcdcb950d860d5d9"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed43",
+      "config": "B",
+      "seed": 43,
+      "path": "ml\\checkpoints\\galaxyppg_hr_B_seed43.pt",
+      "size_bytes": 137473,
+      "sha256": "455be5072e57dc2ef222f60c2520c39faefd10712dfc4e965b5c95869ab64df5"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed43",
+      "config": "C",
+      "seed": 43,
+      "path": "ml\\checkpoints\\galaxyppg_hr_C_seed43.pt",
+      "size_bytes": 137473,
+      "sha256": "d4609b8bc4a7eaea6ec6bdb207757a7dafe1d39aa820fa0f2fec35fa7fe57c4f"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed44",
+      "config": "A_cap",
+      "seed": 44,
+      "path": "ml\\checkpoints\\galaxyppg_hr_A_cap_seed44.pt",
+      "size_bytes": 137013,
+      "sha256": "eead900e51e8cffbce4ffe0aca59d3382468288d80fca048c76efd1cc92da7f6"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed44",
+      "config": "B",
+      "seed": 44,
+      "path": "ml\\checkpoints\\galaxyppg_hr_B_seed44.pt",
+      "size_bytes": 137473,
+      "sha256": "39058d93532ecb409ab34495cb0ae3e13b91b1b677b0cfb76c8adfa784ee238e"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed44",
+      "config": "C",
+      "seed": 44,
+      "path": "ml\\checkpoints\\galaxyppg_hr_C_seed44.pt",
+      "size_bytes": 137473,
+      "sha256": "3a3989ff3ca6aa2bb12c7e9082a62f627adf2c674404c1c5e4db7e4980620579"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed45",
+      "config": "A_cap",
+      "seed": 45,
+      "path": "ml\\checkpoints\\galaxyppg_hr_A_cap_seed45.pt",
+      "size_bytes": 137013,
+      "sha256": "ee44f3ab0e20ded407ba6565b623c71a79b30b5c334dbf9ab2b4a606bf03fbea"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed45",
+      "config": "B",
+      "seed": 45,
+      "path": "ml\\checkpoints\\galaxyppg_hr_B_seed45.pt",
+      "size_bytes": 137473,
+      "sha256": "121b48dc22d1317f19bb140cc777980b707dcbc56d88dc7eee954c9842e98dc8"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed45",
+      "config": "C",
+      "seed": 45,
+      "path": "ml\\checkpoints\\galaxyppg_hr_C_seed45.pt",
+      "size_bytes": 137473,
+      "sha256": "07bef520d7823c3469f01ad29895f3b812364141d00dee20cca78f3a3d04e1ce"
+    },
+    {
+      "run_id": "galaxyppg_hr_A_cap_seed46",
+      "config": "A_cap",
+      "seed": 46,
+      "path": "ml\\checkpoints\\galaxyppg_hr_A_cap_seed46.pt",
+      "size_bytes": 137013,
+      "sha256": "44780a12b02a80acad6ddab61c02cf6b8b7154866f483eb8e449a0c21e1a1696"
+    },
+    {
+      "run_id": "galaxyppg_hr_B_seed46",
+      "config": "B",
+      "seed": 46,
+      "path": "ml\\checkpoints\\galaxyppg_hr_B_seed46.pt",
+      "size_bytes": 137473,
+      "sha256": "669558cb2753e5e5a7a772216a81d4c74ff734db2115527fed01f3aed8227aab"
+    },
+    {
+      "run_id": "galaxyppg_hr_C_seed46",
+      "config": "C",
+      "seed": 46,
+      "path": "ml\\checkpoints\\galaxyppg_hr_C_seed46.pt",
+      "size_bytes": 137473,
+      "sha256": "dadd9c943acd5b50eed539610ee31530d6720ddc967c556825fb59d384389d7d"
+    }
+  ],
+  "aggregate": {
+    "A_cap_mae": {
+      "mean": 11.379250144958496,
+      "sd_sample_ddof1": 0.34371019955220505,
+      "per_seed": {
+        "seed42": 11.44039535522461,
+        "seed43": 10.950566291809082,
+        "seed44": 11.874549865722656,
+        "seed45": 11.440978050231934,
+        "seed46": 11.1897611618042
+      }
+    },
+    "B_mae": {
+      "mean": 11.127975845336914,
+      "sd_sample_ddof1": 0.9640298177000675,
+      "per_seed": {
+        "seed42": 12.418703079223633,
+        "seed43": 10.36950397491455,
+        "seed44": 10.925883293151855,
+        "seed45": 11.793801307678223,
+        "seed46": 10.131987571716309
+      }
+    },
+    "C_mae": {
+      "mean": 11.876429557800293,
+      "sd_sample_ddof1": 0.5305283297383036,
+      "per_seed": {
+        "seed42": 11.693129539489746,
+        "seed43": 11.380242347717285,
+        "seed44": 12.73301887512207,
+        "seed45": 11.56809139251709,
+        "seed46": 12.007665634155273
+      }
+    },
+    "A_to_B": {
+      "mean": 0.25127429962158204,
+      "sd_sample_ddof1": 0.8835104746825406,
+      "per_seed": {
+        "seed42": -0.9783077239990234,
+        "seed43": 0.5810623168945312,
+        "seed44": 0.9486665725708008,
+        "seed45": -0.35282325744628906,
+        "seed46": 1.0577735900878906
+      },
+      "n_seeds_favor_B": 3,
+      "n_seeds_total": 5
+    },
+    "C_to_B": {
+      "mean": 0.7484537124633789,
+      "sd_sample_ddof1": 1.1813113891621116,
+      "per_seed": {
+        "seed42": -0.7255735397338867,
+        "seed43": 1.0107383728027344,
+        "seed44": 1.8071355819702148,
+        "seed45": -0.2257099151611328,
+        "seed46": 1.8756780624389648
+      },
+      "n_seeds_favor_B": 3,
+      "n_seeds_total": 5
+    }
+  },
+  "status": "INVALIDATED_BY_REFERENCE_SIGNAL_QUALITY_DEFECT"
+}

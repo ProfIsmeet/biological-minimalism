@@ -1,0 +1,70 @@
+{
+  "artifact_id": "biological-minimalism-checkpoint-archival-schema-v1",
+  "schema_version": "1.1.0",
+  "purpose": "Checkpoint archival status. Local presence + SHA are tracked in results/checkpoint_inventory.json and results/checkpoint_manifest_consolidated.json. External durable archival is now INTEGRATED and independently verified from the integration Mac (see results/checkpoint_archival_verification.json).",
+  "status_vocabulary": {
+    "checkpoint_hash_known": "SHA256 of the local checkpoint is recorded",
+    "checkpoint_file_present": "the .pt file exists locally",
+    "checkpoint_locally_archived": "copied into a local durable archive location",
+    "checkpoint_externally_archived": "uploaded to an external durable store",
+    "external_archive_location": "URI of the external artifact",
+    "archive_sha": "SHA256 of the externally archived object (the tar.gz)",
+    "archive_verification_status": "verified | unverified | pending"
+  },
+  "external_archive": {
+    "status": "LOCAL_VERIFIED_EXTERNALLY_DURABLE",
+    "external_store": "GitHub Release (private repo ProfIsmeet/biological-minimalism)",
+    "release_tag": "day8-checkpoint-archive-v1",
+    "asset_name": "biological_minimalism_checkpoints_day8.tar.gz",
+    "asset_url": "https://github.com/ProfIsmeet/biological-minimalism/releases/tag/day8-checkpoint-archive-v1",
+    "archive_sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
+    "n_checkpoints": 50,
+    "raw_dataset_included": false,
+    "local_archive_path": "archival/biological_minimalism_checkpoints_day8.tar.gz",
+    "verification_artifact": "results/checkpoint_archival_verification.json",
+    "independent_mac_reverification": {
+      "performed": true,
+      "method": "gh release download + shasum -a 256 on the integration Mac; byte-for-byte match against expected archive_sha256; tar listing confirmed 50 .pt checkpoints and 0 raw dataset files",
+      "downloaded_sha256": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
+      "sha_match": true,
+      "reverified_on": "2026-09-07"
+    }
+  },
+  "records": [
+    {
+      "run_id_group": "ppg_dalia_imu_ablation (model_a/b/c seeds)",
+      "checkpoint_hash_known": true,
+      "checkpoint_file_present": true,
+      "checkpoint_locally_archived": true,
+      "local_manifest": "results/checkpoint_manifest_consolidated.json",
+      "checkpoint_externally_archived": true,
+      "external_archive_location": "GitHub Release day8-checkpoint-archive-v1 asset biological_minimalism_checkpoints_day8.tar.gz",
+      "archive_sha": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
+      "archive_verification_status": "verified"
+    },
+    {
+      "run_id_group": "ptt_ppg_site_ablation (model_a/b seeds)",
+      "checkpoint_hash_known": true,
+      "checkpoint_file_present": true,
+      "checkpoint_locally_archived": true,
+      "local_manifest": "results/ptt_ppg_site_ablation.json (checkpoint_manifest)",
+      "checkpoint_externally_archived": true,
+      "external_archive_location": "GitHub Release day8-checkpoint-archive-v1 asset biological_minimalism_checkpoints_day8.tar.gz",
+      "archive_sha": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
+      "archive_verification_status": "verified"
+    },
+    {
+      "run_id_group": "sleep_edf_eeg_eog_ablation + shuffled-EOG control (baseline/candidate/control seeds)",
+      "checkpoint_hash_known": true,
+      "checkpoint_file_present": true,
+      "checkpoint_locally_archived": true,
+      "local_manifest": "results/checkpoint_manifest_consolidated.json",
+      "checkpoint_externally_archived": true,
+      "external_archive_location": "GitHub Release day8-checkpoint-archive-v1 asset biological_minimalism_checkpoints_day8.tar.gz",
+      "archive_sha": "5e0661a6d5adcf345dfc86fe4c80138b20df405038a13817c7d97a1189572de4",
+      "archive_verification_status": "verified",
+      "note": "The 15 frozen Sleep-EDF checkpoints (A/B/C x seeds 42-46) reused unmodified by the prospective secondary holdout are included in the archived tarball."
+    }
+  ],
+  "integration_rule": "Externally-archived fields were flipped to true only after the downloaded release asset's SHA256 matched archive_sha byte-for-byte on the integration Mac; see external_archive.independent_mac_reverification."
+}

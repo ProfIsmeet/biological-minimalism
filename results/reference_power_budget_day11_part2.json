@@ -1,0 +1,367 @@
+{
+  "artifact_id": "biological-minimalism-reference-power-budget-day11-part2-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "part1_base_commit": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+  "part1_head_commit": "a43b7aa8e65349d703a0eb1ef34307e3a00ab4c1",
+  "statement": "Maximum-defensible reference power state. Four accounting layers are kept separate: L1 component electrical spec, L2 reference acquisition power at one explicit operating point, L3 reference module sensor-electronics boundary (LED/MCU/radio/regulator/battery EXCLUDED), L4 system average power (NOT computed). No component powers are summed into a system number. Unknowns are null + status, never 0.",
+  "system_total_calculated": false,
+  "prohibited": [
+    "Do NOT sum component active powers into a system power number.",
+    "Do NOT treat the LED-excluded wrist boundary as deployable optical power.",
+    "Do NOT use the AD5940 6.5 uA potentiostat point as active BioZ power.",
+    "Do NOT assert head-module (EEG/EOG) average power (operating point NOT_READY)."
+  ],
+  "reference_operating_points": {
+    "wrist_ppg": {
+      "component": "MAX86141",
+      "level1_afe_current": {
+        "max": 10.0,
+        "unit": "uA",
+        "class": "DATASHEET_DIRECT",
+        "note": "optical readout floor @25 s/s; LED supply separate"
+      },
+      "voltage": {
+        "value": 1.8,
+        "unit": "V",
+        "class": "DATASHEET_DIRECT"
+      },
+      "level2_afe_reference_power": {
+        "max": 0.018,
+        "unit": "mW",
+        "class": "DATASHEET_CALCULATED",
+        "note": "<=1.8V x 10uA AFE floor; 64 Hz-mode current UNKNOWN"
+      },
+      "led_contribution": {
+        "status": "NOT_READY",
+        "formula": "P_LED_avg = N_active_LEDs * I_LED * V_LED_forward * (t_pulse * f_pulse)",
+        "variables": {
+          "N_active_LEDs": {
+            "value": null,
+            "class": "UNKNOWN",
+            "note": "MAX86141 has 3 LED drivers; active count for the wrist optical stack not frozen"
+          },
+          "I_LED_peak": {
+            "value": null,
+            "class": "UNKNOWN",
+            "note": "drive current programmable; not frozen"
+          },
+          "V_LED_forward": {
+            "value": null,
+            "class": "UNKNOWN",
+            "note": "emitter forward voltage; emitters not selected"
+          },
+          "t_pulse": {
+            "value": null,
+            "class": "UNKNOWN"
+          },
+          "f_pulse": {
+            "value": null,
+            "class": "UNKNOWN",
+            "note": "pulse rate tied to unfrozen 64 Hz optical sequencing"
+          }
+        },
+        "note": "LED average power DOMINATES optical acquisition and is the OPEN wrist power blocker. No total is faked."
+      },
+      "reference_acquisition_power_total": {
+        "status": "NOT_READY",
+        "reason": "AFE floor known; dominant LED term unresolved. Total not asserted."
+      },
+      "readiness": "AFE_REFERENCE_ONLY_LED_EXCLUDED"
+    },
+    "wrist_imu": {
+      "component": "BMI270",
+      "task": "TASK_B_frozen_reference_operating_point",
+      "reference_operating_point": {
+        "id": "REFERENCE_IMU_OPERATING_POINT",
+        "mode": "accelerometer-only, low-power sub-mode",
+        "gyroscope_enabled": false,
+        "gyro_rationale": "Current wrist scientific function (HR/motion, 3-axis 32 Hz) does not require gyroscope; gyro left disabled.",
+        "channels": 3,
+        "scientific_rate_hz": 32,
+        "nearest_documented_datasheet_point_hz": 25,
+        "odr_caveat": "32 Hz is between the documented 25 Hz low-power point and max-ODR normal point. BMI270 supports an ODR >=32 Hz (e.g. 50 Hz); its exact current is not separately published, so the 25 Hz low-power point is used as the documented reference floor.",
+        "current_uA": 10.0,
+        "voltage_V": 1.8,
+        "reference_power_mW": 0.018,
+        "class": "DATASHEET_CALCULATED"
+      },
+      "retained_full_band": {
+        "min": 0.018,
+        "max": 0.378,
+        "unit": "mW",
+        "class": "DATASHEET_CALCULATED",
+        "note": "10-210 uA accel-only envelope x 1.8 V; kept for uncertainty, NOT the reference point"
+      },
+      "exclusions": [
+        "MCU",
+        "radio",
+        "regulator",
+        "battery",
+        "idle/sleep duty"
+      ],
+      "readiness": "REFERENCE_OPERATING_POINT_FROZEN"
+    },
+    "skin_temperature": {
+      "component": "TMP117",
+      "task": "TASK_C",
+      "level1_current": {
+        "value": 3.5,
+        "unit": "uA",
+        "class": "DATASHEET_DIRECT",
+        "note": "avg @1 Hz, averaging off"
+      },
+      "voltage": {
+        "value": 3.3,
+        "unit": "V",
+        "class": "ARCHITECTURE_ASSUMPTION"
+      },
+      "reference_power_mW": {
+        "value": 0.01155,
+        "class": "DATASHEET_CALCULATED"
+      },
+      "schedule_mapping": "1 Hz conversion, averaging off \u2014 maps to a real TMP117 continuous-conversion mode",
+      "boundary": "component_only",
+      "exclusions": [
+        "MCU",
+        "radio",
+        "regulator",
+        "shutdown-mode duty if intermittent"
+      ],
+      "readiness": "COMPONENT_REFERENCE_POWER_AVAILABLE"
+    },
+    "light_sensor": {
+      "component": "OPT3001-Q1-class",
+      "task": "TASK_C",
+      "level1_current": {
+        "value": 1.8,
+        "unit": "uA",
+        "class": "DATASHEET_DIRECT"
+      },
+      "voltage": {
+        "value": 3.3,
+        "unit": "V",
+        "class": "ARCHITECTURE_ASSUMPTION"
+      },
+      "reference_power_mW": {
+        "value": 0.00594,
+        "class": "DATASHEET_CALCULATED"
+      },
+      "placement": "LOCATION_UNRESOLVED",
+      "wrist_case": {
+        "contributes_to_wrist_electronics_power": true,
+        "value_mW": 0.00594
+      },
+      "cabin_case": {
+        "contributes_to_body_worn_power": false,
+        "value_mW": 0.0,
+        "note": "If cabin/ambient-mounted, ZERO body-worn burden. Not a false zero \u2014 a placement-conditional exclusion."
+      },
+      "boundary": "component_only",
+      "readiness": "COMPONENT_REFERENCE_POWER_AVAILABLE_PLACEMENT_CONDITIONAL"
+    },
+    "ecg_chest": {
+      "component": "ADS1292R",
+      "task": "TASK_D",
+      "id": "REFERENCE_ECG_AFE_POWER",
+      "per_channel_uW": 335.0,
+      "channels": 2,
+      "sample_rate_sps": 250,
+      "afe_reference_power_mW": {
+        "value": 0.67,
+        "class": "DATASHEET_CALCULATED",
+        "note": "2 x 335 uW/ch datasheet AFE point @250 s/s"
+      },
+      "supply_note": "Per-channel power point used directly; single combined rail not asserted.",
+      "internal_blocks_note": "335 uW/ch is the datasheet per-channel AFE figure; lead-off excitation and external bias are NOT included.",
+      "exclusions": [
+        "MCU",
+        "radio",
+        "electrodes",
+        "lead-off excitation",
+        "regulator",
+        "battery"
+      ],
+      "readiness": "ECG_AFE_REFERENCE_POWER_AVAILABLE",
+      "is_chest_module_power": false
+    },
+    "frontal_eeg_eog_head": {
+      "components": [
+        "ADS1299-4-class (EEG)",
+        "EOG on shared spare channel"
+      ],
+      "task": "TASK_E_and_EOG_shared_case",
+      "reference_operating_configuration": {
+        "id": "REFERENCE_HEAD_AFE_OPERATING_CONFIG",
+        "channels_enabled": 2,
+        "channel_breakdown": "1 EEG (Fpz-Cz derivation) + 1 horizontal EOG on a spare channel of the same 4-ch AFE",
+        "spare_channels_remaining": 2,
+        "afe_capacity_channels": 4,
+        "scientific_data_rate_hz": 100,
+        "nearest_supported_hardware_odr_sps": 250,
+        "odr_caveat": "ADS1299 minimum ODR is 250 SPS; the 100 Hz Sleep-EDF scientific rate maps to the 250 SPS nearest supported mode.",
+        "gain": {
+          "value": 24,
+          "class": "ARCHITECTURE_ASSUMPTION",
+          "note": "standard EEG PGA gain; does not materially change data rate"
+        },
+        "internal_reference_used": true,
+        "bias_drl_used": true,
+        "bias_contacts_shared": true,
+        "lead_off_detection": "disabled (not required by the current sleep-staging scientific use case)",
+        "supply": {
+          "avdd_unipolar_v": 5.0,
+          "avdd_bipolar_v": 2.5,
+          "dvdd_v": 3.3,
+          "class": "DATASHEET_DIRECT",
+          "source": "TI ADS1299 datasheet (SBAS499), Electrical Characteristics \u2014 supply section (web-verified 2026-09)"
+        }
+      },
+      "afe_reference_power": {
+        "status": "NOT_READY",
+        "reason": "The per-channel power-dissipation table row (low-power vs high-resolution mode, incl. internal reference + bias) could not be verified to an exact citable value in this environment (no PDF text extraction; secondary search did not corroborate a specific figure). Per Part-1 discipline, no head power is asserted.",
+        "exact_unlock": "ADS1299 datasheet per-channel power dissipation at low-power mode, 250 SPS, gain 24, internal reference + bias ON, for the 2 enabled channels; plus session duty schedule."
+      },
+      "eog_incremental_power": {
+        "status": "NOT_READY",
+        "note": "EOG is ONE additional biopotential channel on the already-counted head-module AFE, sharing reference/bias (REFERENCE_SHARED_HEAD_MODULE). Incremental electrical cost is not zero and not quantified; it cannot be isolated without the per-channel head-AFE operating point. Adding EOG changes enabled channels 1->2 (2 spare remain), adds NO new front-end circuitry in the shared case, and adds +2 lateral-ocular sensing electrodes (wiring/electrode burden, not a new module).",
+        "shared_vs_standalone": "Shared-reference: no new AFE/reference/bias. Standalone: separate front-end (up to +4 contacts, possibly +1 module)."
+      },
+      "readiness": "OPERATING_CONFIG_SPECIFIED_POWER_NOT_READY"
+    },
+    "thoracic_bioz": {
+      "component": "AD5940-class",
+      "task": "TASK_F",
+      "id": "REFERENCE_BIOZ_EXPLORATORY_OPERATING_POINT",
+      "canonical_deployment_status": "UNRESOLVED",
+      "required_for_valid_measurement": [
+        "excitation waveform generation",
+        "excitation frequency",
+        "excitation amplitude",
+        "measurement ADC path",
+        "internal DFT/processing engine usage",
+        "measurement duration",
+        "measurement cadence",
+        "electrode configuration"
+      ],
+      "power": {
+        "status": "NOT_READY",
+        "reason": "No frozen BioZ operating protocol exists; the 6.5 uA potentiostat point is NOT BioZ measurement power. No exploratory point can be sourced cleanly, so power stays NOT_READY."
+      },
+      "readiness": "NOT_READY"
+    },
+    "leg_bioz": {
+      "component": "AD5940-class (separate instance)",
+      "task": "TASK_F_leg",
+      "module_separation_note": "Leg BioZ is a separate body region and likely separate module from thoracic BioZ; AFE operating point may be reused but module/system burden differs.",
+      "power": {
+        "status": "NOT_READY",
+        "reason": "Same as thoracic: no frozen excitation/cadence protocol; potentiostat quiescent != measurement power."
+      },
+      "readiness": "NOT_READY"
+    },
+    "second_ppg_site": {
+      "component": "MAX86141-class extension",
+      "task": "TASK_G",
+      "scientific_rate_hz": 500,
+      "rate_rationale": "500 Hz is the PhysioNet PTT dataset acquisition rate (proximal red/IR/green). It is a dataset sampling rate, NOT a frozen PTT protocol requirement for deployment.",
+      "level2_afe_floor_mW": {
+        "max": 0.018,
+        "class": "DATASHEET_CALCULATED",
+        "note": "<10uA @25 s/s AFE floor; NOT the 500 Hz 3-wavelength sequencing current"
+      },
+      "led_contribution": {
+        "status": "NOT_READY",
+        "formula": "P_LED_avg = N_active_LEDs * I_LED * V_LED_forward * (t_pulse * f_pulse)",
+        "note": "3 wavelengths (R/IR/G) x LED currents dominate; not frozen"
+      },
+      "module_boundary": "OPEN (shared / tethered / standalone undecided)",
+      "reference_power_total": {
+        "status": "NOT_READY",
+        "reason": "LED power + 500 Hz AFE sequencing current + module boundary all open. Do NOT reuse wrist PPG power (different schedule)."
+      },
+      "readiness": "NOT_READY"
+    }
+  },
+  "module_sensor_electronics_boundaries": {
+    "note": "Level-3 partials. LED, MCU, radio, regulator loss, battery, storage ALL excluded. These are LED-excluded CALCULATED REFERENCE SCENARIOS built from datasheet-typical operating points, NOT module system power and NOT guaranteed bounds (audit H7).",
+    "wrist_sensor_electronics_reference_power": {
+      "id": "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED",
+      "includes": [
+        "MAX86141 AFE floor (LED-excluded)",
+        "BMI270 reference operating point (accel-only low-power)",
+        "TMP117",
+        "OPT3001 (wrist case only)"
+      ],
+      "wrist_light_case_band_mW": {
+        "reference_point": 0.05349,
+        "upper_bound_bmi270_normal": 0.41349,
+        "class": "DATASHEET_CALCULATED"
+      },
+      "cabin_light_case_band_mW": {
+        "reference_point": 0.04755,
+        "upper_bound_bmi270_normal": 0.40755,
+        "class": "DATASHEET_CALCULATED",
+        "note": "light excluded (cabin placement)"
+      },
+      "power_semantic_class": "CALCULATED_REFERENCE_SCENARIO_LED_EXCLUDED",
+      "is_lower_bound": false,
+      "component_value_basis": "DATASHEET_TYPICAL_REFERENCE",
+      "directional_note": "Excluding the dominant MAX86141 LED average power means realized sensing-electronics power is DIRECTIONALLY higher than this reference; however, because the included AFE/IMU values are datasheet-typical (not guaranteed minima), this figure is NOT a guaranteed lower bound.",
+      "excludes": [
+        "all LED/emitter power",
+        "MCU",
+        "radio",
+        "regulator loss",
+        "battery",
+        "storage"
+      ],
+      "readiness": "PARTIAL_LED_EXCLUDED_REFERENCE_SCENARIO"
+    },
+    "chest_sensor_electronics_reference_power": {
+      "id": "CHEST_SENSOR_ELECTRONICS_REFERENCE_POWER",
+      "ecg_afe_only_mW": 0.67,
+      "bioz_status": "NOT_READY",
+      "module_boundary_status": "NOT_READY",
+      "reason": "Only the ECG AFE (0.67 mW) is defensible; thoracic BioZ active power is NOT_READY, so a chest sensor-electronics boundary cannot be closed.",
+      "excludes": [
+        "thoracic BioZ (NOT_READY)",
+        "MCU",
+        "radio",
+        "electrodes",
+        "lead-off excitation",
+        "regulator",
+        "battery"
+      ],
+      "readiness": "ECG_AFE_ONLY_MODULE_BOUNDARY_NOT_READY"
+    },
+    "head_sensor_electronics_reference_power": {
+      "id": "HEAD_SENSOR_ELECTRONICS_REFERENCE_POWER",
+      "readiness": "NOT_READY",
+      "reason": "EEG/EOG AFE operating-point power NOT_READY."
+    },
+    "leg_sensor_electronics_reference_power": {
+      "id": "LEG_SENSOR_ELECTRONICS_REFERENCE_POWER",
+      "readiness": "NOT_READY",
+      "reason": "BioZ power NOT_READY."
+    },
+    "second_ppg_sensor_electronics_reference_power": {
+      "id": "SECOND_PPG_SENSOR_ELECTRONICS_REFERENCE_POWER",
+      "readiness": "NOT_READY",
+      "reason": "LED power + 500 Hz sequencing + module boundary open."
+    }
+  },
+  "system_average_power": {
+    "status": "SYSTEM_AVERAGE_POWER_NOT_READY",
+    "highest_defensible_level": "REFERENCE_SENSOR_ELECTRONICS_POWER_AVAILABLE_FOR_WRIST (LED-excluded reference scenario) + ECG_AFE_REFERENCE_POWER_FOR_CHEST; SYSTEM_AVERAGE_POWER_NOT_READY",
+    "blockers": [
+      "LED optical power (wrist + 2nd PPG)",
+      "EEG/EOG head-AFE operating point",
+      "thoracic + leg BioZ operating point",
+      "MCU/radio/regulator identity + power",
+      "deployable duty cycles",
+      "regulator efficiency",
+      "battery architecture"
+    ]
+  }
+}

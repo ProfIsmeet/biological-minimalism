@@ -1,0 +1,195 @@
+Using FROZEN split: {"train": ["SC4001", "SC4031", "SC4051", "SC4061", "SC4071", "SC4091", "SC4101", "SC4111", "SC4121", "SC4141", "SC4161", "SC4171"], "val": ["SC4021", "SC4041", "SC4151"], "test": ["SC4011", "SC4081", "SC4131"]}
+Loading real data per partition (aligned copy, to be shuffled independently per-partition)...
+train=32656 val=7989 test=8412 epochs
+Model C params: 8309 (matches Model B exactly: 8309)
+
+=== seed 42: training model_c_shuffled_eog_seed42 ===
+    epoch  1/20 - train loss 0.9580 | val macro-F1 0.6571
+    epoch  2/20 - train loss 0.6415 | val macro-F1 0.6961
+    epoch  3/20 - train loss 0.5895 | val macro-F1 0.7178
+    epoch  4/20 - train loss 0.5644 | val macro-F1 0.7285
+    epoch  5/20 - train loss 0.5493 | val macro-F1 0.7165
+    epoch  6/20 - train loss 0.5362 | val macro-F1 0.7167
+    epoch  7/20 - train loss 0.5296 | val macro-F1 0.7112
+    epoch  8/20 - train loss 0.5199 | val macro-F1 0.7206
+    epoch  9/20 - train loss 0.5167 | val macro-F1 0.7359
+    epoch 10/20 - train loss 0.5034 | val macro-F1 0.7270
+    epoch 11/20 - train loss 0.4993 | val macro-F1 0.7107
+    epoch 12/20 - train loss 0.4968 | val macro-F1 0.7296
+    epoch 13/20 - train loss 0.4891 | val macro-F1 0.7281
+    epoch 14/20 - train loss 0.4870 | val macro-F1 0.7131
+    epoch 15/20 - train loss 0.4778 | val macro-F1 0.7265
+    epoch 16/20 - train loss 0.4772 | val macro-F1 0.7175
+    epoch 17/20 - train loss 0.4703 | val macro-F1 0.7407
+    epoch 18/20 - train loss 0.4638 | val macro-F1 0.7356
+    epoch 19/20 - train loss 0.4650 | val macro-F1 0.7213
+    epoch 20/20 - train loss 0.4586 | val macro-F1 0.7214
+model_c_shuffled_eog_seed42: test macro-F1=0.7454 accuracy=0.9039 (431.1s)
+
+=== seed 43: training model_c_shuffled_eog_seed43 ===
+    epoch  1/20 - train loss 0.9758 | val macro-F1 0.6913
+    epoch  2/20 - train loss 0.6286 | val macro-F1 0.7107
+    epoch  3/20 - train loss 0.5789 | val macro-F1 0.7250
+    epoch  4/20 - train loss 0.5558 | val macro-F1 0.7322
+    epoch  5/20 - train loss 0.5382 | val macro-F1 0.7201
+    epoch  6/20 - train loss 0.5299 | val macro-F1 0.7255
+    epoch  7/20 - train loss 0.5191 | val macro-F1 0.7252
+    epoch  8/20 - train loss 0.5140 | val macro-F1 0.7359
+    epoch  9/20 - train loss 0.5096 | val macro-F1 0.7172
+    epoch 10/20 - train loss 0.4990 | val macro-F1 0.7408
+    epoch 11/20 - train loss 0.4901 | val macro-F1 0.7273
+    epoch 12/20 - train loss 0.4850 | val macro-F1 0.7051
+    epoch 13/20 - train loss 0.4860 | val macro-F1 0.7368
+    epoch 14/20 - train loss 0.4778 | val macro-F1 0.7194
+    epoch 15/20 - train loss 0.4800 | val macro-F1 0.7053
+    epoch 16/20 - train loss 0.4755 | val macro-F1 0.7428
+    epoch 17/20 - train loss 0.4694 | val macro-F1 0.7314
+    epoch 18/20 - train loss 0.4648 | val macro-F1 0.7358
+    epoch 19/20 - train loss 0.4652 | val macro-F1 0.7234
+    epoch 20/20 - train loss 0.4702 | val macro-F1 0.7429
+model_c_shuffled_eog_seed43: test macro-F1=0.7595 accuracy=0.9082 (458.4s)
+
+=== seed 44: training model_c_shuffled_eog_seed44 ===
+    epoch  1/20 - train loss 0.9855 | val macro-F1 0.6184
+    epoch  2/20 - train loss 0.6446 | val macro-F1 0.6690
+    epoch  3/20 - train loss 0.5861 | val macro-F1 0.6995
+    epoch  4/20 - train loss 0.5606 | val macro-F1 0.7446
+    epoch  5/20 - train loss 0.5457 | val macro-F1 0.6879
+    epoch  6/20 - train loss 0.5300 | val macro-F1 0.6956
+    epoch  7/20 - train loss 0.5207 | val macro-F1 0.7386
+    epoch  8/20 - train loss 0.5196 | val macro-F1 0.6658
+    epoch  9/20 - train loss 0.5167 | val macro-F1 0.7022
+    epoch 10/20 - train loss 0.5027 | val macro-F1 0.7087
+    epoch 11/20 - train loss 0.4978 | val macro-F1 0.7096
+    epoch 12/20 - train loss 0.4964 | val macro-F1 0.6251
+    epoch 13/20 - train loss 0.4825 | val macro-F1 0.7204
+    epoch 14/20 - train loss 0.4891 | val macro-F1 0.7235
+    epoch 15/20 - train loss 0.4813 | val macro-F1 0.7266
+    epoch 16/20 - train loss 0.4729 | val macro-F1 0.7082
+    epoch 17/20 - train loss 0.4648 | val macro-F1 0.7175
+    epoch 18/20 - train loss 0.4662 | val macro-F1 0.6906
+    epoch 19/20 - train loss 0.4638 | val macro-F1 0.7270
+    epoch 20/20 - train loss 0.4635 | val macro-F1 0.7324
+model_c_shuffled_eog_seed44: test macro-F1=0.7343 accuracy=0.8831 (495.7s)
+
+=== seed 45: training model_c_shuffled_eog_seed45 ===
+    epoch  1/20 - train loss 0.9704 | val macro-F1 0.6837
+    epoch  2/20 - train loss 0.6429 | val macro-F1 0.6647
+    epoch  3/20 - train loss 0.5869 | val macro-F1 0.7155
+    epoch  4/20 - train loss 0.5687 | val macro-F1 0.7044
+    epoch  5/20 - train loss 0.5465 | val macro-F1 0.6977
+    epoch  6/20 - train loss 0.5302 | val macro-F1 0.7176
+    epoch  7/20 - train loss 0.5313 | val macro-F1 0.7095
+    epoch  8/20 - train loss 0.5188 | val macro-F1 0.7197
+    epoch  9/20 - train loss 0.5109 | val macro-F1 0.6956
+    epoch 10/20 - train loss 0.5053 | val macro-F1 0.7241
+    epoch 11/20 - train loss 0.5008 | val macro-F1 0.7255
+    epoch 12/20 - train loss 0.4941 | val macro-F1 0.7293
+    epoch 13/20 - train loss 0.4980 | val macro-F1 0.6944
+    epoch 14/20 - train loss 0.4834 | val macro-F1 0.7208
+    epoch 15/20 - train loss 0.4844 | val macro-F1 0.7010
+    epoch 16/20 - train loss 0.4807 | val macro-F1 0.7422
+    epoch 17/20 - train loss 0.4749 | val macro-F1 0.7273
+    epoch 18/20 - train loss 0.4749 | val macro-F1 0.7262
+    epoch 19/20 - train loss 0.4680 | val macro-F1 0.7321
+    epoch 20/20 - train loss 0.4659 | val macro-F1 0.7140
+model_c_shuffled_eog_seed45: test macro-F1=0.7233 accuracy=0.8943 (468.8s)
+
+=== seed 46: training model_c_shuffled_eog_seed46 ===
+    epoch  1/20 - train loss 1.0057 | val macro-F1 0.6801
+    epoch  2/20 - train loss 0.6538 | val macro-F1 0.6693
+    epoch  3/20 - train loss 0.5947 | val macro-F1 0.7133
+    epoch  4/20 - train loss 0.5672 | val macro-F1 0.6608
+    epoch  5/20 - train loss 0.5517 | val macro-F1 0.7391
+    epoch  6/20 - train loss 0.5401 | val macro-F1 0.7390
+    epoch  7/20 - train loss 0.5291 | val macro-F1 0.7114
+    epoch  8/20 - train loss 0.5213 | val macro-F1 0.6964
+    epoch  9/20 - train loss 0.5164 | val macro-F1 0.7020
+    epoch 10/20 - train loss 0.5143 | val macro-F1 0.7380
+    epoch 11/20 - train loss 0.5025 | val macro-F1 0.7095
+    epoch 12/20 - train loss 0.4990 | val macro-F1 0.7387
+    epoch 13/20 - train loss 0.4876 | val macro-F1 0.7161
+    epoch 14/20 - train loss 0.4897 | val macro-F1 0.7073
+    epoch 15/20 - train loss 0.4866 | val macro-F1 0.7287
+    epoch 16/20 - train loss 0.4743 | val macro-F1 0.7231
+    epoch 17/20 - train loss 0.4730 | val macro-F1 0.7366
+    epoch 18/20 - train loss 0.4782 | val macro-F1 0.7393
+    epoch 19/20 - train loss 0.4654 | val macro-F1 0.7378
+    epoch 20/20 - train loss 0.4636 | val macro-F1 0.7247
+model_c_shuffled_eog_seed46: test macro-F1=0.7476 accuracy=0.9088 (475.5s)
+
+Wrote C:\Users\Administrator\Desktop\biological-minimalism\results\sleep_edf_eeg_eog_control_analysis.json
+Aggregate: {
+  "model_a_macro_f1": {
+    "mean": 0.7472525334607252,
+    "sd_sample_ddof1": 0.024382202199124535,
+    "per_seed": {
+      "seed42": 0.7086057747793477,
+      "seed43": 0.7748928568718149,
+      "seed44": 0.7541404087394364,
+      "seed45": 0.7436336267999948,
+      "seed46": 0.7549900001130317
+    }
+  },
+  "model_b_macro_f1": {
+    "mean": 0.7692599394037367,
+    "sd_sample_ddof1": 0.013215074328560379,
+    "per_seed": {
+      "seed42": 0.7608289499707233,
+      "seed43": 0.7717015866525443,
+      "seed44": 0.7913724827694598,
+      "seed45": 0.7623310681847801,
+      "seed46": 0.7600656094411762
+    }
+  },
+  "model_c_macro_f1": {
+    "mean": 0.7420213232275609,
+    "sd_sample_ddof1": 0.013757100765136795,
+    "per_seed": {
+      "seed42": 0.7454106020492566,
+      "seed43": 0.7594724073814922,
+      "seed44": 0.7342621761970922,
+      "seed45": 0.7233308126046032,
+      "seed46": 0.7476306179053609
+    }
+  },
+  "A_to_B": {
+    "mean": 0.022007405943011628,
+    "sd_sample_ddof1": 0.022789241496512992,
+    "per_seed": {
+      "seed42": 0.05222317519137554,
+      "seed43": -0.00319127021927057,
+      "seed44": 0.03723207403002338,
+      "seed45": 0.01869744138478535,
+      "seed46": 0.005075609328144437
+    },
+    "n_seeds_favor_B": 4,
+    "n_seeds_total": 5
+  },
+  "A_to_C": {
+    "mean": -0.005231210233164085,
+    "sd_sample_ddof1": 0.02406795935508609,
+    "per_seed": {
+      "seed42": 0.03680482726990886,
+      "seed43": -0.015420449490322619,
+      "seed44": -0.01987823254234422,
+      "seed45": -0.020302814195391594,
+      "seed46": -0.00735938220767085
+    },
+    "n_seeds_favor_C": 1,
+    "n_seeds_total": 5
+  },
+  "C_to_B": {
+    "mean": 0.027238616176175713,
+    "sd_sample_ddof1": 0.020092307538648674,
+    "per_seed": {
+      "seed42": 0.01541834792146668,
+      "seed43": 0.012229179271052049,
+      "seed44": 0.0571103065723676,
+      "seed45": 0.039000255580176946,
+      "seed46": 0.012434991535815287
+    },
+    "n_seeds_favor_B": 5,
+    "n_seeds_total": 5
+  }
+}

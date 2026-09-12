@@ -1,13 +1,29 @@
 # Biological Minimalism
 
-**AI-Driven Minimal Sensor Architecture for Autonomous Astronaut Health Monitoring**
+**An evidence-driven methodology for the target-specific marginal value of sensing components in autonomous astronaut health monitoring**
 
-A NASA Mission Control–styled dashboard demonstrating how a four-sensor wearable
-suite (wireless EEG, PPG, peripheral temperature, bio-impedance), fused by a
-CNN + Transformer architecture into a personalized **Biological Digital Twin**,
-can recover the physiological picture that today's multi-sensor (up to
-12-sensor) astronaut monitoring setups provide — with genuine, locally-computed
-SHAP explainability instead of a black box.
+Biological Minimalism is a methodology for determining the *target-specific marginal
+value* of individual sensing components and combining that scientific evidence with
+operational burden, provenance, robustness, and architecture constraints — before
+deciding whether a component should be retained, made conditional, deprioritized,
+removed for a named target, or left unresolved. It is **not** a claim that a
+particular fixed sensor set is optimal.
+
+**Current architecture decision status: `NOT_READY`** — this is a valid, honest
+scientific result, not a defect. See [Project status](#project-status--what-is-real-proposed-unresolved).
+
+The repository also ships a NASA Mission Control–styled dashboard. Its synthetic
+mode illustrates a *proposed* four-sensor personalized **Biological Digital Twin**
+deployment (wireless EEG, PPG, peripheral temperature, bio-impedance) — a
+motivating future vision, **not** a trained or validated system. Its replay mode
+plays one real, synchronized PPG-DaLiA subject through the validated PPG+IMU
+heart-rate model, with genuine locally-computed SHAP explainability over the
+synthetic physiology estimator.
+
+> **Motivating research question (not a demonstrated result):** *can a small,
+> personalized sensor set recover enough of the physiological picture that
+> denser (up to ~12-sensor) astronaut monitoring setups provide?* Nothing in
+> this repository establishes that it can; that remains future work.
 
 Built for the **77th International Astronautical Congress (IAC 2026)**, Antalya,
 Türkiye — IAF/IAA Space Life Sciences Symposium, Interactive Presentation format.
@@ -19,16 +35,52 @@ Türkiye — IAF/IAA Space Life Sciences Symposium, Interactive Presentation for
 
 ## What this is (and isn't)
 
-- The dashboard runs on a **synthetic mock data engine**, not real sensors or a
-  real astronaut — see [Sensor & Data Honesty](#sensor--data-honesty) below.
-- The AI layer is a **transparent, documented rule-based physiology estimator**
-  by default, with a **real, structurally complete PyTorch CNN+Transformer
-  architecture** (`backend/app/ml/models.py`) ready to be trained and swapped in
-  — see [`ml/README.md`](ml/README.md).
+- The dashboard defaults to a **synthetic mock data engine** and can also replay
+  one real, synchronized PPG-DaLiA subject with explicit provenance. Neither mode
+  is live sensor hardware — see [Sensor & Data Honesty](#sensor--data-honesty).
+- Synthetic mode uses a **transparent, documented rule-based physiology
+  estimator**. Dataset replay uses the validated PPG-DaLiA PPG+IMU PyTorch model
+  for heart rate only; every other unsupported replay inference remains absent.
 - Explanations shown in the **AI Insights** page are **real SHAP (Shapley
   value) computations** over the live estimator, not scripted text.
 - This is a research demonstrator / proof-of-concept, not a certified or
   clinically validated medical device.
+
+## Project status — what is real, proposed, unresolved
+
+A technically literate reviewer should be able to tell these three tiers apart at
+a glance. The single machine-readable source of truth for the scientific evidence
+is the research API (`backend/app/research/`, served under `/research/...`) backed
+by the immutable artifacts in `results/`; the frontend never hardcodes scientific
+numbers.
+
+**Real (validated / demonstrated on held-out data):**
+- Real PPG-DaLiA replay of one synchronized subject at native sampling rates.
+- Validated PPG+IMU heart-rate model (held-out subjects). Synchronized IMU
+  reduces held-out HR MAE from **9.086 → 7.208 bpm (≈20.6% relative)**, replicated
+  **5/5 seeds** (multi-seed aggregate; the earlier single-seed figure was ≈23%).
+  The A→B and A→C comparisons are **capacity-confounded** (baseline ≈8k params vs
+  candidate ≈29k params); the capacity-matched **C→B** comparison (0.776 bpm) is
+  the cleanest current evidence.
+- PTT second-PPG-site experiment: single-site baseline beat the two-site candidate
+  in aggregate across 5 optimization seeds, but subject behavior is heterogeneous
+  and one subject (s2) dominates the aggregate — bounded, heterogeneous negative
+  evidence, **not** proof the second site is useless.
+- Multi-seed replication, S14-only fault-robustness characterization, the
+  provenance system, operational-burden framework, hardware *reference* topology,
+  and Research Mode.
+
+**Proposed (architected, motivating vision — NOT validated):**
+- The full personalized Biological Digital Twin (architecture code only, untrained,
+  no validated checkpoint).
+- The four-sensor deployment concept, astronaut / microgravity deployment, and the
+  full multi-target evidence suite.
+
+**Unresolved (open, deliberately not faked):**
+- The final minimal configuration; a Pareto frontier (**`NOT_READY`**); total system
+  power, mass, and complete BOM; electrode montages; sensor-interaction effects;
+  calibrated predictive uncertainty. Unknown values are represented as `null`,
+  never as `0`.
 
 ## Quickstart
 
@@ -69,6 +121,11 @@ elsewhere.
 Both run entirely offline once dependencies are installed — no internet
 connection, API key, or account is required to see the full demo.
 
+To enable real recorded-data replay, set `BIOMIN_PPG_DALIA_PATH` for the backend
+to the official archive or extracted `PPG_FieldStudy` directory and set
+`BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH` to the validated Model B checkpoint, then
+use the Settings page. See [`docs/DATASET_REPLAY.md`](docs/DATASET_REPLAY.md).
+
 ## Pages
 
 | Page | Route | What it shows |
@@ -100,7 +157,11 @@ connection, API key, or account is required to see the full demo.
 ```mermaid
 flowchart LR
     subgraph Backend["backend/ — FastAPI"]
-        ME["MockDataEngine\n(engine/mock_data_engine.py)"] --> PHY["Physiology engine\n(engine/physiology.py)"]
+        ME["MockDataEngine\n(engine/mock_data_engine.py)"] --> PHY["Synthetic physiology\n(engine/physiology.py)"]
+        REPLAY["DatasetReplaySource\nrecorded PPG + IMU"] --> FAULT["Replay fault injector\ndisabled by default"]
+        FAULT --> WIN["8 s / 2 s window assembler"]
+        WIN --> HR["Validated PPG+IMU HR model"]
+        HR --> WS
         PHY --> API["REST routes\n/metrics /digital-twin\n/sensor-health /simulation/*"]
         PHY --> WS["/ws/live-feed\nWebSocket broadcast"]
         PHY --> SHAP["ml/explainability.py\nreal SHAP over physiology.py"]
@@ -144,7 +205,7 @@ Framer Motion · FastAPI · WebSockets · NumPy · scikit-learn · SHAP · PyTor
 
 ## Sensor & Data Honesty
 
-No real sensor hardware is connected. All telemetry comes from
+No real sensor hardware is connected. Synthetic mode comes from
 `backend/app/engine/mock_data_engine.py`, a set of smooth (Ornstein-Uhlenbeck)
 random-walk processes shaped by the physiology formulas in
 `backend/app/engine/physiology.py`. Those formulas are literature-*inspired*
@@ -154,6 +215,15 @@ by feature, in the PDD. Every number the dashboard displays and every SHAP
 explanation it generates is computed live from this same transparent pipeline;
 nothing shown is scripted or hand-written per scenario.
 
+Dataset replay mode instead transports previously recorded PPG-DaLiA channels
+from exactly one subject/session at their native sampling rates. Frames are marked
+`dataset_replay` and do not contain synthetic cognitive, digital-twin, confidence,
+or missing-modality values. Synchronized 8-second PPG+IMU windows feed the
+validated heart-rate model at a 2-second stride; its output is separately marked
+`AI_ESTIMATED`, includes dataset/subject/window/checkpoint provenance, and has no
+fabricated confidence or uncertainty. This does not validate hardware timing,
+microgravity behavior, or clinical accuracy.
+
 ## Testing
 
 ```bash
@@ -161,12 +231,10 @@ cd backend && .venv/Scripts/pytest -q   # or .venv/bin/pytest -q on macOS/Linux
 cd frontend && npm run build            # strict TypeScript + Next.js build
 ```
 
-Both were run and passed against this exact codebase during development
-(9/9 backend tests; a clean strict-TypeScript Next.js production build).
-The running dashboard never imports `torch` by default — `/health` reports
-`"inference_engine": "rule_based_v1"` to confirm this — so this is true
-regardless of whether PyTorch itself is installable/importable on a given
-machine.
+Synthetic mode does not load the replay model. PyTorch and the validated Model B
+checkpoint are loaded lazily only when replay produces its first complete
+synchronized 8-second PPG+IMU window. A missing or invalid checkpoint yields an
+explicit `model_unavailable` state; it never falls back to synthetic heart rate.
 
 **A note on the PyTorch path specifically:** the latest PyPI `torch` wheel
 (2.13.0 at the time of building this) failed to import on the machine this

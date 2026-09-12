@@ -1,8 +1,9 @@
 """FastAPI entrypoint.
 
-Boots the mock telemetry engine's background tick loop, mounts the REST
+Boots the active telemetry source's background tick loop, mounts the REST
 routers and the `/ws/live-feed` WebSocket, and configures CORS for the
-Next.js frontend.
+Next.js frontend. The source defaults to the existing synthetic engine and
+can be switched to one real PPG-DaLiA recording.
 """
 
 from __future__ import annotations
@@ -14,11 +15,11 @@ from collections.abc import AsyncIterator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import ai_explanation, digital_twin, metrics, sensor_health, simulation
+from app.api.routes import ai_explanation, data_source, digital_twin, metrics, research, sensor_health, simulation
 from app.api.websocket import manager
 from app.api.websocket import router as ws_router
 from app.core.config import settings
-from app.engine.mock_data_engine import engine
+from app.engine.data_sources import data_source_manager
 from app.ml.inference import create_inference_engine
 
 _tick_task: asyncio.Task | None = None
@@ -32,8 +33,9 @@ inference_engine = create_inference_engine()
 
 async def _tick_loop() -> None:
     while True:
-        snapshot = engine.tick(settings.tick_interval_seconds)
-        await manager.broadcast(snapshot.model_dump(mode="json"))
+        snapshot = data_source_manager.tick(settings.tick_interval_seconds)
+        if snapshot is not None:
+            await manager.broadcast(snapshot.model_dump(mode="json"))
         await asyncio.sleep(settings.tick_interval_seconds)
 
 
@@ -53,7 +55,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(
     title=settings.app_name,
     version=settings.api_version,
-    description="Mock-data-driven mission control API for the Biological Minimalism dashboard.",
+    description="Synthetic-demo and real recorded-dataset replay API for the Biological Minimalism dashboard.",
     lifespan=lifespan,
 )
 
@@ -69,7 +71,9 @@ app.include_router(metrics.router, prefix="/metrics", tags=["metrics"])
 app.include_router(digital_twin.router, tags=["digital-twin"])
 app.include_router(sensor_health.router, tags=["sensor-health"])
 app.include_router(simulation.router, prefix="/simulation", tags=["simulation"])
+app.include_router(data_source.router, prefix="/data-source", tags=["data-source"])
 app.include_router(ai_explanation.router, prefix="/ai", tags=["ai"])
+app.include_router(research.router, prefix="/research", tags=["research"])
 app.include_router(ws_router, tags=["websocket"])
 
 
@@ -80,4 +84,5 @@ def health_check() -> dict[str, str]:
         "service": settings.app_name,
         "version": settings.api_version,
         "inference_engine": inference_engine.name,
+        "source_type": data_source_manager.source_type.value,
     }

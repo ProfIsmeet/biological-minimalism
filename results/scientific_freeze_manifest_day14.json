@@ -1,0 +1,192 @@
+{
+  "purpose": "Scientific freeze manifest (Day 14) - the science source-of-truth hash chain. Any future change to a hashed file must be intentional and re-run this builder.",
+  "n_files": 37,
+  "all_files_exist": true,
+  "entries": [
+    {
+      "path": "results/sensor_marginal_value_contract.json",
+      "exists": true,
+      "sha256": "05e1c62957793cda2095ecf47e50d7901540277006a70699543b5c33e263142d"
+    },
+    {
+      "path": "results/ppg_dalia_capacity_control.json",
+      "exists": true,
+      "sha256": "6fd59a338896fa792c96c44c6c96f739893b41bbdd7df48994721c2d0d33ecd1"
+    },
+    {
+      "path": "results/ppg_dalia_imu_multiseed_replication.json",
+      "exists": true,
+      "sha256": "6671d8b469fbff4b2779292678744e7d775f70e410dc9c4d94abd99d48245e9d"
+    },
+    {
+      "path": "results/ptt_ppg_site_ablation.json",
+      "exists": true,
+      "sha256": "767dab063bf0ed53d04108170a999ecd60c3e75158adbd7cddff4bb58072db44"
+    },
+    {
+      "path": "results/ptt_sensitivity_analysis.json",
+      "exists": true,
+      "sha256": "f9acebd3f7f9831b19daadd74f657f82ff725fd6cee786dcb8ab3015900a047b"
+    },
+    {
+      "path": "results/sleep_edf_eeg_eog_ablation.json",
+      "exists": true,
+      "sha256": "ee4bd0ecde82a2e512f0f2862e459d49244e1657f3bc66670c13dde2f7369f38"
+    },
+    {
+      "path": "results/sleep_edf_eeg_eog_control_analysis.json",
+      "exists": true,
+      "sha256": "d41f4e9769e7a4e57e4e21c5fac8ee0b02c765df81a05617e7f51bc8ed245e0f"
+    },
+    {
+      "path": "results/sleep_edf_per_subject_analysis.json",
+      "exists": true,
+      "sha256": "642c6f21ba89a3291b2b19295ea21b44792d786dd6b5c71c6efd4e8c29784c3d"
+    },
+    {
+      "path": "results/sleep_edf_secondary_holdout_evaluation.json",
+      "exists": true,
+      "sha256": "794c761e9d3ef35207cdde8cf4ffea744bbc8fa67d42f2144f0ac2fa3fd5f155"
+    },
+    {
+      "path": "results/sleep_edf_secondary_n3_diagnostic.json",
+      "exists": true,
+      "sha256": "aaa308006bb2df142adf8b807957539e857c73ce2cc29268a5ac28dd97ff7232"
+    },
+    {
+      "path": "results/sleep_n3_extended_diagnostic_day11.json",
+      "exists": true,
+      "sha256": "d062c3a1bbc5dc04545577c947a8243075e316b9652ec78d0d4603f2517f327c"
+    },
+    {
+      "path": "results/day10_ppg_dalia_fault_robustness_reproduction.json",
+      "exists": true,
+      "sha256": "c2434ca21f327dcb02e79ab91f5cde65c9922cb562afc8c6f62cda6e93e04592"
+    },
+    {
+      "path": "results/sleep_edf_interaction_resp_day10.json",
+      "exists": true,
+      "sha256": "0355bf6d43b41f630a6ca762cc5d3525dcde269aa267cc7329fc0cd2159b5fd7"
+    },
+    {
+      "path": "results/sleep_interaction_sensitivity_day11.json",
+      "exists": true,
+      "sha256": "235f584026537788a6a75b43b01c894648c7b0fb87056cfbfebcaae16680eef0"
+    },
+    {
+      "path": "results/ppg_dalia_sensitivity_day11.json",
+      "exists": true,
+      "sha256": "af9c706ecc62f32284030858c293c383d1dcc41d423af0f31b3af6470f66e83c"
+    },
+    {
+      "path": "results/ptt_sensitivity_day11.json",
+      "exists": true,
+      "sha256": "e6572dbde46f3a91eb1cb35e4630c70a7eb7e502344cc5f2f3754f246e551645"
+    },
+    {
+      "path": "results/sleep_edf_sensitivity_day11.json",
+      "exists": true,
+      "sha256": "df6988e8b13066cf8e372864c3581200439fbda6ad14b12409ea4416b6c9440b"
+    },
+    {
+      "path": "results/statistical_unit_audit_day11.json",
+      "exists": true,
+      "sha256": "6bfe2d47057b10f898a8f3210689d23809af8103f35629abe594f33e00ef509e"
+    },
+    {
+      "path": "results/scientific_master_table_day11.json",
+      "exists": true,
+      "sha256": "e8b7d434f44b773d366c2ded7a9431cfa8269503c920b7905843795668fa3032"
+    },
+    {
+      "path": "results/day10_frozen_environment_verification.json",
+      "exists": true,
+      "sha256": "ce8fa78c080f34ff83c3b80d1103e5b051c4c3a0f8c06ba0ff6077de03bdd6c4"
+    },
+    {
+      "path": "results/dataset_fingerprint_manifest_day10.json",
+      "exists": true,
+      "sha256": "022182bff8bec08deb7f8fe782a83df9d806da1c89c2a9310d27f4cc15a10532"
+    },
+    {
+      "path": "results/final_checkpoint_inventory_day14.json",
+      "exists": true,
+      "sha256": "702d373b276b3d1e978f5113d237eefb8fda01b2f0cf583ad827a3393733e2fc"
+    },
+    {
+      "path": "results/clean_clone_reproduction_day13.json",
+      "exists": true,
+      "sha256": "b6cba845ea5ad7abbed7365131704a288a9f5ff8615b6f8430bf529c8fb25bd7"
+    },
+    {
+      "path": "results/paper_tables/table1_experimental_protocols.json",
+      "exists": true,
+      "sha256": "c9d1b367dd52d2df212b41dc5383cb5b4d2bf43fefaf0226a747e96dddcffce7"
+    },
+    {
+      "path": "results/paper_tables/table2_main_marginal_value_results.json",
+      "exists": true,
+      "sha256": "2cf23981897f10e47171258f84d6ae54355c2bf004c6296d55f2b35a01bdc382"
+    },
+    {
+      "path": "results/paper_tables/table3_subject_heterogeneity.json",
+      "exists": true,
+      "sha256": "b2cb04a1412df2737318a5176775dafdce445268c12740a769afbf770f289b14"
+    },
+    {
+      "path": "results/paper_tables/table4_reproducibility_provenance.json",
+      "exists": true,
+      "sha256": "bc3ced38fd92fb0cdae738c6b68567504287254694108cbe3dba17ead39842f7"
+    },
+    {
+      "path": "results/paper_tables/table5_interaction_experiment.json",
+      "exists": true,
+      "sha256": "198c43f9241b7546f11517bf3b6ee87946161d2bbb6b718e3ab7973f19e5ff93"
+    },
+    {
+      "path": "results/figure_sources/figure_A_ppg_capacity_control.json",
+      "exists": true,
+      "sha256": "6b5b3ce5eb67b26139f0f4bf3f0673f0f24f88a4e4bcc730a1b80d93e3089f27"
+    },
+    {
+      "path": "results/figure_sources/figure_B_ppg_subject_activity_heterogeneity.json",
+      "exists": true,
+      "sha256": "5f227693f1684b53e2038b7438cf3d9bdbb720898fa11a9b2ca8e130cd316ea1"
+    },
+    {
+      "path": "results/figure_sources/figure_C_ptt_subject_heterogeneity.json",
+      "exists": true,
+      "sha256": "08395e59733877e6868034843bd48e03f36823606f9333f3cc40aa464fbcdb8d"
+    },
+    {
+      "path": "results/figure_sources/figure_D_sleep_primary_abc.json",
+      "exists": true,
+      "sha256": "ac0ede1e9e775ecf258146f3b72ad990793e5109571560f1787eaf8903d83ffa"
+    },
+    {
+      "path": "results/figure_sources/figure_E_sleep_secondary_abc.json",
+      "exists": true,
+      "sha256": "27a07c9ab24f71132d2f73ef92d66b20ef7f8b6da517a28c8c4af21e0921a9bf"
+    },
+    {
+      "path": "results/figure_sources/figure_F_sleep_subject_level_b_minus_a.json",
+      "exists": true,
+      "sha256": "5e0fec79a4b089180805834049a1c417a9b390610c1e50cb367cd930da04047b"
+    },
+    {
+      "path": "results/figure_sources/figure_G_sleep_class_level_b_minus_a.json",
+      "exists": true,
+      "sha256": "eba95770509eeedf5f1a426130ab00c2e940e8ce4040308d8db7b8e00897c2a7"
+    },
+    {
+      "path": "results/figure_sources/figure_H_robustness.json",
+      "exists": true,
+      "sha256": "a56ac83a85a151b3386c429281f8507589224d3a2e933da9d8eefedad2d54b54"
+    },
+    {
+      "path": "results/figure_sources/figure_I_interaction.json",
+      "exists": true,
+      "sha256": "0a1dbb3743587b3f800ddea7c74128939a22f0940fcf76f331323fb9d9773c50"
+    }
+  ]
+}

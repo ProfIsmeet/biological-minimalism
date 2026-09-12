@@ -35,13 +35,20 @@ into this exact shape is skipped with a warning, not padded or guessed.
 
 from __future__ import annotations
 
-import pickle
-import re
-import zipfile
+import json
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
+
+from backend.app.data.ppg_dalia import (
+    ALL_SUBJECTS,
+    load_subject_payload,
+    list_available_subjects,
+)
+
+CACHE_SCHEMA_VERSION = "ppg_dalia_cache.v1"  # audit M7/§35 cache provenance
 
 PPG_FS = 64.0
 ACC_FS = 32.0
@@ -50,6 +57,53 @@ WINDOW_SECONDS = 8.0
 STEP_SECONDS = 2.0
 PPG_WINDOW_SAMPLES = int(WINDOW_SECONDS * PPG_FS)  # 512
 ACC_WINDOW_SAMPLES = int(WINDOW_SECONDS * ACC_FS)  # 256
+
+FLAT_STD_THRESHOLD = 1e-8
+
+
+class FlatSignalError(ValueError):
+    """Raised when a window's signal is flat/dead (std below FLAT_STD_THRESHOLD)
+    and cannot be meaningfully z-scored. Both the offline preprocessing path
+    (_windowize, below) and any live/replay inference path must treat this
+    the same way: refuse the window rather than normalizing noise - see
+    ml/inference/ppg_dalia_hr.py, which reuses these exact functions so the
+    two paths can never silently diverge."""
+
+
+def zscore_ppg_window(window: np.ndarray) -> np.ndarray:
+    """Per-window z-score for one raw PPG segment.
+
+    `window`: 1D array, shape (PPG_WINDOW_SAMPLES,). This is the exact
+    normalization applied during training/preprocessing - reused as-is by
+    the inference adapter so the two paths cannot drift apart.
+    """
+
+    window = np.asarray(window)
+    if window.shape != (PPG_WINDOW_SAMPLES,):
+        raise ValueError(f"expected PPG window shape ({PPG_WINDOW_SAMPLES},), got {window.shape}")
+    std = float(window.std())
+    if std < FLAT_STD_THRESHOLD:
+        raise FlatSignalError("PPG window is flat/dead (std < 1e-8) - refusing to normalize noise as signal")
+    return ((window - window.mean()) / std).astype(np.float32)
+
+
+def zscore_imu_window(window: np.ndarray) -> np.ndarray:
+    """Per-axis, per-window z-score for one raw IMU (accelerometer) segment.
+
+    `window`: 2D array, shape (3, ACC_WINDOW_SAMPLES). Each of the 3 axes is
+    normalized independently within this window - the exact normalization
+    applied during training/preprocessing, reused as-is by the inference
+    adapter.
+    """
+
+    window = np.asarray(window)
+    if window.shape != (3, ACC_WINDOW_SAMPLES):
+        raise ValueError(f"expected IMU window shape (3, {ACC_WINDOW_SAMPLES}), got {window.shape}")
+    mean = window.mean(axis=1, keepdims=True)
+    std = window.std(axis=1, keepdims=True)
+    std_safe = np.where(std < FLAT_STD_THRESHOLD, 1.0, std)
+    return ((window - mean) / std_safe).astype(np.float32)
+
 
 ACTIVITY_NAMES = {
     0: "transient/unlabeled",
@@ -62,9 +116,6 @@ ACTIVITY_NAMES = {
     7: "walking",
     8: "working",
 }
-
-ALL_SUBJECTS = tuple(f"S{i}" for i in range(1, 16))
-
 
 @dataclass
 class SubjectWindows:
@@ -81,12 +132,7 @@ def _extract_subject_pickle(zip_path: Path, subject_id: str) -> dict:
     (`ppg_dalia_uci.zip` -> `data.zip` -> `PPG_FieldStudy/<subject>/<subject>.pkl`)
     without ever writing the ~1.2-1.7 GB raw file to disk."""
 
-    with zipfile.ZipFile(zip_path) as outer:
-        with outer.open("data.zip") as data_zip_bytes:
-            with zipfile.ZipFile(data_zip_bytes) as inner:
-                entry = f"PPG_FieldStudy/{subject_id}/{subject_id}.pkl"
-                with inner.open(entry) as f:
-                    return pickle.load(f, encoding="latin1")
+    return load_subject_payload(zip_path, subject_id)
 
 
 def _windowize(raw: dict, subject_id: str) -> SubjectWindows:
@@ -119,15 +165,12 @@ def _windowize(raw: dict, subject_id: str) -> SubjectWindows:
         ppg_seg = bvp[ppg_start:ppg_end]
         acc_seg = acc[acc_start:acc_end].T  # (3, ACC_WINDOW_SAMPLES)
 
-        ppg_std = ppg_seg.std()
-        if ppg_std < 1e-8:
+        try:
+            ppg_out[i] = zscore_ppg_window(ppg_seg)
+        except FlatSignalError:
             keep[i] = False  # flat/dropped real sensor segment - excluded, not fabricated
             continue
-
-        ppg_out[i] = ((ppg_seg - ppg_seg.mean()) / ppg_std).astype(np.float32)
-        acc_axis_std = acc_seg.std(axis=1, keepdims=True)
-        acc_axis_std[acc_axis_std < 1e-8] = 1.0
-        acc_out[i] = ((acc_seg - acc_seg.mean(axis=1, keepdims=True)) / acc_axis_std).astype(np.float32)
+        acc_out[i] = zscore_imu_window(acc_seg)
 
         act_window = activity_raw[act_start:act_end]
         values, counts = np.unique(act_window, return_counts=True)
@@ -176,6 +219,18 @@ def preprocess_subject(zip_path: str | Path, subject_id: str, cache_dir: str | P
     )
     windows = _windowize(raw, subject_id)
 
+    # Audit M7/§35: embed cache provenance metadata so a loader can reject a
+    # mislabeled or stale cache instead of silently trusting it. Existing caches
+    # without this key are tolerated as LEGACY_CACHE_UNVERIFIED (§36).
+    meta = {
+        "cache_schema_version": CACHE_SCHEMA_VERSION,
+        "subject_id": subject_id,
+        "modality_config": {
+            "ppg_fs": PPG_FS, "acc_fs": ACC_FS,
+            "window_seconds": WINDOW_SECONDS, "step_seconds": STEP_SECONDS,
+        },
+        "preprocessing": "ml/datasets/ppg_dalia.py::_windowize (deterministic)",
+    }
     np.savez_compressed(
         cache_path,
         ppg=windows.ppg,
@@ -183,6 +238,7 @@ def preprocess_subject(zip_path: str | Path, subject_id: str, cache_dir: str | P
         hr=windows.hr,
         activity=windows.activity,
         motion_energy=windows.motion_energy,
+        _provenance=np.array(json.dumps(meta)),
     )
     return cache_path
 
@@ -195,6 +251,28 @@ def load_cached_subject(cache_dir: str | Path, subject_id: str) -> SubjectWindow
             "ml/preprocess_ppg_dalia.py first."
         )
     with np.load(cache_path) as data:
+        # Audit M7/§35-§36: verify embedded provenance; reject a cache whose
+        # recorded subject/schema does not match, but tolerate legacy caches
+        # (no provenance) as LEGACY_CACHE_UNVERIFIED rather than silently trusting.
+        if "_provenance" in data:
+            meta = json.loads(str(data["_provenance"]))
+            if meta.get("subject_id") != subject_id:
+                raise ValueError(
+                    f"Cache provenance mismatch: {cache_path} records subject "
+                    f"{meta.get('subject_id')!r} but {subject_id!r} was requested."
+                )
+            if meta.get("cache_schema_version") != CACHE_SCHEMA_VERSION:
+                warnings.warn(
+                    f"Cache {cache_path} schema {meta.get('cache_schema_version')!r} != "
+                    f"{CACHE_SCHEMA_VERSION!r}; treating as LEGACY_CACHE_UNVERIFIED.",
+                    stacklevel=2,
+                )
+        else:
+            warnings.warn(
+                f"Cache {cache_path} has no provenance metadata "
+                "(LEGACY_CACHE_UNVERIFIED): re-run ml/preprocess_ppg_dalia.py to stamp it.",
+                stacklevel=2,
+            )
         return SubjectWindows(
             subject_id=subject_id,
             ppg=data["ppg"],
@@ -214,13 +292,4 @@ def list_available_raw_subjects(zip_path: str | Path) -> list[str]:
     the preprocessing script and tests instead of assuming all of S1-S15
     are present."""
 
-    zip_path = Path(zip_path)
-    with zipfile.ZipFile(zip_path) as outer:
-        with outer.open("data.zip") as data_zip_bytes:
-            with zipfile.ZipFile(data_zip_bytes) as inner:
-                names = inner.namelist()
-    subjects = sorted(
-        {m.group(1) for n in names if (m := re.match(r"PPG_FieldStudy/(S\d+)/\1\.pkl$", n))},
-        key=lambda s: int(s[1:]),
-    )
-    return subjects
+    return list_available_subjects(zip_path)

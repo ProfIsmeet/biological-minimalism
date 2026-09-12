@@ -1,0 +1,122 @@
+Using FROZEN split (never recomputed): {"train": ["S1", "S10", "S11", "S12", "S15", "S3", "S4", "S6", "S7", "S8"], "val": ["S13", "S5"], "test": ["S14", "S2", "S9"]}
+HR normalization (frozen): mean=86.344666 std=21.048254
+Model A params: 8065 | Model A_cap params: 28865 | Model B/C params: 29089
+
+=== seed 42: training model_a_cap_seed42 (params=28865) ===
+C:\Users\Administrator\Desktop\biological-minimalism\backend\.venv\Lib\site-packages\torch\nn\modules\transformer.py:508: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\aten\src\ATen\NestedTensorImpl.cpp:182.)
+  output = torch._nested_tensor_from_mask(
+  epoch  1/20 - train loss 0.3211 | val MAE 12.738 bpm
+  epoch  2/20 - train loss 0.2346 | val MAE 14.286 bpm
+  epoch  3/20 - train loss 0.2053 | val MAE 9.453 bpm
+  epoch  4/20 - train loss 0.1917 | val MAE 7.670 bpm
+  epoch  5/20 - train loss 0.1789 | val MAE 10.032 bpm
+  epoch  6/20 - train loss 0.1729 | val MAE 8.101 bpm
+  epoch  7/20 - train loss 0.1605 | val MAE 6.779 bpm
+  epoch  8/20 - train loss 0.1557 | val MAE 7.651 bpm
+  epoch  9/20 - train loss 0.1514 | val MAE 8.145 bpm
+  epoch 10/20 - train loss 0.1439 | val MAE 6.637 bpm
+  epoch 11/20 - train loss 0.1421 | val MAE 8.137 bpm
+  epoch 12/20 - train loss 0.1350 | val MAE 8.058 bpm
+  epoch 13/20 - train loss 0.1289 | val MAE 9.178 bpm
+  epoch 14/20 - train loss 0.1270 | val MAE 5.915 bpm
+  epoch 15/20 - train loss 0.1229 | val MAE 7.325 bpm
+  epoch 16/20 - train loss 0.1210 | val MAE 6.072 bpm
+  epoch 17/20 - train loss 0.1149 | val MAE 7.234 bpm
+  epoch 18/20 - train loss 0.1083 | val MAE 8.073 bpm
+  epoch 19/20 - train loss 0.1098 | val MAE 6.777 bpm
+  epoch 20/20 - train loss 0.1071 | val MAE 7.014 bpm
+seed 42 model_a_cap_seed42: held-out MAE 7.5584 bpm, RMSE 11.5797 bpm (354.7s)
+
+=== seed 43: training model_a_cap_seed43 (params=28865) ===
+  epoch  1/20 - train loss 0.2999 | val MAE 9.904 bpm
+  epoch  2/20 - train loss 0.2181 | val MAE 10.894 bpm
+  epoch  3/20 - train loss 0.1986 | val MAE 8.733 bpm
+  epoch  4/20 - train loss 0.1824 | val MAE 8.027 bpm
+  epoch  5/20 - train loss 0.1688 | val MAE 6.991 bpm
+  epoch  6/20 - train loss 0.1617 | val MAE 8.713 bpm
+  epoch  7/20 - train loss 0.1566 | val MAE 7.454 bpm
+  epoch  8/20 - train loss 0.1454 | val MAE 8.043 bpm
+  epoch  9/20 - train loss 0.1443 | val MAE 8.695 bpm
+  epoch 10/20 - train loss 0.1384 | val MAE 7.700 bpm
+  epoch 11/20 - train loss 0.1319 | val MAE 6.778 bpm
+  epoch 12/20 - train loss 0.1292 | val MAE 7.877 bpm
+  epoch 13/20 - train loss 0.1244 | val MAE 7.817 bpm
+  epoch 14/20 - train loss 0.1186 | val MAE 8.239 bpm
+  epoch 15/20 - train loss 0.1162 | val MAE 7.283 bpm
+  epoch 16/20 - train loss 0.1132 | val MAE 8.698 bpm
+  epoch 17/20 - train loss 0.1077 | val MAE 7.353 bpm
+  epoch 18/20 - train loss 0.1064 | val MAE 6.578 bpm
+  epoch 19/20 - train loss 0.1050 | val MAE 7.146 bpm
+  epoch 20/20 - train loss 0.1006 | val MAE 7.522 bpm
+seed 43 model_a_cap_seed43: held-out MAE 7.8385 bpm, RMSE 12.0952 bpm (337.6s)
+
+=== seed 44: training model_a_cap_seed44 (params=28865) ===
+  epoch  1/20 - train loss 0.3174 | val MAE 10.527 bpm
+  epoch  2/20 - train loss 0.2281 | val MAE 8.961 bpm
+  epoch  3/20 - train loss 0.2007 | val MAE 9.747 bpm
+  epoch  4/20 - train loss 0.1857 | val MAE 8.456 bpm
+  epoch  5/20 - train loss 0.1735 | val MAE 8.075 bpm
+  epoch  6/20 - train loss 0.1602 | val MAE 8.209 bpm
+  epoch  7/20 - train loss 0.1581 | val MAE 7.295 bpm
+  epoch  8/20 - train loss 0.1492 | val MAE 11.153 bpm
+  epoch  9/20 - train loss 0.1449 | val MAE 7.072 bpm
+  epoch 10/20 - train loss 0.1377 | val MAE 9.116 bpm
+  epoch 11/20 - train loss 0.1463 | val MAE 8.000 bpm
+  epoch 12/20 - train loss 0.1275 | val MAE 8.578 bpm
+  epoch 13/20 - train loss 0.1231 | val MAE 7.404 bpm
+  epoch 14/20 - train loss 0.1214 | val MAE 6.591 bpm
+  epoch 15/20 - train loss 0.1189 | val MAE 8.860 bpm
+  epoch 16/20 - train loss 0.1161 | val MAE 8.157 bpm
+  epoch 17/20 - train loss 0.1102 | val MAE 8.683 bpm
+  epoch 18/20 - train loss 0.1084 | val MAE 7.060 bpm
+  epoch 19/20 - train loss 0.1073 | val MAE 7.905 bpm
+  epoch 20/20 - train loss 0.1022 | val MAE 9.582 bpm
+seed 44 model_a_cap_seed44: held-out MAE 7.5549 bpm, RMSE 11.3506 bpm (347.3s)
+
+=== seed 45: training model_a_cap_seed45 (params=28865) ===
+  epoch  1/20 - train loss 0.3111 | val MAE 11.235 bpm
+  epoch  2/20 - train loss 0.2237 | val MAE 8.968 bpm
+  epoch  3/20 - train loss 0.1967 | val MAE 7.892 bpm
+  epoch  4/20 - train loss 0.1828 | val MAE 7.036 bpm
+  epoch  5/20 - train loss 0.1708 | val MAE 8.715 bpm
+  epoch  6/20 - train loss 0.1655 | val MAE 7.141 bpm
+  epoch  7/20 - train loss 0.1572 | val MAE 7.179 bpm
+  epoch  8/20 - train loss 0.1486 | val MAE 8.625 bpm
+  epoch  9/20 - train loss 0.1440 | val MAE 7.780 bpm
+  epoch 10/20 - train loss 0.1379 | val MAE 6.999 bpm
+  epoch 11/20 - train loss 0.1363 | val MAE 7.470 bpm
+  epoch 12/20 - train loss 0.1303 | val MAE 6.859 bpm
+  epoch 13/20 - train loss 0.1270 | val MAE 8.936 bpm
+  epoch 14/20 - train loss 0.1202 | val MAE 7.672 bpm
+  epoch 15/20 - train loss 0.1165 | val MAE 7.698 bpm
+  epoch 16/20 - train loss 0.1152 | val MAE 7.254 bpm
+  epoch 17/20 - train loss 0.1130 | val MAE 7.138 bpm
+  epoch 18/20 - train loss 0.1096 | val MAE 6.853 bpm
+  epoch 19/20 - train loss 0.1065 | val MAE 8.808 bpm
+  epoch 20/20 - train loss 0.1035 | val MAE 6.654 bpm
+seed 45 model_a_cap_seed45: held-out MAE 7.5742 bpm, RMSE 11.9116 bpm (382.0s)
+
+=== seed 46: training model_a_cap_seed46 (params=28865) ===
+  epoch  1/20 - train loss 0.3076 | val MAE 10.887 bpm
+  epoch  2/20 - train loss 0.2271 | val MAE 10.584 bpm
+  epoch  3/20 - train loss 0.2016 | val MAE 8.575 bpm
+  epoch  4/20 - train loss 0.1831 | val MAE 9.583 bpm
+  epoch  5/20 - train loss 0.1713 | val MAE 8.292 bpm
+  epoch  6/20 - train loss 0.1644 | val MAE 8.630 bpm
+  epoch  7/20 - train loss 0.1546 | val MAE 7.779 bpm
+  epoch  8/20 - train loss 0.1476 | val MAE 9.350 bpm
+  epoch  9/20 - train loss 0.1415 | val MAE 6.762 bpm
+  epoch 10/20 - train loss 0.1337 | val MAE 8.447 bpm
+  epoch 11/20 - train loss 0.1321 | val MAE 7.143 bpm
+  epoch 12/20 - train loss 0.1268 | val MAE 6.568 bpm
+  epoch 13/20 - train loss 0.1212 | val MAE 8.365 bpm
+  epoch 14/20 - train loss 0.1151 | val MAE 6.533 bpm
+  epoch 15/20 - train loss 0.1114 | val MAE 7.616 bpm
+  epoch 16/20 - train loss 0.1058 | val MAE 7.849 bpm
+  epoch 17/20 - train loss 0.1061 | val MAE 8.501 bpm
+  epoch 18/20 - train loss 0.1026 | val MAE 7.467 bpm
+  epoch 19/20 - train loss 0.1001 | val MAE 6.671 bpm
+  epoch 20/20 - train loss 0.0967 | val MAE 6.367 bpm
+seed 46 model_a_cap_seed46: held-out MAE 8.5388 bpm, RMSE 12.8539 bpm (409.3s)
+
+Wrote C:\Users\Administrator\Desktop\biological-minimalism\results\ppg_dalia_capacity_control.json

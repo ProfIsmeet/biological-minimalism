@@ -1,0 +1,100 @@
+{
+  "purpose": "Extended, read-only N3-regression diagnostic (Day 11) - recomputes per-subject/per-seed confusion structure from the SAME frozen checkpoints already used for results/sleep_edf_secondary_n3_diagnostic.json. No retraining.",
+  "no_retraining": true,
+  "class_names": [
+    "Wake",
+    "N1",
+    "N2",
+    "N3",
+    "REM"
+  ],
+  "pooled_false_positive_source_breakdown": {
+    "count_A_by_true_class": [
+      71,
+      12,
+      2427,
+      0,
+      30
+    ],
+    "count_B_by_true_class": [
+      353,
+      33,
+      3032,
+      0,
+      66
+    ],
+    "delta_B_minus_A_by_true_class": [
+      282,
+      21,
+      605,
+      0,
+      36
+    ],
+    "n2_to_n3_delta": 605,
+    "n2_share_of_all_new_n3_false_positives": 0.6408898305084746,
+    "wake_to_n3_delta": 282,
+    "wake_to_n3_meaningful": true
+  },
+  "n2_to_n3_false_positives_per_seed": {
+    "A": {
+      "seed42": 404,
+      "seed43": 521,
+      "seed44": 431,
+      "seed45": 433,
+      "seed46": 638
+    },
+    "B": {
+      "seed42": 487,
+      "seed43": 401,
+      "seed44": 518,
+      "seed45": 664,
+      "seed46": 962
+    },
+    "delta_seed_consistent_sign": false
+  },
+  "per_subject_n3_recall_gain_B_minus_A": {
+    "SC4181": 0.02405498281786933,
+    "SC4191": 0.047272727272727244,
+    "SC4201": -0.09999999999999998,
+    "SC4211": 0.11428571428571443,
+    "SC4221": 0.01612903225806439,
+    "SC4231": 0.0,
+    "SC4241": 0.0,
+    "SC4251": 0.0
+  },
+  "per_subject_n3_precision_loss_A_minus_B": {
+    "SC4181": 0.035242833605243384,
+    "SC4191": 0.07997759564394757,
+    "SC4201": 0.0025172533255020113,
+    "SC4211": 0.10858251696567689,
+    "SC4221": 0.13337080943894397,
+    "SC4231": -0.0011420621620872179,
+    "SC4241": 0.029066233432298694,
+    "SC4251": 0.041570239093770084
+  },
+  "per_subject_n2_to_n3_fp_delta": {
+    "SC4181": 8.599999999999998,
+    "SC4191": 12.0,
+    "SC4201": -17.199999999999996,
+    "SC4211": 29.0,
+    "SC4221": 52.0,
+    "SC4231": 1.1999999999999886,
+    "SC4241": 7.599999999999994,
+    "SC4251": 27.799999999999997
+  },
+  "recall_gain_concentration": {
+    "n_subjects_positive": 4,
+    "n_subjects_total": 8,
+    "dominant_subject": "SC4211",
+    "dominant_subject_share": 1.1232843993183181,
+    "concentrated_in_one_subject": true
+  },
+  "precision_loss_concentration": {
+    "n_subjects_positive": 7,
+    "n_subjects_total": 8,
+    "dominant_subject": "SC4221",
+    "dominant_subject_share": 0.31075335607397175,
+    "concentrated_in_one_subject": false
+  },
+  "descriptive_interpretation": "The pooled N3 false-positive increase is dominated by N2->N3 confusion (~64% of the new false positives) but Wake->N3 confusion is also a MEANINGFUL, not minor, contributor (~30%) - both are disclosed here rather than only the larger one. The N2->N3 false-positive increase is NOT perfectly seed-consistent: 4/5 seeds show an increase, but seed43 shows a decrease (521->401) - this nuance was not visible in the pooled/aggregate figure alone and is disclosed here. The N3 precision loss is spread across multiple subjects (no subject exceeds ~31% of the summed effect). The N3 recall gain, by contrast, shows sign-cancellation across subjects (the dominant subjects share exceeds 100% of the summed effect because some subjects have a negative recall change offsetting others) - this is reported as genuine subject heterogeneity in the recall-gain direction, not clean single-subject dominance. This remains a descriptive account of confusion-matrix structure - it does not establish a physiological mechanism for why aligned EOG increases N2/Wake vs. N3 confusability."
+}

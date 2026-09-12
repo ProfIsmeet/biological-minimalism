@@ -6,16 +6,22 @@ import { LinearMeter } from "@/components/ui/LinearMeter";
 import { Panel } from "@/components/ui/Panel";
 import { RadialGauge } from "@/components/ui/RadialGauge";
 import { confidenceLevel, titleCase } from "@/lib/format";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
 
 export function AIConfidencePanel() {
   const confidence = useMissionStore((state) => state.latest?.ai_confidence);
+  const isReplay = useDatasetReplayMode();
 
   const entries = Object.entries(confidence?.sensor_contribution ?? {}).sort((a, b) => b[1] - a[1]);
 
   return (
     <Panel title="AI Confidence" subtitle="Sensor fusion trust & contribution" icon={<ShieldCheck size={16} />}>
-      <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:gap-6">
+      {isReplay ? (
+        <p className="text-sm leading-relaxed text-slate-500">
+          Unavailable for replay inference. The validated PPG + IMU heart-rate model has no predictive confidence or uncertainty output.
+        </p>
+      ) : <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:gap-6">
         <RadialGauge
           value={confidence?.overall_confidence ?? 0}
           label="Overall Confidence"
@@ -31,7 +37,7 @@ export function AIConfidencePanel() {
             ))
           )}
         </div>
-      </div>
+      </div>}
     </Panel>
   );
 }

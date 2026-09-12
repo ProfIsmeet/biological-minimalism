@@ -10,13 +10,20 @@ import { confidenceLevel } from "@/lib/format";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { api } from "@/lib/api";
 import type { DigitalTwinState } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
 export default function DigitalTwinPage() {
   const [day, setDay] = useState(1);
   const [state, setState] = useState<DigitalTwinState | null>(null);
   const [loading, setLoading] = useState(false);
+  const isReplay = useDatasetReplayMode();
 
   useEffect(() => {
+    if (isReplay) {
+      setState(null);
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
     setLoading(true);
     api
@@ -24,21 +31,41 @@ export default function DigitalTwinPage() {
       .then((result) => {
         if (!cancelled) setState(result);
       })
-      .catch(() => undefined)
+      .catch(() => {
+        if (!cancelled) setState(null);
+      })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
     return () => {
       cancelled = true;
     };
-  }, [day]);
+  }, [day, isReplay]);
+
+  if (isReplay) {
+    return (
+      <div className="flex flex-col gap-5">
+        <div>
+          <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
+          <p className="text-sm text-slate-500">REAL RECORDED DATA — REPLAY MODE</p>
+        </div>
+        <Panel title="Adaptation State" subtitle="Unavailable during recorded-data replay" icon={<Orbit size={16} />}>
+          <p className="text-sm leading-relaxed text-slate-500">
+            Digital Twin unavailable during recorded-data replay until real personalized inference is implemented.
+          </p>
+        </Panel>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
         <p className="text-sm text-slate-500">
-          Demo — Digital Twin Evolution. Move the slider to see the personalized baseline adapt across a simulated 30-day mission.
+          Demo — Digital Twin Evolution. A <span className="text-slate-400">synthetic, conceptual</span> illustration of a
+          <em> proposed</em> personalized baseline: the model is architecture/reference code only, untrained and not validated.
+          Move the slider to see the illustrative adaptation across a simulated 30-day mission.
         </p>
       </div>
 
@@ -63,8 +90,9 @@ export default function DigitalTwinPage() {
         <Panel title="Mission Day" subtitle="Day 1 · 5 · 12 · 30 milestones" icon={<Orbit size={16} />}>
           <DigitalTwinDaySlider day={day} onChange={setDay} />
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            The Digital Twin learns a personalized baseline over the first 48–72 hours, then continuously tracks deviation across four
-            physiological systems as the simulated mission progresses.
+            The Digital Twin is designed to support future personalized-baseline learning and deviation tracking across four
+            physiological systems when sufficient longitudinal subject-specific data are available. This is a synthetic, untrained
+            illustration — no model is trained here, so the adaptation shown is simulated, not learned.
           </p>
         </Panel>
       </div>

@@ -1,0 +1,89 @@
+{
+  "purpose": "Day 11 paper-ready PTT sensitivity package, extending results/ptt_sensitivity_analysis.json with median/mean subject effect, seed-level variability, and an explicit dominance share. s2 is never excluded from any reported primary number.",
+  "source_artifacts": [
+    "results/ptt_sensitivity_analysis.json",
+    "results/ptt_ppg_site_ablation.json"
+  ],
+  "no_retraining": true,
+  "full_aggregate": {
+    "model_a_mean_mae": 17.540314865112304,
+    "model_b_mean_mae": 19.002723693847656,
+    "paired_delta_b_minus_a_mean": 1.4624088287353516,
+    "note": "positive delta = B (candidate, two-site) worse than A (baseline, one-site)"
+  },
+  "seed_level": {
+    "delta_b_minus_a_per_seed": {
+      "seed42": 2.0013084411621094,
+      "seed43": 1.0997314453125,
+      "seed44": 2.1134490966796875,
+      "seed45": 2.0268783569335938,
+      "seed46": 0.07067680358886719
+    },
+    "mean": 1.4624088287353516,
+    "sample_sd": 0.8805317974508174,
+    "median": 2.0013084411621094,
+    "n_seeds_favor_candidate": 0,
+    "n_seeds_total": 5,
+    "note": "5 training seeds are optimization replication, NOT 5 independent biological subjects - see docs/STATISTICAL_REPORTING_STANDARD_DAY11.md."
+  },
+  "subject_level": {
+    "per_subject_delta_b_minus_a": {
+      "s14": 1.2935703277587898,
+      "s2": 7.265168762207029,
+      "s20": -1.4176908493041998,
+      "s9": -1.3268955230712898
+    },
+    "mean_subject_delta": 1.4535381793975823,
+    "median_subject_delta": -0.01666259765625,
+    "n_subjects_favor_candidate": 2,
+    "n_subjects_total": 4,
+    "dominant_subject": "s2",
+    "dominant_subject_share_of_summed_effect": 1.2495662076826342,
+    "single_subject_dominance_flag": true,
+    "note": "n=4 held-out subjects. This is far too small a sample for any inferential population claim - reported descriptively only, per docs/STATISTICAL_REPORTING_STANDARD_DAY11.md's confidence-interval policy (no defensible population CI at n=4)."
+  },
+  "leave_one_subject_out": {
+    "excluding_s14": {
+      "model_a_mae": 16.166360866224363,
+      "model_b_mae": 17.684973087170672,
+      "delta_b_minus_a": 1.5186122209463093,
+      "direction": "B_WORSE"
+    },
+    "excluding_s2": {
+      "model_a_mae": 12.811820910452917,
+      "model_b_mae": 12.328411470341265,
+      "delta_b_minus_a": -0.483409440111652,
+      "direction": "B_BETTER"
+    },
+    "excluding_s20": {
+      "model_a_mae": 21.219948781243687,
+      "model_b_mae": 23.646364801078004,
+      "delta_b_minus_a": 2.426416019834317,
+      "direction": "B_WORSE"
+    },
+    "excluding_s9": {
+      "model_a_mae": 19.955078089335554,
+      "model_b_mae": 22.339160388593385,
+      "delta_b_minus_a": 2.3840822992578303,
+      "direction": "B_WORSE"
+    }
+  },
+  "s2_dependence": {
+    "with_s2": {
+      "model_a_mae": 17.540314802629062,
+      "model_b_mae": 19.002724690622927,
+      "delta_b_minus_a": 1.4624098879938643,
+      "direction": "B_WORSE"
+    },
+    "without_s2": {
+      "model_a_mae": 12.811820910452917,
+      "model_b_mae": 12.328411470341265,
+      "delta_b_minus_a": -0.483409440111652,
+      "direction": "B_BETTER"
+    },
+    "direction_flips_when_s2_excluded": true,
+    "magnitude_of_s2_influence_on_delta": 1.9458193281055163,
+    "note": "s2 is RETAINED in the frozen primary result. This is a descriptive sensitivity finding, not a re-run excluding s2."
+  },
+  "final_interpretation": "The aggregate negative direction (candidate two-site configuration worse) is consistent across all 5 training seeds, but the n=4 held-out-subject evidence is small and heterogeneous: excluding subject s2 alone flips the aggregate sign. s2 dominates the summed subject-level effect (1.25 share if computed - see field above). This is reported as a replicated-within-dataset (seed-level) but small-and-heterogeneous (subject-level) negative result - never as evidence of the second PPG site being globally unhelpful."
+}

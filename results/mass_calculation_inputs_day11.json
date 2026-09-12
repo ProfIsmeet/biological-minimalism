@@ -1,0 +1,82 @@
+{
+  "artifact_id": "biological-minimalism-mass-calculation-inputs-day11-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART1",
+  "canonical_base_commit": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+  "statement": "Frozen INPUTS for Day-11 Part-2 mass estimation. Records, per module, which mass contributors are known vs missing. NO component/package mass is asserted (datasheet package dimensions are NOT mass, and no material model is frozen). No fake values: every contributor is boolean-known=false with a null value where unresolved. No module or system mass total is authorized here.",
+  "rule": "Do NOT estimate package mass from dimensions unless a defensible, explicitly-labeled material model exists. None exists yet, so all package masses are null/known=false.",
+  "no_measured_mass_exists": true,
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "components": ["wrist_ppg (MAX86141)", "wrist_imu (BMI270)", "skin_temperature (TMP117)", "light_sensor (OPT3001-Q1, LOCATION_UNRESOLVED)"],
+      "sensing_ic_mass_known": false,
+      "pcb_mass_known": false,
+      "battery_mass_known": false,
+      "enclosure_mass_known": false,
+      "electrode_mass_known": "N/A (optical + thermal + light; no electrodes)",
+      "attachment_mass_known": false,
+      "wiring_connector_mass_known": false,
+      "module_mass_ready": false,
+      "missing_contributors": ["all 4 sensing IC package masses", "PCB + passives", "battery", "enclosure", "strap/attachment", "wiring/connectors", "light_sensor placement (may not be in this module at all)"]
+    },
+    {
+      "module_id": "chest_module",
+      "components": ["ecg_chest (ADS1292R)", "thoracic_bioz (AD5940-class)"],
+      "sensing_ic_mass_known": false,
+      "pcb_mass_known": false,
+      "battery_mass_known": false,
+      "enclosure_mass_known": false,
+      "electrode_mass_known": false,
+      "attachment_mass_known": false,
+      "wiring_connector_mass_known": false,
+      "module_mass_ready": false,
+      "missing_contributors": ["AFE package masses", "electrode count/material (montage OPEN)", "PCB", "battery", "enclosure", "attachment", "wiring/connectors"]
+    },
+    {
+      "module_id": "head_module",
+      "components": ["frontal_eeg (ADS1299-4-class)", "frontal_eog_horizontal (shared AFE, +2 ocular electrodes)"],
+      "sensing_ic_mass_known": false,
+      "pcb_mass_known": false,
+      "battery_mass_known": false,
+      "enclosure_mass_known": false,
+      "electrode_mass_known": false,
+      "attachment_mass_known": false,
+      "wiring_connector_mass_known": false,
+      "module_mass_ready": false,
+      "missing_contributors": ["EEG AFE package mass", "EEG electrode count/material (montage OPEN)", "EOG +2 ocular electrode + lead mass (materials not selected)", "PCB", "battery", "head attachment", "wiring/connectors"],
+      "eog_incremental_mass_note": "EOG adds 2 ocular electrodes + leads (SYSTEM_MASS_NOT_READY, not zero, not quantified). See eog_operational_burden_day10.json."
+    },
+    {
+      "module_id": "leg_module",
+      "components": ["leg_bioz (AD5940-class, separate instance)"],
+      "sensing_ic_mass_known": false,
+      "pcb_mass_known": false,
+      "battery_mass_known": false,
+      "enclosure_mass_known": false,
+      "electrode_mass_known": false,
+      "attachment_mass_known": false,
+      "wiring_connector_mass_known": false,
+      "module_mass_ready": false,
+      "missing_contributors": ["AFE package mass", "electrode count/material", "PCB", "battery", "enclosure", "attachment", "wiring/connectors"]
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "components": ["second_ppg_site (MAX86141-class extension)"],
+      "sensing_ic_mass_known": false,
+      "pcb_mass_known": false,
+      "battery_mass_known": false,
+      "enclosure_mass_known": false,
+      "electrode_mass_known": "N/A (optical)",
+      "attachment_mass_known": false,
+      "wiring_connector_mass_known": false,
+      "module_mass_ready": false,
+      "missing_contributors": ["AFE + LED/photodiode mass", "module boundary (shared/tethered/standalone) — determines whether there is a separate enclosure/battery at all", "PCB", "attachment", "wiring/connectors"]
+    }
+  ],
+  "system_mass_authorization": {
+    "status": "SYSTEM_MASS_NOT_READY",
+    "reason": "No component/package mass is published or modeled; PCB, battery, enclosure, electrodes/adhesives/straps, and wiring/connectors are all unselected for every module. No module or system mass total is authorized.",
+    "missing_contributors_global": ["component/package mass", "PCB mass", "battery mass", "enclosure mass", "electrodes/adhesives/straps", "wiring/connectors"]
+  }
+}

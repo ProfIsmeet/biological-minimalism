@@ -6,9 +6,11 @@ import clsx from "clsx";
 import { Radio } from "lucide-react";
 
 import { NAV_ITEMS } from "@/components/layout/navigation";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const isReplay = useDatasetReplayMode();
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-white/5 bg-space-900/60 backdrop-blur-sm md:flex">
@@ -47,7 +49,7 @@ export function Sidebar() {
 
       <div className="border-t border-white/5 px-4 py-4 text-[11px] text-slate-500">
         <p>IAC 2026 · Interactive Presentation</p>
-        <p>Research demonstrator — synthetic data</p>
+        <p>Research demonstrator — {isReplay ? "recorded-data replay" : "synthetic demo data"}</p>
       </div>
     </aside>
   );

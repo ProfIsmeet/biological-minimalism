@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, Info, Settings as SettingsIcon, XCircle } from "lucide-react";
 
 import { Panel } from "@/components/ui/Panel";
+import { DataSourceControl } from "@/components/demos/DataSourceControl";
 import { API_BASE_URL, WS_URL } from "@/lib/config";
 import { api } from "@/lib/api";
 
@@ -99,17 +100,20 @@ export default function SettingsPage() {
         </Panel>
       </div>
 
+      <DataSourceControl />
+
       <Panel title="About" subtitle="Project attribution & scope" icon={<Info size={16} />}>
         <div className="flex flex-col gap-2 text-sm leading-relaxed text-slate-400">
           <p>
-            <span className="font-medium text-slate-200">Biological Minimalism</span> — AI-driven minimal sensor architecture for
-            autonomous astronaut health monitoring. Prepared for IAC 2026 (Interactive Presentation, IAF/IAA Space Life Sciences
-            Symposium).
+            <span className="font-medium text-slate-200">Biological Minimalism</span> — an evidence-driven methodology for
+            determining the target-specific marginal value of sensing components for autonomous astronaut health monitoring. The
+            final minimal architecture is <span className="font-medium text-slate-200">not yet resolved</span>. Prepared for IAC 2026
+            (Interactive Presentation, IAF/IAA Space Life Sciences Symposium).
           </p>
           <p>
-            This dashboard runs entirely on a synthetic mock data engine (see <span className="tabular-nums-mono">backend/app/engine</span>)
-            — no real sensor or subject data is used. The AI Confidence and Fatigue Risk explanations on the AI Insights page are real
-            SHAP (Shapley value) computations over the project&apos;s physiology scoring functions, not scripted text.
+            Synthetic demo mode uses the mock engine. PPG-DaLiA replay mode streams previously recorded, synchronized real human channels
+            with explicit dataset/subject provenance; it is not live hardware. Replay heart rate is an AI estimate from the validated PPG + IMU
+            model, while unsupported physiology remains unavailable. SHAP views apply only to the synthetic physiology scoring functions.
           </p>
           <p>See <span className="tabular-nums-mono">docs/PDD_Biological_Minimalism_IAC2026.md</span> for the full project design document.</p>
         </div>

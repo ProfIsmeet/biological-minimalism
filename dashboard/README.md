@@ -2,10 +2,10 @@
 
 The Biological Minimalism dashboard is not a separate application living in this
 folder — it's the combination of [`../frontend/`](../frontend/) (the Next.js 15
-Mission Control UI) and [`../backend/`](../backend/) (the FastAPI + WebSocket API
-and mock telemetry engine). This folder exists to satisfy the project's documented
-top-level layout and to hold dashboard-specific notes that don't belong in either
-the frontend or backend package itself.
+Mission Control UI) and [`../backend/`](../backend/) (the FastAPI + WebSocket API,
+synthetic engine, and PPG-DaLiA replay source). This folder exists to satisfy the
+project's documented top-level layout and to hold dashboard-specific notes that
+don't belong in either the frontend or backend package itself.
 
 For run instructions, see the [root README](../README.md#quickstart). For the
 architecture and design rationale, see the PDD's **Dashboard Architecture** and
@@ -21,6 +21,7 @@ architecture and design rationale, see the PDD's **Dashboard Architecture** and
 | Data fetch | `../frontend/src/lib/api.ts`, `useLiveFeed.ts` | REST + WebSocket clients |
 | API | `../backend/app/api/` | REST routes + `/ws/live-feed` |
 | Simulation | `../backend/app/engine/mock_data_engine.py` | Synthetic telemetry, mission modes, sensor-failure injection |
+| Replay | `../backend/app/engine/data_sources.py` | Native-rate, same-subject PPG-DaLiA replay |
 | Physiology model | `../backend/app/engine/physiology.py` | Transparent scoring formulas (the thing SHAP explains) |
 | Explainability | `../backend/app/ml/explainability.py` | Real SHAP over the physiology model |
 | Future ML | `../backend/app/ml/models.py`, `../ml/` | Real PyTorch architecture + training scaffolding, not active by default |

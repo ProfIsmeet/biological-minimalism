@@ -1,0 +1,290 @@
+{
+  "artifact_id": "biological-minimalism-stage4-architecture-decision-projection-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_CLOSURE_PREP",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "The single authoritative architecture-decision projection joining Science Owner evidence (2 artifacts, 2 vocabularies, not conflated) with Integration Owner burden state, per decision unit.",
+  "join_note": "Organized around results/stage4_sensor_decision_sensitivity.json's decision-unit grouping (the decision-relevant level); each unit cites its corresponding results/stage4_scientific_sensor_value_matrix.json modality entries verbatim (0-2 per unit, disclosed join map in this script) rather than forcing a false 1:1 rename between the two Science Owner artifacts' different groupings.",
+  "source_artifacts": [
+    "results/stage4_scientific_sensor_value_matrix.json",
+    "results/stage4_sensor_decision_sensitivity.json",
+    "results/stage4_engineering_readiness.json",
+    "results/hardware_topology_contract.json",
+    "results/stage4_gate_d_burden_completeness.json"
+  ],
+  "units": [
+    {
+      "decision_unit": "wrist PPG + wrist IMU",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "wrist PPG",
+          "anatomical_site": "wrist",
+          "confidence_tier_science_handoff": "HIGH",
+          "external_replication_status": "N/A (baseline modality, not an incremental addition under test)",
+          "heterogeneity": "N/A",
+          "architecture_implication": "STRONGLY_SUPPORTED_CORE",
+          "unresolved_evidence": "None material to this modality's own inclusion."
+        },
+        {
+          "modality": "wrist IMU",
+          "anatomical_site": "wrist",
+          "confidence_tier_science_handoff": "HIGH",
+          "external_replication_status": "EXTERNAL_REPLICATION_SUPPORTIVE (GalaxyPPG, independent device/subject family from PPG-DaLiA)",
+          "heterogeneity": "Real, disclosed, moderate (not uniform benefit).",
+          "architecture_implication": "STRONGLY_SUPPORTED_CORE",
+          "unresolved_evidence": "None material - this is the strongest-evidence modality in the current package."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_A_REPLICATED_SUPPORT",
+      "decision_sensitivity": "LOW",
+      "pending_evidence": "None identified.",
+      "decision_flip_condition": "N/A - would require a NEW independent dataset showing a null or negative result under the same capacity-controlled design to materially weaken this tier; no such experiment is planned.",
+      "burden_state": {
+        "power_mw": {
+          "wrist_ppg_incl_led": 0.786,
+          "wrist_imu": 0.018
+        },
+        "shared_module": "wrist_module (shared enclosure/battery/strap; no incremental module for IMU)",
+        "evidence_class": "ENGINEERING_ASSUMPTION / ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE"
+      },
+      "unresolved_science": "None identified.",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "NONE_CURRENTLY - no HIGH-sensitivity pending science identified for this unit"
+    },
+    {
+      "decision_unit": "EOG (with EEG)",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "EOG",
+          "anatomical_site": "head (peri-orbital)",
+          "confidence_tier_science_handoff": "MEDIUM (strong same-dataset signal, external validity genuinely open)",
+          "external_replication_status": "PENDING_EXTERNAL_VALIDATION (HMC full-151-cohort training LOWER_PRIORITY_EXTERNAL_WORK_PENDING; the bounded n=7 diagnostic is inconclusive, not a negative external replication)",
+          "heterogeneity": "Same-dataset result is fairly consistent (4/5 seeds both comparisons); the bounded external diagnostic disagrees but is statistically underpowered to be informative either way.",
+          "architecture_implication": "SUPPORTED",
+          "unresolved_evidence": "HMC full-cohort training could materially change confidence in EOG's independent value - HIGH decision sensitivity to this pending result."
+        },
+        {
+          "modality": "frontal EEG",
+          "anatomical_site": "head (frontal)",
+          "confidence_tier_science_handoff": "HIGH",
+          "external_replication_status": "N/A (baseline modality)",
+          "heterogeneity": "N/A",
+          "architecture_implication": "STRONGLY_SUPPORTED_CORE",
+          "unresolved_evidence": "None material to this modality's own inclusion."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_B_CONTROLLED_SUPPORT (same-dataset); TIER_C_BOUNDED_SUPPORT (external, via HMC bounded n=7)",
+      "decision_sensitivity": "HIGH",
+      "pending_evidence": "HMC full 151-recording cohort training (currently FULL_COHORT_PENDING).",
+      "decision_flip_condition": {
+        "HMC-1_strong_external_replication": {
+          "condition": "Full-cohort HMC shows B-A macro-F1 delta of comparable sign and magnitude to Sleep-EDF's own +0.028 (or larger), with a majority of held-out test recordings favoring B, AND the shuffled-EOG control condition remains clearly worse than B (control superiority preserved).",
+          "implication_if_observed": "EOG would be promotable to TIER_A_REPLICATED_SUPPORT and its architecture_implication in results/stage4_scientific_sensor_value_matrix.json could reasonably move from SUPPORTED toward STRONGLY_SUPPORTED_CORE."
+        },
+        "HMC-2_near_zero_external_benefit": {
+          "condition": "Full-cohort HMC shows a B-A delta close to zero (e.g. within the seed-to-seed noise band already observed in Sleep-EDF, roughly +/-0.01-0.03 macro-F1) with no clear majority direction across held-out recordings.",
+          "implication_if_observed": "EOG would remain TIER_C_BOUNDED_SUPPORT for external validity - same-dataset support stays TIER_B, but the external claim should downgrade to 'inconclusive at full scale' rather than supportive or negative."
+        },
+        "HMC-3_external_negative_result": {
+          "condition": "Full-cohort HMC shows a stable, majority-consistent NEGATIVE B-A delta across held-out recordings (EOG measurably hurts external sleep-stage classification), not attributable to a single-recording artifact.",
+          "implication_if_observed": "EOG's architecture candidacy should downgrade toward CONDITIONAL_CANDIDATE or EXPERIMENTAL_CANDIDATE - same-dataset support alone would no longer be sufficient given a real external negative signal, and the burden-vs-evidence case would need re-examination even under a shared-AFE assumption."
+        }
+      },
+      "burden_state": {
+        "power_mw": {
+          "eog_incremental_over_eeg_only": 0.375
+        },
+        "mass_g": {
+          "eog_incremental": 0.4
+        },
+        "shared_module": "head_module (shared AFE/reference/battery; EOG's isolated incremental cost only)",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "caveat": "Shared-AFE co-location feasibility is asserted, not yet Integration-Owner-confirmed (candidate_classes.json)."
+      },
+      "unresolved_science": "HMC full 151-recording cohort training (currently FULL_COHORT_PENDING).",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns (module-boundary + shared-AFE confirmation apply to this unit)",
+      "coordinator_decision_requirement": "GATE_E_COORDINATOR_DECISION_REQUIRED (WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE)"
+    },
+    {
+      "decision_unit": "sparse vs. full-montage EEG (ds003838-adjacent)",
+      "related_sensor_value_matrix_modalities": [],
+      "confidence_tier_decision_framework": "TIER_C_BOUNDED_SUPPORT (inconclusive by design at n=3)",
+      "decision_sensitivity": "HIGH",
+      "pending_evidence": "Full ~65-subject ds003838 cohort (quantified: ~93GB/~9.4h additional download, not attempted).",
+      "decision_flip_condition": {
+        "DS-1_sparse_approximately_equals_full": {
+          "condition": "Full-cohort comparison shows sparse (4-channel) EEG performance within a small, consistently-observed margin of full-montage EEG across the majority of subjects, with no subgroup showing a large gap.",
+          "implication_if_observed": "Would support electrode minimization for the EEG module - a real evidence-based case for a low-channel-count architecture."
+        },
+        "DS-2_sparse_materially_worse": {
+          "condition": "Full-cohort comparison shows sparse EEG meaningfully and consistently worse than full montage (a gap well beyond seed/subject noise) across the majority of subjects.",
+          "implication_if_observed": "Would weaken aggressive EEG channel minimization as a scientifically-supported choice."
+        },
+        "DS-3_strong_subject_heterogeneity": {
+          "condition": "Full-cohort comparison shows some subjects with near-equal sparse/full performance and others with a large gap, without a consistent population-level direction.",
+          "implication_if_observed": "May justify a CONDITIONAL architecture (e.g. adaptive or subject-calibrated channel count) rather than a single universal configuration - this is a real, distinct architecture class worth defining (see results/stage4_architecture_candidate_classes.json)."
+        }
+      },
+      "burden_state": {
+        "power_mw": null,
+        "note": "Not a modality-inclusion burden question; channel-count-within-EEG burden (electrode montage size) is separately MISSING per results/stage4_gate_d_burden_completeness.json (electrode/contact count dimension)."
+      },
+      "unresolved_science": "Full ~65-subject ds003838 cohort (quantified: ~93GB/~9.4h additional download, not attempted).",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "GATE_E_COORDINATOR_DECISION_REQUIRED (WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE)"
+    },
+    {
+      "decision_unit": "second-site PPG",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "second-site PPG",
+          "anatomical_site": "secondary limb/site (per PTT protocol)",
+          "confidence_tier_science_handoff": "LOW (n=4 held-out test subjects, sign-sensitive)",
+          "external_replication_status": "N/A (single dataset)",
+          "heterogeneity": "HIGH - subject-exclusion-sensitive.",
+          "architecture_implication": "DEPRIORITIZED",
+          "unresolved_evidence": "Whether a larger held-out test set would stabilize the direction is not established."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_E_NEGATIVE_OR_DEPRIORITIZED",
+      "decision_sensitivity": "LOW",
+      "pending_evidence": "None currently planned.",
+      "decision_flip_condition": "Would require a substantially larger held-out test set (current n=4) showing a stable positive direction - no such experiment is planned, and prior sprints already established the current result's fragility without reversing its aggregate sign.",
+      "burden_state": {
+        "power_mw": {
+          "second_ppg_site_incl_led": 9.018
+        },
+        "shared_module": "optical_site_evaluation_branch (OPEN_BOUNDARY - shared/tethered/standalone unresolved)",
+        "evidence_class": "ENGINEERING_ASSUMPTION"
+      },
+      "unresolved_science": "None currently planned.",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "NONE_CURRENTLY - no HIGH-sensitivity pending science identified for this unit"
+    },
+    {
+      "decision_unit": "leg BioZ",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "leg BioZ",
+          "anatomical_site": "legs (bilateral)",
+          "confidence_tier_science_handoff": "LOW-MEDIUM (n=10, single-outlier-dominated)",
+          "external_replication_status": "N/A (single dataset, new experiment)",
+          "heterogeneity": "HIGH - aggregate-vs-per-subject-direction tension, single-outlier-dominated.",
+          "architecture_implication": "EXPERIMENTAL",
+          "unresolved_evidence": "Whether a larger cohort or outlier-robust design would resolve the aggregate/per-subject tension is not established either way."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_D_MIXED_OR_FRAGILE",
+      "decision_sensitivity": "LOW",
+      "pending_evidence": "None currently planned.",
+      "decision_flip_condition": "Would require a larger or outlier-robust-redesigned cohort to resolve the aggregate-vs-per-subject-direction tension (7/10 subjects favor B despite a negative aggregate mean) - no such experiment is currently planned.",
+      "burden_state": {
+        "power_mw": {
+          "leg_bioz": 1.33485
+        },
+        "mass_g": {
+          "leg_module_total": 8.431
+        },
+        "shared_module": "leg_module (new body region, not shared with any other module)",
+        "evidence_class": "ENGINEERING_ASSUMPTION / ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE"
+      },
+      "unresolved_science": "None currently planned.",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "NONE_CURRENTLY - no HIGH-sensitivity pending science identified for this unit"
+    },
+    {
+      "decision_unit": "thoracic BioZ/EIS",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "thoracic BioZ/EIS",
+          "anatomical_site": "thorax",
+          "confidence_tier_science_handoff": "MEDIUM (real n=12 experiment, but high subject-sensitivity)",
+          "external_replication_status": "N/A (single dataset, new experiment)",
+          "heterogeneity": "HIGH - both key comparisons substantially subject-9-influenced.",
+          "architecture_implication": "MIXED",
+          "unresolved_evidence": "Abdominal/arm EIS sites and other targets remain untested; only the LBNP-stage target and thoracic site were tested."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_D_MIXED_OR_FRAGILE",
+      "decision_sensitivity": "LOW",
+      "pending_evidence": "None currently planned.",
+      "decision_flip_condition": "Would require a different target endpoint, a different site (abdominal/arm), or a substantially larger cohort to move past subject-9 sensitivity - none of these are currently planned Stage-3 experiments.",
+      "burden_state": {
+        "power_mw": {
+          "thoracic_bioz": 1.33485
+        },
+        "shared_module": "chest_module (shared with ECG; electrode/contact sharing NOT assumed)",
+        "evidence_class": "ENGINEERING_ASSUMPTION",
+        "caveat": "Chest-module mass cannot be decomposed into ECG-only vs ECG+BioZ submasses (see results/stage4_gate_d_burden_completeness.json)."
+      },
+      "unresolved_science": "None currently planned.",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "NONE_CURRENTLY - no HIGH-sensitivity pending science identified for this unit"
+    },
+    {
+      "decision_unit": "sleep interaction (EOG x respiration)",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "respiration (derived, EEG-adjacent)",
+          "anatomical_site": "N/A (derived signal in the Sleep-EDF interaction experiment)",
+          "confidence_tier_science_handoff": "LOW (interaction-only evidence, single dataset)",
+          "external_replication_status": "N/A (same-dataset interaction experiment only)",
+          "heterogeneity": "Interaction term noisy relative to its own magnitude at n=5 seeds.",
+          "architecture_implication": "EXPERIMENTAL",
+          "unresolved_evidence": "Whether respiration has stand-alone incremental value independent of EOG was not the tested question."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_D_MIXED_OR_FRAGILE",
+      "decision_sensitivity": "LOW",
+      "pending_evidence": "None currently planned beyond the existing interaction experiment.",
+      "decision_flip_condition": "Would require more optimization seeds or a second dataset's interaction test - not currently planned.",
+      "burden_state": {
+        "power_mw": null,
+        "note": "No dedicated hardware burden beyond EOG/EEG already-accounted infrastructure; respiration here is model-derived, not a separate sensor."
+      },
+      "unresolved_science": "None currently planned beyond the existing interaction experiment.",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "NONE_CURRENTLY - no HIGH-sensitivity pending science identified for this unit"
+    },
+    {
+      "decision_unit": "wrist temperature / wrist light",
+      "related_sensor_value_matrix_modalities": [
+        {
+          "modality": "wrist temperature",
+          "anatomical_site": "wrist",
+          "confidence_tier_science_handoff": "NONE (no governing evidence)",
+          "external_replication_status": "PENDING_EXTERNAL_VALIDATION (untested)",
+          "heterogeneity": "Not assessed.",
+          "architecture_implication": "PENDING_EXTERNAL_VALIDATION",
+          "unresolved_evidence": "No Stage-3 experiment currently tests this modality."
+        },
+        {
+          "modality": "wrist light (ambient/optical)",
+          "anatomical_site": "wrist",
+          "confidence_tier_science_handoff": "NONE (no governing evidence)",
+          "external_replication_status": "PENDING_EXTERNAL_VALIDATION (untested)",
+          "heterogeneity": "Not assessed.",
+          "architecture_implication": "PENDING_EXTERNAL_VALIDATION",
+          "unresolved_evidence": "No Stage-3 experiment currently tests this modality."
+        }
+      ],
+      "confidence_tier_decision_framework": "TIER_P_PENDING",
+      "decision_sensitivity": "MEDIUM",
+      "pending_evidence": "No experiment currently planned or in progress for either modality.",
+      "decision_flip_condition": "Any future Stage-3-equivalent experiment testing either modality against a controlled baseline would immediately move it out of TIER_P - currently rated MEDIUM (not LOW) because, unlike the other pending items above, there is no evidence at all to anchor a confidence judgment, so any new experiment (even a small one) could be more decision-relevant than incremental evidence on an already-tested modality.",
+      "burden_state": {
+        "power_mw": {
+          "skin_temperature": 0.01155,
+          "light_sensor": 0.00594
+        },
+        "shared_module": "wrist_module (shared; light_sensor's wrist placement itself is LOCATION_UNRESOLVED per hardware_topology_contract.json)",
+        "evidence_class": "DATASHEET_CALCULATED"
+      },
+      "unresolved_science": "No experiment currently planned or in progress for either modality.",
+      "unresolved_engineering": "See results/stage4_gate_d_burden_completeness.json known_unknowns",
+      "coordinator_decision_requirement": "NONE_CURRENTLY - no HIGH-sensitivity pending science identified for this unit"
+    }
+  ],
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}

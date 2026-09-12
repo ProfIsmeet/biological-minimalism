@@ -1,0 +1,244 @@
+Using FROZEN split: {"train": ["SC4001", "SC4031", "SC4051", "SC4061", "SC4071", "SC4091", "SC4101", "SC4111", "SC4121", "SC4141", "SC4161", "SC4171"], "val": ["SC4021", "SC4041", "SC4151"], "test": ["SC4011", "SC4081", "SC4131"]}
+Parameter counts: {'baseline_eeg_only': 8197, 'candidate_eeg_plus_eog': 8309}
+Loading real data (this parses EDF files, may take a while)...
+baseline_eeg_only: train=32656 val=7989 test=8412 epochs, shape=(32656, 1, 3000)
+candidate_eeg_plus_eog: train=32656 val=7989 test=8412 epochs, shape=(32656, 2, 3000)
+
+baseline_eeg_only: train-only class weights = [0.2840393146038097, 11.704659498207885, 1.270908737108387, 3.9511191772534784, 2.824913494809689]
+
+=== seed 42: training baseline_eeg_only_seed42 (in_channels=1) ===
+    epoch  1/20 - train loss 0.9314 | val macro-F1 0.6759
+    epoch  2/20 - train loss 0.6381 | val macro-F1 0.6814
+    epoch  3/20 - train loss 0.5832 | val macro-F1 0.7102
+    epoch  4/20 - train loss 0.5605 | val macro-F1 0.7183
+    epoch  5/20 - train loss 0.5415 | val macro-F1 0.7132
+    epoch  6/20 - train loss 0.5318 | val macro-F1 0.7184
+    epoch  7/20 - train loss 0.5238 | val macro-F1 0.7316
+    epoch  8/20 - train loss 0.5131 | val macro-F1 0.7178
+    epoch  9/20 - train loss 0.5119 | val macro-F1 0.7162
+    epoch 10/20 - train loss 0.4985 | val macro-F1 0.7280
+    epoch 11/20 - train loss 0.4951 | val macro-F1 0.7213
+    epoch 12/20 - train loss 0.4921 | val macro-F1 0.7214
+    epoch 13/20 - train loss 0.4830 | val macro-F1 0.7230
+    epoch 14/20 - train loss 0.4854 | val macro-F1 0.7211
+    epoch 15/20 - train loss 0.4743 | val macro-F1 0.7295
+    epoch 16/20 - train loss 0.4730 | val macro-F1 0.7257
+    epoch 17/20 - train loss 0.4683 | val macro-F1 0.7293
+    epoch 18/20 - train loss 0.4631 | val macro-F1 0.7237
+    epoch 19/20 - train loss 0.4627 | val macro-F1 0.7183
+    epoch 20/20 - train loss 0.4568 | val macro-F1 0.7070
+baseline_eeg_only_seed42: test macro-F1=0.7086 accuracy=0.8801 (458.8s)
+
+=== seed 43: training baseline_eeg_only_seed43 (in_channels=1) ===
+    epoch  1/20 - train loss 0.9152 | val macro-F1 0.6735
+    epoch  2/20 - train loss 0.6386 | val macro-F1 0.6990
+    epoch  3/20 - train loss 0.5891 | val macro-F1 0.7307
+    epoch  4/20 - train loss 0.5638 | val macro-F1 0.7289
+    epoch  5/20 - train loss 0.5472 | val macro-F1 0.7250
+    epoch  6/20 - train loss 0.5421 | val macro-F1 0.7328
+    epoch  7/20 - train loss 0.5282 | val macro-F1 0.7159
+    epoch  8/20 - train loss 0.5260 | val macro-F1 0.7317
+    epoch  9/20 - train loss 0.5155 | val macro-F1 0.7171
+    epoch 10/20 - train loss 0.5071 | val macro-F1 0.7380
+    epoch 11/20 - train loss 0.4984 | val macro-F1 0.7157
+    epoch 12/20 - train loss 0.4876 | val macro-F1 0.6893
+    epoch 13/20 - train loss 0.4921 | val macro-F1 0.7366
+    epoch 14/20 - train loss 0.4802 | val macro-F1 0.7264
+    epoch 15/20 - train loss 0.4820 | val macro-F1 0.7146
+    epoch 16/20 - train loss 0.4785 | val macro-F1 0.7428
+    epoch 17/20 - train loss 0.4697 | val macro-F1 0.7095
+    epoch 18/20 - train loss 0.4683 | val macro-F1 0.7333
+    epoch 19/20 - train loss 0.4700 | val macro-F1 0.7335
+    epoch 20/20 - train loss 0.4676 | val macro-F1 0.7350
+baseline_eeg_only_seed43: test macro-F1=0.7749 accuracy=0.9163 (468.2s)
+
+=== seed 44: training baseline_eeg_only_seed44 (in_channels=1) ===
+    epoch  1/20 - train loss 0.9209 | val macro-F1 0.6550
+    epoch  2/20 - train loss 0.6353 | val macro-F1 0.6660
+    epoch  3/20 - train loss 0.5870 | val macro-F1 0.7079
+    epoch  4/20 - train loss 0.5625 | val macro-F1 0.7252
+    epoch  5/20 - train loss 0.5476 | val macro-F1 0.6702
+    epoch  6/20 - train loss 0.5342 | val macro-F1 0.7033
+    epoch  7/20 - train loss 0.5264 | val macro-F1 0.7254
+    epoch  8/20 - train loss 0.5263 | val macro-F1 0.7009
+    epoch  9/20 - train loss 0.5187 | val macro-F1 0.7187
+    epoch 10/20 - train loss 0.5063 | val macro-F1 0.7088
+    epoch 11/20 - train loss 0.5051 | val macro-F1 0.7198
+    epoch 12/20 - train loss 0.4992 | val macro-F1 0.6933
+    epoch 13/20 - train loss 0.4883 | val macro-F1 0.7236
+    epoch 14/20 - train loss 0.4936 | val macro-F1 0.7407
+    epoch 15/20 - train loss 0.4865 | val macro-F1 0.7264
+    epoch 16/20 - train loss 0.4722 | val macro-F1 0.7146
+    epoch 17/20 - train loss 0.4670 | val macro-F1 0.7234
+    epoch 18/20 - train loss 0.4668 | val macro-F1 0.6980
+    epoch 19/20 - train loss 0.4630 | val macro-F1 0.7275
+    epoch 20/20 - train loss 0.4663 | val macro-F1 0.7372
+baseline_eeg_only_seed44: test macro-F1=0.7541 accuracy=0.9041 (449.7s)
+
+=== seed 45: training baseline_eeg_only_seed45 (in_channels=1) ===
+    epoch  1/20 - train loss 0.9307 | val macro-F1 0.6628
+    epoch  2/20 - train loss 0.6656 | val macro-F1 0.6907
+    epoch  3/20 - train loss 0.6047 | val macro-F1 0.6980
+    epoch  4/20 - train loss 0.5816 | val macro-F1 0.7121
+    epoch  5/20 - train loss 0.5571 | val macro-F1 0.7102
+    epoch  6/20 - train loss 0.5403 | val macro-F1 0.7074
+    epoch  7/20 - train loss 0.5386 | val macro-F1 0.7100
+    epoch  8/20 - train loss 0.5256 | val macro-F1 0.7117
+    epoch  9/20 - train loss 0.5137 | val macro-F1 0.7049
+    epoch 10/20 - train loss 0.5089 | val macro-F1 0.7114
+    epoch 11/20 - train loss 0.5032 | val macro-F1 0.7222
+    epoch 12/20 - train loss 0.4954 | val macro-F1 0.7295
+    epoch 13/20 - train loss 0.4982 | val macro-F1 0.7040
+    epoch 14/20 - train loss 0.4835 | val macro-F1 0.7127
+    epoch 15/20 - train loss 0.4853 | val macro-F1 0.7145
+    epoch 16/20 - train loss 0.4821 | val macro-F1 0.7247
+    epoch 17/20 - train loss 0.4773 | val macro-F1 0.7305
+    epoch 18/20 - train loss 0.4772 | val macro-F1 0.7247
+    epoch 19/20 - train loss 0.4685 | val macro-F1 0.7334
+    epoch 20/20 - train loss 0.4650 | val macro-F1 0.7298
+baseline_eeg_only_seed45: test macro-F1=0.7436 accuracy=0.8994 (421.7s)
+
+=== seed 46: training baseline_eeg_only_seed46 (in_channels=1) ===
+    epoch  1/20 - train loss 0.9354 | val macro-F1 0.7039
+    epoch  2/20 - train loss 0.6539 | val macro-F1 0.6661
+    epoch  3/20 - train loss 0.5966 | val macro-F1 0.7173
+    epoch  4/20 - train loss 0.5693 | val macro-F1 0.6911
+    epoch  5/20 - train loss 0.5546 | val macro-F1 0.7220
+    epoch  6/20 - train loss 0.5387 | val macro-F1 0.7344
+    epoch  7/20 - train loss 0.5280 | val macro-F1 0.7056
+    epoch  8/20 - train loss 0.5214 | val macro-F1 0.6968
+    epoch  9/20 - train loss 0.5159 | val macro-F1 0.7087
+    epoch 10/20 - train loss 0.5100 | val macro-F1 0.7195
+    epoch 11/20 - train loss 0.4991 | val macro-F1 0.7082
+    epoch 12/20 - train loss 0.4973 | val macro-F1 0.7326
+    epoch 13/20 - train loss 0.4856 | val macro-F1 0.7196
+    epoch 14/20 - train loss 0.4843 | val macro-F1 0.7153
+    epoch 15/20 - train loss 0.4815 | val macro-F1 0.7296
+    epoch 16/20 - train loss 0.4731 | val macro-F1 0.7134
+    epoch 17/20 - train loss 0.4682 | val macro-F1 0.7253
+    epoch 18/20 - train loss 0.4742 | val macro-F1 0.7359
+    epoch 19/20 - train loss 0.4624 | val macro-F1 0.7006
+    epoch 20/20 - train loss 0.4592 | val macro-F1 0.7247
+baseline_eeg_only_seed46: test macro-F1=0.7550 accuracy=0.9120 (433.2s)
+
+candidate_eeg_plus_eog: train-only class weights = [0.2840393146038097, 11.704659498207885, 1.270908737108387, 3.9511191772534784, 2.824913494809689]
+
+=== seed 42: training candidate_eeg_plus_eog_seed42 (in_channels=2) ===
+    epoch  1/20 - train loss 0.9297 | val macro-F1 0.7059
+    epoch  2/20 - train loss 0.6049 | val macro-F1 0.6946
+    epoch  3/20 - train loss 0.5391 | val macro-F1 0.7332
+    epoch  4/20 - train loss 0.5020 | val macro-F1 0.7522
+    epoch  5/20 - train loss 0.4795 | val macro-F1 0.7186
+    epoch  6/20 - train loss 0.4651 | val macro-F1 0.7539
+    epoch  7/20 - train loss 0.4606 | val macro-F1 0.7261
+    epoch  8/20 - train loss 0.4471 | val macro-F1 0.7405
+    epoch  9/20 - train loss 0.4375 | val macro-F1 0.7450
+    epoch 10/20 - train loss 0.4286 | val macro-F1 0.7683
+    epoch 11/20 - train loss 0.4224 | val macro-F1 0.7337
+    epoch 12/20 - train loss 0.4174 | val macro-F1 0.7507
+    epoch 13/20 - train loss 0.4079 | val macro-F1 0.7381
+    epoch 14/20 - train loss 0.4076 | val macro-F1 0.7409
+    epoch 15/20 - train loss 0.4003 | val macro-F1 0.7561
+    epoch 16/20 - train loss 0.3967 | val macro-F1 0.7562
+    epoch 17/20 - train loss 0.3894 | val macro-F1 0.7627
+    epoch 18/20 - train loss 0.3849 | val macro-F1 0.7528
+    epoch 19/20 - train loss 0.3868 | val macro-F1 0.7158
+    epoch 20/20 - train loss 0.3775 | val macro-F1 0.7475
+candidate_eeg_plus_eog_seed42: test macro-F1=0.7608 accuracy=0.9076 (475.6s)
+
+=== seed 43: training candidate_eeg_plus_eog_seed43 (in_channels=2) ===
+    epoch  1/20 - train loss 0.9645 | val macro-F1 0.6952
+    epoch  2/20 - train loss 0.6005 | val macro-F1 0.6350
+    epoch  3/20 - train loss 0.5273 | val macro-F1 0.7481
+    epoch  4/20 - train loss 0.4886 | val macro-F1 0.7476
+    epoch  5/20 - train loss 0.4687 | val macro-F1 0.7283
+    epoch  6/20 - train loss 0.4555 | val macro-F1 0.7327
+    epoch  7/20 - train loss 0.4474 | val macro-F1 0.7303
+    epoch  8/20 - train loss 0.4364 | val macro-F1 0.7412
+    epoch  9/20 - train loss 0.4295 | val macro-F1 0.7418
+    epoch 10/20 - train loss 0.4191 | val macro-F1 0.7596
+    epoch 11/20 - train loss 0.4124 | val macro-F1 0.7309
+    epoch 12/20 - train loss 0.4062 | val macro-F1 0.7131
+    epoch 13/20 - train loss 0.4074 | val macro-F1 0.7465
+    epoch 14/20 - train loss 0.3959 | val macro-F1 0.7465
+    epoch 15/20 - train loss 0.3977 | val macro-F1 0.7298
+    epoch 16/20 - train loss 0.3924 | val macro-F1 0.7610
+    epoch 17/20 - train loss 0.3886 | val macro-F1 0.7440
+    epoch 18/20 - train loss 0.3811 | val macro-F1 0.7505
+    epoch 19/20 - train loss 0.3859 | val macro-F1 0.7566
+    epoch 20/20 - train loss 0.3822 | val macro-F1 0.7667
+candidate_eeg_plus_eog_seed43: test macro-F1=0.7717 accuracy=0.9041 (456.2s)
+
+=== seed 44: training candidate_eeg_plus_eog_seed44 (in_channels=2) ===
+    epoch  1/20 - train loss 0.9645 | val macro-F1 0.6879
+    epoch  2/20 - train loss 0.6165 | val macro-F1 0.7016
+    epoch  3/20 - train loss 0.5471 | val macro-F1 0.7505
+    epoch  4/20 - train loss 0.5079 | val macro-F1 0.7606
+    epoch  5/20 - train loss 0.4859 | val macro-F1 0.7255
+    epoch  6/20 - train loss 0.4688 | val macro-F1 0.7186
+    epoch  7/20 - train loss 0.4544 | val macro-F1 0.7337
+    epoch  8/20 - train loss 0.4509 | val macro-F1 0.7191
+    epoch  9/20 - train loss 0.4437 | val macro-F1 0.7298
+    epoch 10/20 - train loss 0.4249 | val macro-F1 0.7467
+    epoch 11/20 - train loss 0.4231 | val macro-F1 0.7588
+    epoch 12/20 - train loss 0.4171 | val macro-F1 0.7293
+    epoch 13/20 - train loss 0.4092 | val macro-F1 0.7486
+    epoch 14/20 - train loss 0.4079 | val macro-F1 0.7567
+    epoch 15/20 - train loss 0.4011 | val macro-F1 0.7333
+    epoch 16/20 - train loss 0.3944 | val macro-F1 0.7474
+    epoch 17/20 - train loss 0.3864 | val macro-F1 0.7294
+    epoch 18/20 - train loss 0.3887 | val macro-F1 0.6967
+    epoch 19/20 - train loss 0.3839 | val macro-F1 0.7343
+    epoch 20/20 - train loss 0.3833 | val macro-F1 0.7697
+candidate_eeg_plus_eog_seed44: test macro-F1=0.7914 accuracy=0.9161 (449.7s)
+
+=== seed 45: training candidate_eeg_plus_eog_seed45 (in_channels=2) ===
+    epoch  1/20 - train loss 0.9423 | val macro-F1 0.6888
+    epoch  2/20 - train loss 0.6135 | val macro-F1 0.6782
+    epoch  3/20 - train loss 0.5460 | val macro-F1 0.7242
+    epoch  4/20 - train loss 0.5145 | val macro-F1 0.7277
+    epoch  5/20 - train loss 0.4859 | val macro-F1 0.7288
+    epoch  6/20 - train loss 0.4627 | val macro-F1 0.7304
+    epoch  7/20 - train loss 0.4599 | val macro-F1 0.7478
+    epoch  8/20 - train loss 0.4468 | val macro-F1 0.7057
+    epoch  9/20 - train loss 0.4367 | val macro-F1 0.6989
+    epoch 10/20 - train loss 0.4300 | val macro-F1 0.7374
+    epoch 11/20 - train loss 0.4245 | val macro-F1 0.7394
+    epoch 12/20 - train loss 0.4177 | val macro-F1 0.7654
+    epoch 13/20 - train loss 0.4177 | val macro-F1 0.7353
+    epoch 14/20 - train loss 0.4012 | val macro-F1 0.7452
+    epoch 15/20 - train loss 0.4043 | val macro-F1 0.7477
+    epoch 16/20 - train loss 0.4007 | val macro-F1 0.7650
+    epoch 17/20 - train loss 0.3918 | val macro-F1 0.7590
+    epoch 18/20 - train loss 0.3918 | val macro-F1 0.7554
+    epoch 19/20 - train loss 0.3881 | val macro-F1 0.7269
+    epoch 20/20 - train loss 0.3807 | val macro-F1 0.7476
+candidate_eeg_plus_eog_seed45: test macro-F1=0.7623 accuracy=0.9042 (446.8s)
+
+=== seed 46: training candidate_eeg_plus_eog_seed46 (in_channels=2) ===
+    epoch  1/20 - train loss 0.9512 | val macro-F1 0.6879
+    epoch  2/20 - train loss 0.6061 | val macro-F1 0.6585
+    epoch  3/20 - train loss 0.5373 | val macro-F1 0.7299
+    epoch  4/20 - train loss 0.5033 | val macro-F1 0.6653
+    epoch  5/20 - train loss 0.4856 | val macro-F1 0.7525
+    epoch  6/20 - train loss 0.4663 | val macro-F1 0.7318
+    epoch  7/20 - train loss 0.4549 | val macro-F1 0.7497
+    epoch  8/20 - train loss 0.4491 | val macro-F1 0.7196
+    epoch  9/20 - train loss 0.4425 | val macro-F1 0.7078
+    epoch 10/20 - train loss 0.4365 | val macro-F1 0.7483
+    epoch 11/20 - train loss 0.4213 | val macro-F1 0.7555
+    epoch 12/20 - train loss 0.4223 | val macro-F1 0.7473
+    epoch 13/20 - train loss 0.4108 | val macro-F1 0.7491
+    epoch 14/20 - train loss 0.4100 | val macro-F1 0.7447
+    epoch 15/20 - train loss 0.4075 | val macro-F1 0.7361
+    epoch 16/20 - train loss 0.3944 | val macro-F1 0.7411
+    epoch 17/20 - train loss 0.3941 | val macro-F1 0.7475
+    epoch 18/20 - train loss 0.4002 | val macro-F1 0.7493
+    epoch 19/20 - train loss 0.3835 | val macro-F1 0.7609
+    epoch 20/20 - train loss 0.3865 | val macro-F1 0.7348
+candidate_eeg_plus_eog_seed46: test macro-F1=0.7601 accuracy=0.9028 (471.2s)
+
+Wrote C:\Users\Administrator\Desktop\biological-minimalism\results\sleep_edf_eeg_eog_ablation.json
+Baseline macro-F1: {'mean': 0.7472525334607252, 'sd_sample_ddof1': 0.024382202199124535, 'per_seed': {'seed42': 0.7086057747793477, 'seed43': 0.7748928568718149, 'seed44': 0.7541404087394364, 'seed45': 0.7436336267999948, 'seed46': 0.7549900001130317}}
+Candidate macro-F1: {'mean': 0.7692599394037367, 'sd_sample_ddof1': 0.013215074328560379, 'per_seed': {'seed42': 0.7608289499707233, 'seed43': 0.7717015866525443, 'seed44': 0.7913724827694598, 'seed45': 0.7623310681847801, 'seed46': 0.7600656094411762}}
+Delta: {'mean': 0.022007405943011628, 'sd_sample_ddof1': 0.022789241496512992, 'per_seed': {'seed42': 0.05222317519137554, 'seed43': -0.00319127021927057, 'seed44': 0.03723207403002338, 'seed45': 0.01869744138478535, 'seed46': 0.005075609328144437}, 'n_seeds_candidate_better': 4, 'n_seeds_total': 5}

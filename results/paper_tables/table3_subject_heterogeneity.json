@@ -1,0 +1,51 @@
+{
+  "header": [
+    "experiment_id",
+    "n_subjects",
+    "n_favor_candidate",
+    "dominant_subject",
+    "dominant_share",
+    "single_subject_dominance"
+  ],
+  "rows": [
+    [
+      "ppg_dalia_imu_hr",
+      3,
+      2,
+      "S9",
+      0.6260372535633518,
+      true
+    ],
+    [
+      "ptt_second_ppg_site_hr",
+      4,
+      2,
+      "s2",
+      1.2495662076826342,
+      true
+    ],
+    [
+      "sleep_edf_primary",
+      3,
+      3,
+      "SC4011",
+      0.7409462390313473,
+      true
+    ],
+    [
+      "sleep_edf_secondary_holdout",
+      8,
+      6,
+      "SC4221",
+      0.41037674529105445,
+      false
+    ]
+  ],
+  "provenance": {
+    "sources": [
+      "results/ppg_dalia_sensitivity_day11.json",
+      "results/ptt_sensitivity_day11.json",
+      "results/sleep_edf_sensitivity_day11.json"
+    ]
+  }
+}

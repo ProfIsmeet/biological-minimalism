@@ -1,0 +1,424 @@
+{
+  "schema_version": "1.0.0",
+  "architecture_id": "biological-minimalism-day6-system-topology-v1",
+  "source_topology_path": "results/hardware_topology_contract.json",
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "label": "Shared wrist module",
+      "body_location": "wrist",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "shared_resources": [
+        "enclosure",
+        "attachment strap",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock"
+      ],
+      "notes": [
+        "Shared resource identities and allocation remain open; each must be counted once.",
+        "light_sensor is listed here as its candidate wrist placement, but its location_status is LOCATION_UNRESOLVED (wrist vs cabin/ambient). It must not be counted as body-worn burden until placement is frozen."
+      ]
+    },
+    {
+      "module_id": "chest_module",
+      "label": "Shared chest module",
+      "body_location": "thorax",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "shared_resources": [
+        "enclosure",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock"
+      ],
+      "notes": [
+        "ECG/BioZ electrode sharing is not assumed until a montage is validated."
+      ]
+    },
+    {
+      "module_id": "head_module",
+      "label": "Intermittent frontal EEG module",
+      "body_location": "forehead/head",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "frontal_eeg"
+      ],
+      "shared_resources": [
+        "head attachment",
+        "battery",
+        "host MCU",
+        "wireless radio"
+      ],
+      "notes": [
+        "Electrode count, montage, and session schedule remain open."
+      ]
+    },
+    {
+      "module_id": "leg_module",
+      "label": "Experimental leg BioZ module",
+      "body_location": "lower leg",
+      "worn_body": true,
+      "topology_status": "FROZEN_REFERENCE",
+      "component_ids": [
+        "leg_bioz"
+      ],
+      "shared_resources": [
+        "attachment",
+        "battery",
+        "host MCU",
+        "wireless radio"
+      ],
+      "notes": [
+        "Electrode topology and operating schedule remain open."
+      ]
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "label": "Second PPG-site evaluation branch",
+      "body_location": "finger/phalanx",
+      "worn_body": true,
+      "topology_status": "OPEN_BOUNDARY",
+      "component_ids": [
+        "second_ppg_site"
+      ],
+      "shared_resources": [],
+      "notes": [
+        "One additional optical site is fixed; shared, tethered, or standalone electronics remain unresolved."
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "wrist_module:enclosure",
+      "resource_type": "enclosure",
+      "module_id": "wrist_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "wrist_module:attachment_strap",
+      "resource_type": "attachment strap",
+      "module_id": "wrist_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "wrist_module:battery",
+      "resource_type": "battery",
+      "module_id": "wrist_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "wrist_module:host_mcu",
+      "resource_type": "host MCU",
+      "module_id": "wrist_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "wrist_module:wireless_radio",
+      "resource_type": "wireless radio",
+      "module_id": "wrist_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "wrist_module:clock",
+      "resource_type": "clock",
+      "module_id": "wrist_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "wrist_ppg",
+        "wrist_imu",
+        "skin_temperature",
+        "light_sensor"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "chest_module:enclosure",
+      "resource_type": "enclosure",
+      "module_id": "chest_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "chest_module:battery",
+      "resource_type": "battery",
+      "module_id": "chest_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "chest_module:host_mcu",
+      "resource_type": "host MCU",
+      "module_id": "chest_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "chest_module:wireless_radio",
+      "resource_type": "wireless radio",
+      "module_id": "chest_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "chest_module:clock",
+      "resource_type": "clock",
+      "module_id": "chest_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "ecg_chest",
+        "thoracic_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "head_module:head_attachment",
+      "resource_type": "head attachment",
+      "module_id": "head_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "frontal_eeg"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "head_module:battery",
+      "resource_type": "battery",
+      "module_id": "head_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "frontal_eeg"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "head_module:host_mcu",
+      "resource_type": "host MCU",
+      "module_id": "head_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "frontal_eeg"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "head_module:wireless_radio",
+      "resource_type": "wireless radio",
+      "module_id": "head_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "frontal_eeg"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "leg_module:attachment",
+      "resource_type": "attachment",
+      "module_id": "leg_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "leg_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "leg_module:battery",
+      "resource_type": "battery",
+      "module_id": "leg_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "leg_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "leg_module:host_mcu",
+      "resource_type": "host MCU",
+      "module_id": "leg_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "leg_bioz"
+      ],
+      "double_count_prohibited": true
+    },
+    {
+      "resource_id": "leg_module:wireless_radio",
+      "resource_type": "wireless radio",
+      "module_id": "leg_module",
+      "allocation_status": "OPEN_IDENTITY_COUNT_ONCE",
+      "shared_by": [
+        "leg_bioz"
+      ],
+      "double_count_prohibited": true
+    }
+  ],
+  "signals": [
+    {
+      "signal_id": "wrist_imu_signal",
+      "source_component_id": "wrist_imu",
+      "destination": "wrist_module host",
+      "interface": "SPI/I2C to shared wrist MCU",
+      "target_ids": [
+        "heart_rate",
+        "workload",
+        "fatigue"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "second_ppg_site_signal",
+      "source_component_id": "second_ppg_site",
+      "destination": "optical_site_evaluation_branch host",
+      "interface": "SPI; shared/tethered host open",
+      "target_ids": [
+        "heart_rate",
+        "blood_pressure_or_pat"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "wrist_ppg_signal",
+      "source_component_id": "wrist_ppg",
+      "destination": "wrist_module host",
+      "interface": "SPI to shared wrist MCU",
+      "target_ids": [
+        "heart_rate",
+        "heart_rate_variability",
+        "blood_pressure_or_pat"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "ecg_chest_signal",
+      "source_component_id": "ecg_chest",
+      "destination": "chest_module host",
+      "interface": "SPI to shared chest MCU",
+      "target_ids": [
+        "heart_rate",
+        "heart_rate_variability",
+        "respiration",
+        "blood_pressure_or_pat"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "thoracic_bioz_signal",
+      "source_component_id": "thoracic_bioz",
+      "destination": "chest_module host",
+      "interface": "SPI to shared chest MCU",
+      "target_ids": [
+        "respiration",
+        "fluid_status"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "skin_temperature_signal",
+      "source_component_id": "skin_temperature",
+      "destination": "wrist_module host",
+      "interface": "I2C to shared wrist MCU",
+      "target_ids": [
+        "fatigue",
+        "sleep_or_circadian"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "light_sensor_signal",
+      "source_component_id": "light_sensor",
+      "destination": "wrist_module host",
+      "interface": "I2C to shared wrist MCU",
+      "target_ids": [
+        "sleep_or_circadian"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "frontal_eeg_signal",
+      "source_component_id": "frontal_eeg",
+      "destination": "head_module host",
+      "interface": "SPI to head-module MCU",
+      "target_ids": [
+        "workload",
+        "fatigue",
+        "sleep_or_circadian"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    },
+    {
+      "signal_id": "leg_bioz_signal",
+      "source_component_id": "leg_bioz",
+      "destination": "leg_module host",
+      "interface": "SPI to leg-module MCU",
+      "target_ids": [
+        "fluid_status"
+      ],
+      "validation_status": "Only statuses in hardware_topology_contract.target_coverage are authoritative"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from app.api.routes._source_guard import require_synthetic_source
 from app.engine.mock_data_engine import engine
 from app.schemas.simulation import SetFailureRequest, SetModeRequest, SimulationStateResponse
 
@@ -22,16 +23,19 @@ def _state() -> SimulationStateResponse:
 
 @router.get("/state", response_model=SimulationStateResponse, summary="Current mission mode and sensor status")
 def get_simulation_state() -> SimulationStateResponse:
+    require_synthetic_source("Mission/fault simulation")
     return _state()
 
 
 @router.post("/mode", response_model=SimulationStateResponse, summary="Set the mission mode (Demo 2 — Solar Storm Mode)")
 def set_mission_mode(request: SetModeRequest) -> SimulationStateResponse:
+    require_synthetic_source("Mission/fault simulation")
     engine.set_mode(request.mode)
     return _state()
 
 
 @router.post("/failure", response_model=SimulationStateResponse, summary="Set a sensor's status (Demo 1 — Sensor Failure Simulation)")
 def set_sensor_failure(request: SetFailureRequest) -> SimulationStateResponse:
+    require_synthetic_source("Mission/fault simulation")
     engine.set_sensor_status(request.sensor, request.status)
     return _state()

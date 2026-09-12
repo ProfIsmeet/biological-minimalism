@@ -7,6 +7,7 @@ import { AlertTriangle } from "lucide-react";
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import { SENSOR_NAMES, type SensorStatus } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
 
 const STATUS_OPTIONS: { value: SensorStatus; label: string }[] = [
@@ -18,7 +19,8 @@ const STATUS_OPTIONS: { value: SensorStatus; label: string }[] = [
 /** Demo 1 — Sensor Failure Simulation. Flips a sensor's status; the mock
  * engine recomputes AI confidence and the explanation on the next tick. */
 export function SensorFailureControl() {
-  const sensors = useMissionStore((state) => state.latest?.sensor_health.sensors);
+  const sensors = useMissionStore((state) => state.latest?.sensor_health?.sensors);
+  const isReplay = useDatasetReplayMode();
   const [pendingKey, setPendingKey] = useState<string | null>(null);
 
   async function handleSet(sensor: (typeof SENSOR_NAMES)[number]["value"], status: SensorStatus) {
@@ -49,7 +51,7 @@ export function SensorFailureControl() {
                       type="button"
                       aria-pressed={isActive}
                       onClick={() => handleSet(value, option.value)}
-                      disabled={isPending}
+                      disabled={isPending || isReplay}
                       className={clsx(
                         "rounded-md border px-2.5 py-1 text-[11px] font-medium transition-colors disabled:opacity-60",
                         isActive && option.value === "nominal" && "border-signal-nominal/40 bg-signal-nominal/10 text-signal-nominal",
@@ -67,6 +69,7 @@ export function SensorFailureControl() {
           );
         })}
       </div>
+      {isReplay ? <p className="mt-3 text-xs text-slate-500">The synthetic sensor-failure demo is disabled during replay. Configure replay signal faults in Settings.</p> : null}
     </Panel>
   );
 }

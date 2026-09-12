@@ -1,0 +1,21 @@
+{
+  "dataset": "PhysioNet Pulse Transit Time PPG Dataset v1.1.0",
+  "raw_dir": "datasets/pulse-transit-time-ppg/raw",
+  "cache_dir": "datasets/pulse-transit-time-ppg/processed",
+  "seed": 42,
+  "n_train_subjects": 15,
+  "n_val_subjects": 3,
+  "n_test_subjects": 4,
+  "window_seconds": 8.0,
+  "step_seconds": 2.0,
+  "signal_fs": 500.0,
+  "min_rpeaks_in_window": 3,
+  "model_a_channels": ["pleth_1", "pleth_2", "pleth_3"],
+  "model_b_channels": ["pleth_1", "pleth_2", "pleth_3", "pleth_4", "pleth_5", "pleth_6"],
+  "ground_truth": "ECG R-peak-derived mean instantaneous HR per window (manually-verified .atr annotations)",
+  "normalization": "per-channel, per-window z-score, self-contained (no stored train-set statistics)",
+  "imu_included_in_primary_comparison": false,
+  "status_day3": "FROZEN - loader/preprocessing/split/contract only, NO training run executed for scientific results",
+  "embedding_dim": 32,
+  "architecture": "single Conv1DEncoder (in_channels = len(model_X_channels)) + Linear(embedding_dim, 1) head - identical for Model A and Model B except in_channels"
+}

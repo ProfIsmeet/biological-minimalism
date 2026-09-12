@@ -1,0 +1,179 @@
+{
+  "purpose": "Master-review statistical reporting audit: all existing multi-seed SD figures used numpy default ddof=0 (population SD). This overlay adds ddof=1 (sample SD, recommended for n=5 seed estimates) computed from the SAME raw per-seed values already stored in the frozen source artifacts - those artifacts are NOT modified.",
+  "revised_convention": "sample SD (ddof=1) is the recommended figure for all new multi-seed reporting going forward",
+  "old_convention_preserved": "population SD (ddof=0) values in the original frozen artifacts are unchanged and remain valid as originally reported",
+  "sources": {
+    "ppg_dalia_imu_multiseed_replication": {
+      "source_artifact": "results/ppg_dalia_imu_multiseed_replication.json (unchanged)",
+      "audit": {
+        "model_a": {
+          "mae": {
+            "mean": 9.086226463317871,
+            "sd_population_ddof0_as_originally_reported": 0.2306219374643015,
+            "sd_sample_ddof1_recommended": 0.25784316463644186,
+            "n": 5,
+            "per_seed": [
+              8.969229698181152,
+              9.468905448913574,
+              8.968219757080078,
+              8.811178207397461,
+              9.21359920501709
+            ]
+          },
+          "rmse": {
+            "mean": 12.312088966369629,
+            "sd_population_ddof0_as_originally_reported": 0.18564846606391255,
+            "sd_sample_ddof1_recommended": 0.20756129501873563,
+            "n": 5,
+            "per_seed": [
+              12.430132865905762,
+              12.606070518493652,
+              12.112504959106445,
+              12.136702537536621,
+              12.275033950805664
+            ]
+          }
+        },
+        "model_b": {
+          "mae": {
+            "mean": 7.2076342582702635,
+            "sd_population_ddof0_as_originally_reported": 0.15664695860140332,
+            "sd_sample_ddof1_recommended": 0.1751366239506666,
+            "n": 5,
+            "per_seed": [
+              7.0128560066223145,
+              7.109114646911621,
+              7.282139778137207,
+              7.1660990715026855,
+              7.46796178817749
+            ]
+          },
+          "rmse": {
+            "mean": 10.795911598205567,
+            "sd_population_ddof0_as_originally_reported": 0.10469128107669785,
+            "sd_sample_ddof1_recommended": 0.1170484105695169,
+            "n": 5,
+            "per_seed": [
+              10.695701599121094,
+              10.658166885375977,
+              10.939452171325684,
+              10.824082374572754,
+              10.862154960632324
+            ]
+          }
+        },
+        "model_c": {
+          "mae": {
+            "mean": 7.983925724029541,
+            "sd_population_ddof0_as_originally_reported": 0.20444261016249607,
+            "sd_sample_ddof1_recommended": 0.22857378691041527,
+            "n": 5,
+            "per_seed": [
+              7.882018566131592,
+              8.215158462524414,
+              8.142921447753906,
+              7.641919136047363,
+              8.03761100769043
+            ]
+          },
+          "rmse": {
+            "mean": 11.957774543762207,
+            "sd_population_ddof0_as_originally_reported": 0.19639930630554328,
+            "sd_sample_ddof1_recommended": 0.21958109981649893,
+            "n": 5,
+            "per_seed": [
+              11.890378952026367,
+              12.304479598999023,
+              12.022595405578613,
+              11.737220764160156,
+              11.834197998046875
+            ]
+          }
+        },
+        "total_sync_imu_benefit_mae_A_minus_B": {
+          "mean": 1.8785922050476074,
+          "sd_population_ddof0_as_originally_reported": 0.2633888136300174,
+          "sd_sample_ddof1_recommended": 0.2944776458948711,
+          "n": 5,
+          "per_seed": [
+            1.956373691558838,
+            2.359790802001953,
+            1.686079978942871,
+            1.6450791358947754,
+            1.7456374168395996
+          ]
+        },
+        "shuffled_context_like_benefit_mae_A_minus_C": {
+          "mean": 1.1023007392883302,
+          "sd_population_ddof0_as_originally_reported": 0.14819397283096972,
+          "sd_sample_ddof1_recommended": 0.1656858985529026,
+          "n": 5,
+          "per_seed": [
+            1.0872111320495605,
+            1.2537469863891602,
+            0.8252983093261719,
+            1.1692590713500977,
+            1.1759881973266602
+          ]
+        },
+        "synchronization_increment_mae_C_minus_B": {
+          "mean": 0.7762914657592773,
+          "sd_population_ddof0_as_originally_reported": 0.22692920822040621,
+          "sd_sample_ddof1_recommended": 0.2537145678305162,
+          "n": 5,
+          "per_seed": [
+            0.8691625595092773,
+            1.106043815612793,
+            0.8607816696166992,
+            0.47582006454467773,
+            0.5696492195129395
+          ]
+        }
+      }
+    },
+    "ptt_ppg_site_ablation": {
+      "source_artifact": "results/ptt_ppg_site_ablation.json (unchanged)",
+      "audit": {
+        "model_a": {
+          "mean": 17.540314865112304,
+          "sd_population_ddof0_as_originally_reported": 1.0384105383437507,
+          "sd_sample_ddof1_recommended": 1.1609782761443894,
+          "n": 5,
+          "per_seed": [
+            17.041627883911133,
+            17.744354248046875,
+            17.24323272705078,
+            16.280893325805664,
+            19.39146614074707
+          ]
+        },
+        "model_b": {
+          "mean": 19.002723693847656,
+          "sd_population_ddof0_as_originally_reported": 0.41136207265180985,
+          "sd_sample_ddof1_recommended": 0.459916778907327,
+          "n": 5,
+          "per_seed": [
+            19.042936325073242,
+            18.844085693359375,
+            19.35668182373047,
+            18.307771682739258,
+            19.462142944335938
+          ]
+        },
+        "paired_delta_mae_b_minus_a": {
+          "mean": 1.4624088287353516,
+          "sd_population_ddof0_as_originally_reported": 0.7875715821800415,
+          "sd_sample_ddof1_recommended": 0.8805317974508173,
+          "n": 5,
+          "per_seed": [
+            2.0013084411621094,
+            1.0997314453125,
+            2.1134490966796875,
+            2.0268783569335938,
+            0.07067680358886719
+          ]
+        }
+      }
+    }
+  }
+}

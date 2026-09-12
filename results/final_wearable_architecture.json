@@ -1,0 +1,244 @@
+{
+  "artifact_id": "biological-minimalism-final-wearable-architecture-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_FINAL_ARCHITECTURE_CLOSURE",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "The ONE canonical final Stage-4 wearable architecture artifact. Records the Project Coordinator's selection of CORE_PLUS_CONTEXT, closing the architecture decision that every upstream Stage-4 artifact deliberately left UNRESOLVED.",
+  "selected_class": "CORE_PLUS_CONTEXT",
+  "selected_modalities": [
+    "MINIMAL_CORE sensors",
+    "EOG (if sharing EEG AFE/reference infrastructure)"
+  ],
+  "selected_body_regions": [
+    "wrist",
+    "chest",
+    "head (frontal + peri-orbital, sharing EEG module)"
+  ],
+  "module_topology": {
+    "topology_class": "DISTRIBUTED_BODY_MODULE_TOPOLOGY",
+    "rationale": "Independent body-worn modules for wrist, chest, and head, each maintaining its own local electronics/power/MCU-radio domain. Avoids cross-body shared-hub wiring/harness; maintains modular wearable topology; final candidate ordering (results/stage4_candidate_burden_matrix.json robustness_analysis) is robust to this topology choice; higher distributed power burden is accepted and disclosed below rather than hidden behind the cheaper single-shared-MCU/radio figure.",
+    "modules": [
+      "wrist",
+      "chest",
+      "head (frontal + peri-orbital, sharing EEG module)"
+    ],
+    "module_ids": [
+      "wrist_module",
+      "chest_module",
+      "head_module"
+    ],
+    "battery_topology_selected": "DISTRIBUTED_PER_MODULE",
+    "battery_topology_rationale": "Battery-cell mass is scenario-neutral (8.763 g either way per results/stage4_battery_topology_scenarios.json) - DISTRIBUTED_PER_MODULE additionally avoids the cross-body wiring-harness mass penalty SHARED_HUB would add (0.6-3.0 g, most likely 1.6 g) and keeps the already-frozen single-stage 0.85 regulator efficiency (no added regulation-stage risk).",
+    "mcu_radio_topology_selected": "PER_MODULE",
+    "mcu_radio_topology_rationale": "Consistent with results/hardware_topology_contract.json's literal per-module 'host MCU'/'wireless radio' shared_resources listing for each independent body-worn module. This is the HIGHER-power interpretation and is accepted/disclosed as such: 9.937201 mW battery-side (selected, per-module) vs. 5.644949 mW battery-side (alternative, single-shared system-wide MCU/radio - NOT selected). Source power assumptions are unchanged from results/stage4_engineering_readiness.json; only the topology interpretation differs."
+  },
+  "contact_model": {
+    "total_contacts": {
+      "min": 9,
+      "max": 14,
+      "most_likely": 9,
+      "unit": "electrodes_or_optical_sites"
+    },
+    "per_modality_breakdown": {
+      "wrist_ppg_plus_imu": {
+        "min": 1,
+        "max": 1,
+        "most_likely": 1,
+        "unit": "optical_sites"
+      },
+      "ecg_chest": {
+        "min": 3,
+        "max": 5,
+        "most_likely": 3,
+        "unit": "electrodes",
+        "reasoning": "ADS1292R is a 2-channel biopotential AFE (results/hardware_topology_contract.json evidence_id day6_ads1292r_datasheet). A minimal single-vector wearable ECG (the project's stated HR/HRV reference-signal use case, not diagnostic multi-lead ECG) needs 2 sensing electrodes + 1 reference/right-leg-drive electrode = 3 (most_likely, matching the project's HR-reference scope). A dual-vector 2-channel configuration (e.g. adding a respiration-impedance-style second derivation) would need up to 3 sensing + 1-2 reference/ground = 5 (max). dry_electrodes=0 is already confirmed in the topology contract, so wet/adhesive is the constrained electrode type, not an open question."
+      },
+      "frontal_eeg": {
+        "min": 3,
+        "max": 6,
+        "most_likely": 3,
+        "unit": "electrodes",
+        "reasoning": "results/stage4_engineering_readiness.json's already-frozen power scenario (power.head_afe_eeg_eog.scenario) models exactly '2 active_channels (1 EEG + 1 shared EOG)' - i.e. the frozen DESIGN INTENT is 1 EEG signal channel, not the full 4-channel capacity of the ADS1299-4-class AFE (evidence_id day6_ads1299_datasheet). A minimal single-derivation montage is 1 signal + 1 reference + 1 ground/bias = 3 (most_likely, matches the frozen 1-channel power design point). Using the AFE's full 4-channel capacity would need up to 4 signal + reference + ground = 6 (max) - not the currently-modeled scenario, but physically available on the selected AFE class. Unlike ECG/thoracic-BioZ/leg-BioZ, dry_electrodes is None (not 0) in hardware_topology_contract.json - the electrode TYPE itself remains genuinely open, not just the count."
+      },
+      "eog": {
+        "min": 2,
+        "max": 2,
+        "most_likely": 2,
+        "unit": "electrodes",
+        "reasoning": "Already closed by the prior Closure Prep sprint: +2 ocular electrodes + leads only; shares module/AFE/battery, so this is the ONLY incremental mass EOG adds"
+      }
+    },
+    "sum_check": {
+      "sum_of_most_likely_per_modality": 9,
+      "matches_burden_matrix_most_likely": true
+    },
+    "eog_shared_infrastructure_note": "EOG contributes only its incremental ocular contacts (2, CLOSED confidence) and shares frontal EEG's reference/ground/AFE infrastructure - not double-counted. See results/stage4_contact_electrode_burden.json modalities[eog].shared_with and results/stage4_gate_d_burden_completeness.json eeg_eog_shared_afe_confirmation.",
+    "exact_anatomical_positions_not_specified": "Bounded engineering estimates only (BOUNDED_ENGINEERING_ESTIMATE / PHYSICALLY_CONSTRAINED_BY_FROZEN_METHOD per modality) - no exact anatomical electrode montage positions are invented beyond what results/stage4_contact_electrode_burden.json already specifies."
+  },
+  "burden_ranges": {
+    "power_mw": {
+      "selected_topology_battery_side": 9.937201,
+      "selected_topology_load_side": 8.446621,
+      "alternative_single_shared_battery_side_not_selected": 5.644949,
+      "sensor_only_subtotal": 2.974
+    },
+    "mass_g": {
+      "battery_only": 8.763,
+      "shared_hub_wiring_avoided_g": {
+        "min": 0.6,
+        "max": 3.0,
+        "most_likely": 1.6
+      },
+      "note": "Battery-only reference point (module-level mass totals remain BURDEN_DATA_INCOMPLETE per results/stage4_candidate_class_burden_comparison.json's chest-module decomposition limitation - not re-derived here)."
+    },
+    "raw_data_rate_bps": {
+      "wrist_ppg": 1216,
+      "wrist_imu": 1536,
+      "ecg_chest": 12000,
+      "head_eeg_eog_scientific": 4800
+    },
+    "contacts": {
+      "min": 9,
+      "max": 14,
+      "most_likely": 9,
+      "unit": "electrodes_or_optical_sites"
+    },
+    "bounded_not_exact": "Every figure above is a bounded engineering estimate carried forward from results/stage4_gate_d_burden_completeness.json (CONDITIONALLY_READY, coordinator-accepted) - not a final/exact BOM. bom_final remains false."
+  },
+  "science_rationale": {
+    "class_description": "Minimal Core plus modalities with bounded-but-controlled same-dataset support, assuming low marginal burden via shared infrastructure.",
+    "evidence_confidence": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+    "included_modalities": [
+      "MINIMAL_CORE sensors",
+      "EOG (if sharing EEG AFE/reference infrastructure)"
+    ],
+    "eog_specific_rationale": "Aligned EOG provides bounded same-dataset incremental sleep-staging value beyond EEG-only and shuffled/control conditions under the tested protocol (TIER_B_CONTROLLED_SUPPORT same-dataset; TIER_C_BOUNDED_SUPPORT external, via HMC bounded n=7 - NOT externally replicated). Included at low incremental physical burden (+0.375 mW, +0.4 g, +2 contacts) via shared EEG AFE/reference infrastructure, without adding a new body region or full module.",
+    "pareto_context": "Coordinator selected CORE_PLUS_CONTEXT from the Pareto-relevant set because the EOG increment adds controlled sleep-staging evidence at low incremental physical burden without adding a new body region or full module, while accepting conditional external-validation uncertainty."
+  },
+  "exclusion_rationale": {
+    "thoracic_bioz_eis": {
+      "excluded_from_final_architecture": true,
+      "reason": "Corrected protocol-compliant LBNP evidence is COMPLETE_MIXED, negative-leaning and heterogeneous (results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json). Does not demonstrate stable incremental value sufficient to justify final architecture inclusion.",
+      "prohibited_claim": "BioZ is useless - NOT the finding. Preserved in scientific history/evidence, excluded from hardware architecture only."
+    },
+    "leg_bioz": {
+      "excluded_from_final_architecture": true,
+      "reason": "QDE V2 is aggregate-negative, heterogeneous, and sensitivity-fragile (7/10 subjects individually favor B despite a negative aggregate mean), while leg BioZ adds a new body region, electrode/contact burden, and attachment/module burden.",
+      "prohibited_claim": "Generalization beyond the tested terrestrial endpoint is not supported."
+    },
+    "second_site_ppg": {
+      "excluded_from_final_architecture": true,
+      "reason": "Current PTT evidence is negative/deprioritized (B_minus_A=+1.462 MAE, worse; n=4 held-out test subjects) and it adds substantial sensor power (9.018 mW, the single largest sensor contributor in the entire burden model), data rate (28500 bps), and a new sensing location.",
+      "prohibited_claim": "'Second PPG never helps' as an absolute/permanent claim - NOT supported; only this tested implementation is deprioritized."
+    },
+    "wrist_temperature_light": {
+      "excluded_from_final_architecture": true,
+      "reason": "No governing scientific experiment currently establishes incremental value (TIER_P_PENDING - complete absence of governing evidence, not a negative result).",
+      "prohibited_claim": "Labeling these modalities negative - NOT supported. Correct status is insufficient/pending evidence."
+    }
+  },
+  "gate_d_status": {
+    "gate_d_burden_completeness": "CONDITIONALLY_READY",
+    "coordinator_acceptance": {
+      "status": "CLOSED_FOR_STAGE4_BY_COORDINATOR_ACCEPTANCE_OF_BOUNDED_ENGINEERING_UNCERTAINTY",
+      "accepted_verdict": "CONDITIONALLY_READY",
+      "decided_by": "PROJECT_COORDINATOR (Emir)",
+      "sprint": "STAGE4_FINAL_ARCHITECTURE_CLOSURE",
+      "rationale": "The Coordinator explicitly accepts CONDITIONALLY_READY as sufficient for the final Stage-4 architecture decision because: (1) all material burden uncertainties are now bounded (results/stage4_gate_d_burden_completeness.json known_unknowns - every item with could_be_decision_changing=true also has bounded=true); (2) candidate ordering is stable across every tested contact-count bound, battery topology, and MCU/radio topology (results/stage4_candidate_burden_matrix.json robustness_analysis); (3) remaining uncertainty affects absolute burden magnitude only, never the selected architecture-class ordering.",
+      "state_transition": [
+        "NOT_READY",
+        "CONDITIONALLY_READY",
+        "COORDINATOR_ACCEPTED_BOUNDED_UNCERTAINTY"
+      ],
+      "does_not_imply": "This acceptance does NOT retroactively make Gate D READY, and does NOT imply the underlying bounds have narrowed to exact values - gate_d_burden_completeness remains CONDITIONALLY_READY verbatim. what_would_close_it (below) remains a real, disclosed list of what a future unconditional READY verdict would still require.",
+      "residual_disclosure_required_at_freeze": [
+        "Freeze the final battery/electronics topology decision (shared-hub vs. per-module, and single-shared-vs-per-module MCU/radio) - the bounded ranges in results/stage4_battery_topology_scenarios.json and results/stage4_candidate_burden_matrix.json would collapse to a single point estimate.",
+        "Freeze exact electrode montages for ECG, EEG, thoracic BioZ, and leg BioZ (converting results/stage4_contact_electrode_burden.json's bounded ranges to exact counts).",
+        "Resolve the leg BioZ unilateral-vs-bilateral module question with an explicit engineering decision (not just the Science-Owner-implied bilateral scope).",
+        "Obtain vendor-specific part selection for MCU/radio/regulator/battery/sensing ICs (currently class-level only)."
+      ]
+    },
+    "state_transition_history": [
+      "NOT_READY",
+      "CONDITIONALLY_READY",
+      "COORDINATOR_ACCEPTED_BOUNDED_UNCERTAINTY"
+    ]
+  },
+  "gate_e_decisions": {
+    "gate_e_pending_science_sensitivity": "CLOSED_BY_COORDINATOR_DECISION",
+    "decisions": [
+      {
+        "item": "EOG external validity (HMC full-cohort)",
+        "decision": "FREEZE_CONDITIONALLY",
+        "architecture_disposition": "EOG is INCLUDED in the final Stage-4 architecture (CORE_PLUS_CONTEXT), on the basis of TIER_B_CONTROLLED_SUPPORT same-dataset evidence and TIER_C_BOUNDED_SUPPORT (bounded, underpowered n=7) external evidence, sharing the head_module's EEG AFE/reference/ground infrastructure per results/stage4_gate_d_burden_completeness.json eeg_eog_shared_afe_confirmation.",
+        "claim_limitations": "Any public/jury-facing claim about EOG must cite TIER_B_CONTROLLED_SUPPORT (same-dataset) / TIER_C_BOUNDED_SUPPORT (external) exactly as the claim ledger requires (GATE_C/GATE_G) - never presented as externally validated pending the full-cohort result.",
+        "what_could_trigger_revision": "A stable, majority-consistent NEGATIVE HMC full-cohort result (scenario HMC-3) if EOG was included; OR a strong external-replication result (scenario HMC-1) if EOG was excluded pending more evidence.",
+        "revision_trigger": {
+          "condition": "Full-cohort HMC shows a stable, majority-consistent NEGATIVE B-A delta across held-out recordings (EOG measurably hurts external sleep-stage classification), not attributable to a single-recording artifact.",
+          "action_if_triggered": "Reopen EOG architecture inclusion for re-evaluation (per HMC-3's own implication_if_observed: EOG's architecture candidacy should downgrade toward CONDITIONAL_CANDIDATE or EXPERIMENTAL_CANDIDATE - same-dataset support alone would no longer be sufficient given a real external negative signal, and the burden-vs-evidence case would need re-examination even under a shared-AFE assumption.)",
+          "source_scenario": "results/stage4_gate_e_coordinator_options.json high_sensitivity_items[EOG].decision_flip_scenarios.HMC-3_external_negative_result"
+        },
+        "near_zero_result_note": "A near-zero/inconclusive HMC-2 result may trigger Coordinator review but is NOT an automatic removal condition - only a stable, majority-consistent HMC-3-equivalent negative result reopens inclusion, per this decision's own governing scope.",
+        "decided_by": "PROJECT_COORDINATOR (Emir)"
+      },
+      {
+        "item": "Sparse-vs-full EEG electrode-count minimization (ds003838 full cohort)",
+        "decision": "FREEZE_CONDITIONALLY",
+        "architecture_disposition": "The current sparse/minimal frontal EEG architecture (1 active EEG signal channel + shared reference/ground, per results/stage4_contact_electrode_burden.json frontal_eeg most_likely=3 total contacts) is retained as-is. This is NOT presented as a population-validated minimization result - it is the already-frozen engineering design point, continued under explicit condition.",
+        "claim_limitations": "Any claim about electrode-count sufficiency must be scoped to 'n=3 bounded diagnostic, inconclusive by design' (TIER_C_BOUNDED_SUPPORT) - never presented as population-validated minimization.",
+        "what_could_trigger_revision": "A materially-worse sparse-EEG result at full cohort (DS-2) if a sparse montage was selected; or strong subject heterogeneity (DS-3) surfacing a need for a conditional/adaptive channel-count class regardless of which fixed count was initially selected.",
+        "revision_trigger": {
+          "condition_ds2": "Full-cohort comparison shows sparse EEG meaningfully and consistently worse than full montage (a gap well beyond seed/subject noise) across the majority of subjects.",
+          "condition_ds3": "Full-cohort comparison shows some subjects with near-equal sparse/full performance and others with a large gap, without a consistent population-level direction.",
+          "action_if_triggered": "Reopen EEG channel-count architecture for re-evaluation (per DS-2's implication: Would weaken aggressive EEG channel minimization as a scientifically-supported choice. — or per DS-3's implication: May justify a CONDITIONAL architecture (e.g. adaptive or subject-calibrated channel count) rather than a single universal configuration - this is a real, distinct architecture class worth defining (see results/stage4_architecture_candidate_classes.json).)",
+          "source_scenario": "results/stage4_gate_e_coordinator_options.json high_sensitivity_items[EEG].decision_flip_scenarios.{DS-2,DS-3}"
+        },
+        "decided_by": "PROJECT_COORDINATOR (Emir)"
+      }
+    ]
+  },
+  "revision_triggers": [
+    {
+      "item": "EOG external validity (HMC full-cohort)",
+      "revision_trigger": {
+        "condition": "Full-cohort HMC shows a stable, majority-consistent NEGATIVE B-A delta across held-out recordings (EOG measurably hurts external sleep-stage classification), not attributable to a single-recording artifact.",
+        "action_if_triggered": "Reopen EOG architecture inclusion for re-evaluation (per HMC-3's own implication_if_observed: EOG's architecture candidacy should downgrade toward CONDITIONAL_CANDIDATE or EXPERIMENTAL_CANDIDATE - same-dataset support alone would no longer be sufficient given a real external negative signal, and the burden-vs-evidence case would need re-examination even under a shared-AFE assumption.)",
+        "source_scenario": "results/stage4_gate_e_coordinator_options.json high_sensitivity_items[EOG].decision_flip_scenarios.HMC-3_external_negative_result"
+      }
+    },
+    {
+      "item": "Sparse-vs-full EEG electrode-count minimization (ds003838 full cohort)",
+      "revision_trigger": {
+        "condition_ds2": "Full-cohort comparison shows sparse EEG meaningfully and consistently worse than full montage (a gap well beyond seed/subject noise) across the majority of subjects.",
+        "condition_ds3": "Full-cohort comparison shows some subjects with near-equal sparse/full performance and others with a large gap, without a consistent population-level direction.",
+        "action_if_triggered": "Reopen EEG channel-count architecture for re-evaluation (per DS-2's implication: Would weaken aggressive EEG channel minimization as a scientifically-supported choice. — or per DS-3's implication: May justify a CONDITIONAL architecture (e.g. adaptive or subject-calibrated channel count) rather than a single universal configuration - this is a real, distinct architecture class worth defining (see results/stage4_architecture_candidate_classes.json).)",
+        "source_scenario": "results/stage4_gate_e_coordinator_options.json high_sensitivity_items[EEG].decision_flip_scenarios.{DS-2,DS-3}"
+      }
+    }
+  ],
+  "provenance": {
+    "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+    "stage4_science_owner_package_sha": "5730efd246df8a898d77ea60a32d04235078c215",
+    "stage4_architecture_decision_framework_sha": "fa71eec8a870e4d0d87d5f541344d4d9c299dc23",
+    "stage4_controlled_integration_sha": "05c0ff8cd1b8b815e26188c25b62007b0d03f284",
+    "stage4_gate_d_burden_closure_branch_head_sha": "51a644e0a797ba65b4b3f38acb3c8ee25f1dd95d",
+    "source_artifacts": [
+      "results/stage4_architecture_candidate_classes.json",
+      "results/stage4_candidate_burden_matrix.json",
+      "results/stage4_contact_electrode_burden.json",
+      "results/stage4_battery_topology_scenarios.json",
+      "results/stage4_gate_d_burden_completeness.json",
+      "results/stage4_gate_e_coordinator_decisions.json",
+      "results/stage4_formal_pareto_analysis.json"
+    ]
+  },
+  "coordinator_decision_status": {
+    "final_architecture": "CORE_PLUS_CONTEXT",
+    "formal_pareto_status": "COMPLETE",
+    "gate_d": "CLOSED_FOR_STAGE4_BY_COORDINATOR_ACCEPTANCE_OF_BOUNDED_ENGINEERING_UNCERTAINTY",
+    "gate_e": "CLOSED_BY_COORDINATOR_DECISION",
+    "not_yet_started": "Stage 5 (paper/jury writing) is explicitly NOT authorized by this closure."
+  },
+  "final_architecture_status": "CORE_PLUS_CONTEXT",
+  "formal_pareto_status": "COMPLETE"
+}

@@ -1,13 +1,18 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: biomin-backend
     ports:
       - "8000:8000"
     environment:
       BIOMIN_TICK_INTERVAL_SECONDS: "0.5"
       BIOMIN_ROLLING_HISTORY_LENGTH: "600"
+      BIOMIN_PPG_DALIA_PATH: "/data/ppg-dalia"
+    volumes:
+      - ./datasets/ppg-dalia:/data/ppg-dalia:ro
+      - ./ml/checkpoints:/app/ml/checkpoints:ro
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s

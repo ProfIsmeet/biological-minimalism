@@ -1,0 +1,50 @@
+{
+  "purpose": "Stage 1A machine-readable integrated checkpoint state, post H1/H2 + audit-remediation merge (§29-30). Does not overwrite results/final_checkpoint_inventory_day14.json or results/scientific_freeze_candidate_post_audit_day12.json; both remain the source of truth this artifact summarizes.",
+  "generated_from": [
+    "results/final_checkpoint_inventory_day14.json",
+    "results/scientific_freeze_candidate_post_audit_day12.json",
+    "results/sleep_edf_primary_seedfix_v2.json"
+  ],
+  "historical_external": {
+    "count": 60,
+    "status": "EXTERNALLY_ARCHIVED",
+    "provenance": "results/final_checkpoint_inventory_day14.json::archives (day8 tag day8-checkpoint-archive-v1, n=50; day14 tag day14-checkpoint-archive-v1, n=10)",
+    "note": "Day-8 + Day-14 release lineage. Not modified, not renormalized, not re-tagged by Stage 1A."
+  },
+  "sleep_v2_local": {
+    "count": 10,
+    "status": "LOCAL_ONLY_NOT_YET_ARCHIVED",
+    "external_archive_status": "NOT_YET_ARCHIVED_EXTERNALLY",
+    "model_types": {
+      "baseline_eeg_only_seedfix_v2": 5,
+      "candidate_eeg_plus_eog_seedfix_v2": 5
+    },
+    "seed_ids": [42, 43, 44, 45, 46],
+    "protocol_version": "V2_SEEDFIX_CORRECTED",
+    "manifest_source": "results/sleep_edf_primary_seedfix_v2.json::checkpoint_manifest (10 entries, each with sha256 + size_bytes)",
+    "gitignored": true,
+    "present_on_this_clone": false,
+    "note": "Trained on Ismet's machine; the .pt binaries are gitignored and are NOT present on this integration clone -- only the JSON result artifact (with recorded per-checkpoint sha256/size_bytes) is committed. This is expected (matches results/scientific_freeze_candidate_post_audit_day12.json::checkpoint_state.archival_note) and is not a Stage 1A regression.",
+    "portability_observation": "checkpoint_manifest paths use Windows-style backslash separators (e.g. 'ml\\\\checkpoints\\\\sleep_edf_baseline_eeg_only_seedfix_v2_seed42.pt'), unlike the historical inventory's forward-slash paths. Cosmetic/portability only, not corrected in Stage 1A to avoid editing Ismet's committed science artifact outside disclosed scope; flagged as a remaining risk (LOW)."
+  },
+  "pending_future_v2": {
+    "shuffled_eog_control_c": {"count": 5, "status": "PLANNED_NOT_YET_TRAINED_UNDER_V2"},
+    "interaction_m_b": {"count": 5, "status": "PLANNED_NOT_YET_TRAINED_UNDER_V2"},
+    "interaction_m_ab": {"count": 5, "status": "PLANNED_NOT_YET_TRAINED_UNDER_V2"},
+    "note": "These 15 checkpoints do NOT exist yet under any protocol version this sprint. Do not count them in any total."
+  },
+  "forbidden_totals": {
+    "do_not_report": [
+      "70 externally archived (60 historical is externally archived; the 10 V2 checkpoints are NOT)",
+      "70/70 externally archived",
+      "80 total checkpoints (that would double-count the 15 not-yet-trained pending checkpoints)"
+    ]
+  },
+  "correct_summary_counts": {
+    "historical_externally_durable": 60,
+    "corrected_v2_local_not_externally_archived": 10,
+    "corrected_v2_pending_untrained": 15,
+    "total_known_local_or_referenced": 70,
+    "total_externally_durable": 60
+  }
+}

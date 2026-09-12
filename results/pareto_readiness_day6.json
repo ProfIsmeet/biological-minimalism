@@ -1,0 +1,210 @@
+{
+  "schema_version": "1.0.0",
+  "readiness_id": "biological-minimalism-day6-pareto-readiness-v1",
+  "topology_path": "results/hardware_topology_contract.json",
+  "operational_catalog_path": "results/operational_cost_catalog.json",
+  "decision_inputs_path": "results/pareto_decision_inputs.json",
+  "global_pareto_ready": false,
+  "target_specific_pareto_ready": false,
+  "structural_assessment_available": true,
+  "formal_pareto_authorized": false,
+  "classification": "STRUCTURAL_ONLY_DESCRIPTIVE; FORMAL_PARETO_NOT_READY",
+  "component_matrix": [
+    {
+      "component_id": "wrist_imu",
+      "scientific_benefit": "AVAILABLE",
+      "target_coverage": "PARTIAL",
+      "component_power": "PARTIAL",
+      "average_power_and_energy": "MISSING",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "AVAILABLE",
+      "compute_and_data": "AVAILABLE",
+      "robustness_evidence": "AVAILABLE",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "32 Hz-compatible acquisition/resampling validation",
+        "selected range/filter settings",
+        "shared MCU/radio identity",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "second_ppg_site",
+      "scientific_benefit": "AVAILABLE",
+      "target_coverage": "PARTIAL",
+      "component_power": "PARTIAL",
+      "average_power_and_energy": "MISSING",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "PARTIAL",
+      "compute_and_data": "AVAILABLE",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "shared versus standalone module boundary",
+        "emitters/photodiode and LED currents",
+        "AFE sequencing at 500 Hz",
+        "attachment/cabling",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "wrist_ppg",
+      "scientific_benefit": "PARTIAL",
+      "target_coverage": "PARTIAL",
+      "component_power": "PARTIAL",
+      "average_power_and_energy": "MISSING",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "AVAILABLE",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "LED wavelengths and currents",
+        "photodiode and optical geometry",
+        "64 Hz operating-point power",
+        "shared MCU/radio identity",
+        "finished module mass"
+      ]
+    },
+    {
+      "component_id": "ecg_chest",
+      "scientific_benefit": "MISSING",
+      "target_coverage": "PARTIAL",
+      "component_power": "AVAILABLE",
+      "average_power_and_energy": "AVAILABLE",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "PARTIAL",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "electrode count/type/layout",
+        "input protection",
+        "shared chest MCU/radio identity",
+        "finished chest-module mass",
+        "scientific target validation"
+      ]
+    },
+    {
+      "component_id": "thoracic_bioz",
+      "scientific_benefit": "MISSING",
+      "target_coverage": "PARTIAL",
+      "component_power": "MISSING",
+      "average_power_and_energy": "MISSING",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "PARTIAL",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "electrode count/type/layout",
+        "excitation frequencies and amplitude",
+        "measurement schedule",
+        "MCU/radio identity",
+        "finished-module mass",
+        "scientific target validation"
+      ]
+    },
+    {
+      "component_id": "skin_temperature",
+      "scientific_benefit": "MISSING",
+      "target_coverage": "PARTIAL",
+      "component_power": "AVAILABLE",
+      "average_power_and_energy": "AVAILABLE",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "AVAILABLE",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "thermal coupling to skin",
+        "placement bias and calibration",
+        "shared MCU/radio identity",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "light_sensor",
+      "scientific_benefit": "MISSING",
+      "target_coverage": "PARTIAL",
+      "component_power": "AVAILABLE",
+      "average_power_and_energy": "AVAILABLE",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "AVAILABLE",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "reporting interval",
+        "optical window",
+        "shared MCU/radio identity",
+        "component and finished-module mass"
+      ]
+    },
+    {
+      "component_id": "frontal_eeg",
+      "scientific_benefit": "MISSING",
+      "target_coverage": "PARTIAL",
+      "component_power": "MISSING",
+      "average_power_and_energy": "MISSING",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "PARTIAL",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "montage and electrode count/type",
+        "session schedule",
+        "power state",
+        "MCU/radio identity",
+        "headband mass",
+        "scientific target validation"
+      ]
+    },
+    {
+      "component_id": "leg_bioz",
+      "scientific_benefit": "MISSING",
+      "target_coverage": "PARTIAL",
+      "component_power": "MISSING",
+      "average_power_and_energy": "MISSING",
+      "component_mass": "MISSING",
+      "finished_mass": "MISSING",
+      "physical_burden": "PARTIAL",
+      "compute_and_data": "PARTIAL",
+      "robustness_evidence": "MISSING",
+      "provenance": "AVAILABLE",
+      "unresolved_dependencies": [
+        "electrode count/type/layout",
+        "excitation frequencies and amplitude",
+        "measurement schedule",
+        "MCU/radio identity",
+        "finished-module mass",
+        "scientific target validation"
+      ]
+    }
+  ],
+  "blockers": [
+    "Scientific benefit is validated for two HR additions and one sleep-stage addition (EOG), but those experiments use different datasets, populations, baselines, metrics (MAE vs macro-F1), and model families and are not comparable or rankable against each other.",
+    "Deployable average power/energy is absent for optical sensing, IMU at the scientifically compatible rate, BioZ, EEG, and the second PPG site.",
+    "Component, PCB/module, and finished wearable masses are unquantified for every component.",
+    "Electrode montages and shared-electrode allocation are unresolved for ECG, thoracic BioZ, EEG, EOG, and leg BioZ.",
+    "Final MCU, memory, radio, battery, regulator, enclosure, and attachment identities/allocations are open.",
+    "Only heart rate and 5-class sleep stage have frozen marginal-value experiments; HRV, respiration, BP/PAT, workload, fatigue, circadian, and fluid targets are not validated."
+  ],
+  "limited_structural_conclusion": "For the frozen PTT heart-rate experiment only, the second PPG site worsened aggregate error while adding one physical and optical sensing site. This does not authorize global removal or final architecture selection.",
+  "prohibited_inferences": [
+    "No universal sensor score",
+    "No raw cross-dataset MAE/RMSE ranking",
+    "No total wearable power from IC/AFE power",
+    "No finished wearable mass from package dimensions",
+    "No final component retain/remove outcome"
+  ]
+}

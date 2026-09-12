@@ -1,0 +1,99 @@
+{
+  "artifact_id": "biological-minimalism-pareto-blocker-progress-day11-part2-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART2",
+  "not_the_canonical_pareto_decision": true,
+  "source_of_truth": "results/pareto_readiness_blockers.json",
+  "statement": "Part-2 progress against each Pareto blocker. Engineering-only. Does NOT recompute or downgrade the canonical Pareto decision; Part-3 may act on these.",
+  "blockers": [
+    {
+      "id": "cross_dataset_incomparability",
+      "before_part2": "BLOCKER",
+      "evidence_added": "NONE (engineering cannot address scientific incomparability)",
+      "after_part2_readiness": "BLOCKER",
+      "still_unresolved": "Per-target comparable benefit frame",
+      "part3_may_downgrade": false,
+      "note": "MUST NOT be downgraded by any engineering work."
+    },
+    {
+      "id": "power_partial",
+      "before_part2": "HIGH (component IC points only)",
+      "evidence_added": [
+        "Frozen REFERENCE_IMU_OPERATING_POINT (0.018 mW ref, 0.018-0.378 band)",
+        "TMP117 0.01155 mW + OPT3001 0.00594 mW component reference powers",
+        "REFERENCE_ECG_AFE_POWER 0.67 mW",
+        "MAX86141 AFE floor <=0.018 mW (LED-excluded)",
+        "WRIST_SENSOR_ELECTRONICS_REFERENCE_SCENARIO_LED_EXCLUDED band (LED-excluded reference scenario, not a bound)",
+        "Reference MCU/radio/regulator CLASSES"
+      ],
+      "after_part2_readiness": "HIGH (PARTIAL_IMPROVED)",
+      "still_unresolved": [
+        "LED optical power",
+        "EEG/EOG head-AFE operating point",
+        "thoracic + leg BioZ operating point",
+        "deployable duty",
+        "regulator efficiency",
+        "battery",
+        "system average power"
+      ],
+      "part3_may_downgrade": false,
+      "note": "System average power still NOT_READY; do not drop below HIGH."
+    },
+    {
+      "id": "mass_missing",
+      "before_part2": "HIGH",
+      "evidence_added": [
+        "Tier-0..4 framework formalised",
+        "per-module contributor classification (all Tier 0)"
+      ],
+      "after_part2_readiness": "HIGH",
+      "still_unresolved": "Every mass number (no material model / board design / cell)",
+      "part3_may_downgrade": false
+    },
+    {
+      "id": "module_bom_unresolved",
+      "before_part2": "HIGH",
+      "evidence_added": [
+        "MCU/radio/regulator/battery MISSING -> REFERENCE_SELECTED (class, final=false)"
+      ],
+      "after_part2_readiness": "HIGH (PARTIALLY_ADDRESSED)",
+      "still_unresolved": [
+        "final component selections",
+        "enclosure",
+        "PCB",
+        "electrode materials",
+        "attachment",
+        "2nd-PPG module boundary"
+      ],
+      "part3_may_downgrade": "CANDIDATE \u2014 Part-3 MAY reduce to MEDIUM if class-level reference BOM is accepted as sufficient for a reference (not final) Pareto; not downgraded here."
+    },
+    {
+      "id": "interaction_evidence_incomplete",
+      "before_part2": "MEDIUM (PARTIALLY_ADDRESSED)",
+      "evidence_added": "NONE (scientific)",
+      "after_part2_readiness": "MEDIUM",
+      "still_unresolved": "interaction coverage across other pairs/targets",
+      "part3_may_downgrade": false
+    },
+    {
+      "id": "sleep_single_dataset_scope",
+      "before_part2": "MEDIUM",
+      "evidence_added": "NONE (scientific)",
+      "after_part2_readiness": "MEDIUM",
+      "still_unresolved": "independent-dataset replication",
+      "part3_may_downgrade": false
+    },
+    {
+      "id": "targets_incomplete",
+      "before_part2": "MEDIUM",
+      "evidence_added": "NONE (scientific)",
+      "after_part2_readiness": "MEDIUM",
+      "still_unresolved": "additional target-specific experiments",
+      "part3_may_downgrade": false
+    }
+  ],
+  "data_compute_axis": {
+    "note": "Not a blocker; strengthened by results/reference_data_rate_budget_day11.json (explicit raw payloads)."
+  },
+  "pareto_status": "NOT_READY (unchanged)"
+}

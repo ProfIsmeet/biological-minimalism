@@ -45,12 +45,16 @@ class RuleBasedInferenceEngine:
 
 
 class TorchInferenceEngine:
-    """Loads a trained `BiologicalDigitalTwinNet` checkpoint and runs real
-    inference. Not exercised by default (no checkpoint is trained in this
-    task), but fully implemented so a future training run can be dropped
-    in without touching the API or frontend."""
+    """Loads a `BiologicalDigitalTwinNet` checkpoint but does NOT yet run a
+    forward pass (audit M10/M31). `confidence_and_contribution` currently
+    returns the MOCK snapshot's precomputed values, not model output — the real
+    forward-pass wiring point is documented below but not exercised, because no
+    raw per-modality window buffers are retained. `name`/`runs_real_inference`
+    make the absence of real inference explicit; wire the forward pass (and a
+    real windowing pipeline) before treating any output as learned inference."""
 
-    name = "torch_v1"
+    name = "torch_v1_mock_passthrough"
+    runs_real_inference = False
 
     def __init__(self, checkpoint_path: Path) -> None:
         from app.ml._torch_bootstrap import ensure_torch_dll_path

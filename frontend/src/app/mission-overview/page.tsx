@@ -18,7 +18,7 @@ export default function MissionOverviewPage() {
       <div>
         <h1 className="text-lg font-semibold text-slate-100">Mission Overview</h1>
         <p className="text-sm text-slate-500">
-          Real-time status of the four-sensor Biological Minimalism architecture — mock telemetry, live over WebSocket.
+          Source-labelled telemetry over WebSocket. Synthetic demo and real recorded-data replay remain explicitly distinguished.
         </p>
       </div>
 

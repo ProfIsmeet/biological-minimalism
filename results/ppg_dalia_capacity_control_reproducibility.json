@@ -1,0 +1,36 @@
+{
+  "tolerance_bpm": 0.0001,
+  "all_ok": true,
+  "runs": [
+    {
+      "run_id": "model_a_cap_seed42",
+      "ok": true,
+      "mae_diff": 0.0,
+      "rmse_diff": 0.0
+    },
+    {
+      "run_id": "model_a_cap_seed43",
+      "ok": true,
+      "mae_diff": 0.0,
+      "rmse_diff": 0.0
+    },
+    {
+      "run_id": "model_a_cap_seed44",
+      "ok": true,
+      "mae_diff": 0.0,
+      "rmse_diff": 0.0
+    },
+    {
+      "run_id": "model_a_cap_seed45",
+      "ok": true,
+      "mae_diff": 0.0,
+      "rmse_diff": 0.0
+    },
+    {
+      "run_id": "model_a_cap_seed46",
+      "ok": true,
+      "mae_diff": 0.0,
+      "rmse_diff": 0.0
+    }
+  ]
+}

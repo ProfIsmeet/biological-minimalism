@@ -65,10 +65,14 @@ by loading `S1.pkl` directly before writing the loader (`data['subject']`,
 preprocessing, and loader details: `datasets/ppg-dalia/README.md`.
 
 **Priority 2 (first real ablation experiment) — complete.** Real result: adding
-synchronized IMU reduced held-out heart-rate MAE from 9.090 to 7.032 bpm (≈23%),
+synchronized IMU reduced held-out heart-rate MAE from 9.090 to 7.032 bpm (≈23%,
+single-seed; **replicated multi-seed aggregate ≈20.6%**, 9.086→7.208 bpm — use
+the multi-seed number),
 subject-wise held out, stratified by motion severity, with a negative-control
-(shuffled IMU) check. Full results: `ml/README.md` §"Priority 2" and
-`ml/experiments/ppg_dalia_imu_ablation/results.json`.
+(shuffled IMU) check. Note A→B is capacity-confounded (≈8k vs ≈29k params); the
+capacity-matched C→B control is the cleanest comparison. Full results:
+`ml/README.md` §"Priority 2", `results/ppg_dalia_imu_multiseed_replication.json`,
+and `ml/experiments/ppg_dalia_imu_ablation/results.json`.
 
 ---
 
@@ -229,8 +233,10 @@ multimodal result.
 **Priority 2** (first real ablation result — "how much does synchronized IMU improve
 PPG-derived heart-rate estimation under motion?") is complete, using PPG-DaLiA — real,
 accessible, exactly fit for that question. Result: synchronized IMU reduced held-out
-HR MAE by ≈23% (9.090 → 7.032 bpm), consistent across all 3 held-out test subjects and
-all motion-severity quartiles (see `ml/README.md`). PulseDB and WESAD stay blocked
+HR MAE by ≈23% single-seed (9.090 → 7.032 bpm; **replicated multi-seed aggregate
+≈20.6%**, 9.086 → 7.208 bpm), consistent across all 3 held-out test subjects and
+all motion-severity quartiles (see `ml/README.md`). A→B is capacity-confounded;
+the capacity-matched C→B control is the cleanest comparison. PulseDB and WESAD stay blocked
 pending team action (an account holder downloading them) — not silently substituted
 again the way Sleep-EDF/BIDMC/QDE substituted for WESAD earlier, per the handoff's
 own caution against over-substituting away from the datasets a target actually needs.

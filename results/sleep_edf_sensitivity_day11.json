@@ -1,0 +1,100 @@
+{
+  "purpose": "Day 11 Sleep-EDF sensitivity package - primary (n=3) and secondary (n=8) reported SEPARATELY, never pooled into a single n=11 headline.",
+  "no_retraining": true,
+  "no_pooling": true,
+  "primary": {
+    "n_subjects": 3,
+    "subjects": [
+      "SC4011",
+      "SC4081",
+      "SC4131"
+    ],
+    "per_subject_b_minus_a": {
+      "SC4011": 0.04885590039645715,
+      "SC4081": 0.007986328751987237,
+      "SC4131": 0.009094943918696585
+    },
+    "per_subject_b_minus_c": {
+      "SC4011": 0.07125429541837802,
+      "SC4081": 0.010881927467600971,
+      "SC4131": 0.005416171973716133
+    },
+    "median_b_minus_a": 0.009094943918696585,
+    "mean_b_minus_a": 0.021979057689046993,
+    "median_b_minus_c": 0.010881927467600971,
+    "mean_b_minus_c": 0.029184131619898374,
+    "dominant_subject_b_minus_a": "SC4011",
+    "dominant_subject_share_b_minus_a": 0.7409462390313473,
+    "single_subject_dominance_flag": true,
+    "source_artifact": "results/sleep_edf_per_subject_analysis.json + results/sleep_edf_eeg_eog_control_analysis.json"
+  },
+  "secondary": {
+    "n_subjects": 8,
+    "subjects": [
+      "SC4181",
+      "SC4191",
+      "SC4201",
+      "SC4211",
+      "SC4221",
+      "SC4231",
+      "SC4241",
+      "SC4251"
+    ],
+    "per_subject_b_minus_a": {
+      "SC4181": 0.029482909023675008,
+      "SC4191": -0.004822290080345825,
+      "SC4201": 0.062206288578808513,
+      "SC4211": 0.02588917948645315,
+      "SC4221": 0.1363492840088756,
+      "SC4231": 0.06574329004900799,
+      "SC4241": 0.02190871856662009,
+      "SC4251": -0.004503455468430606
+    },
+    "per_subject_b_minus_c": {
+      "SC4181": 0.013068513431004703,
+      "SC4191": -0.007871237223194627,
+      "SC4201": 0.06236455705917452,
+      "SC4211": 0.01915173896766138,
+      "SC4221": 0.11942595356040057,
+      "SC4231": 0.05285788200427153,
+      "SC4241": 0.02532419208578667,
+      "SC4251": 0.003849341500232728
+    },
+    "median_b_minus_a": 0.02768604425506408,
+    "mean_b_minus_a": 0.04153174052058299,
+    "median_b_minus_c": 0.022237965526724024,
+    "mean_b_minus_c": 0.03602136767316719,
+    "dominant_subject_b_minus_a": "SC4221",
+    "dominant_subject_share_b_minus_a": 0.41037674529105445,
+    "single_subject_dominance_flag": false,
+    "descriptive_subject_bootstrap_b_minus_a": {
+      "label": "DESCRIPTIVE_SUBJECT_BOOTSTRAP",
+      "not_a_population_generalization_proof": true,
+      "n_subjects": 8,
+      "n_resamples": 5000,
+      "observed_mean": 0.04153174052058299,
+      "bootstrap_mean_of_means": 0.04137166660178851,
+      "percentile_2_5": 0.01463965627288296,
+      "percentile_97_5": 0.0730048358270634,
+      "fraction_resamples_positive": 0.9998
+    },
+    "descriptive_subject_bootstrap_b_minus_c": {
+      "label": "DESCRIPTIVE_SUBJECT_BOOTSTRAP",
+      "not_a_population_generalization_proof": true,
+      "n_subjects": 8,
+      "n_resamples": 5000,
+      "observed_mean": 0.03602136767316719,
+      "bootstrap_mean_of_means": 0.0358989882032992,
+      "percentile_2_5": 0.011646637055885237,
+      "percentile_97_5": 0.0640398621554282,
+      "fraction_resamples_positive": 0.9998
+    },
+    "source_artifact": "results/sleep_edf_secondary_holdout_evaluation.json"
+  },
+  "seed_level_variability_note": {
+    "note": "5 training seeds are optimization replication only - not independent subjects. See docs/STATISTICAL_REPORTING_STANDARD_DAY11.md.",
+    "primary_aggregate_source": "results/sleep_edf_eeg_eog_ablation.json (baseline/candidate SD already sample ddof=1)",
+    "secondary_aggregate_source": "results/sleep_edf_secondary_holdout_evaluation.json (aggregate block already sample ddof=1)"
+  },
+  "final_interpretation": "Primary (n=3): the aggregate B>A effect is concentrated in one subject (SC4011); the other two are mixed/weak - already disclosed in Day 8. Secondary (n=8): the effect is more evenly distributed (no single subject exceeds 50% of the summed effect), and a descriptive (non-population-generalizing) subject bootstrap on the 8-subject B-A deltas shows the resample distribution's mean stays positive in the large majority of resamples - consistent with, but not proof beyond, the already-reported 6/8 direction count. Neither cohort supports independent-dataset replication; both remain the same Sleep-EDF cassette source population."
+}

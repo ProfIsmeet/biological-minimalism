@@ -1,0 +1,89 @@
+{
+  "matrix_id": "biological-minimalism-target-evidence-matrix-v1",
+  "statement": "Target-specific marginal-value evidence for each completed experiment. Only frozen, committed evidence is included; the three entries span distinct targets/datasets/metrics and are NOT ranked against one another.",
+  "cross_target_comparability": "PROHIBITED: raw metric magnitudes across different targets/datasets/model families are not comparable and must never be ranked against each other (e.g. MAE vs macro-F1).",
+  "entries": [
+    {
+      "experiment_id": "ppg-dalia-imu-ablation",
+      "target": "heart_rate_bpm",
+      "dataset": "PPG-DaLiA",
+      "candidate": "synchronized wrist IMU",
+      "metric": "MAE (bpm)",
+      "metric_kind": "regression",
+      "metric_directionality": "lower_is_better",
+      "baseline_configuration_id": "model_a_ppg_only",
+      "candidate_configuration_id": "model_b_ppg_plus_imu",
+      "direction": "improved",
+      "result_class": "positive_marginal_value",
+      "evidence_strength": "strongly_replicated",
+      "capacity_match_status": "confounded",
+      "subject_heterogeneity": "Benefit held for all three held-out subjects (S2, S9, S14); motion-quartile benefit was positive but non-monotonic.",
+      "class_heterogeneity": null,
+      "sensitivity_status": "available",
+      "operational_cost_linkage_status": "linked (component wrist_imu in pareto_decision_inputs)",
+      "supported_claim": "On PPG-DaLiA held-out subjects under the frozen 8s/2s protocol, adding synchronized wrist IMU reduced HR MAE 9.086->7.208 bpm (~20.6% relative), replicated 5/5 seeds (original protocol). A supplemental capacity-matched PPG-only control (A_cap) is now available: ~68% of the original A->B gap was recovered by capacity/architecture alone, leaving a smaller capacity-controlled IMU-information benefit (A_cap->B ~0.605 bpm, 5/5 seeds). The already-capacity-matched C->B increment (~0.776 bpm, 5/5 seeds) remains the cleanest comparison. Key limitation: the effect is substantially smaller after architecture/capacity control.",
+      "prohibited_claims": [
+        "The full A->B benefit is pure IMU sensor value (A->B and A->C are capacity-confounded, ~8k vs ~29k params).",
+        "IMU is universally required for heart rate or any other target.",
+        "The evaluated sensor set is globally optimal.",
+        "Generalizes to astronauts / microgravity or beyond PPG-DaLiA's population."
+      ]
+    },
+    {
+      "experiment_id": "ptt-ppg-site-ablation",
+      "target": "heart_rate_bpm",
+      "dataset": "PTT-PPG",
+      "candidate": "second physical PPG site",
+      "metric": "MAE (bpm)",
+      "metric_kind": "regression",
+      "metric_directionality": "lower_is_better",
+      "baseline_configuration_id": "single_ppg_site",
+      "candidate_configuration_id": "two_ppg_site",
+      "direction": "worsened",
+      "result_class": "heterogeneous_marginal_result",
+      "evidence_strength": "replicated_but_variable",
+      "capacity_match_status": "unknown",
+      "subject_heterogeneity": "Subject behavior is heterogeneous across only n=4 held-out subjects (2 of 4 favor the candidate): subject s2 strongly dominates the aggregate negative direction and descriptively excluding s2 flips the aggregate direction (delta shift ~1.95 bpm). The 5 seeds are optimization replications, NOT five independent populations. s2 is never removed from the frozen primary result.",
+      "class_heterogeneity": null,
+      "sensitivity_status": "available",
+      "operational_cost_linkage_status": "linked (component second_ppg_site in pareto_decision_inputs)",
+      "supported_claim": "Under the frozen PTT protocol, the single-site PPG baseline beat the two-site candidate in aggregate HR MAE across 5 optimization seeds \u2014 bounded, heterogeneous negative evidence. Key limitation: n=4 held-out subjects, and the aggregate direction is s2-sensitive.",
+      "prohibited_claims": [
+        "The second PPG site is universally harmful or useless.",
+        "This proves the second PPG site should be removed.",
+        "s2 should be removed from the analysis.",
+        "PTT and PPG-DaLiA magnitudes are comparable or rankable."
+      ]
+    },
+    {
+      "experiment_id": "sleep-edf-eeg-eog-ablation",
+      "target": "sleep_stage_5class",
+      "dataset": "Sleep-EDF",
+      "candidate": "horizontal EOG added to EEG",
+      "metric": "macro-F1",
+      "metric_kind": "classification",
+      "metric_directionality": "higher_is_better",
+      "baseline_configuration_id": "eeg_fpz_cz_only",
+      "candidate_configuration_id": "eeg_fpz_cz_plus_eog_horizontal",
+      "direction": "improved",
+      "result_class": "positive_marginal_value",
+      "evidence_strength": "strongly_replicated",
+      "capacity_match_status": "matched",
+      "subject_heterogeneity": "Primary test n=3: the aggregate positive effect is concentrated in one subject (SC4011 improves; SC4081/SC4131 mixed), so the primary result is dominated by a single subject. Prospective secondary holdout (n=8, evaluation-only, no retraining) broadens this: 6/8 subjects favor B over A and 7/8 favor B over the shuffled control C; the largest single-subject effect (SC4221) contributes ~41% of the summed B-A effect but does not solely carry it. Benefit is broader in the secondary cohort but still not uniform (2/8 subjects near-zero or slightly negative).",
+      "class_heterogeneity": "Primary: largest gains in N1 and REM (physiologically expected for EOG). Secondary holdout reproduces a large REM gain (B-A ~+0.150) but shows an N3 regression (B-A ~-0.043) not seen in the primary test \u2014 disclosed, not smoothed. Read-only confusion diagnostic: the N3 drop is a precision effect (B over-labels true N2 epochs as N3); N3 recall actually improves.",
+      "sensitivity_status": "unavailable",
+      "operational_cost_linkage_status": "not linked (EEG/EOG components not in the current HR-focused pareto_decision_inputs)",
+      "supported_claim": "Under the frozen Sleep-EDF protocol (18 subjects, 12/3/3 subject-disjoint split), adding horizontal EOG to EEG Fpz-Cz improved 5-class sleep-stage macro-F1 in the primary test (0.747->0.769, delta ~0.022, 4/5 seeds) and again in a prospectively-frozen 8-subject secondary holdout from the same dataset (0.653->0.686, 5/5 seeds). A capacity-identical shuffled-EOG control (C, macro-F1 0.742) is consistently worse than aligned EOG (primary C->B 5/5 seeds; secondary C->B 5/5 seeds), while A->C is approximately neutral \u2014 supporting a role for temporally aligned ocular information rather than mere EOG presence. Evidence strength: replicated-with-control with prospective secondary-holdout support. Key limitations: single dataset (Sleep-EDF cassette), terrestrial population, benefit non-uniform across subjects, and an N3 regression in the secondary cohort.",
+      "prohibited_claims": [
+        "EOG is necessary or universally improves sleep staging.",
+        "This validates astronaut / microgravity / spaceflight sleep monitoring.",
+        "The final architecture should contain EOG.",
+        "Sleep-EDF macro-F1 is comparable to or rankable against the HR-MAE experiments.",
+        "This validates the Biological Digital Twin.",
+        "The primary and secondary holdouts form one pooled n=11 test set.",
+        "This is independent-dataset or cross-population replication."
+      ]
+    }
+  ],
+  "awaiting": []
+}

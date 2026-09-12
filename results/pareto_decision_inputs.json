@@ -1,0 +1,1898 @@
+{
+  "schema_version": "2.0.0",
+  "artifact_id": "biological-minimalism-day6-decision-inputs-v2",
+  "source_artifacts": [
+    {
+      "path": "results/sensor_marginal_value_contract.json",
+      "sha256": "05e1c62957793cda2095ecf47e50d7901540277006a70699543b5c33e263142d",
+      "role": "scientific marginal-value contract"
+    },
+    {
+      "path": "results/operational_cost_catalog.json",
+      "sha256": "62c7f0f7846d2da6c73262ebc903b3339a0ef19bc03299637c1c8e777c83f732",
+      "role": "operational-cost contract"
+    },
+    {
+      "path": "results/ppg_dalia_fault_robustness.json",
+      "sha256": "c40397fb0bb43b4f4a778aac4a4e0ba72b7b0387cab1aabec1e0708cc2912dcb",
+      "role": "frozen S14 robustness evidence"
+    },
+    {
+      "path": "docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md",
+      "sha256": "dc2f33355a3aad65e4eafb6148254549c48d3f93b4ff1d943ba8826baf13e194",
+      "role": "post-hoc robustness interpretation boundary"
+    }
+  ],
+  "join_mappings": [
+    {
+      "component_id": "wrist_imu",
+      "scientific_component_id": "wrist_imu_accelerometer",
+      "scientific_experiment_id": "ppg_dalia_imu_hr",
+      "operational_experiment_id": "ppg-dalia-imu-ablation"
+    },
+    {
+      "component_id": "second_ppg_site",
+      "scientific_component_id": "second_physical_ppg_site_proximal_phalanx",
+      "scientific_experiment_id": "ptt_second_ppg_site_hr",
+      "operational_experiment_id": "ptt-ppg-site-ablation"
+    }
+  ],
+  "components": [
+    {
+      "component_id": "wrist_imu",
+      "label": "Wrist IMU",
+      "target": "heart_rate_bpm",
+      "experiment_id": "ppg_dalia_imu_hr",
+      "scientific_marginal_value": {
+        "scientific_component_id": "wrist_imu_accelerometer",
+        "target_id": "heart_rate_bpm",
+        "experiment_id": "ppg_dalia_imu_hr",
+        "dataset_id": "ppg_dalia",
+        "baseline_configuration": {
+          "description": "wrist PPG only",
+          "channels": [
+            "PPG (wrist, 1 channel)"
+          ]
+        },
+        "candidate_configuration": {
+          "description": "wrist PPG + synchronized wrist IMU (3-axis accelerometer)",
+          "channels": [
+            "PPG (wrist, 1 channel)",
+            "IMU (wrist, 3-axis accelerometer)"
+          ]
+        },
+        "primary_metric": "mae",
+        "baseline_metrics": {
+          "mae": {
+            "mean": 9.090062141418457,
+            "sd": null,
+            "unit": "bpm"
+          },
+          "rmse": {
+            "mean": 12.522624015808105,
+            "sd": null,
+            "unit": "bpm"
+          },
+          "n_windows": 12852
+        },
+        "candidate_metrics": {
+          "mae": {
+            "mean": 7.031700611114502,
+            "sd": null,
+            "unit": "bpm"
+          },
+          "rmse": {
+            "mean": 10.717168807983398,
+            "sd": null,
+            "unit": "bpm"
+          },
+          "n_windows": 12852
+        },
+        "absolute_benefit": {
+          "mae_bpm": 2.058361530303955,
+          "rmse_bpm": 1.805455207824707
+        },
+        "relative_improvement": {
+          "mae_fraction": 0.2264408645706748,
+          "rmse_fraction": 0.1441754703763018
+        },
+        "direction": "POSITIVE",
+        "variability": {
+          "training_seed_replication": "5/5 training seeds favor candidate (seeds [42, 43, 44, 45, 46], see results/ppg_dalia_imu_multiseed_replication.json)",
+          "subject_direction_consistency": "3/3 held-out subjects favor candidate",
+          "motion_quartile_direction_consistency": "4/4 motion quartiles favor candidate",
+          "activity_direction_consistency": "8/9 activities favor candidate",
+          "activities_where_candidate_did_not_improve": [
+            "table_soccer"
+          ],
+          "benefit_monotonic_with_motion": false
+        },
+        "heterogeneity": {
+          "subject_level": "CONSISTENT",
+          "activity_level": "MOSTLY_CONSISTENT"
+        },
+        "evidence_strength": "replicated-within-dataset",
+        "evidence_scope": {
+          "n_held_out_subjects": 3,
+          "n_total_subjects": 15,
+          "n_datasets": 1,
+          "n_training_seeds": 5,
+          "independent_ground_truth": "real chest-ECG-derived HR label shipped with PPG-DaLiA (not computed by this project)",
+          "negative_control_present": true,
+          "subject_disjoint_split": true
+        },
+        "capacity_confound": {
+          "status": "RESOLVED_WITH_REVISED_CLAIM",
+          "source_artifact": "results/ppg_dalia_capacity_control.json",
+          "a_cap_parameters": 28865,
+          "b_c_parameters": 29089,
+          "a_cap_residual_vs_b_fraction": 0.0077005053456633095,
+          "fraction_of_original_gap_explained_by_capacity_alone": 0.6777823878375916,
+          "genuine_imu_information_benefit_on_matched_capacity_mae_bpm": 0.6053154945373536,
+          "genuine_imu_information_benefit_seed_consistency": "5/5",
+          "note": "Model A_cap (capacity-matched PPG-only, 28,865 params) closes most of the original A->B gap through architecture alone. The remaining, capacity-controlled IMU-information benefit (A_cap->B) is smaller than originally reported but remains real and 5/5-seed-consistent. The already-capacity-matched C->B comparison (shuffled vs. synchronized IMU) is unaffected by this finding."
+        },
+        "provenance": {
+          "source_artifact": "results/ppg_dalia_imu_ablation.json",
+          "source_reproducibility_artifact": null,
+          "methodology_path": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
+          "contract_path": "results/sensor_marginal_value_contract.json"
+        },
+        "claim_boundaries": {
+          "supported": [
+            "Target-specific marginal direction and metrics within this experiment's frozen dataset and protocol."
+          ],
+          "unsupported": [
+            "Cross-dataset raw-error comparison or universal component ordering.",
+            "Automatic final-architecture inclusion or global component removal.",
+            "Astronaut, microgravity, clinical, or other-target generalization."
+          ],
+          "limitations": [
+            "Trained and evaluated on PPG-DaLiA (terrestrial, free-living daily activities), not astronaut or spaceflight data - no microgravity validation.",
+            "Not clinically validated.",
+            "Held-out test set is 3 subjects (out of 15 total) in this specific seeded split - a different split could shift exact numbers, though the direction of the effect (IMU helps) was consistent across all 3 test subjects individually.",
+            "IMU benefit did NOT monotonically increase with motion-quartile severity in this run (largest absolute gain was in the lowest-motion quartile) - reported as observed, not smoothed into a monotonic story.",
+            "Per-activity breakdown shows one activity (table_soccer) where Model B performed WORSE than Model A - a real negative result within an overall-positive experiment.",
+            "CURRENT MODEL DOES NOT PROVIDE VALIDATED PREDICTIVE UNCERTAINTY. Model output is a single point estimate; no variance/confidence head exists or has been calibrated.",
+            "This experiment establishes heart-rate estimation performance only - it does not establish anything about stress, fatigue, cognitive load, or other targets.",
+            "ModalityFusionTransformer was generalized during this experiment to accept an explicit n_modalities parameter (previously hard-coupled to the dashboard's global 4-modality tuple) - default behavior for existing dashboard callers is unchanged and covered by backend/tests/test_models.py."
+          ]
+        }
+      },
+      "operational_cost": {
+        "source_component_id": "wrist_imu",
+        "candidate_hardware_identity": "BMI270",
+        "duty_cycle": {
+          "availability": "known",
+          "value_kind": "exact",
+          "value": 100.0,
+          "minimum": null,
+          "typical": null,
+          "maximum": null,
+          "unit": "percent",
+          "basis": "total",
+          "evidence_level": "derived",
+          "provenance_ids": [
+            "day6_bmi270_datasheet"
+          ],
+          "notes": [
+            "Day 6 reference acquisition schedule; not total system duty cycle."
+          ]
+        },
+        "dimensions": {
+          "additional_module_count": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 0.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "modules",
+            "basis": "marginal",
+            "evidence_level": "architectural_count",
+            "provenance_ids": [
+              "wrist_colocation_reference"
+            ],
+            "notes": [
+              "Zero only in the explicit colocated wrist-module reference context; it is not a universal BOM claim."
+            ]
+          },
+          "candidate_model_parameters": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 29089.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "parameters",
+            "basis": "total",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ppg_dalia_model_parameter_count"
+            ],
+            "notes": [
+              "Desktop/server research model parameter count; not an embedded-runtime power measurement."
+            ]
+          },
+          "contact_regions_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 0.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "contact_regions",
+            "basis": "marginal",
+            "evidence_level": "architectural_count",
+            "provenance_ids": [
+              "wrist_colocation_reference"
+            ],
+            "notes": [
+              "Uses the existing wrist contact region in the reference integration context."
+            ]
+          },
+          "electrodes_or_contacts_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 0.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "contacts",
+            "basis": "marginal",
+            "evidence_level": "architectural_count",
+            "provenance_ids": [
+              "wrist_colocation_reference"
+            ],
+            "notes": [
+              "A colocated MEMS accelerometer requires no additional skin electrode or optical contact."
+            ]
+          },
+          "incremental_inference_latency_ms": {
+            "availability": "unknown",
+            "value_kind": "exact",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "ms",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "No controlled latency benchmark was frozen for this comparison."
+            ]
+          },
+          "incremental_mass_g": {
+            "availability": "unknown",
+            "value_kind": "range",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "g",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "Final component, PCB, interconnect, and enclosure are not selected."
+            ]
+          },
+          "incremental_model_parameters": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 21024.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "parameters",
+            "basis": "marginal",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ppg_dalia_model_parameter_count"
+            ],
+            "notes": [
+              "Model B minus Model A for embedding dimension 32."
+            ]
+          },
+          "incremental_power_mw": {
+            "availability": "unknown",
+            "value_kind": "range",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "mW",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "No final IMU or operating mode is selected; no representative datasheet is treated as a final design value."
+            ]
+          },
+          "model_input_values_per_window_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 768.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "scalar_values_per_window",
+            "basis": "marginal",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ppg_dalia_window_parameters"
+            ],
+            "notes": [
+              "Three axes × 256 samples per 8-second window."
+            ]
+          },
+          "physical_sensing_sites_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 0.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "physical_sites",
+            "basis": "marginal",
+            "evidence_level": "architectural_count",
+            "provenance_ids": [
+              "wrist_colocation_reference"
+            ],
+            "notes": [
+              "The accelerometer is colocated at the already-present wrist site."
+            ]
+          },
+          "raw_bit_rate_added": {
+            "availability": "unknown",
+            "value_kind": "exact",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "bit_per_second",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "Acquisition bit depth and protocol overhead are not frozen."
+            ]
+          },
+          "raw_sample_throughput_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 96.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "scalar_samples_per_second",
+            "basis": "marginal",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ppg_dalia_window_parameters"
+            ],
+            "notes": [
+              "Three accelerometer axes × 32 Hz; excludes bit depth, framing, compression, and protocol overhead."
+            ]
+          },
+          "baseline_model_parameters": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 8065.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "parameters",
+            "basis": "total",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ppg_dalia_model_parameter_count"
+            ],
+            "notes": [
+              "PPG-only Model A at embedding dimension 32."
+            ]
+          }
+        },
+        "shared_hardware": {
+          "shared_module_id": "wrist_module",
+          "integration_context": "Shares the physical wrist module, enclosure, power source, communications path, and potentially MCU with wrist PPG.",
+          "incremental_vs_standalone": "Marginal colocated cost is expected to differ from a standalone IMU wearable cost.",
+          "allocation_status": "Incremental PCB, power, and compute allocation unresolved.",
+          "double_counting_risk": "Do not add a standalone enclosure, battery, radio, or MCU when evaluating the colocated reference context.",
+          "naive_addition_allowed": false
+        },
+        "known_dimensions": [
+          "additional_module_count",
+          "candidate_model_parameters",
+          "contact_regions_added",
+          "electrodes_or_contacts_added",
+          "incremental_model_parameters",
+          "model_input_values_per_window_added",
+          "physical_sensing_sites_added",
+          "raw_sample_throughput_added",
+          "baseline_model_parameters"
+        ],
+        "unknown_dimensions": [
+          "incremental_inference_latency_ms",
+          "incremental_mass_g",
+          "incremental_power_mw",
+          "raw_bit_rate_added"
+        ],
+        "unknowns": [
+          "final IMU component",
+          "incremental acquisition/interface power",
+          "incremental finished-module mass",
+          "final duty cycle",
+          "embedded inference latency and memory"
+        ],
+        "evidence": [
+          {
+            "evidence_id": "ppg_dalia_window_parameters",
+            "evidence_level": "derived",
+            "title": "PPG-DaLiA frozen window parameters",
+            "source_reference": "results/ppg_dalia_imu_ablation.json",
+            "component_or_artifact_identity": "PPG-DaLiA frozen IMU ablation result",
+            "operating_condition": "8-second windows; wrist PPG 64 Hz × 1 channel; wrist accelerometer 32 Hz × 3 axes",
+            "value_characterization": "Exact software/data-contract quantities",
+            "version_or_date": "d257f196f736e281a671fcc117781331034db1eb",
+            "assumptions": [
+              "Raw sample throughput counts scalar samples and excludes bit depth, compression, framing, and protocol overhead."
+            ],
+            "manufacturer": null,
+            "source_url": null,
+            "retrieval_date": null,
+            "page_or_section": null,
+            "exact_parameters": []
+          },
+          {
+            "evidence_id": "ppg_dalia_model_parameter_count",
+            "evidence_level": "derived",
+            "title": "PPG-DaLiA model parameter counts",
+            "source_reference": "ml/train_ppg_dalia_imu_ablation.py",
+            "component_or_artifact_identity": "PPGOnlyHRModel and PPGPlusIMUHRModel",
+            "operating_condition": "Committed PyTorch architecture, embedding dimension 32",
+            "value_characterization": "Deterministic parameter count from committed architecture",
+            "version_or_date": "1b7bbc1d0341c529b1d5ced955ab303d63526f97",
+            "assumptions": [
+              "Counts instantiate the committed model classes with embedding_dim=32; they are not latency, memory, or power measurements."
+            ],
+            "manufacturer": null,
+            "source_url": null,
+            "retrieval_date": null,
+            "page_or_section": null,
+            "exact_parameters": []
+          },
+          {
+            "evidence_id": "wrist_colocation_reference",
+            "evidence_level": "architectural_count",
+            "title": "Wrist IMU colocated integration context",
+            "source_reference": "docs/MODEL_CONTRACT_PPG_DALIA_HR.md",
+            "component_or_artifact_identity": "Reference shared wrist module",
+            "operating_condition": "Marginal IMU addition to a baseline wrist PPG module",
+            "value_characterization": "Architectural count",
+            "version_or_date": "2026-09-04",
+            "assumptions": [
+              "The experimental source has one existing wrist device; the reference marginal architecture colocates the candidate IMU with wrist PPG.",
+              "This is a structural integration context, not a frozen final BOM."
+            ],
+            "manufacturer": null,
+            "source_url": null,
+            "retrieval_date": null,
+            "page_or_section": null,
+            "exact_parameters": []
+          },
+          {
+            "evidence_id": "day6_bmi270_datasheet",
+            "evidence_level": "manufacturer_spec",
+            "title": "BMI270 Datasheet, document BST-BMI270-DS000-07",
+            "source_reference": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi270-ds000.pdf",
+            "component_or_artifact_identity": "Bosch Sensortec BMI270",
+            "operating_condition": "Electrical table at VDD=1.8 V and TA=25°C; current depends on accelerometer/gyro mode and ODR.",
+            "value_characterization": "Manufacturer operating points and digital resolution; not a complete wrist-module power measurement.",
+            "version_or_date": "BST-BMI270-DS000-07",
+            "assumptions": [
+              "BMI270 is a representative wearable IMU candidate, not a final BOM selection."
+            ],
+            "manufacturer": "Bosch Sensortec",
+            "source_url": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi270-ds000.pdf",
+            "retrieval_date": "2026-09-05",
+            "page_or_section": "Table 1, Basic electrical parameter specifications",
+            "exact_parameters": [
+              "VDD typical 1.8 V",
+              "accelerometer-only low-power 10 µA at 25 Hz",
+              "accelerometer-only normal 210 µA at maximum ODR",
+              "accelerometer output 16 bit"
+            ]
+          }
+        ],
+        "hardware_characterization": {
+          "topology_component_id": "wrist_imu",
+          "identity": {
+            "manufacturer": "Bosch Sensortec",
+            "part_number_or_class": "BMI270",
+            "device_class": "wearable six-axis IMU used in accelerometer-only mode",
+            "status": "representative_candidate",
+            "rationale": "Wearable-focused digital IMU with 16-bit accelerometer and SPI/I2C; representative identity is independent of the positive HR result.",
+            "evidence_ids": [
+              "day6_bmi270_datasheet"
+            ],
+            "exclusions": [
+              "The PPG-DaLiA checkpoint was trained on Empatica E4 32 Hz acceleration, not BMI270 output."
+            ]
+          },
+          "required_afe": "integrated digital MEMS sensing and conversion",
+          "host_interface": "SPI or I2C to shared wrist MCU",
+          "host_mcu_status": "OPEN — shared wrist MCU/radio identity not selected",
+          "power_energy": {
+            "boundary": "incremental_sensor_ic",
+            "operating_condition": "BMI270 accelerometer-only manufacturer reference points at 1.8 V, 25°C: 10 µA low-power at 25 Hz and 210 µA normal at maximum ODR.",
+            "duty_cycle_status": "frozen",
+            "duty_cycle_assumption": "Continuous acquisition while HR inference is active; exact 32 Hz-compatible BMI270 mode and resampling parity remain unresolved.",
+            "supply_voltage": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 1.8,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "V",
+              "basis": "marginal",
+              "evidence_level": "manufacturer_spec",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "Datasheet typical supply condition."
+              ]
+            },
+            "active_current": {
+              "availability": "known",
+              "value_kind": "range",
+              "value": null,
+              "minimum": 10.0,
+              "typical": null,
+              "maximum": 210.0,
+              "unit": "uA",
+              "basis": "marginal",
+              "evidence_level": "manufacturer_spec",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "Two documented accelerometer-only operating points; not a statistical interval or a 32 Hz typical value."
+              ]
+            },
+            "active_power": {
+              "availability": "known",
+              "value_kind": "range",
+              "value": null,
+              "minimum": 0.018,
+              "typical": null,
+              "maximum": 0.378,
+              "unit": "mW",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "1.8 V × documented 10–210 µA operating points."
+              ]
+            },
+            "active_fraction": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 1.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "fraction",
+              "basis": "total",
+              "evidence_level": "reference_schedule",
+              "provenance_ids": [
+                "ppg_dalia_window_parameters"
+              ],
+              "notes": [
+                "Continuous acquisition is an experiment-reference schedule assumption (synchronized HR windows run continuously), not a datasheet-derived duty cycle."
+              ]
+            },
+            "average_power": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "mW",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Average component power requires a compatible operating point and explicit state schedule."
+              ]
+            },
+            "daily_energy": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "mWh_per_day",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Daily energy requires a defensible average component power."
+              ]
+            },
+            "equations": [
+              "P = V × I",
+              "P_avg = Σ(P_state × duty_fraction_state)",
+              "E_day = P_avg × 24 h"
+            ],
+            "excluded_subsystems": [
+              "shared MCU",
+              "memory",
+              "wireless radio",
+              "regulator loss",
+              "battery",
+              "enclosure",
+              "attachment"
+            ]
+          },
+          "mass": {
+            "component_mass": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "g",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Manufacturer package dimensions are not component mass."
+              ]
+            },
+            "pcb_or_module_incremental_mass": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "g",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "PCB, passives, interconnect, and assembly are not frozen."
+              ]
+            },
+            "finished_wearable_mass": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "g",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Enclosure, battery, attachment, electrodes, and allocated shared hardware are not frozen."
+              ]
+            }
+          },
+          "data_rate": {
+            "channel_count": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 3.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "channels",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "Scientific-reference three-axis stream at 32 Hz; BMI270 mode/parity remains to be validated."
+              ]
+            },
+            "sample_rate": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 32.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "Hz",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "Scientific-reference three-axis stream at 32 Hz; BMI270 mode/parity remains to be validated."
+              ]
+            },
+            "bits_per_sample": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 16.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bits_per_sample",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "Scientific-reference three-axis stream at 32 Hz; BMI270 mode/parity remains to be validated."
+              ]
+            },
+            "scalar_sample_throughput": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 96.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "scalar_samples_per_second",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "Scientific-reference three-axis stream at 32 Hz; BMI270 mode/parity remains to be validated."
+              ]
+            },
+            "raw_payload_bit_rate": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 1536.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bit_per_second",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_bmi270_datasheet"
+              ],
+              "notes": [
+                "channels × sample rate × bits/sample; Scientific-reference three-axis stream at 32 Hz; BMI270 mode/parity remains to be validated."
+              ]
+            },
+            "protocol_overhead_bit_rate": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bit_per_second",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Framing, headers, retransmission, and bus/radio overhead are not frozen."
+              ]
+            },
+            "equation": "raw_payload_bit_rate = channels × sample_rate × bits_per_sample",
+            "notes": [
+              "Raw payload excludes protocol overhead.",
+              "Scientific-reference three-axis stream at 32 Hz; BMI270 mode/parity remains to be validated."
+            ]
+          },
+          "compute_memory": {
+            "dtype": "float32",
+            "bytes_per_value": 4,
+            "input_tensor_shapes": [
+              "baseline PPG: [1, 512]",
+              "candidate PPG: [1, 512] + IMU: [3, 256]"
+            ],
+            "baseline_model_weight_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 32260.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ppg_dalia_model_parameter_count"
+              ],
+              "notes": [
+                "8065 parameters × 4 bytes."
+              ]
+            },
+            "candidate_model_weight_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 116356.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ppg_dalia_model_parameter_count"
+              ],
+              "notes": [
+                "29089 parameters × 4 bytes."
+              ]
+            },
+            "incremental_model_weight_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 84096.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ppg_dalia_model_parameter_count"
+              ],
+              "notes": [
+                "21024 parameters × 4 bytes."
+              ]
+            },
+            "baseline_input_buffer_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 2048.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ppg_dalia_window_parameters"
+              ],
+              "notes": [
+                "512 float32 PPG values."
+              ]
+            },
+            "candidate_input_buffer_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 5120.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ppg_dalia_window_parameters"
+              ],
+              "notes": [
+                "1280 float32 values across PPG and IMU."
+              ]
+            },
+            "incremental_input_buffer_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 3072.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ppg_dalia_window_parameters"
+              ],
+              "notes": [
+                "768 added float32 IMU values."
+              ]
+            },
+            "embedded_inference_latency": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "ms",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "No embedded target benchmark exists."
+              ]
+            },
+            "notes": [
+              "Weight memory excludes framework, activations, allocator, and runtime workspace.",
+              "Input buffers exclude alignment, double buffering, and preprocessing workspace."
+            ]
+          },
+          "unresolved_dependencies": [
+            "32 Hz-compatible acquisition/resampling validation",
+            "selected range/filter settings",
+            "shared MCU/radio identity",
+            "component and finished-module mass"
+          ]
+        }
+      },
+      "robustness_evidence": {
+        "status": "RESOLVED_FROM_INTEGRATION_SOURCE",
+        "experiment_id": "ppg_dalia_s14_fault_robustness_v1",
+        "source_artifact": "results/ppg_dalia_fault_robustness.json",
+        "audit_addendum": "docs/PHASE5_ROBUSTNESS_AUDIT_ADDENDUM.md",
+        "subject_id": "S14",
+        "scope": "controlled single-subject robustness characterization",
+        "condition_count": 114,
+        "eligible_windows_per_condition": 4476,
+        "total_condition_windows": 510264,
+        "clean_mae_bpm": 5.0838541984558105,
+        "clean_rmse_bpm": 7.492855072021484,
+        "clean_prediction_availability": 1.0,
+        "imu_calibration_caveat": "IMU noise and saturation scales came from the first affected S14 batch, whose motion variance was much lower than typical later windows; the tested grid is not proof of robustness to severe corruption.",
+        "packet_loss_interpretation": "Independent loss of a required native-rate sample primarily triggered fail-closed input rejection, so packet-loss results characterize prediction availability rather than continuous error degradation.",
+        "supported_claim": "Observed behavior of the frozen canonical pipeline under controlled corruption of official held-out S14 replay data.",
+        "unsupported_claims": [
+          "population-level robustness",
+          "fault tolerance or fault detection",
+          "calibrated predictive uncertainty",
+          "microgravity performance or astronaut readiness",
+          "generalization to missing PPG-DaLiA subjects",
+          "robustness to universally severe IMU corruption",
+          "automatic neural-network fault detection",
+          "fault tolerance"
+        ]
+      }
+    },
+    {
+      "component_id": "second_ppg_site",
+      "label": "Second physical PPG site",
+      "target": "heart_rate_bpm",
+      "experiment_id": "ptt_second_ppg_site_hr",
+      "scientific_marginal_value": {
+        "scientific_component_id": "second_physical_ppg_site_proximal_phalanx",
+        "target_id": "heart_rate_bpm",
+        "experiment_id": "ptt_second_ppg_site_hr",
+        "dataset_id": "pulse_transit_time_ppg",
+        "baseline_configuration": {
+          "description": "one physical PPG sensing site (distal phalanx), 3 wavelengths",
+          "channels": [
+            "pleth_1",
+            "pleth_2",
+            "pleth_3"
+          ]
+        },
+        "candidate_configuration": {
+          "description": "two physical PPG sensing sites (distal + proximal phalanx), 3 wavelengths each",
+          "channels": [
+            "pleth_1",
+            "pleth_2",
+            "pleth_3",
+            "pleth_4",
+            "pleth_5",
+            "pleth_6"
+          ]
+        },
+        "primary_metric": "mae",
+        "baseline_metrics": {
+          "mae": {
+            "mean": 17.540314865112304,
+            "sd": 1.0384105383437507,
+            "unit": "bpm"
+          },
+          "rmse": {
+            "mean": 21.189903259277344,
+            "sd": 1.1099569886140703,
+            "unit": "bpm"
+          },
+          "n_windows": null
+        },
+        "candidate_metrics": {
+          "mae": {
+            "mean": 19.002723693847656,
+            "sd": 0.41136207265180985,
+            "unit": "bpm"
+          },
+          "rmse": {
+            "mean": 24.01768379211426,
+            "sd": 0.7808258121590937,
+            "unit": "bpm"
+          },
+          "n_windows": null
+        },
+        "absolute_benefit": {
+          "mae_bpm": -1.4624088287353523,
+          "rmse_bpm": -2.8277805328369148
+        },
+        "relative_improvement": {
+          "mae_fraction": -0.08337414920892237,
+          "rmse_fraction": -0.13344943099723017
+        },
+        "direction": "NEGATIVE",
+        "variability": {
+          "training_seed_replication": "5/5 seeds trained (seeds [42, 43, 44, 45, 46])",
+          "seed_direction_consistency": "5/5 seeds favor baseline (candidate worse in all of these)",
+          "subject_direction_consistency": "2/4 held-out subjects favor candidate",
+          "activity_direction_consistency": "1/3 activities favor candidate",
+          "per_subject_favors_candidate": {
+            "s14": false,
+            "s2": false,
+            "s20": true,
+            "s9": true
+          },
+          "per_activity_favors_candidate": {
+            "run": false,
+            "sit": false,
+            "walk": true
+          },
+          "benefit_monotonic_with_motion": false
+        },
+        "heterogeneity": {
+          "seed_level": "CONSISTENT (5/5 favor baseline)",
+          "subject_level": "MIXED",
+          "activity_level": "MIXED"
+        },
+        "evidence_strength": "replicated-within-dataset",
+        "evidence_scope": {
+          "n_held_out_subjects": 4,
+          "n_total_subjects": 22,
+          "n_datasets": 1,
+          "n_training_seeds": 5,
+          "independent_ground_truth": "real ECG R-peak-derived HR (manually-verified .atr annotations)",
+          "negative_control_present": false,
+          "subject_disjoint_split": true
+        },
+        "capacity_confound": null,
+        "provenance": {
+          "source_artifact": "results/ptt_ppg_site_ablation.json",
+          "source_reproducibility_artifact": "results/ptt_ppg_site_ablation_reproducibility.json",
+          "methodology_path": "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md",
+          "contract_path": "results/sensor_marginal_value_contract.json"
+        },
+        "claim_boundaries": {
+          "supported": [
+            "Target-specific marginal direction and metrics within this experiment's frozen dataset and protocol."
+          ],
+          "unsupported": [
+            "Cross-dataset raw-error comparison or universal component ordering.",
+            "Automatic final-architecture inclusion or global component removal.",
+            "Astronaut, microgravity, clinical, or other-target generalization."
+          ],
+          "limitations": [
+            "Held-out subject s2 has a real HR distribution far outside the training population's range (verified from raw R-peak data: sit ~121bpm, run ~140bpm mean, vs. a train-set mean of ~85bpm) - a genuine out-of-distribution subject that dominates the small (N=4) held-out aggregate for both models. Not excluded from the frozen result per pre-registered protocol; disclosed here as context, not as grounds to recompute the headline metric.",
+            "Candidate configuration has strictly more input channels (6 vs 3) than baseline by construction - channel-count and site-value effects are not perfectly separable."
+          ]
+        }
+      },
+      "operational_cost": {
+        "source_component_id": "second_ppg_site",
+        "candidate_hardware_identity": "MAX86141-class extension",
+        "duty_cycle": {
+          "availability": "unknown",
+          "value_kind": "range",
+          "value": null,
+          "minimum": null,
+          "typical": null,
+          "maximum": null,
+          "unit": "percent",
+          "basis": "total",
+          "evidence_level": "unknown",
+          "provenance_ids": [],
+          "notes": [
+            "Operating schedule remains open."
+          ]
+        },
+        "dimensions": {
+          "additional_module_count": {
+            "availability": "unknown",
+            "value_kind": "range",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "modules",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "A second site may share electronics or require another module; mechanics are not frozen."
+            ]
+          },
+          "baseline_model_parameters": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 8289.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "parameters",
+            "basis": "total",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ptt_checkpoint_manifest"
+            ],
+            "notes": [
+              "Model A, three input channels."
+            ]
+          },
+          "candidate_model_parameters": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 8625.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "parameters",
+            "basis": "total",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ptt_checkpoint_manifest"
+            ],
+            "notes": [
+              "Model B, six input channels."
+            ]
+          },
+          "contact_regions_added": {
+            "availability": "unknown",
+            "value_kind": "exact",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "contact_regions",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "The experiment adds a physical optical site, but final body-region grouping and wearable mechanics are not frozen."
+            ]
+          },
+          "incremental_inference_latency_ms": {
+            "availability": "unknown",
+            "value_kind": "exact",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "ms",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "No controlled latency benchmark was frozen for the paired PTT models."
+            ]
+          },
+          "incremental_mass_g": {
+            "availability": "unknown",
+            "value_kind": "range",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "g",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "Emitters, detector, AFE allocation, wiring, PCB, enclosure, and attachment are not selected."
+            ]
+          },
+          "incremental_model_parameters": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 336.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "parameters",
+            "basis": "marginal",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ptt_checkpoint_manifest"
+            ],
+            "notes": [
+              "Model B minus Model A; both otherwise share the frozen architecture."
+            ]
+          },
+          "incremental_power_mw": {
+            "availability": "unknown",
+            "value_kind": "range",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "mW",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "No final emitters, currents, duty cycle, photodiode, AFE, or interface are selected."
+            ]
+          },
+          "model_input_values_per_window_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 12000.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "scalar_values_per_window",
+            "basis": "marginal",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ptt_window_parameters"
+            ],
+            "notes": [
+              "Three added channels × 4000 samples per 8-second window."
+            ]
+          },
+          "optical_contact_sites_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 1.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "optical_contact_sites",
+            "basis": "marginal",
+            "evidence_level": "architectural_count",
+            "provenance_ids": [
+              "second_ppg_site_structure"
+            ],
+            "notes": [
+              "One proximal phalanx site is added to the distal baseline site."
+            ]
+          },
+          "physical_sensing_sites_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 1.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "physical_sites",
+            "basis": "marginal",
+            "evidence_level": "architectural_count",
+            "provenance_ids": [
+              "second_ppg_site_structure"
+            ],
+            "notes": [
+              "The source experiment explicitly compares one versus two physical PPG sites."
+            ]
+          },
+          "raw_bit_rate_added": {
+            "availability": "unknown",
+            "value_kind": "exact",
+            "value": null,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "bit_per_second",
+            "basis": "marginal",
+            "evidence_level": "unknown",
+            "provenance_ids": [],
+            "notes": [
+              "Dataset storage representation is not a frozen future ADC bit depth; protocol overhead is also unknown."
+            ]
+          },
+          "raw_sample_throughput_added": {
+            "availability": "known",
+            "value_kind": "exact",
+            "value": 1500.0,
+            "minimum": null,
+            "typical": null,
+            "maximum": null,
+            "unit": "scalar_samples_per_second",
+            "basis": "marginal",
+            "evidence_level": "derived",
+            "provenance_ids": [
+              "ptt_window_parameters"
+            ],
+            "notes": [
+              "Three added PPG channels × 500 Hz; excludes bit depth, framing, compression, and protocol overhead."
+            ]
+          }
+        },
+        "shared_hardware": {
+          "shared_module_id": null,
+          "integration_context": "May share AFE, processor, battery, or communications with the baseline PPG system, but a final topology is not selected.",
+          "incremental_vs_standalone": "One extra physical site is known; standalone-versus-shared implementation cost is unknown.",
+          "allocation_status": "Optical AFE, MCU, battery, enclosure, and communications sharing unresolved.",
+          "double_counting_risk": "Do not assume a complete second wearable module or duplicate shared electronics without a frozen mechanical/electrical design.",
+          "naive_addition_allowed": false
+        },
+        "known_dimensions": [
+          "baseline_model_parameters",
+          "candidate_model_parameters",
+          "incremental_model_parameters",
+          "model_input_values_per_window_added",
+          "optical_contact_sites_added",
+          "physical_sensing_sites_added",
+          "raw_sample_throughput_added"
+        ],
+        "unknown_dimensions": [
+          "additional_module_count",
+          "contact_regions_added",
+          "incremental_inference_latency_ms",
+          "incremental_mass_g",
+          "incremental_power_mw",
+          "raw_bit_rate_added"
+        ],
+        "unknowns": [
+          "final optical component set and currents",
+          "incremental power and finished mass",
+          "whether a new body region or wearable module is required",
+          "final duty cycle",
+          "embedded inference latency and memory"
+        ],
+        "evidence": [
+          {
+            "evidence_id": "ptt_window_parameters",
+            "evidence_level": "derived",
+            "title": "PTT frozen input and sampling parameters",
+            "source_reference": "results/ptt_ppg_site_ablation.json",
+            "component_or_artifact_identity": "PTT PPG-site ablation frozen configuration",
+            "operating_condition": "8-second windows; 500 Hz; three baseline and three added PPG channels",
+            "value_characterization": "Exact software/data-contract quantities",
+            "version_or_date": "a18068440319786c6921e8b8914420eeb731b350",
+            "assumptions": [
+              "Raw sample throughput counts scalar samples and excludes bit depth, compression, framing, and protocol overhead."
+            ],
+            "manufacturer": null,
+            "source_url": null,
+            "retrieval_date": null,
+            "page_or_section": null,
+            "exact_parameters": []
+          },
+          {
+            "evidence_id": "ptt_checkpoint_manifest",
+            "evidence_level": "derived",
+            "title": "PTT model parameter counts",
+            "source_reference": "results/ptt_ppg_site_ablation.json",
+            "component_or_artifact_identity": "PTT Model A and Model B checkpoint manifest",
+            "operating_condition": "Frozen Model A 3-channel and Model B 6-channel architectures",
+            "value_characterization": "Manifested deterministic parameter count",
+            "version_or_date": "a18068440319786c6921e8b8914420eeb731b350",
+            "assumptions": [
+              "Parameter counts are identical across seeds within each model and are not runtime power measurements."
+            ],
+            "manufacturer": null,
+            "source_url": null,
+            "retrieval_date": null,
+            "page_or_section": null,
+            "exact_parameters": []
+          },
+          {
+            "evidence_id": "second_ppg_site_structure",
+            "evidence_level": "architectural_count",
+            "title": "Second physical PPG site structure",
+            "source_reference": "docs/MODEL_CONTRACT_PTT_HR.md",
+            "component_or_artifact_identity": "PTT distal versus proximal phalanx PPG comparison",
+            "operating_condition": "Model B adds proximal red/infrared/green PPG to the distal baseline site",
+            "value_characterization": "Architectural count",
+            "version_or_date": "a18068440319786c6921e8b8914420eeb731b350",
+            "assumptions": [
+              "A physical sensing site is counted separately from a body contact region and a hardware module."
+            ],
+            "manufacturer": null,
+            "source_url": null,
+            "retrieval_date": null,
+            "page_or_section": null,
+            "exact_parameters": []
+          },
+          {
+            "evidence_id": "day6_max86141_datasheet",
+            "evidence_level": "manufacturer_spec",
+            "title": "MAX86140/MAX86141 Wearable Optical AFE Data Sheet, Rev. 5",
+            "source_reference": "https://www.analog.com/en/products/max86141.html",
+            "component_or_artifact_identity": "Analog Devices MAX86141 optical AFE class",
+            "operating_condition": "Optical readout channel at 25 samples/s for the published <10 µA point; LED supply and current are application-dependent.",
+            "value_characterization": "AFE reference point only; excludes LEDs, photodiodes, MCU, radio, regulators, and final optical stack.",
+            "version_or_date": "Rev. 5, 2023-08-24",
+            "assumptions": [
+              "MAX86141 is a representative AFE class; emitters and detectors remain open."
+            ],
+            "manufacturer": "Analog Devices",
+            "source_url": "https://www.analog.com/en/products/max86141.html",
+            "retrieval_date": "2026-09-05",
+            "page_or_section": "Features and product details",
+            "exact_parameters": [
+              "1.8 V main supply",
+              "optical readout <10 µA typical at 25 samples/s",
+              "19-bit ADC",
+              "three LED drivers",
+              "two simultaneous optical readout channels",
+              "SPI"
+            ]
+          }
+        ],
+        "hardware_characterization": {
+          "topology_component_id": "second_ppg_site",
+          "identity": {
+            "manufacturer": "Analog Devices",
+            "part_number_or_class": "MAX86141-class extension",
+            "device_class": "additional wearable optical interface and dual-channel-capable AFE class",
+            "status": "representative_component_class",
+            "rationale": "The class can support multiple LED drivers and two optical receivers, but the experiment's exact six-channel hardware is not a final device design.",
+            "evidence_ids": [
+              "day6_max86141_datasheet"
+            ],
+            "exclusions": [
+              "Does not establish whether electronics are shared, tethered, or a standalone module."
+            ]
+          },
+          "required_afe": "MAX86141-class optical AFE capacity plus unresolved added emitters/photodiode",
+          "host_interface": "SPI; routing to shared or dedicated MCU remains open",
+          "host_mcu_status": "OPEN — module boundary and host identity not selected",
+          "power_energy": {
+            "boundary": "incremental_component_class",
+            "operating_condition": "MAX86141 optical-readout reference only; three-wavelength 500 Hz site schedule and LED currents are not covered by the <10 µA point.",
+            "duty_cycle_status": "open",
+            "duty_cycle_assumption": "Continuous during the frozen experiment; deployable duty cycle is open.",
+            "supply_voltage": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 1.8,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "V",
+              "basis": "marginal",
+              "evidence_level": "manufacturer_spec",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "Main AFE supply; LED supply is separate."
+              ]
+            },
+            "active_current": {
+              "availability": "known",
+              "value_kind": "range",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": 10.0,
+              "unit": "uA",
+              "basis": "marginal",
+              "evidence_level": "manufacturer_spec",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "Published <10 µA reference at 25 samples/s; not the 500 Hz multi-wavelength site current."
+              ]
+            },
+            "active_power": {
+              "availability": "known",
+              "value_kind": "range",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": 0.018,
+              "unit": "mW",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "AFE readout reference only; not deployable second-site power."
+              ]
+            },
+            "active_fraction": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "fraction",
+              "basis": "total",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "A deployable state schedule is not frozen."
+              ]
+            },
+            "average_power": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "mW",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Average component power requires a compatible operating point and explicit state schedule."
+              ]
+            },
+            "daily_energy": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "mWh_per_day",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Daily energy requires a defensible average component power."
+              ]
+            },
+            "equations": [
+              "P = V × I",
+              "P_avg = Σ(P_state × duty_fraction_state)",
+              "E_day = P_avg × 24 h"
+            ],
+            "excluded_subsystems": [
+              "shared MCU",
+              "memory",
+              "wireless radio",
+              "regulator loss",
+              "battery",
+              "enclosure",
+              "attachment",
+              "all added LED/emitter power",
+              "photodiode",
+              "tether or second-module electronics"
+            ]
+          },
+          "mass": {
+            "component_mass": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "g",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Manufacturer package dimensions are not component mass."
+              ]
+            },
+            "pcb_or_module_incremental_mass": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "g",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "PCB, passives, interconnect, and assembly are not frozen."
+              ]
+            },
+            "finished_wearable_mass": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "g",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Enclosure, battery, attachment, electrodes, and allocated shared hardware are not frozen."
+              ]
+            }
+          },
+          "data_rate": {
+            "channel_count": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 3.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "channels",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "Frozen experiment's three added site channels at 500 Hz combined with the representative AFE's 19-bit conversion; protocol overhead excluded."
+              ]
+            },
+            "sample_rate": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 500.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "Hz",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "Frozen experiment's three added site channels at 500 Hz combined with the representative AFE's 19-bit conversion; protocol overhead excluded."
+              ]
+            },
+            "bits_per_sample": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 19.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bits_per_sample",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "Frozen experiment's three added site channels at 500 Hz combined with the representative AFE's 19-bit conversion; protocol overhead excluded."
+              ]
+            },
+            "scalar_sample_throughput": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 1500.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "scalar_samples_per_second",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "Frozen experiment's three added site channels at 500 Hz combined with the representative AFE's 19-bit conversion; protocol overhead excluded."
+              ]
+            },
+            "raw_payload_bit_rate": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 28500.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bit_per_second",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "day6_max86141_datasheet"
+              ],
+              "notes": [
+                "channels × sample rate × bits/sample; Frozen experiment's three added site channels at 500 Hz combined with the representative AFE's 19-bit conversion; protocol overhead excluded."
+              ]
+            },
+            "protocol_overhead_bit_rate": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bit_per_second",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "Framing, headers, retransmission, and bus/radio overhead are not frozen."
+              ]
+            },
+            "equation": "raw_payload_bit_rate = channels × sample_rate × bits_per_sample",
+            "notes": [
+              "Raw payload excludes protocol overhead.",
+              "Frozen experiment's three added site channels at 500 Hz combined with the representative AFE's 19-bit conversion; protocol overhead excluded."
+            ]
+          },
+          "compute_memory": {
+            "dtype": "float32",
+            "bytes_per_value": 4,
+            "input_tensor_shapes": [
+              "baseline: [3, 4000]",
+              "candidate: [6, 4000]"
+            ],
+            "baseline_model_weight_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 33156.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ptt_checkpoint_manifest"
+              ],
+              "notes": [
+                "8289 parameters × 4 bytes."
+              ]
+            },
+            "candidate_model_weight_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 34500.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ptt_checkpoint_manifest"
+              ],
+              "notes": [
+                "8625 parameters × 4 bytes."
+              ]
+            },
+            "incremental_model_weight_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 1344.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ptt_checkpoint_manifest"
+              ],
+              "notes": [
+                "336 parameters × 4 bytes."
+              ]
+            },
+            "baseline_input_buffer_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 48000.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ptt_window_parameters"
+              ],
+              "notes": [
+                "12000 float32 values."
+              ]
+            },
+            "candidate_input_buffer_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 96000.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "total",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ptt_window_parameters"
+              ],
+              "notes": [
+                "24000 float32 values."
+              ]
+            },
+            "incremental_input_buffer_memory": {
+              "availability": "known",
+              "value_kind": "exact",
+              "value": 48000.0,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "bytes",
+              "basis": "marginal",
+              "evidence_level": "derived",
+              "provenance_ids": [
+                "ptt_window_parameters"
+              ],
+              "notes": [
+                "12000 added float32 values."
+              ]
+            },
+            "embedded_inference_latency": {
+              "availability": "unknown",
+              "value_kind": "exact",
+              "value": null,
+              "minimum": null,
+              "typical": null,
+              "maximum": null,
+              "unit": "ms",
+              "basis": "marginal",
+              "evidence_level": "unknown",
+              "provenance_ids": [],
+              "notes": [
+                "No embedded target benchmark exists."
+              ]
+            },
+            "notes": [
+              "Weight memory excludes framework, activations, allocator, and runtime workspace.",
+              "Input buffers exclude alignment, double buffering, and preprocessing workspace."
+            ]
+          },
+          "unresolved_dependencies": [
+            "shared versus standalone module boundary",
+            "emitters/photodiode and LED currents",
+            "AFE sequencing at 500 Hz",
+            "attachment/cabling",
+            "component and finished-module mass"
+          ]
+        }
+      },
+      "robustness_evidence": null
+    }
+  ],
+  "readiness": {
+    "pareto_status": "NOT_READY",
+    "formal_pareto_calculated": false,
+    "missing_requirements": [
+      "Deployable average power and daily energy remain unquantified for both candidate components.",
+      "Incremental finished mass is unquantified for both candidate components.",
+      "Embedded inference latency and protocol/storage/transport overhead are unquantified.",
+      "Reference component identities and topology are frozen, but the final BOM, MCU, radio, battery, regulator, enclosure, and attachment are not selected.",
+      "The second PPG site's module boundary and contact-region allocation are unresolved.",
+      "Only heart rate has marginal-value evidence; other mission-relevant targets are unvalidated.",
+      "Only two candidate additions have scientific evidence, from different datasets and model families.",
+      "Interaction effects are only PARTIALLY measured: one predeclared factorial experiment (Sleep-EDF EEG x EOG x Resp, result approximately additive/unresolved) now exists, but it covers a single candidate pair on a single target and does not prove a globally minimal subset. One-component-at-a-time marginal value still dominates the evidence, so a formal Pareto frontier cannot be declared from these experiments alone."
+    ],
+    "cross_dataset_restriction": "Raw MAE/RMSE and relative-improvement magnitudes from PPG-DaLiA and PTT are not comparable ranking coordinates.",
+    "limited_structural_observation": "Within the frozen PTT heart-rate experiment, the second PPG site worsened aggregate error while adding one physical and optical sensing site. This is a descriptive, target-specific observation—not a global architecture decision.",
+    "component_matrix": [
+      {
+        "component_id": "wrist_imu",
+        "scientific_benefit": "AVAILABLE",
+        "power": "PARTIAL",
+        "mass": "MISSING",
+        "contact_burden": "AVAILABLE",
+        "module_burden": "AVAILABLE",
+        "compute_data_burden": "AVAILABLE",
+        "robustness_evidence": "AVAILABLE",
+        "evidence_provenance": "AVAILABLE"
+      },
+      {
+        "component_id": "second_ppg_site",
+        "scientific_benefit": "AVAILABLE",
+        "power": "PARTIAL",
+        "mass": "MISSING",
+        "contact_burden": "PARTIAL",
+        "module_burden": "MISSING",
+        "compute_data_burden": "AVAILABLE",
+        "robustness_evidence": "MISSING",
+        "evidence_provenance": "AVAILABLE"
+      }
+    ]
+  }
+}

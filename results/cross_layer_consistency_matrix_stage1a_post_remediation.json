@@ -1,0 +1,193 @@
+{
+  "artifact_id": "cross_layer_consistency_matrix_stage1a_post_remediation",
+  "schema_version": "1.0",
+  "purpose": "Stage 1A post-integration cross-layer consistency check (source/contract/backend/frontend/paper-jury) covering the 20 items listed in the governing master prompt §35. Regenerated fresh -- does not assume the pre-integration results/cross_layer_consistency_matrix_day12.json remains valid after the H1/H2 merge.",
+  "layers": ["source_result", "backend_api", "frontend", "paper_jury_claim"],
+  "rows": [
+    {
+      "row": "ppg_controlled_headline",
+      "value": "Capacity-controlled A_cap->B ~0.605 bpm (5/5 seeds); shuffled control C->B ~0.776 bpm (5/5). Unchanged by this integration.",
+      "source_result": "results/ppg_dalia_capacity_control.json::primary_comparisons",
+      "backend_api": "catalog._ppg_controlled_comparisons -> marginal_result.controlled_comparisons, headline_comparison_id=capacity_controlled_Acap_to_B",
+      "frontend": "ResearchMode controlled-comparisons block, HEADLINE badge",
+      "paper_jury_claim": "FURKAN_PAPER_HANDOFF_DAY11 / JURY_DEFENSE_MASTER capacity-control section",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "ppg_historical_confounded_headline",
+      "value": "Historical uncontrolled A->B remains HISTORICAL_CAPACITY_CONFOUNDED_RESULT, never the headline.",
+      "source_result": "results/ppg_dalia_imu_multiseed_replication.json::aggregate.total_sync_imu_benefit_mae_A_minus_B",
+      "backend_api": "catalog._ppg_controlled_comparisons -> role=HISTORICAL_CAPACITY_CONFOUNDED_RESULT",
+      "frontend": "ResearchMode HISTORICAL badge, dimmed styling",
+      "paper_jury_claim": "SENSOR_MARGINAL_VALUE_METHODOLOGY.md demotion note",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "ppg_subject_heterogeneity",
+      "value": "5/5 seed aggregate support; S9 >50% of summed subject effect; not every subject individually improves. Unchanged by this integration.",
+      "source_result": "results/ppg_dalia_capacity_control.json subject-level sensitivity block",
+      "backend_api": "marginal_result.subject_heterogeneity text",
+      "frontend": "ResearchMode subject-heterogeneity paragraph",
+      "paper_jury_claim": "SENSOR_INTERACTION_LIMITATION.md",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "sleep_v2_primary_a",
+      "value": "Corrected V2 Primary A (EEG-only) mean macro-F1 ~0.7365 (5 seeds, seed-before-model-init protocol).",
+      "source_result": "results/sleep_edf_primary_seedfix_v2.json::aggregate.baseline_macro_f1.mean",
+      "backend_api": "catalog._build_sleep_v1_v2_comparisons -> ControlledComparison(seed_corrected_v2_primary_ab).delta operand baseline_eeg_only",
+      "frontend": "ResearchMode controlled-comparisons SEED_CORRECTED_PREFERRED_V2 row",
+      "paper_jury_claim": "docs/CLAUDE_H1_H2_SCIENTIFIC_REMEDIATION_HANDOFF.md old-vs-corrected table (this integration report §9)",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "sleep_v2_primary_b",
+      "value": "Corrected V2 Primary B (EEG+EOG) mean macro-F1 ~0.7647 (5 seeds).",
+      "source_result": "results/sleep_edf_primary_seedfix_v2.json::aggregate.candidate_macro_f1.mean",
+      "backend_api": "catalog._build_sleep_v1_v2_comparisons -> same comparison, operand candidate_eeg_plus_eog",
+      "frontend": "ResearchMode controlled-comparisons SEED_CORRECTED_PREFERRED_V2 row",
+      "paper_jury_claim": "docs/CLAUDE_H1_H2_SCIENTIFIC_REMEDIATION_HANDOFF.md",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "sleep_v2_b_minus_a",
+      "value": "+0.0282 macro-F1, 4/5 seeds favor candidate. This is the current headline (marginal_result.delta).",
+      "source_result": "results/sleep_edf_primary_seedfix_v2.json::aggregate.delta_candidate_minus_baseline",
+      "backend_api": "marginal_result.delta == controlled_comparisons['seed_corrected_v2_primary_ab'].delta; headline_comparison_id set",
+      "frontend": "ResearchMode marginal-result panel top-line delta + HEADLINE badge",
+      "paper_jury_claim": "§19 active Sleep claim policy wording (this integration report)",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "sleep_c_v2_pending",
+      "value": "Shuffled-EOG control C has NO corrected V2 retraining this sprint. delta=None, role=SEED_CORRECTION_PENDING_FOLLOWUP.",
+      "source_result": "results/scientific_freeze_candidate_post_audit_day12.json::h1_scope_note (not_retrained_this_sprint)",
+      "backend_api": "catalog._build_sleep_v1_v2_comparisons -> comparison_id=seed_correction_pending_shuffled_eog_c, delta.mean=None",
+      "frontend": "ResearchMode PENDING badge (amber) + sleep_v1_v2_version_state table, shuffled_eog_c row",
+      "paper_jury_claim": "docs table §26 (this integration report) marks PENDING_SEEDFIX_V2_FOLLOWUP",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "sleep_interaction_v2_pending",
+      "value": "Interaction M_B/M_AB have NO corrected V2 retraining this sprint. delta=None for both legs.",
+      "source_result": "results/scientific_freeze_candidate_post_audit_day12.json::h1_scope_note",
+      "backend_api": "catalog._build_sleep_v1_v2_comparisons -> seed_correction_pending_interaction_m_b / _m_ab, delta.mean=None",
+      "frontend": "ResearchMode PENDING badges + version-state table interaction rows",
+      "paper_jury_claim": "docs table §26 PENDING_SEEDFIX_V2_FOLLOWUP",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "resp_native_rate",
+      "value": "Resp oro-nasal is natively 1 Hz (verified via EDF header).",
+      "source_result": "docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md; ml/datasets/sleep_edf.py::RESP_NATIVE_SFREQ_HZ=1.0",
+      "backend_api": "Not separately surfaced via a dedicated API field this sprint (metadata-only correction, no retraining or new endpoint).",
+      "frontend": "Not rendered as a distinct UI field this sprint -- documented only.",
+      "paper_jury_claim": "docs/INTERACTION_EXPERIMENT_RESULTS_DAY10.md new H2 bandwidth-caveat section",
+      "status": "CONSISTENT",
+      "note": "No API/frontend surface currently displays Resp sample rate directly, so there is nothing to contradict; flagged as a documentation-only correction, consistent with H2's own H2_CLOSED_METADATA_ONLY scope."
+    },
+    {
+      "row": "resp_model_grid_rate",
+      "value": "Loaded/common training grid is 100 Hz (FFT-resampled from native 1 Hz); model input rate is 100 Hz.",
+      "source_result": "ml/datasets/sleep_edf.py::RESP_LOADED_SFREQ_HZ=100.0",
+      "backend_api": "N/A (same as above)",
+      "frontend": "N/A (same as above)",
+      "paper_jury_claim": "docs/SLEEP_RESPIRATION_RATE_PROVENANCE_DAY12.md",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "checkpoint_count_historical",
+      "value": "60 historical checkpoints, externally archived (Day-8 + Day-14 lineage).",
+      "source_result": "results/final_checkpoint_inventory_day14.json::summary.n_total_referenced=60",
+      "backend_api": "Not directly surfaced by a Sleep-specific endpoint; H3 reproduction panel is artifact-driven generically (backend/app/research/catalog.py::_reproducibility).",
+      "frontend": "Reproducibility panel (generic, not Sleep-specific)",
+      "paper_jury_claim": "results/checkpoint_inventory_post_remediation_stage1a.json::historical_external.count=60",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "checkpoint_count_v2_local",
+      "value": "10 new seedfix_v2 checkpoints, local only, NOT externally archived this sprint.",
+      "source_result": "results/scientific_freeze_candidate_post_audit_day12.json::checkpoint_state",
+      "backend_api": "sleep_v1_v2_version_state breakdown, primary_ab.checkpoint_set dimension states 'external_archive=False'",
+      "frontend": "VersionStateTable renders checkpoint_set text verbatim",
+      "paper_jury_claim": "results/checkpoint_inventory_post_remediation_stage1a.json::sleep_v2_local (external_archive_status=NOT_YET_ARCHIVED_EXTERNALLY)",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "h1_status",
+      "value": "H1_CLOSED_WITH_UPDATED_NUMBERS, scoped to Primary A/B only.",
+      "source_result": "results/scientific_freeze_candidate_post_audit_day12.json::h1_status",
+      "backend_api": "Implicit: marginal_result.headline_comparison_id points to V2 when V2 artifact is valid and matches expected 4/5-seed shape.",
+      "frontend": "sleep_v1_v2_version_state table, primary_ab row (result_status=V2_AVAILABLE)",
+      "paper_jury_claim": "results/stage1a_post_remediation_integration_status.json::h1_status",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "h2_status",
+      "value": "H2_CLOSED_METADATA_ONLY, zero data/retraining impact.",
+      "source_result": "results/scientific_freeze_candidate_post_audit_day12.json::h2_status",
+      "backend_api": "N/A -- no data-layer change required or made.",
+      "frontend": "N/A",
+      "paper_jury_claim": "results/stage1a_post_remediation_integration_status.json::h2_status",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "scientific_candidate_state",
+      "value": "SCIENTIFIC_FREEZE_CANDIDATE_READY_WITH_LIMITATIONS (science-layer candidate, not final project freeze).",
+      "source_result": "results/scientific_freeze_candidate_post_audit_day12.json::final_status",
+      "backend_api": "Not gated at the API layer (no endpoint currently blocks on freeze state).",
+      "frontend": "Not currently rendered as a distinct freeze-state banner.",
+      "paper_jury_claim": "results/stage1a_post_remediation_integration_status.json::science_candidate_status",
+      "status": "CONSISTENT",
+      "note": "No frontend freeze-state banner exists to contradict this; flagged as a documentation/status-artifact-level state, consistent with the pre-existing (pre-Stage-1A) architecture where freeze state is a docs/results-layer concept, not an API gate."
+    },
+    {
+      "row": "final_architecture_unresolved",
+      "value": "No final four-sensor selection made; still UNRESOLVED.",
+      "source_result": "docs/JURY_DEFENSE_MASTER.md architecture section (unchanged by this integration)",
+      "backend_api": "N/A",
+      "frontend": "mission-overview page architecture wording (unchanged)",
+      "paper_jury_claim": "results/stage1a_post_remediation_integration_status.json::architecture_status=UNRESOLVED",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "system_power_not_ready",
+      "value": "System average power remains NOT_READY; wrist power values remain CALCULATED_REFERENCE_SCENARIO_LED_EXCLUDED (H7, unchanged by this integration).",
+      "source_result": "results/reference_power_budget_day11_part2.json",
+      "backend_api": "backend/app/research/engineering_readiness.py Quantity/QuantityStatus (H4-fixed, unchanged)",
+      "frontend": "EngineeringReadinessView.tsx QuantityValue rendering (unchanged)",
+      "paper_jury_claim": "docs/JURY_DEFENSE_MASTER.md power reference-scenario wording (Group4b, unchanged)",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "system_mass_not_ready",
+      "value": "System mass remains NOT_READY; partial BOM only.",
+      "source_result": "results/pareto_blocker_progress_day11_part2.json",
+      "backend_api": "engineering_readiness.py (unchanged)",
+      "frontend": "EngineeringReadinessView.tsx (unchanged)",
+      "paper_jury_claim": "docs/JURY_DEFENSE_MASTER.md (unchanged)",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "digital_twin_conceptual",
+      "value": "Digital Twin remains conceptual/simulated/untrained/unvalidated; no present-tense 'has learned' language.",
+      "source_result": "N/A (design/claim-layer only, no result artifact)",
+      "backend_api": "N/A",
+      "frontend": "frontend/src/app/digital-twin/page.tsx (M10 wording, unchanged by this integration)",
+      "paper_jury_claim": "docs/JURY_DEFENSE_MASTER.md Digital Twin section (unchanged)",
+      "status": "CONSISTENT"
+    },
+    {
+      "row": "ptt_deprioritized",
+      "value": "PTT decision remains DEPRIORITIZE_FOR_TARGET; n=4 subjects, s2-sensitive, unchanged.",
+      "source_result": "results/pareto_decision_inputs.json (regenerated this sprint, byte-identical -- verified via `python -m app.research.decision_inputs`, no git diff)",
+      "backend_api": "backend/app/research/decision_inputs.py (unchanged by this integration)",
+      "frontend": "DecisionInputsView.tsx (unchanged)",
+      "paper_jury_claim": "docs/JURY_DEFENSE_MASTER.md PTT section (unchanged)",
+      "status": "CONSISTENT"
+    }
+  ],
+  "all_rows_resolve": true,
+  "remaining_contradictions": [],
+  "scientific_freeze_status": "SCIENTIFIC_FREEZE_CANDIDATE_READY_WITH_LIMITATIONS (science layer); PROJECT_FINAL_FREEZE_NOT_YET_COMPLETE (project layer, unchanged) -- see results/stage1a_post_remediation_integration_status.json"
+}

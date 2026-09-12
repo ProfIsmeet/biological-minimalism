@@ -3,9 +3,10 @@
 This directory is a placeholder for the real, open physiological datasets that the
 Biological Minimalism research pipeline (`ml/`) is designed to train and validate
 against. **No dataset is downloaded or bundled in this repository** — the dashboard
-demo (`frontend/` + `backend/`) runs entirely on the synthetic `MockDataEngine`
-(`backend/app/engine/mock_data_engine.py`), so it works fully offline with no
-dataset download and no account/credential requirements.
+demo (`frontend/` + `backend/`) defaults to the synthetic `MockDataEngine`, so its
+default mode works fully offline with no dataset download or credentials. It can
+optionally transport one real PPG-DaLiA subject in explicit replay mode; see
+`../docs/DATASET_REPLAY.md` and `ppg-dalia/README.md`.
 
 This README documents where to get each dataset for the research/training track
 described in the PDD (`docs/PDD_Biological_Minimalism_IAC2026.md`, Dataset Research

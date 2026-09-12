@@ -1,0 +1,77 @@
+{
+  "artifact_id": "biological-minimalism-day11-part2-calculation-readiness-v1",
+  "schema_version": "1.0.0",
+  "part": "DAY11_PART1",
+  "canonical_base_commit": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+  "statement": "Per-module readiness for the Day-11 Part-2 defensible power/mass calculations. It is acceptable and expected that modules differ: the point is to know exactly where evidence exists. No module is forced ready. No calculation is performed here.",
+  "status_vocabulary": [
+    "READY_FOR_REFERENCE_POWER_CALC",
+    "READY_FOR_PARTIAL_POWER_CALC",
+    "NOT_READY_FOR_POWER_CALC",
+    "READY_FOR_REFERENCE_MASS_ESTIMATE",
+    "NOT_READY_FOR_MASS_ESTIMATE"
+  ],
+  "modules": [
+    {
+      "module_id": "wrist_module",
+      "power_calculation_ready": "READY_FOR_PARTIAL_POWER_CALC",
+      "power_detail": "Component-boundary reference active power is defensible for TMP117 (0.01155 mW) and OPT3001 (0.00594 mW); BMI270 is a REFERENCE-band (0.018-0.378 mW); MAX86141 is an AFE floor only (LED power OPEN). Part-2 can compute a PARTIAL sensor-IC reference power band for the wrist sensing ICs, explicitly excluding LEDs, MCU, radio, regulator.",
+      "mass_calculation_ready": "NOT_READY_FOR_MASS_ESTIMATE",
+      "bom_readiness": "PARTIAL (sensing ICs AVAILABLE; MCU/radio/battery/regulator/enclosure/strap MISSING)",
+      "operating_point_frozen": "PARTIAL (temp 1 Hz, light continuous frozen; IMU/PPG reference-only, deployable open)",
+      "duty_schedule_frozen": "REFERENCE_SCHEDULE_ASSUMPTION only (not deployable)",
+      "missing_fields": ["MAX86141 LED currents + 64 Hz AFE point", "BMI270 single 32 Hz-mode current", "MCU/radio/regulator identity+power", "battery", "all mass contributors", "light_sensor placement"],
+      "recommended_part2_action": "Compute a PARTIAL wrist sensing-IC reference active-power band (temp+light+IMU-band+PPG-AFE-floor), clearly labeled component-boundary and LED-excluded. Do NOT emit a wrist-module system power or any mass."
+    },
+    {
+      "module_id": "chest_module",
+      "power_calculation_ready": "READY_FOR_PARTIAL_POWER_CALC",
+      "power_detail": "ADS1292R AFE-boundary reference power is defensible (0.67 mW @2ch,250 s/s). Thoracic BioZ (AD5940-class) active measurement power is UNKNOWN. Part-2 can report ECG AFE reference power only.",
+      "mass_calculation_ready": "NOT_READY_FOR_MASS_ESTIMATE",
+      "bom_readiness": "PARTIAL (ECG AFE AVAILABLE; BioZ active point MISSING; electrodes/MCU/radio/battery/enclosure MISSING)",
+      "operating_point_frozen": "PARTIAL (ECG 250 s/s continuous reference frozen; BioZ cadence OPEN)",
+      "duty_schedule_frozen": "REFERENCE_SCHEDULE_ASSUMPTION for ECG; UNKNOWN for BioZ",
+      "missing_fields": ["thoracic BioZ active current/power", "BioZ excitation + cadence", "lead-off excitation power", "electrode montage", "MCU/radio/regulator", "all mass contributors"],
+      "recommended_part2_action": "Report ECG AFE-only reference power (0.67 mW). Leave thoracic BioZ power NOT_READY. No module total, no mass."
+    },
+    {
+      "module_id": "head_module",
+      "power_calculation_ready": "NOT_READY_FOR_POWER_CALC",
+      "power_detail": "ADS1299-4-class EEG has no complete operating point (supply/current/session duty all OPEN). EOG is one added channel on the same (un-quantified) AFE. No defensible reference power.",
+      "mass_calculation_ready": "NOT_READY_FOR_MASS_ESTIMATE",
+      "bom_readiness": "PARTIAL (EEG AFE class identified; EOG shared-reference path modeled +2 electrodes; power/mass MISSING)",
+      "operating_point_frozen": "NO (session-based, duration/frequency OPEN)",
+      "duty_schedule_frozen": "NO",
+      "missing_fields": ["ADS1299 supply + active current operating point", "EEG session duty schedule", "EEG/EOG electrode montage + materials", "EOG standalone-vs-shared decision", "MCU/radio/regulator", "all mass contributors"],
+      "recommended_part2_action": "Do NOT compute head-module power. Keep EOG contact increment=2 (interpretation-independent) as the defensible structural fact. Flag EEG operating point as the top blocker."
+    },
+    {
+      "module_id": "leg_module",
+      "power_calculation_ready": "NOT_READY_FOR_POWER_CALC",
+      "power_detail": "AD5940-class active BioZ measurement power UNKNOWN; cadence OPEN.",
+      "mass_calculation_ready": "NOT_READY_FOR_MASS_ESTIMATE",
+      "bom_readiness": "MISSING (AFE class only; everything else open)",
+      "operating_point_frozen": "NO",
+      "duty_schedule_frozen": "NO",
+      "missing_fields": ["active BioZ current/power", "excitation params", "measurement cadence", "electrodes", "MCU/radio/regulator", "all mass contributors"],
+      "recommended_part2_action": "Leave NOT_READY. Lowest-priority module for Part-2 (experimental, LOW confidence)."
+    },
+    {
+      "module_id": "optical_site_evaluation_branch",
+      "power_calculation_ready": "NOT_READY_FOR_POWER_CALC",
+      "power_detail": "MAX86141-class AFE floor known, but 500 Hz sequencing current, LED currents (dominant), and module boundary are all OPEN.",
+      "mass_calculation_ready": "NOT_READY_FOR_MASS_ESTIMATE",
+      "bom_readiness": "MISSING (module boundary OPEN_BOUNDARY; shared/tethered/standalone undecided)",
+      "operating_point_frozen": "NO (deployable duty OPEN)",
+      "duty_schedule_frozen": "NO",
+      "missing_fields": ["LED currents", "500 Hz AFE sequencing current", "module boundary decision", "MCU/radio/battery (if standalone)", "all mass contributors"],
+      "recommended_part2_action": "Leave NOT_READY. Preserve the structural burden facts (+1 optical site, +1 contact region). Do not let the negative HR result zero-out engineering burden."
+    }
+  ],
+  "summary": {
+    "partial_power_calc_ready": ["wrist_module", "chest_module"],
+    "not_ready_for_power_calc": ["head_module", "leg_module", "optical_site_evaluation_branch"],
+    "mass_estimate_ready": [],
+    "note": "NO module is READY_FOR_REFERENCE_POWER_CALC at the system boundary (MCU/radio/regulator/battery unselected everywhere). Two modules support PARTIAL component/AFE-boundary reference power only. NO module is mass-ready. This is expected; Part-1 maps evidence, it does not manufacture it."
+  }
+}

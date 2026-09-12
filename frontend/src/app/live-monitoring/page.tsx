@@ -15,7 +15,7 @@ export default function LiveMonitoringPage() {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-lg font-semibold text-slate-100">Live Monitoring</h1>
-        <p className="text-sm text-slate-500">Streaming telemetry from the four-sensor architecture, updated twice per second.</p>
+        <p className="text-sm text-slate-500">Streaming source-labelled telemetry, updated twice per second.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">

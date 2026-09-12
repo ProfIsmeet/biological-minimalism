@@ -1,0 +1,45 @@
+{
+  "purpose": "Independent recomputation (Ismet/support track) of every arithmetic step in Claude's Day-11 power and data-rate artifacts. Every source value re-read from the cited artifact, never from Claude's stated result. No engineering value changed.",
+  "sources_checked": ["results/power_calculation_inputs_day11.json", "results/reference_data_rate_budget_day11.json"],
+  "power_checks": [
+    {"component": "wrist_ppg (MAX86141 AFE floor)", "source_current_uA": 10.0, "source_voltage_V": 1.8, "formula": "I*V", "recomputed_mW": 0.018, "canonical_mW": 0.018, "difference": 0.0, "result": "PASS"},
+    {"component": "wrist_imu (BMI270) min", "source_current_uA": 10.0, "source_voltage_V": 1.8, "formula": "I*V", "recomputed_mW": 0.018, "canonical_mW": 0.018, "difference": 0.0, "result": "PASS"},
+    {"component": "wrist_imu (BMI270) max", "source_current_uA": 210.0, "source_voltage_V": 1.8, "formula": "I*V", "recomputed_mW": 0.378, "canonical_mW": 0.378, "difference": 0.0, "result": "PASS"},
+    {"component": "skin_temperature (TMP117)", "source_current_uA": 3.5, "source_voltage_V": 3.3, "formula": "I*V", "recomputed_mW": 0.01155, "canonical_mW": 0.01155, "difference": 0.0, "result": "PASS"},
+    {"component": "light_sensor (OPT3001-class)", "source_current_uA": 1.8, "source_voltage_V": 3.3, "formula": "I*V", "recomputed_mW": 0.00594, "canonical_mW": 0.00594, "difference": 0.0, "result": "PASS"},
+    {"component": "ecg_chest (ADS1292R)", "source_value": "2 x 335 uW/ch (direct datasheet per-channel power point, not derived from separate I/V)", "formula": "2 * 335uW", "recomputed_mW": 0.67, "canonical_mW": 0.67, "difference": 0.0, "result": "PASS"},
+    {"component": "thoracic_bioz / frontal_eeg / frontal_eog / leg_bioz / second_ppg_site (deployable power)", "source_value": "no complete operating point (current and/or voltage UNKNOWN)", "formula": "N/A", "recomputed_mW": null, "canonical_mW": null, "difference": null, "result": "PASS (correctly left UNKNOWN, not defaulted to 0)"}
+  ],
+  "data_rate_checks": [
+    {"modality": "wrist_ppg", "channels": 1, "rate_hz": 64, "bits_per_sample": 19, "formula": "channels*rate*bits", "recomputed_bps": 1216, "canonical_bps": 1216, "result": "PASS"},
+    {"modality": "wrist_imu", "channels": 3, "rate_hz": 32, "bits_per_sample": 16, "formula": "channels*rate*bits", "recomputed_bps": 1536, "canonical_bps": 1536, "result": "PASS"},
+    {"modality": "skin_temperature", "channels": 1, "rate_hz": 1, "bits_per_sample": 16, "formula": "channels*rate*bits", "recomputed_bps": 16, "canonical_bps": 16, "result": "PASS"},
+    {"modality": "ecg_chest", "channels": 2, "rate_hz": 250, "bits_per_sample": 24, "formula": "channels*rate*bits", "recomputed_bps": 12000, "canonical_bps": 12000, "result": "PASS"},
+    {"modality": "frontal_eeg (scientific 1ch@100Hz)", "channels": 1, "rate_hz": 100, "bits_per_sample": 24, "formula": "channels*rate*bits", "recomputed_bps": 2400, "canonical_bps": 2400, "result": "PASS"},
+    {"modality": "frontal_eog_horizontal (scientific 1ch@100Hz)", "channels": 1, "rate_hz": 100, "bits_per_sample": 24, "formula": "channels*rate*bits", "recomputed_bps": 2400, "canonical_bps": 2400, "result": "PASS"},
+    {"modality": "frontal_eeg+eog shared-AFE alternative framing (1ch@250 SPS)", "channels": 1, "rate_hz": 250, "bits_per_sample": 24, "formula": "channels*rate*bits", "recomputed_bps": 6000, "canonical_bps": 6000, "result": "PASS"},
+    {"modality": "second_ppg_site", "channels": 3, "rate_hz": 500, "bits_per_sample": 19, "formula": "channels*rate*bits", "recomputed_bps": 28500, "canonical_bps": 28500, "result": "PASS"},
+    {"modality": "head_module AFE-capacity framing (4ch@250 SPS)", "channels": 4, "rate_hz": 250, "bits_per_sample": 24, "formula": "channels*rate*bits", "recomputed_bps": 24000, "canonical_bps": 24000, "result": "PASS"}
+  ],
+  "module_total_checks": [
+    {"module": "wrist_module (PPG+IMU+temp, excl. light)", "components_bps": [1216, 1536, 16], "recomputed_sum_bps": 2768, "canonical_bps": 2768, "result": "PASS"},
+    {"module": "chest_module (ECG only, excl. BioZ)", "components_bps": [12000], "recomputed_sum_bps": 12000, "canonical_bps": 12000, "result": "PASS"},
+    {"module": "head_module (scientific 2ch@100Hz: EEG+EOG)", "components_bps": [2400, 2400], "recomputed_sum_bps": 4800, "canonical_bps": 4800, "result": "PASS"}
+  ],
+  "system_total_check": {
+    "components_summed": {"wrist_module": 2768, "chest_module_ecg_only": 12000, "head_module_scientific_2ch": 4800, "optical_site_evaluation_branch": 28500},
+    "formula": "sum of the 4 included components",
+    "recomputed_bps": 48068,
+    "recomputed_kbps": 48.068,
+    "canonical_bps": 48068,
+    "canonical_kbps": 48.068,
+    "difference": 0.0,
+    "result": "PASS",
+    "excluded_and_correctly_not_zeroed": ["light_sensor", "thoracic_bioz", "leg_bioz"],
+    "audit_note_MEDIUM": "The 48.068 kbps 'system_raw_total' includes the second_ppg_site evaluation-branch's 28,500 bps (59% of the total) alongside genuinely-deployed-baseline modalities. This is disclosed ('optical_site_evaluation_branch' label, 'PARTIAL LOWER BOUND' framing) and not a computation error, but a reader skimming only the 48.068 kbps headline could mistake it for the baseline system's rate when in fact the second PPG site is architecturally DEPRIORITIZE_FOR_TARGET per the scientific evidence (heterogeneous, n=4, s2-sensitive negative result). Recommend Claude consider a headline split (baseline-only vs. baseline+evaluation-branch) if this number reaches jury/paper copy."
+  },
+  "overall_result": "ALL_CHECKED_ARITHMETIC_PASSES_EXACTLY",
+  "n_checks": 21,
+  "n_pass": 21,
+  "n_fail": 0
+}

@@ -2,7 +2,8 @@
 
 Simulation controls (mode / sensor failure) stay on REST (`api/routes/simulation.py`);
 this socket exists purely to broadcast `LiveMetricsSnapshot` frames as the
-mock engine ticks, so the frontend charts update smoothly without polling.
+active synthetic or dataset-replay source ticks, so the frontend charts
+update smoothly without polling.
 """
 
 from __future__ import annotations

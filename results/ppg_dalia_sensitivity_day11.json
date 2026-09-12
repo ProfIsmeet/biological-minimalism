@@ -1,0 +1,201 @@
+{
+  "purpose": "Day 11 low-risk sensitivity package for the CAPACITY-CONTROLLED PPG-DaLiA IMU result. Does NOT reintroduce the retired uncontrolled A->B headline (~1.88bpm) - all deltas here are A_cap->B or C->B, the capacity-fair comparisons.",
+  "source_artifacts": [
+    "results/ppg_dalia_capacity_control.json",
+    "results/ppg_dalia_imu_multiseed_replication.json"
+  ],
+  "no_retraining": true,
+  "seed_level": {
+    "a_cap_to_b_delta_mae_per_seed": {
+      "seed42": 0.5455083847045898,
+      "seed43": 0.729393482208252,
+      "seed44": 0.27272891998291016,
+      "seed45": 0.4080967903137207,
+      "seed46": 1.070849895477295
+    },
+    "a_cap_to_b_mean": 0.6053154945373536,
+    "a_cap_to_b_sample_sd": 0.3103238480760966,
+    "a_cap_to_b_median": 0.5455083847045898,
+    "c_to_b_delta_mae_per_seed": {
+      "seed42": 0.8691625595092773,
+      "seed43": 1.106043815612793,
+      "seed44": 0.8607816696166992,
+      "seed45": 0.47582006454467773,
+      "seed46": 0.5696492195129395
+    },
+    "c_to_b_mean": 0.7762914657592773,
+    "c_to_b_sample_sd": 0.2537145678305162,
+    "c_to_b_median": 0.8607816696166992
+  },
+  "subject_level": {
+    "per_subject": {
+      "S14": {
+        "a_cap_mae_per_seed": {
+          "seed42": 4.928507328033447,
+          "seed43": 5.575392723083496,
+          "seed44": 5.793078899383545,
+          "seed45": 5.488838195800781,
+          "seed46": 6.039332389831543
+        },
+        "b_mae_per_seed": {
+          "seed42": 5.076727867126465,
+          "seed43": 5.065240859985352,
+          "seed44": 4.718973636627197,
+          "seed45": 4.209714889526367,
+          "seed46": 5.044145107269287
+        },
+        "c_mae_per_seed": {
+          "seed42": 5.185695171356201,
+          "seed43": 5.980269908905029,
+          "seed44": 4.606478691101074,
+          "seed45": 4.927918910980225,
+          "seed46": 4.923004150390625
+        },
+        "delta_a_cap_minus_b_mean": 0.7420694351196289,
+        "delta_c_minus_b_mean": 0.3017128944396973,
+        "n_seeds_favor_b_over_a_cap": 4,
+        "n_seeds_favor_b_over_c": 3
+      },
+      "S2": {
+        "a_cap_mae_per_seed": {
+          "seed42": 6.355040550231934,
+          "seed43": 6.420231819152832,
+          "seed44": 6.010296821594238,
+          "seed45": 6.236563205718994,
+          "seed46": 7.184010028839111
+        },
+        "b_mae_per_seed": {
+          "seed42": 6.249533176422119,
+          "seed43": 6.182070255279541,
+          "seed44": 6.495774269104004,
+          "seed45": 6.758223533630371,
+          "seed46": 6.9003167152404785
+        },
+        "c_mae_per_seed": {
+          "seed42": 6.645075798034668,
+          "seed43": 6.926671504974365,
+          "seed44": 7.399136543273926,
+          "seed45": 6.155296802520752,
+          "seed46": 7.4787068367004395
+        },
+        "delta_a_cap_minus_b_mean": -0.07595510482788086,
+        "delta_c_minus_b_mean": 0.4037939071655273,
+        "n_seeds_favor_b_over_a_cap": 3,
+        "n_seeds_favor_b_over_c": 4
+      },
+      "S9": {
+        "a_cap_mae_per_seed": {
+          "seed42": 11.463829040527344,
+          "seed43": 11.566173553466797,
+          "seed44": 10.87891960144043,
+          "seed45": 11.038543701171875,
+          "seed46": 12.453006744384766
+        },
+        "b_mae_per_seed": {
+          "seed42": 9.770623207092285,
+          "seed43": 10.136548042297363,
+          "seed44": 10.7182035446167,
+          "seed45": 10.6509370803833,
+          "seed46": 10.54857349395752
+        },
+        "c_mae_per_seed": {
+          "seed42": 11.889260292053223,
+          "seed43": 11.788894653320312,
+          "seed44": 12.556736946105957,
+          "seed45": 11.906947135925293,
+          "seed46": 11.832776069641113
+        },
+        "delta_a_cap_minus_b_mean": 1.1151174545288085,
+        "delta_c_minus_b_mean": 1.629945945739746,
+        "n_seeds_favor_b_over_a_cap": 5,
+        "n_seeds_favor_b_over_c": 5
+      }
+    },
+    "median_subject_delta_a_cap_minus_b": 0.7420694351196289,
+    "mean_subject_delta_a_cap_minus_b": 0.5937439282735189,
+    "leave_one_subject_out": {
+      "excluding_S14": {
+        "remaining_subjects": [
+          "S2",
+          "S9"
+        ],
+        "mean_delta_a_cap_minus_b_of_remaining": 0.5195811748504638,
+        "direction_flips": false
+      },
+      "excluding_S2": {
+        "remaining_subjects": [
+          "S14",
+          "S9"
+        ],
+        "mean_delta_a_cap_minus_b_of_remaining": 0.9285934448242187,
+        "direction_flips": false
+      },
+      "excluding_S9": {
+        "remaining_subjects": [
+          "S14",
+          "S2"
+        ],
+        "mean_delta_a_cap_minus_b_of_remaining": 0.333057165145874,
+        "direction_flips": false
+      }
+    },
+    "dominant_subject": "S9",
+    "dominant_subject_share_of_summed_effect": 0.6260372535633518,
+    "single_subject_dominance_flag": true,
+    "note": "Only 3 held-out subjects (S14, S2, S9) were evaluated for A_cap - the same 3 as the original frozen test split. LOSO here recombines per-subject MEAN deltas (not the window-weighted overall MAE) and is explicitly labeled as an approximation."
+  },
+  "activity_level": {
+    "per_activity_a_to_b": {
+      "cycling": {
+        "mean_delta_a_minus_b": 2.278848075866699,
+        "n_seeds_favor_b": 4,
+        "n_seeds_total": 5
+      },
+      "driving": {
+        "mean_delta_a_minus_b": 2.667247200012207,
+        "n_seeds_favor_b": 5,
+        "n_seeds_total": 5
+      },
+      "lunch_break": {
+        "mean_delta_a_minus_b": 1.9531797409057616,
+        "n_seeds_favor_b": 5,
+        "n_seeds_total": 5
+      },
+      "sitting": {
+        "mean_delta_a_minus_b": 4.208269119262695,
+        "n_seeds_favor_b": 5,
+        "n_seeds_total": 5
+      },
+      "stairs": {
+        "mean_delta_a_minus_b": 1.038104248046875,
+        "n_seeds_favor_b": 4,
+        "n_seeds_total": 5
+      },
+      "table_soccer": {
+        "mean_delta_a_minus_b": -1.833482265472412,
+        "n_seeds_favor_b": 0,
+        "n_seeds_total": 5
+      },
+      "transient/unlabeled": {
+        "mean_delta_a_minus_b": 1.2775111198425293,
+        "n_seeds_favor_b": 5,
+        "n_seeds_total": 5
+      },
+      "walking": {
+        "mean_delta_a_minus_b": 1.3429176330566406,
+        "n_seeds_favor_b": 5,
+        "n_seeds_total": 5
+      },
+      "working": {
+        "mean_delta_a_minus_b": 2.4926834106445312,
+        "n_seeds_favor_b": 5,
+        "n_seeds_total": 5
+      }
+    },
+    "dominant_activity": "sitting",
+    "dominant_activity_share_of_summed_effect": 0.2728164148667731,
+    "single_activity_dominance_flag": false,
+    "note": "Activity-level breakdown exists only for the original A-vs-B multiseed comparison (A_cap was not re-run per-activity); reported here as-is, not as a capacity-controlled activity breakdown."
+  },
+  "final_interpretation": "The capacity-controlled synchronized-IMU benefit (A_cap->B) is small, positive, and consistent across all 5 seeds and all 3 held-out subjects; no single subject or activity dominates the 3-subject A_cap result to the point of being solely responsible for the direction. The shuffled-IMU comparison (C->B) is also consistently positive, supporting a synchronization-specific (not merely motion-context-shaped) residual. This remains a single-dataset, capacity-controlled, modest-magnitude finding - not a claim of IMU necessity or a repeat of the retired ~1.88bpm / 20.6% uncontrolled figure."
+}

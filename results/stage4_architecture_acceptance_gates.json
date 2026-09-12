@@ -1,0 +1,89 @@
+{
+  "purpose": "Explicit checklist that must pass before the Project Coordinator (Emir) can legitimately freeze a final architecture. Gates are classified by severity so uncertainty handling is decided in advance, not renegotiated at freeze time.",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "severity_enum": ["HARD_BLOCK", "COORDINATOR_DECISION_REQUIRED", "DISCLOSURE_REQUIRED", "NONBLOCKING"],
+  "gates": [
+    {
+      "gate_id": "GATE_A_SCIENTIFIC_PROVENANCE",
+      "requirement": "Every sensor included in the frozen architecture has a documented scientific rationale traceable to a specific governing Stage-3 family.",
+      "rationale": "Prevents sensors being included by default/legacy/aesthetic reasons rather than evidence.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "A citation from results/stage4_science_consumption_manifest.json or results/stage4_science_claim_ledger.json for every included sensor.",
+      "owner": "PROJECT_COORDINATOR (with SCIENCE_OWNER verification)",
+      "current_readiness": "READY - the manifest and claim ledger exist and cover all currently-evidenced modalities.",
+      "what_closes_it": "Coordinator's final architecture document cites this manifest/ledger per sensor."
+    },
+    {
+      "gate_id": "GATE_B_EXCLUDED_SENSOR_RATIONALE",
+      "requirement": "Every serious candidate sensor that is excluded has a documented reason (not silence).",
+      "rationale": "Prevents undocumented removal that cannot be defended to a jury or future team.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "A citation from results/stage4_scientific_sensor_value_matrix.json or results/stage4_architecture_decision_inputs_science.json explaining the exclusion.",
+      "owner": "PROJECT_COORDINATOR (with SCIENCE_OWNER verification)",
+      "current_readiness": "READY - exclusion rationale exists for second-site PPG, leg BioZ, thoracic EIS in the current package.",
+      "what_closes_it": "Coordinator's final architecture document cites the specific exclusion rationale per excluded sensor."
+    },
+    {
+      "gate_id": "GATE_C_EVIDENCE_STATUS_HONESTY",
+      "requirement": "No bounded or pending result is represented as a verified external replication in the final architecture document.",
+      "rationale": "Prevents overclaiming HMC bounded n=7 or ds003838 bounded n=3 as established external evidence.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "Cross-check final architecture wording against results/stage4_science_claim_ledger.json's prohibited_stronger_wording fields.",
+      "owner": "SCIENCE_OWNER (verification), PROJECT_COORDINATOR (compliance)",
+      "current_readiness": "READY - the claim ledger and validator (ml/validate_stage4_science_claim_consistency.py) already check for this class of error.",
+      "what_closes_it": "Running the claim-consistency validator against the final architecture document text before freeze."
+    },
+    {
+      "gate_id": "GATE_D_BURDEN_COMPLETENESS",
+      "requirement": "Engineering burden accounting includes body region, contact/electrode count, module count, and attachment/strap burden - not chip/component count alone.",
+      "rationale": "A cheap chip with a new body region and new strap is not a low-burden addition merely because the silicon is small.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "Integration Owner's burden analysis explicitly covering all four dimensions per candidate sensor.",
+      "owner": "INTEGRATION_OWNER",
+      "current_readiness": "NOT_READY - this is explicitly Integration Owner's deliverable, not produced by this Science Owner package.",
+      "what_closes_it": "Integration Owner publishes a burden analysis artifact covering all four dimensions; Science Owner's role is limited to flagging which dimensions matter scientifically (done in results/stage4_scientific_pareto_inputs.json's uniqueness/dependency fields)."
+    },
+    {
+      "gate_id": "GATE_E_PENDING_SCIENCE_SENSITIVITY",
+      "requirement": "For every modality with decision_sensitivity=HIGH in results/stage4_sensor_decision_sensitivity.json, the Coordinator has explicitly chosen one of: WAIT, FREEZE_CONDITIONALLY, or FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE.",
+      "rationale": "Prevents silently freezing an architecture that a nearly-complete pending experiment (HMC full, ds003838 full) could have materially changed.",
+      "severity": "COORDINATOR_DECISION_REQUIRED",
+      "evidence_needed": "An explicit Coordinator statement for EOG (HMC-dependent) and sparse/full EEG (ds003838-dependent), the two current HIGH-sensitivity items.",
+      "owner": "PROJECT_COORDINATOR",
+      "current_readiness": "NOT_READY - no such decision has been made yet; this gate exists precisely to force that decision before freeze.",
+      "what_closes_it": "A recorded Coordinator decision (WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE) for each current HIGH-sensitivity item."
+    },
+    {
+      "gate_id": "GATE_F_NEGATIVE_RESULT_PRESERVATION",
+      "requirement": "The final architecture rationale must not omit or contradict adverse evidence (thoracic EIS mixed/negative-leaning, second-site PPG negative, leg BioZ heterogeneous).",
+      "rationale": "This project's own standing discipline: negative/mixed results are preserved, not silently dropped, per the negative_result_policy already established in prior sprints.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "Final architecture document explicitly references and does not contradict results/stage4_science_consumption_manifest.json's negative/mixed families.",
+      "owner": "SCIENCE_OWNER (verification), PROJECT_COORDINATOR (compliance)",
+      "current_readiness": "READY - the manifest, matrix, and ledger already document all adverse evidence.",
+      "what_closes_it": "Final architecture document is checked against the manifest for consistency before freeze."
+    },
+    {
+      "gate_id": "GATE_G_CLAIM_CONSISTENCY",
+      "requirement": "The final architecture's public/jury-facing claims match the scientific evidence exactly - no stronger wording than the claim ledger permits.",
+      "rationale": "Prevents drift between what was scientifically established and what gets said publicly.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "Final claims cross-checked against results/stage4_science_claim_ledger.json's exact_safe_wording and prohibited_stronger_wording fields.",
+      "owner": "SCIENCE_OWNER (verification), PROJECT_COORDINATOR (compliance)",
+      "current_readiness": "READY - the claim ledger and validator already exist.",
+      "what_closes_it": "Running the claim-consistency validator against all final public-facing claim text."
+    },
+    {
+      "gate_id": "GATE_H_DIGITAL_TWIN_SEPARATION",
+      "requirement": "The final wearable architecture decision does not imply, state, or suggest that the Digital Twin has been validated as a trained, longitudinal, personalized model.",
+      "rationale": "The Digital Twin remains conceptual/synthetic; conflating architecture freeze with Digital Twin validation would be a real overclaim.",
+      "severity": "HARD_BLOCK",
+      "evidence_needed": "Final architecture document explicitly states the Digital Twin's conceptual/synthetic/unvalidated status wherever it is mentioned.",
+      "owner": "SCIENCE_OWNER (verification), PROJECT_COORDINATOR (compliance)",
+      "current_readiness": "READY - results/stage4_science_claim_ledger.json's digital_twin claim already states the required wording.",
+      "what_closes_it": "Final architecture document is checked for Digital Twin mentions and verified against the ledger's required disclaimer."
+    }
+  ],
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}

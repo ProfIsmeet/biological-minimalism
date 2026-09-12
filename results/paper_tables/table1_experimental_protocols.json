@@ -1,0 +1,84 @@
+{
+  "header": [
+    "dataset",
+    "target",
+    "baseline",
+    "candidate",
+    "n_train",
+    "n_val",
+    "n_test",
+    "seeds",
+    "metric",
+    "controls"
+  ],
+  "rows": [
+    [
+      "PPG-DaLiA",
+      "heart_rate_bpm",
+      "PPG-only (A_cap, capacity-matched)",
+      "PPG+IMU (B)",
+      10,
+      2,
+      3,
+      "42-46",
+      "MAE (bpm)",
+      "capacity-matched baseline (A_cap) + shuffled-IMU (C)"
+    ],
+    [
+      "PhysioNet PTT-PPG v1.1.0",
+      "heart_rate_bpm",
+      "One PPG site (A)",
+      "Two PPG sites (B)",
+      15,
+      3,
+      4,
+      "42-46",
+      "MAE (bpm)",
+      "none"
+    ],
+    [
+      "PhysioNet Sleep-EDFx cassette (primary)",
+      "sleep_stage_5class",
+      "EEG only (A)",
+      "EEG+EOG (B)",
+      12,
+      3,
+      3,
+      "42-46",
+      "macro-F1",
+      "shuffled-EOG (C)"
+    ],
+    [
+      "PhysioNet Sleep-EDFx cassette (secondary holdout)",
+      "sleep_stage_5class",
+      "EEG only (A)",
+      "EEG+EOG (B)",
+      0,
+      0,
+      8,
+      "42-46 (existing checkpoints, evaluation only)",
+      "macro-F1",
+      "shuffled-EOG (C), same protocol as primary"
+    ],
+    [
+      "PhysioNet Sleep-EDFx cassette (interaction, same primary split)",
+      "sleep_stage_5class",
+      "EEG (M0)",
+      "EEG+EOG+Resp (M_AB)",
+      12,
+      3,
+      3,
+      "42-46",
+      "macro-F1",
+      "capacity-fairness safeguard (constant per-channel param cost)"
+    ]
+  ],
+  "provenance": {
+    "sources": [
+      "results/ppg_dalia_imu_ablation.json",
+      "results/ptt_ppg_site_ablation.json",
+      "ml/experiments/sleep_edf_eeg_eog_ablation/subject_split.json",
+      "ml/experiments/sleep_edf_secondary_holdout/cohort.json"
+    ]
+  }
+}

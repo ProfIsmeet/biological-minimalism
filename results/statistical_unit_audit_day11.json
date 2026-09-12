@@ -1,0 +1,103 @@
+{
+  "methodology_doc": "docs/STATISTICAL_REPORTING_STANDARD_DAY11.md",
+  "audits": [
+    {
+      "experiment": "ppg_dalia_imu_hr",
+      "target": "heart_rate_bpm",
+      "metric": "MAE (bpm)",
+      "optimization_replication_n": 5,
+      "heldout_subject_n": 3,
+      "dataset_n": 1,
+      "class_n": null,
+      "true_population_unit": "held-out subject (n=3: S14, S2, S9)",
+      "inappropriate_unit_interpretations": [
+        "Treating the 5 training seeds as 5 independent human subjects.",
+        "Reporting a seed-based standard deviation as a population confidence interval.",
+        "Claiming population-level generalization from 3 held-out subjects."
+      ],
+      "recommended_reporting": "Report seed mean +- sample SD (ddof=1) labeled SEED_VARIABILITY; report the 3 per-subject deltas descriptively; never compute an inferential interval at n=3."
+    },
+    {
+      "experiment": "ptt_second_ppg_site_hr",
+      "target": "heart_rate_bpm",
+      "metric": "MAE (bpm)",
+      "optimization_replication_n": 5,
+      "heldout_subject_n": 4,
+      "dataset_n": 1,
+      "class_n": null,
+      "true_population_unit": "held-out subject (n=4: s2, s9, s14, s20)",
+      "inappropriate_unit_interpretations": [
+        "Treating the 5 training seeds as 5 independent human subjects.",
+        "Treating the aggregate negative direction as evidence the second PPG site is globally harmful - it is n=4-subject, s2-dominated evidence.",
+        "Computing any bootstrap or percentile interval at n=4 and presenting it as inferential."
+      ],
+      "recommended_reporting": "Report seed-level direction count (5/5 favor baseline) separately from subject-level direction count (2/4 favor candidate); label subject-level spread NO_DEFENSIBLE_POPULATION_CI; always disclose the s2 sensitivity/flip."
+    },
+    {
+      "experiment": "sleep_edf_eeg_eog_sleep_stage_primary",
+      "target": "sleep_stage_5class",
+      "metric": "macro-F1",
+      "optimization_replication_n": 5,
+      "heldout_subject_n": 3,
+      "dataset_n": 1,
+      "class_n": 5,
+      "true_population_unit": "held-out subject (n=3: SC4011, SC4081, SC4131)",
+      "inappropriate_unit_interpretations": [
+        "Treating 5 training seeds as 5 independent subjects.",
+        "Treating 5 sleep-stage classes as 5 independent statistical replicates (they are different sub-tasks with different base rates, not repeated measures of one effect).",
+        "Claiming the primary result is uniform across subjects when it is concentrated in SC4011."
+      ],
+      "recommended_reporting": "Report seed mean +- sample SD (ddof=1); report all 3 per-subject deltas, explicitly flagging single-subject dominance; report per-class F1 descriptively without treating classes as a hypothesis-test family."
+    },
+    {
+      "experiment": "sleep_edf_eeg_eog_sleep_stage_secondary_holdout",
+      "target": "sleep_stage_5class",
+      "metric": "macro-F1",
+      "optimization_replication_n": 5,
+      "heldout_subject_n": 8,
+      "dataset_n": 1,
+      "class_n": 5,
+      "true_population_unit": "held-out subject (n=8: SC4181..SC4251), SAME dataset/protocol as primary",
+      "inappropriate_unit_interpretations": [
+        "Pooling primary (n=3) and secondary (n=8) into a single n=11 headline test set.",
+        "Describing the secondary holdout as independent-dataset or population-level replication - it is the same Sleep-EDF cassette source.",
+        "Treating the descriptive subject bootstrap (results/sleep_edf_sensitivity_day11.json) as a population-generalization proof."
+      ],
+      "recommended_reporting": "Report primary and secondary separately, always. A descriptive subject bootstrap (label DESCRIPTIVE_SUBJECT_BOOTSTRAP) is permitted at n=8 as a spread summary only."
+    },
+    {
+      "experiment": "sleep_edf_interaction_eeg_eog_resp",
+      "target": "sleep_stage_5class",
+      "metric": "macro-F1 (derived interaction term)",
+      "optimization_replication_n": 5,
+      "heldout_subject_n": 3,
+      "dataset_n": 1,
+      "class_n": 5,
+      "true_population_unit": "held-out subject (n=3, same primary split) for subject-level interaction; seed for seed-level interaction",
+      "inappropriate_unit_interpretations": [
+        "Treating +0.0031 +- 0.0434 (n=5 seeds) as a precise point estimate rather than a noisy, unresolved signal.",
+        "Concluding 'no interaction exists' from a null/near-zero mean at this sample size (absence of evidence is not evidence of absence).",
+        "Concluding 'synergy exists' from 2/5 positive seeds."
+      ],
+      "recommended_reporting": "Report the interaction term's mean, sample SD, median, and sign count together; classify as approximately_additive_or_unresolved, never as a firm additive or synergistic conclusion."
+    },
+    {
+      "experiment": "ppg_dalia_fault_robustness",
+      "target": "heart_rate_bpm (robustness axis)",
+      "metric": "MAE (bpm) / availability",
+      "optimization_replication_n": null,
+      "heldout_subject_n": 1,
+      "dataset_n": 1,
+      "class_n": null,
+      "true_population_unit": "perturbation condition (114 conditions, some with 5 stochastic seeds), single subject S14",
+      "inappropriate_unit_interpretations": [
+        "Treating 114 conditions as 114 independent subjects or as statistical replicates of a single robustness claim.",
+        "Generalizing S14's robustness profile to all subjects.",
+        "Calling this 'robust' in an unqualified, population-level sense."
+      ],
+      "recommended_reporting": "Report per-condition MAE/availability descriptively; never compute a single aggregate 'robustness score' across conditions; always disclose the single-subject (S14) scope."
+    }
+  ],
+  "cross_cutting_rule": "No training seed is ever treated as an independent biological/population replicate anywhere in this project's artifacts or paper-facing text.",
+  "no_p_values_computed": true
+}

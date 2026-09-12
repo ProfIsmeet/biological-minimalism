@@ -10,14 +10,124 @@ export type SensorName = "eeg" | "ppg" | "temperature" | "bioimpedance";
 
 export type SensorStatus = "nominal" | "degraded" | "offline";
 
+export type DataSourceType = "synthetic" | "dataset_replay";
+
+export type ReplayPlaybackState = "unloaded" | "paused" | "playing" | "ended";
+
+export type ReplayFaultType =
+  | "modality_dropout"
+  | "packet_loss"
+  | "frozen_sensor"
+  | "additive_noise"
+  | "saturation";
+
+export type ReplayFaultTarget = "ppg" | "imu" | "both";
+
+export interface ReplayFaultConfig {
+  fault_type: ReplayFaultType;
+  target: ReplayFaultTarget;
+  severity: number;
+  seed: number;
+}
+
+export interface ReplayFaultState {
+  active: boolean;
+  fault_type: ReplayFaultType | null;
+  target: ReplayFaultTarget | null;
+  target_channels: string[];
+  affected_channels: string[];
+  severity: number | null;
+  seed: number | null;
+  dropped_samples: Record<string, number>;
+  parameters: Record<string, number | string | number[] | string[]>;
+}
+
+export interface ChannelMetadata {
+  name: string;
+  sample_rate_hz: number;
+  device: string;
+  role: string;
+  axes: string[];
+  units: string;
+}
+
+export interface TelemetrySourceMetadata {
+  source_type: DataSourceType;
+  display_label: string;
+  dataset_name: string | null;
+  subject_id: string | null;
+  replay_position_seconds: number | null;
+  duration_seconds: number | null;
+  playback_state: ReplayPlaybackState | null;
+  playback_speed: number | null;
+  end_behavior: string | null;
+  license: string | null;
+  source_url: string | null;
+  available_channels: string[];
+  unavailable_channels: string[];
+}
+
+export interface RawChannelBatch {
+  dataset_name: string;
+  subject_id: string;
+  channel_name: string;
+  device: string;
+  role: string;
+  axes: string[];
+  units: string;
+  sample_rate_hz: number;
+  sample_start_index: number;
+  start_timestamp_seconds: number;
+  end_timestamp_seconds: number;
+  samples: number[] | number[][];
+}
+
+export type ModelInferenceStatus =
+  | "warming_up"
+  | "available"
+  | "input_unavailable"
+  | "model_unavailable"
+  | "error";
+
+export interface HeartRateInferenceState {
+  status: ModelInferenceStatus;
+  message: string;
+  required_window_seconds: 8;
+  required_channels: ["wrist_bvp", "wrist_acc"];
+}
+
+export interface HeartRateModelProvenance {
+  dataset_name: "PPG-DaLiA";
+  subject_id: string;
+  window_index: number;
+  window_start_seconds: number;
+  window_duration_seconds: number;
+  input_channels: ["wrist_bvp", "wrist_acc"];
+  model_id: string;
+  checkpoint_path: string;
+  checkpoint_sha256: string;
+  fault_injection: ReplayFaultState | null;
+}
+
+export interface HeartRateModelPrediction {
+  prediction_type: "heart_rate";
+  value: number;
+  unit: "bpm";
+  normalized_model_output: number;
+  evidence_level: "AI_ESTIMATED";
+  uncertainty: null;
+  provenance: HeartRateModelProvenance;
+}
+
 export interface VitalsSnapshot {
-  heart_rate_bpm: number;
-  hrv_rmssd_ms: number;
-  respiration_rate_bpm: number;
-  blood_pressure_systolic_mmhg: number;
-  blood_pressure_diastolic_mmhg: number;
+  heart_rate_bpm: number | null;
+  hrv_rmssd_ms: number | null;
+  respiration_rate_bpm: number | null;
+  blood_pressure_systolic_mmhg: number | null;
+  blood_pressure_diastolic_mmhg: number | null;
   ppg_waveform: number[];
   ecg_like_waveform: number[];
+  ecg_waveform: number[];
 }
 
 export interface CognitiveSnapshot {
@@ -51,13 +161,18 @@ export interface AIConfidenceSnapshot {
 
 export interface LiveMetricsSnapshot {
   timestamp: number;
-  mission_mode: MissionMode;
-  mission_day: number;
-  vitals: VitalsSnapshot;
-  cognitive: CognitiveSnapshot;
-  space_adaptation: SpaceAdaptationSnapshot;
-  sensor_health: SensorHealthSnapshot;
-  ai_confidence: AIConfidenceSnapshot;
+  source: TelemetrySourceMetadata;
+  channels: RawChannelBatch[];
+  heart_rate_prediction: HeartRateModelPrediction | null;
+  heart_rate_inference: HeartRateInferenceState | null;
+  fault_injection: ReplayFaultState | null;
+  mission_mode: MissionMode | null;
+  mission_day: number | null;
+  vitals: VitalsSnapshot | null;
+  cognitive: CognitiveSnapshot | null;
+  space_adaptation: SpaceAdaptationSnapshot | null;
+  sensor_health: SensorHealthSnapshot | null;
+  ai_confidence: AIConfidenceSnapshot | null;
 }
 
 export interface DigitalTwinSystemScore {
@@ -94,6 +209,1446 @@ export interface AIExplanation {
 export interface SimulationStateResponse {
   mission_mode: MissionMode;
   sensor_status: Record<SensorName, SensorStatus>;
+}
+
+export interface DataSourceStatus {
+  source_type: DataSourceType;
+  dataset_configured: boolean;
+  dataset_name: string | null;
+  subject_id: string | null;
+  replay_position_seconds: number | null;
+  duration_seconds: number | null;
+  playback_state: ReplayPlaybackState | null;
+  playback_speed: number | null;
+  end_behavior: string | null;
+  channels: ChannelMetadata[];
+  fault_injection: ReplayFaultState;
+}
+
+export interface AvailableSubjectsResponse {
+  dataset_name: string;
+  subjects: string[];
+}
+
+export type ResearchAvailability = "available" | "unavailable";
+export type ResearchResultClass =
+  | "positive_marginal_value"
+  | "negative_marginal_result"
+  | "robustness_characterization";
+export type MarginalDirection = "improved" | "worsened" | "mixed" | "not_applicable";
+
+export interface ResearchMetricEstimate {
+  mean: number | null;
+  sd: number | null;
+  n: number | null;
+  unit: string;
+}
+
+export interface ResearchConfiguration {
+  configuration_id: string;
+  label: string;
+  description: string;
+  sensing: string[];
+  metrics: Record<string, ResearchMetricEstimate>;
+}
+
+export interface ResearchScope {
+  subjects: string[];
+  held_out_subjects: string[];
+  evaluation_windows: number;
+  activities: string[];
+  evidence_level: "experimental_evaluation";
+  environment_scope:
+    | "terrestrial_free_living"
+    | "terrestrial_controlled"
+    | "analog"
+    | "simulation"
+    | "spaceflight";
+  cohort_note: string;
+}
+
+export interface ResearchMarginalResult {
+  baseline_configuration_id: string;
+  candidate_configuration_id: string;
+  added_sensing: string;
+  metric: string;
+  delta: ResearchMetricEstimate;
+  direction: MarginalDirection;
+  paired_replicates: number | null;
+  candidate_improved_count: number | null;
+  candidate_worsened_count: number | null;
+  // Multi-target / capacity / heterogeneity extensions (optional, backward-compatible).
+  metric_kind?: string | null;
+  metric_directionality?: string | null;
+  capacity_match_status?: string | null;
+  evidence_strength?: string | null;
+  subject_heterogeneity?: string | null;
+  class_heterogeneity?: string | null;
+  sensitivity_status?: string | null;
+  controlled_comparisons?: ControlledComparison[];
+  headline_comparison_id?: string | null;
+  notes: string[];
+}
+
+export type ComparisonRole =
+  | "PRIMARY_CONTROLLED"
+  | "MATCHED_SHUFFLED_CONTROL"
+  | "HISTORICAL_CAPACITY_CONFOUNDED_RESULT"
+  | "SEED_CORRECTED_PREFERRED_V2"
+  | "HISTORICAL_PRE_SEEDFIX_V1_RESULT"
+  | "SEED_CORRECTION_PENDING_FOLLOWUP";
+
+export interface ControlledComparison {
+  comparison_id: string;
+  label: string;
+  role: ComparisonRole;
+  baseline_id: string;
+  candidate_id: string;
+  delta_definition: string;
+  delta: ResearchMetricEstimate;
+  n_seeds: number | null;
+  n_seeds_favor_candidate: number | null;
+  interpretation: string;
+}
+
+export interface ResearchBreakdownEntry {
+  entry_id: string;
+  label: string;
+  dimensions: Record<string, string | number | boolean | null>;
+  configuration_metrics: Record<string, Record<string, ResearchMetricEstimate>>;
+  delta: ResearchMetricEstimate | null;
+}
+
+export interface ResearchBreakdown {
+  breakdown_id: string;
+  kind: string;
+  title: string;
+  entries: ResearchBreakdownEntry[];
+}
+
+export interface ResearchCheckpointIdentity {
+  run_id: string;
+  model_id: string;
+  sha256: string;
+  size_bytes: number;
+}
+
+export interface ResearchProvenance {
+  source_artifact: string;
+  supporting_artifacts: string[];
+  dataset_version: string | null;
+  split_identity: string | null;
+  model_identity: string[];
+  checkpoints: ResearchCheckpointIdentity[];
+  experiment_version: string | null;
+}
+
+export interface ResearchClaimBoundaries {
+  supported: string[];
+  unsupported: string[];
+  limitations: string[];
+}
+
+export interface ResearchOperationalCosts {
+  sensor_contact_regions: number | null;
+  additional_module_count: number | null;
+  power_estimate: number | null;
+  mass_estimate: number | null;
+  compute_estimate: number | null;
+  comfort_burden: number | null;
+}
+
+export interface ResearchExperiment {
+  experiment_id: string;
+  title: string;
+  research_question: string;
+  dataset: string;
+  target: string;
+  status: "complete";
+  result_class: ResearchResultClass;
+  outcome_summary: string;
+  scope: ResearchScope;
+  configurations: ResearchConfiguration[];
+  marginal_result: ResearchMarginalResult | null;
+  breakdowns: ResearchBreakdown[];
+  provenance: ResearchProvenance;
+  claim_boundaries: ResearchClaimBoundaries;
+  operational_costs: ResearchOperationalCosts;
+}
+
+export interface ResearchExperimentSummary {
+  experiment_id: string;
+  title: string;
+  research_question: string;
+  dataset: string;
+  target: string;
+  status: "complete";
+  result_class: ResearchResultClass;
+  outcome_summary: string;
+  held_out_subject_count: number;
+  source_artifact: string;
+}
+
+export interface ResearchExperimentEnvelope {
+  experiment_id: string;
+  availability: ResearchAvailability;
+  experiment: ResearchExperiment | null;
+  error: string | null;
+}
+
+export interface ResearchExperimentSummaryEnvelope {
+  experiment_id: string;
+  availability: ResearchAvailability;
+  summary: ResearchExperimentSummary | null;
+  error: string | null;
+}
+
+export interface ReproducibilityInteraction {
+  tested: boolean;
+  configs: string;
+  interaction_estimate: string;
+  uncertainty: string;
+  interpretation: string;
+  plain_language: string;
+  boundary: string;
+}
+
+export type ReproComponentStatus = "PASS" | "PARTIAL" | "FAIL" | "UNAVAILABLE" | "MALFORMED";
+
+export interface ReproComponent {
+  key: string;
+  label: string;
+  status: ReproComponentStatus;
+  detail: string;
+  value_display: string | null;
+  provenance: string | null;
+  reason_if_unavailable: string | null;
+}
+
+export interface ReproducibilitySummary {
+  overall_status: string;
+  overall_declared: string | null;
+  overall_matches_declared: boolean;
+  environment_scope: string;
+  independence_caveat: string;
+  components: ReproComponent[];
+  interaction: ReproducibilityInteraction | null;
+}
+
+export interface ResearchProjectSummary {
+  experiment_count: number;
+  available_count: number;
+  unavailable_count: number;
+  experiments: ResearchExperimentSummaryEnvelope[];
+  statement: string;
+  reproducibility?: ReproducibilitySummary | null;
+}
+
+export type CostEvidenceLevel =
+  | "measured"
+  | "manufacturer_spec"
+  | "literature_estimate"
+  | "derived"
+  | "architectural_count"
+  | "unknown";
+export type CostAvailability = "known" | "unknown";
+export type CostValueKind = "exact" | "range";
+export type CostBasis = "marginal" | "total";
+export type OperationMode = "continuous" | "periodic" | "intermittent" | "event_driven" | "unresolved";
+
+export interface OperationalQuantity {
+  availability: CostAvailability;
+  value_kind: CostValueKind;
+  value: number | null;
+  minimum: number | null;
+  typical: number | null;
+  maximum: number | null;
+  unit: string;
+  basis: CostBasis;
+  evidence_level: CostEvidenceLevel;
+  provenance_ids: string[];
+  notes: string[];
+}
+
+export interface CostEvidenceRecord {
+  evidence_id: string;
+  evidence_level: CostEvidenceLevel;
+  title: string;
+  source_reference: string;
+  component_or_artifact_identity: string;
+  operating_condition: string;
+  value_characterization: string;
+  version_or_date: string | null;
+  assumptions: string[];
+  manufacturer: string | null;
+  source_url: string | null;
+  retrieval_date: string | null;
+  page_or_section: string | null;
+  exact_parameters: string[];
+}
+
+export interface HardwareIdentity {
+  manufacturer: string | null;
+  part_number_or_class: string | null;
+  device_class: string;
+  status: "representative_candidate" | "representative_component_class" | "open";
+  rationale: string;
+  evidence_ids: string[];
+  exclusions: string[];
+}
+
+export interface HardwareCharacterization {
+  topology_component_id: string;
+  identity: HardwareIdentity;
+  required_afe: string;
+  host_interface: string;
+  host_mcu_status: string;
+  power_energy: {
+    boundary: "incremental_sensor_ic" | "incremental_afe" | "incremental_component_class" | "unquantified";
+    operating_condition: string;
+    duty_cycle_status: "frozen" | "open";
+    duty_cycle_assumption: string;
+    supply_voltage: OperationalQuantity;
+    active_current: OperationalQuantity;
+    active_power: OperationalQuantity;
+    active_fraction: OperationalQuantity;
+    average_power: OperationalQuantity;
+    daily_energy: OperationalQuantity;
+    equations: string[];
+    excluded_subsystems: string[];
+  };
+  mass: {
+    component_mass: OperationalQuantity;
+    pcb_or_module_incremental_mass: OperationalQuantity;
+    finished_wearable_mass: OperationalQuantity;
+  };
+  data_rate: {
+    channel_count: OperationalQuantity;
+    sample_rate: OperationalQuantity;
+    bits_per_sample: OperationalQuantity;
+    scalar_sample_throughput: OperationalQuantity;
+    raw_payload_bit_rate: OperationalQuantity;
+    protocol_overhead_bit_rate: OperationalQuantity;
+    equation: string | null;
+    notes: string[];
+  };
+  compute_memory: {
+    dtype: string | null;
+    bytes_per_value: number | null;
+    input_tensor_shapes: string[];
+    baseline_model_weight_memory: OperationalQuantity;
+    candidate_model_weight_memory: OperationalQuantity;
+    incremental_model_weight_memory: OperationalQuantity;
+    baseline_input_buffer_memory: OperationalQuantity;
+    candidate_input_buffer_memory: OperationalQuantity;
+    incremental_input_buffer_memory: OperationalQuantity;
+    embedded_inference_latency: OperationalQuantity;
+    notes: string[];
+  };
+  unresolved_dependencies: string[];
+}
+
+export interface SharedHardwareContext {
+  shared_module_id: string | null;
+  integration_context: string;
+  incremental_vs_standalone: string;
+  allocation_status: string;
+  double_counting_risk: string;
+  naive_addition_allowed: false;
+}
+
+export interface OperationalCostComponent {
+  component_id: string;
+  label: string;
+  status: "scientifically_mapped" | "architecture_placeholder";
+  category: "wearable" | "cabin_context";
+  sensing_modality: string;
+  channels: string[];
+  physical_site: string;
+  architecture_role: string;
+  operation_mode: OperationMode;
+  duty_cycle: OperationalQuantity;
+  experimental_sensor_identity: string | null;
+  candidate_hardware_identity: string | null;
+  scientific_experiment_ids: string[];
+  dimensions: Record<string, OperationalQuantity>;
+  operational_burden_proxies: string[];
+  reliability_exposure: string[];
+  shared_hardware: SharedHardwareContext;
+  assumptions: string[];
+  unknowns: string[];
+  hardware_characterization: HardwareCharacterization | null;
+}
+
+export interface ScientificJoinContract {
+  join_key: "component_id";
+  expected_scientific_fields: string[];
+  cost_contract_status: string;
+  scientific_contract_status: string;
+  scientific_benefit: null;
+  allowed_future_outputs: string[];
+  prohibited_current_outputs: string[];
+}
+
+export interface OperationalCostCatalog {
+  schema_version: string;
+  catalog_id: string;
+  title: string;
+  methodology_path: string;
+  generated_from_commit: string;
+  evidence: CostEvidenceRecord[];
+  components: OperationalCostComponent[];
+  scientific_join_contract: ScientificJoinContract;
+  hardware_topology_path: string | null;
+  revision_history: { schema_version: string; source_commit: string; source_sha256: string; change_summary: string }[];
+}
+
+export interface OperationalCostCatalogEnvelope {
+  availability: ResearchAvailability;
+  catalog: OperationalCostCatalog | null;
+  error: string | null;
+}
+
+export interface OperationalCostComponentEnvelope {
+  component_id: string;
+  availability: ResearchAvailability;
+  component: OperationalCostComponent | null;
+  error: string | null;
+}
+
+export interface ParetoReadyInput {
+  component_id: string;
+  operational_cost_component_id: string;
+  scientific_experiment_ids: string[];
+  target: string | null;
+  scientific_benefit: null;
+  join_status: string;
+}
+
+export type ReadinessAvailability = "AVAILABLE" | "PARTIAL" | "MISSING";
+
+export interface DecisionSourceArtifact {
+  path: string;
+  sha256: string;
+  role: string;
+}
+
+export interface DecisionMetricEstimate {
+  mean: number;
+  sd: number | null;
+  unit: string;
+}
+
+export interface DecisionAccuracyMetrics {
+  mae: DecisionMetricEstimate;
+  rmse: DecisionMetricEstimate;
+  n_windows: number | null;
+}
+
+export interface DecisionConfiguration {
+  description: string;
+  channels: string[];
+}
+
+export interface DecisionClaimBoundaries {
+  supported: string[];
+  unsupported: string[];
+  limitations: string[];
+}
+
+export interface DecisionScientificMarginalValue {
+  scientific_component_id: string;
+  target_id: string;
+  experiment_id: string;
+  dataset_id: string;
+  baseline_configuration: DecisionConfiguration;
+  candidate_configuration: DecisionConfiguration;
+  primary_metric: "mae";
+  baseline_metrics: DecisionAccuracyMetrics;
+  candidate_metrics: DecisionAccuracyMetrics;
+  absolute_benefit: {
+    mae_bpm: number;
+    rmse_bpm: number;
+  };
+  relative_improvement: {
+    mae_fraction: number;
+    rmse_fraction: number;
+  };
+  direction: "POSITIVE" | "NEGATIVE";
+  variability: Record<string, unknown>;
+  heterogeneity: Record<string, string>;
+  evidence_strength: string;
+  evidence_scope: Record<string, unknown>;
+  capacity_confound?: {
+    status?: string;
+    fraction_of_original_gap_explained_by_capacity_alone?: number;
+    genuine_imu_information_benefit_on_matched_capacity_mae_bpm?: number;
+    genuine_imu_information_benefit_seed_consistency?: string;
+    note?: string;
+  } | null;
+  provenance: {
+    source_artifact: string;
+    source_reproducibility_artifact: string | null;
+    methodology_path: string;
+    contract_path: string;
+  };
+  claim_boundaries: DecisionClaimBoundaries;
+}
+
+export interface DecisionOperationalCost {
+  source_component_id: string;
+  candidate_hardware_identity: string | null;
+  duty_cycle: OperationalQuantity;
+  dimensions: Record<string, OperationalQuantity>;
+  shared_hardware: SharedHardwareContext;
+  known_dimensions: string[];
+  unknown_dimensions: string[];
+  unknowns: string[];
+  evidence: CostEvidenceRecord[];
+  hardware_characterization: HardwareCharacterization | null;
+}
+
+export interface TopologyModule {
+  module_id: string;
+  label: string;
+  body_location: string;
+  worn_body: boolean;
+  topology_status: "FROZEN_REFERENCE" | "OPEN_BOUNDARY";
+  component_ids: string[];
+  shared_resources: string[];
+  notes: string[];
+}
+
+export interface TopologyComponent {
+  component_id: string;
+  label: string;
+  modality: string;
+  module_id: string;
+  target_body_region: string;
+  physical_sensing_site: string;
+  operation_mode: OperationMode;
+  operating_schedule: string;
+  optionality: string;
+  contact_burden: {
+    body_regions: string[];
+    contact_type: string;
+    new_contact_region_required: boolean | null;
+    new_physical_sensing_site_required: boolean | null;
+    physical_sensing_sites: number | null;
+    optical_interfaces: number | null;
+    dry_electrodes: number | null;
+    adhesive_or_wet_electrodes: number | null;
+    straps: number | null;
+    head_worn_hardware: boolean;
+    external_cable_required: boolean | null;
+  };
+  required_afe: string;
+  required_mcu_or_interface: string;
+  shared_resources: string[];
+  new_module_required: boolean | null;
+  hardware_identity: HardwareIdentity;
+  evidence_confidence: "HIGH" | "MEDIUM" | "LOW" | "OPEN";
+  unresolved_dependencies: string[];
+}
+
+export type TargetEvidenceStatus = "VALIDATED_POSITIVE" | "VALIDATED_NEGATIVE" | "PARTIAL_EVIDENCE" | "CANDIDATE" | "UNVALIDATED" | "NOT_APPLICABLE";
+
+export interface HardwareTopologyContract {
+  schema_version: string;
+  topology_id: string;
+  title: string;
+  methodology_path: string;
+  reference_architecture_not_final_bom: true;
+  stable_component_ids: string[];
+  modules: TopologyModule[];
+  components: TopologyComponent[];
+  target_coverage: Record<string, Record<string, { status: TargetEvidenceStatus; evidence_ids: string[]; note: string }>>;
+  global_unresolved_dependencies: string[];
+}
+
+export interface HardwareTopologyEnvelope {
+  availability: ResearchAvailability;
+  topology: HardwareTopologyContract | null;
+  system_architecture: { schema_version: string; architecture_id: string; source_topology_path: string; modules: TopologyModule[]; resources: unknown[]; signals: unknown[] } | null;
+  error: string | null;
+}
+
+export interface ParetoReadinessDay6 {
+  schema_version: string;
+  readiness_id: string;
+  topology_path: string;
+  operational_catalog_path: string;
+  decision_inputs_path: string;
+  global_pareto_ready: false;
+  target_specific_pareto_ready: false;
+  structural_assessment_available: boolean;
+  formal_pareto_authorized: false;
+  classification: string;
+  component_matrix: { component_id: string; scientific_benefit: string; target_coverage: string; component_power: string; average_power_and_energy: string; component_mass: string; finished_mass: string; physical_burden: string; compute_and_data: string; robustness_evidence: string; provenance: string; unresolved_dependencies: string[] }[];
+  blockers: string[];
+  limited_structural_conclusion: string;
+  prohibited_inferences: string[];
+}
+
+export interface ParetoReadinessDay6Envelope {
+  availability: ResearchAvailability;
+  readiness: ParetoReadinessDay6 | null;
+  error: string | null;
+}
+
+export interface DecisionRobustnessEvidence {
+  status: "RESOLVED_FROM_INTEGRATION_SOURCE";
+  experiment_id: string;
+  source_artifact: string;
+  audit_addendum: string;
+  subject_id: string;
+  scope: string;
+  condition_count: number;
+  eligible_windows_per_condition: number;
+  total_condition_windows: number;
+  clean_mae_bpm: number;
+  clean_rmse_bpm: number;
+  clean_prediction_availability: number;
+  imu_calibration_caveat: string;
+  packet_loss_interpretation: string;
+  supported_claim: string;
+  unsupported_claims: string[];
+}
+
+export interface DecisionInputComponent {
+  component_id: string;
+  label: string;
+  target: string;
+  experiment_id: string;
+  scientific_marginal_value: DecisionScientificMarginalValue;
+  operational_cost: DecisionOperationalCost;
+  robustness_evidence: DecisionRobustnessEvidence | null;
+}
+
+export interface DecisionComponentReadiness {
+  component_id: string;
+  scientific_benefit: ReadinessAvailability;
+  power: ReadinessAvailability;
+  mass: ReadinessAvailability;
+  contact_burden: ReadinessAvailability;
+  module_burden: ReadinessAvailability;
+  compute_data_burden: ReadinessAvailability;
+  robustness_evidence: ReadinessAvailability;
+  evidence_provenance: ReadinessAvailability;
+}
+
+export interface ParetoDecisionInputs {
+  schema_version: string;
+  artifact_id: string;
+  source_artifacts: DecisionSourceArtifact[];
+  join_mappings: {
+    component_id: string;
+    scientific_component_id: string;
+    scientific_experiment_id: string;
+    operational_experiment_id: string;
+  }[];
+  components: DecisionInputComponent[];
+  readiness: {
+    pareto_status: "NOT_READY";
+    formal_pareto_calculated: false;
+    missing_requirements: string[];
+    cross_dataset_restriction: string;
+    limited_structural_observation: string;
+    component_matrix: DecisionComponentReadiness[];
+  };
+}
+
+export interface ParetoDecisionInputsEnvelope {
+  availability: ResearchAvailability;
+  decision_inputs: ParetoDecisionInputs | null;
+  error: string | null;
+}
+
+export type EngineeringReadinessLevel = "AVAILABLE" | "PARTIAL" | "NOT_READY" | "MISSING";
+
+export interface EngineeringPanelRow {
+  dimension: string;
+  value_display: string;
+  status: EngineeringReadinessLevel;
+  note: string;
+}
+
+export type EngineeringQuantityStatus = "AVAILABLE" | "NOT_READY" | "UNKNOWN";
+
+export interface EngineeringQuantity {
+  value: number | null;
+  unit: string;
+  status: EngineeringQuantityStatus;
+  display: string;
+  reason_if_unavailable: string | null;
+  provenance: string | null;
+}
+
+export interface EngineeringRawDataRate {
+  value: EngineeringQuantity;
+  status: string;
+  radio_data_rate_status: string;
+  note: string;
+}
+
+export interface EngineeringCandidate {
+  candidate: string;
+  label: string;
+  scientific_target: string;
+  scientific_direction: string;
+  gate_status: string;
+  incremental_body_region: string;
+  incremental_module: string;
+  incremental_sensing_contacts: EngineeringQuantity;
+  reference_component_power_display: string;
+  reference_component_power_status: EngineeringReadinessLevel;
+  raw_data_rate_increment: EngineeringQuantity;
+  mass_tier: string;
+  bom_readiness: string;
+  engineering_summary: string;
+  caveat: string;
+}
+
+export interface EngineeringReadiness {
+  artifact_id: string;
+  part: string;
+  source_head_commit: string;
+  statement: string;
+  system_average_power_status: string;
+  system_mass_status: string;
+  bom_status: string;
+  formal_pareto_status: string;
+  final_architecture_status: string;
+  raw_data_rate: EngineeringRawDataRate;
+  panel: EngineeringPanelRow[];
+  candidates: EngineeringCandidate[];
+  boundaries: string[];
+  source_artifacts: string[];
+}
+
+export interface EngineeringReadinessEnvelope {
+  availability: ResearchAvailability;
+  readiness: EngineeringReadiness | null;
+  error: string | null;
+}
+
+// --- Stage 4: power/data-rate/mass/BOM evidence advancement ----------------
+// evidence_class distinguishes a frozen Day-11 datasheet value from a new
+// Stage-4 engineering assumption; a consumer must never render the two as
+// visually/semantically identical (governing prompt §34/§35).
+export type Stage4EvidenceClass =
+  | "DATASHEET_DIRECT"
+  | "DATASHEET_CALCULATED"
+  | "ENGINEERING_ASSUMPTION"
+  | "ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE"
+  | "ASSUMED_USE_SCHEDULE";
+
+export interface Stage4EvidenceQuantity extends EngineeringQuantity {
+  evidence_class: Stage4EvidenceClass;
+}
+
+export interface Stage4DutyScheduleEntry {
+  module: string;
+  state: string;
+  duty_fraction: number;
+  note: string;
+}
+
+export interface Stage4SystemPower {
+  status: string;
+  reason: string;
+  base_topology_load_side_mw: Stage4EvidenceQuantity;
+  base_topology_battery_side_mw: Stage4EvidenceQuantity;
+  contributors_mw: Record<string, number>;
+  excluded_from_base_total_mw: Record<string, number>;
+  duty_schedule: Stage4DutyScheduleEntry[];
+}
+
+export interface Stage4SystemDataRate {
+  system_raw_total_bps: Stage4EvidenceQuantity;
+  system_transmitted_bps: Stage4EvidenceQuantity;
+  processed_data_rate_status: string;
+  excluded_from_base_total_bps: Record<string, number>;
+}
+
+export interface Stage4SystemMass {
+  status: string;
+  tier_achieved: string;
+  system_mass_base_topology_excl_leg_g: Stage4EvidenceQuantity;
+  eog_incremental_mass_g: Stage4EvidenceQuantity;
+}
+
+export interface Stage4BomAdvancement {
+  not_a_final_bom: boolean;
+  final: boolean;
+  items_advanced: Record<string, string>[];
+  still_missing: string[];
+}
+
+export interface Stage4EngineeringReadiness {
+  artifact_id: string;
+  sprint: string;
+  statement: string;
+  prohibited: string[];
+  system_average_power: Stage4SystemPower;
+  system_data_rate: Stage4SystemDataRate;
+  system_mass: Stage4SystemMass;
+  bom: Stage4BomAdvancement;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  source_artifacts: string[];
+}
+
+export interface Stage4EngineeringReadinessEnvelope {
+  availability: ResearchAvailability;
+  readiness: Stage4EngineeringReadiness | null;
+  error: string | null;
+}
+
+// --- Stage-3 accepted governing science (Stage 4 controlled integration) --
+// Every entry here was resolved LIVE through the integrity-verified
+// resolver (registry + semantic + hash checks) — never a hard-coded path,
+// never the private unverified helper. All fields are `| null` on purpose:
+// missing evidence must render as missing, never as a fabricated zero
+// (governing prompt §26).
+
+export interface Stage3EvidenceEntry {
+  family_id: string;
+  artifact_path: string;
+  artifact_type: "json" | "markdown";
+  experiment_id: string | null;
+  classification: string | null;
+  biological_subject_n: number | null;
+  held_out_or_reduced_n: number | null;
+  full_cohort_target_n: number | null;
+  optimization_seed_n: number | null;
+  primary_comparison_label: string | null;
+  primary_effect_value: number | null;
+  primary_effect_unit: string | null;
+  secondary_comparison_label: string | null;
+  secondary_effect_value: number | null;
+  secondary_effect_unit: string | null;
+  heterogeneity_note: string | null;
+  limitation: string | null;
+  summary: string | null;
+  provenance_doc: string | null;
+}
+
+export interface Stage3EvidenceEnvelope {
+  schema_version: string;
+  source_registry: string;
+  source_freeze_manifest: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  entries: Stage3EvidenceEntry[];
+}
+
+// --- Science Owner's Stage-4 handoff package -------------------------------
+// AUTHORITATIVE safe-wording/classification surface (governing prompt Part
+// XI). Unlike Stage3EvidenceEntry above (Integration Owner's raw resolver
+// passthrough, used for numeric cross-verification), every string here is
+// Science-Owner-authored and must be rendered verbatim — never paraphrased,
+// never strengthened.
+
+export interface Stage4ScienceFamilyEntry {
+  family_id: string;
+  governing_artifact: string;
+  experiment_protocol_version: string;
+  biological_n: number | string | null;
+  held_out_test_biological_n: number | string | null;
+  note_on_n: string | null;
+  optimization_seed_n: number | string | null;
+  a_b_c_definitions: Record<string, string>;
+  primary_metric: string | null;
+  governing_numeric_result: Record<string, unknown> | string;
+  heterogeneity: string | null;
+  sensitivity: string | null;
+  evidence_classification: string;
+  strongest_safe_claim: string;
+  prohibited_overclaim: string;
+  architecture_relevance: string | null;
+  consumption_status: string;
+  provenance_hash_reference: string | null;
+  unresolved_limitation: string | null;
+}
+
+export interface Stage4ScienceConsumptionManifest {
+  purpose: string;
+  accepted_stage3_reference: { branch: string; sha: string; accepted_state: string };
+  consumption_rule: string;
+  families: Stage4ScienceFamilyEntry[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4SensorModality {
+  modality: string;
+  anatomical_site: string;
+  supported_target_use: string;
+  strongest_positive_evidence: string;
+  strongest_negative_evidence: string;
+  external_replication_status: string;
+  heterogeneity: string;
+  incremental_value_status: string;
+  burden_relevance: string;
+  confidence_tier: string;
+  unresolved_evidence: string;
+  architecture_implication: string;
+}
+
+export interface Stage4SensorValueMatrix {
+  purpose: string;
+  accepted_stage3_sha: string;
+  final_architecture_status: string;
+  modalities: Stage4SensorModality[];
+}
+
+export interface Stage4ScienceClaim {
+  claim_id: string;
+  exact_safe_wording: string;
+  strength: string;
+  governing_evidence: string[];
+  relevant_numeric_result: string;
+  scope_limitation: string;
+  prohibited_stronger_wording: string;
+  stage4_consumer_guidance: string;
+}
+
+export interface Stage4ScienceClaimLedger {
+  purpose: string;
+  accepted_stage3_sha: string;
+  strength_enum: string[];
+  claims: Stage4ScienceClaim[];
+}
+
+export interface Stage4ArchitectureDecisionCandidate {
+  modality: string;
+  scientific_value: string;
+  independent_replication_status: string;
+  consistency: string;
+  heterogeneity: string;
+  negative_evidence: string;
+  strongest_supported_endpoint: string;
+  weakest_supported_endpoint: string;
+  evidence_maturity: string;
+  additional_engineering_burden_to_compare: string;
+  pending_science_that_could_change_decision: string;
+  decision_sensitivity_to_pending_science: string;
+}
+
+export interface Stage4ArchitectureDecisionInputsScience {
+  purpose: string;
+  accepted_stage3_sha: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  candidates: Stage4ArchitectureDecisionCandidate[];
+}
+
+// --- Stage-4 architecture decision framework (2nd parallel Science Owner --
+// package, `stage4-architecture-decision-framework @ fa71eec`) + this
+// closure-prep sprint's own Integration Owner artifacts (Gate D/E, burden
+// comparison, decision projection, final packet). Same verbatim-rendering
+// discipline as Stage4ScienceConsumptionManifest above for the Science
+// Owner types; `Record<string, unknown>` is used only for genuinely
+// heterogeneous narrative sub-structures (decision-flip scenarios, etc.).
+
+export interface Stage4ConfidenceTier {
+  mechanical_definition: string;
+  current_occupants: string[];
+}
+
+export interface Stage4ArchitectureScienceDecisionFramework {
+  purpose: string;
+  accepted_stage3_sha: string;
+  confidence_dimensions: Record<string, unknown>;
+  confidence_tiers: Record<string, Stage4ConfidenceTier>;
+  tier_assignment_rule: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4SensorDecisionSensitivityEntry {
+  modality: string;
+  current_science_state: string;
+  current_confidence_tier: string;
+  pending_evidence: string | null;
+  decision_sensitivity: "HIGH" | "MEDIUM" | "LOW";
+  decision_flip_condition: string | null;
+  decision_flip_scenarios: Record<string, unknown> | null;
+  reason: string;
+}
+
+export interface Stage4SensorDecisionSensitivity {
+  purpose: string;
+  accepted_stage3_sha: string;
+  sensors: Stage4SensorDecisionSensitivityEntry[];
+}
+
+export interface Stage4ScientificParetoInputs {
+  purpose: string;
+  explicit_non_goal: string;
+  scientific_pareto_axes: Record<string, unknown>;
+  per_modality_axis_values: Record<string, unknown>[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4AcceptanceGate {
+  gate_id: string;
+  requirement: string;
+  rationale: string;
+  severity: "HARD_BLOCK" | "COORDINATOR_DECISION_REQUIRED" | "DISCLOSURE_REQUIRED" | "NONBLOCKING";
+  evidence_needed: string;
+  owner: string;
+  current_readiness: string;
+  what_closes_it: string;
+}
+
+export interface Stage4ArchitectureAcceptanceGates {
+  purpose: string;
+  severity_enum: string[];
+  gates: Stage4AcceptanceGate[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4ArchitectureCandidateClass {
+  class_id: string;
+  description: string;
+  sensors: string[];
+  anatomical_regions: string[];
+  evidence_confidence: string;
+  unresolved_dependencies: string;
+  pending_science_exposure: string;
+}
+
+export interface Stage4ArchitectureCandidateClasses {
+  purpose: string;
+  explicit_non_goal: string;
+  classes: Stage4ArchitectureCandidateClass[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4GateDDimension {
+  dimension: string;
+  status: string;
+  evidence: string;
+  gap: string | null;
+}
+
+export interface Stage4GateDKnownUnknown {
+  item: string;
+  why_it_matters: string;
+  bounded: boolean;
+  could_be_decision_changing: boolean;
+  note?: string | null;
+}
+
+export interface Stage4GateDBurdenCompleteness {
+  primary_question: string;
+  dimensions_audited: Stage4GateDDimension[];
+  shared_resource_accounting: Record<string, unknown>;
+  known_unknowns: Stage4GateDKnownUnknown[];
+  bom_final: boolean;
+  bom_still_missing: string[];
+  gate_d_burden_completeness: "READY" | "CONDITIONALLY_READY" | "NOT_READY";
+  rationale: string;
+  what_would_close_it: string[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+  assessment_history?: Record<string, unknown>[];
+  chest_module_decomposition?: Record<string, unknown> | null;
+  eeg_eog_shared_afe_confirmation?: Record<string, unknown> | null;
+  new_artifacts_this_sprint?: string[];
+}
+
+export interface Stage4GateDBurdenCompletenessEnvelope {
+  availability: ResearchAvailability;
+  assessment: Stage4GateDBurdenCompleteness | null;
+  error: string | null;
+}
+
+export interface Stage4CandidateClassBurden {
+  class_id: string;
+  description: string;
+  sensors: string[];
+  evidence_confidence: string;
+  pending_science_exposure: string;
+  power: Record<string, unknown>;
+  data_rate_raw_bps: Record<string, unknown>;
+  mass: Record<string, unknown>;
+  dominance_flag: "PARETO_RELEVANT" | "POTENTIALLY_DOMINATED" | "BURDEN_DATA_INCOMPLETE";
+  dominance_reason: string;
+}
+
+export interface Stage4CandidateClassBurdenComparison {
+  purpose: string;
+  explicit_non_goal: string;
+  derivation_note: string;
+  classes: Stage4CandidateClassBurden[];
+  allowed_dominance_flags: string[];
+  note_on_dominance: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4CandidateClassBurdenComparisonEnvelope {
+  availability: ResearchAvailability;
+  comparison: Stage4CandidateClassBurdenComparison | null;
+  error: string | null;
+}
+
+export interface Stage4ArchitectureDecisionUnit {
+  decision_unit: string;
+  related_sensor_value_matrix_modalities: Record<string, unknown>[];
+  confidence_tier_decision_framework: string;
+  decision_sensitivity: "HIGH" | "MEDIUM" | "LOW";
+  pending_evidence: string | null;
+  decision_flip_condition: unknown;
+  burden_state: Record<string, unknown> | null;
+  unresolved_science: string | null;
+  unresolved_engineering: string | null;
+  coordinator_decision_requirement: string;
+}
+
+export interface Stage4ArchitectureDecisionProjection {
+  purpose: string;
+  join_note: string;
+  units: Stage4ArchitectureDecisionUnit[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4ArchitectureDecisionProjectionEnvelope {
+  availability: ResearchAvailability;
+  projection: Stage4ArchitectureDecisionProjection | null;
+  error: string | null;
+}
+
+export interface Stage4GateEOption {
+  description: string;
+  [key: string]: unknown;
+}
+
+export interface Stage4GateEHighSensitivityItem {
+  item: string;
+  current_science_state: string;
+  current_confidence_tier: string;
+  pending_evidence: string | null;
+  decision_flip_scenarios: Record<string, unknown>;
+  options: {
+    WAIT: Stage4GateEOption;
+    FREEZE_CONDITIONALLY: Stage4GateEOption;
+    FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE: Stage4GateEOption;
+  };
+}
+
+export interface Stage4GateECoordinatorOptions {
+  purpose: string;
+  gate_reference: string;
+  high_sensitivity_items: Stage4GateEHighSensitivityItem[];
+  no_option_selected: boolean;
+  coordinator_action_required: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4GateECoordinatorOptionsEnvelope {
+  availability: ResearchAvailability;
+  options: Stage4GateECoordinatorOptions | null;
+  error: string | null;
+}
+
+export interface Stage4ContactModality {
+  modality: string;
+  anatomical_region: string;
+  module_id: string;
+  components: string[];
+  sensing_contacts: Record<string, unknown>;
+  reference_electrodes: Record<string, unknown>;
+  ground_bias_electrodes: Record<string, unknown>;
+  shared_with: string[];
+  total_contacts: { min: number; max: number; most_likely: number; unit: string; reasoning?: string };
+  incremental_contacts_if_added: Record<string, unknown>;
+  electrode_type: string;
+  disposable_or_reusable: string;
+  attachment_type: string;
+  external_cable_required: unknown;
+  source: string;
+  confidence: string;
+  unresolved_topology_question?: Record<string, unknown> | null;
+}
+
+export interface Stage4ContactElectrodeBurden {
+  purpose: string;
+  method: string;
+  modalities: Stage4ContactModality[];
+  new_findings_not_previously_disclosed: Record<string, unknown>[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4ContactElectrodeBurdenEnvelope {
+  availability: ResearchAvailability;
+  burden: Stage4ContactElectrodeBurden | null;
+  error: string | null;
+}
+
+export interface Stage4BatteryTopologyScenarios {
+  purpose: string;
+  operating_duration_requirement_status: Record<string, unknown>;
+  per_module_battery_reference: Record<string, unknown>;
+  scenarios: Record<string, unknown>;
+  candidate_class_comparison: Record<string, unknown>[];
+  does_ranking_depend_on_topology: { verdict: string; reasoning: string };
+  not_a_final_battery_selection: boolean;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4BatteryTopologyScenariosEnvelope {
+  availability: ResearchAvailability;
+  scenarios: Stage4BatteryTopologyScenarios | null;
+  error: string | null;
+}
+
+export interface Stage4CandidateBurdenMatrixClass {
+  class_id: string;
+  modalities: string[];
+  anatomical_regions: string[];
+  modules: string[];
+  module_count: number;
+  total_contacts: { min: number; max: number; most_likely: number; unit: string };
+  incremental_contacts_vs_previous_class: number;
+  power_range_mw: Record<string, unknown>;
+  mass_range_g: Record<string, unknown>;
+  raw_data_rate_bps: Record<string, unknown>;
+  battery_scenario_shared_hub_g: number;
+  battery_scenario_distributed_g: number;
+  major_unknowns: string[];
+  scientific_confidence_summary: string;
+  pending_science_exposure: string;
+}
+
+export interface Stage4CandidateBurdenMatrix {
+  purpose: string;
+  classes: Stage4CandidateBurdenMatrixClass[];
+  robustness_analysis: {
+    power_ordering_preserved_across_mcu_radio_interpretations: boolean;
+    verdict: string;
+    [key: string]: unknown;
+  };
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4CandidateBurdenMatrixEnvelope {
+  availability: ResearchAvailability;
+  matrix: Stage4CandidateBurdenMatrix | null;
+  error: string | null;
+}
+
+export interface Stage4FinalArchitectureDecisionPacket {
+  purpose: string;
+  statement: string;
+  candidate_configurations: Record<string, unknown>[];
+  contact_electrode_burden?: Record<string, unknown> | null;
+  battery_topology_scenarios?: Record<string, unknown> | null;
+  candidate_burden_matrix?: Record<string, unknown>[];
+  robustness_analysis?: Record<string, unknown> | null;
+  scientific_evidence_summary: Record<string, unknown>;
+  burden_evidence_summary: Record<string, unknown>;
+  uncertainties: Record<string, unknown>;
+  pending_science_sensitivity: Record<string, unknown>[];
+  potential_dominance: { class_id: string; dominance_flag: string; dominance_reason: string }[];
+  acceptance_gate_readiness: Stage4AcceptanceGate[];
+  decision_blockers: Record<string, unknown>[];
+  coordinator_choices_required: string[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4FinalArchitectureDecisionPacketEnvelope {
+  availability: ResearchAvailability;
+  packet: Stage4FinalArchitectureDecisionPacket | null;
+  error: string | null;
+}
+
+// --- Stage 4 Final Architecture Closure (Coordinator decisions) -----------
+
+export interface Stage4GateECoordinatorDecision {
+  item: string;
+  decision: string;
+  architecture_disposition: string;
+  claim_limitations: string;
+  what_could_trigger_revision?: string | null;
+  revision_trigger: Record<string, unknown>;
+  decided_by: string;
+  near_zero_result_note?: string | null;
+}
+
+export interface Stage4GateECoordinatorDecisions {
+  purpose: string;
+  gate_reference: string;
+  decisions: Stage4GateECoordinatorDecision[];
+  no_option_selected: boolean;
+  gate_e_pending_science_sensitivity: string;
+  pending_science_still_pending: string;
+}
+
+export interface Stage4GateECoordinatorDecisionsEnvelope {
+  availability: ResearchAvailability;
+  decisions: Stage4GateECoordinatorDecisions | null;
+  error: string | null;
+}
+
+export interface Stage4FormalParetoAnalysis {
+  purpose: string;
+  methodology: Record<string, unknown>;
+  pairwise_dominance_analysis: { class_a: string; class_b: string; verdict: string; [key: string]: unknown }[];
+  pareto_relevant_set: string[];
+  potentially_dominated_set: string[];
+  no_unique_pareto_winner: boolean;
+  no_unique_pareto_winner_reason: string;
+  coordinator_selected_architecture: string;
+  coordinator_selection_rationale: string;
+  coordinator_selection_is_not_mathematical_dominance: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4FormalParetoAnalysisEnvelope {
+  availability: ResearchAvailability;
+  analysis: Stage4FormalParetoAnalysis | null;
+  error: string | null;
+}
+
+export interface FinalWearableArchitecture {
+  purpose: string;
+  selected_class: string;
+  selected_modalities: string[];
+  selected_body_regions: string[];
+  module_topology: Record<string, unknown>;
+  contact_model: Record<string, unknown>;
+  burden_ranges: Record<string, unknown>;
+  science_rationale: Record<string, unknown>;
+  exclusion_rationale: Record<string, { excluded_from_final_architecture: boolean; reason: string; prohibited_claim: string }>;
+  gate_d_status: Record<string, unknown>;
+  gate_e_decisions: Record<string, unknown>;
+  revision_triggers: Record<string, unknown>[];
+  provenance: Record<string, unknown>;
+  coordinator_decision_status: Record<string, unknown>;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface FinalWearableArchitectureEnvelope {
+  availability: ResearchAvailability;
+  architecture: FinalWearableArchitecture | null;
+  error: string | null;
+}
+
+export interface Stage4FinalClosureManifest {
+  purpose: string;
+  authoritative_artifacts: { path: string; sha256: string; description: string }[];
+  final_architecture: string;
+  formal_pareto_status: string;
+  acceptance_gates: { gate_id: string; original_severity: string; final_state: string; [key: string]: unknown }[];
+  pending_science: Record<string, unknown>;
+  coordinator_decisions: Record<string, unknown>;
+  repository_sha_after_closure: string;
+  accepted_stage3_sha: string;
+  status: string;
+}
+
+export interface Stage4FinalClosureManifestEnvelope {
+  availability: ResearchAvailability;
+  manifest: Stage4FinalClosureManifest | null;
+  error: string | null;
+}
+
+// --- Phase 2/3: future-science ingestion contract (Stage 2-4 handoff) ------
+// No manifest satisfying this contract exists yet (Ismet's science-completion
+// sprint is in progress). A consumer must ONLY read `display_projections` —
+// never `manifest.entries` directly — to inherit the backend's promotion-gate
+// and state-separation guards (governing prompt Phase-3 consumer-guard
+// requirement). See backend/app/schemas/experiment_manifest.py.
+
+export type ExperimentCompletionState =
+  | "COMPLETE"
+  | "BOUNDED_DIAGNOSTIC"
+  | "BLOCKED_BY_DATA_ACCESS"
+  | "PENDING"
+  | "HISTORICAL"
+  | "SUPERSEDED";
+
+export type ReplicationClass =
+  | "EXTERNAL_REPLICATION"
+  | "SAME_DATASET_HOLDOUT"
+  | "SINGLE_RUN"
+  | "NOT_APPLICABLE";
+
+export type FutureScienceMetricDirectionality = "lower_is_better" | "higher_is_better" | "not_applicable";
+
+export type FutureScienceSensitivityStatus = "available" | "unavailable" | "pending";
+
+export interface FutureScienceSensitivityEntry {
+  key: string;
+  value: number | null;
+  note: string | null;
+}
+
+export interface FutureScienceSensitivityBlock {
+  status: FutureScienceSensitivityStatus;
+  entries: FutureScienceSensitivityEntry[];
+  dominant_key: string | null;
+  note: string | null;
+}
+
+export interface ManifestEntryDisplayProjection {
+  experiment_id: string;
+  completion_state: ExperimentCompletionState;
+  completion_state_label: string;
+  is_headline_eligible: boolean;
+  replication_class: ReplicationClass;
+  replication_class_label: string;
+  metric_name: string;
+  metric_directionality: FutureScienceMetricDirectionality;
+  benefit_value: number | null;
+  benefit_display: string;
+  // Phase-4 close-out: labeled separately so subjects and seeds are never
+  // merged into one ambiguous "n" or implied to be the same kind of count.
+  biological_subject_n: number | null;
+  biological_subject_n_display: string;
+  optimization_seed_n: number | null;
+  optimization_seed_n_display: string;
+  // Phase-4 hostile-review fix: carried through so a strong aggregate benefit
+  // can never visually hide severe per-subject/per-class heterogeneity.
+  subject_sensitivity: FutureScienceSensitivityBlock;
+  class_sensitivity: FutureScienceSensitivityBlock | null;
+  limitations: string[];
+  provenance_source: string;
+}
+
+// Raw manifest shape — present on the envelope for completeness/debugging,
+// but no frontend component in this codebase should render from it directly.
+export interface ExperimentManifestFile {
+  schema_version: string;
+  manifest_id: string;
+  generated_by: string;
+  generated_at: string | null;
+  entries: unknown[];
+}
+
+export interface FutureScienceManifestEnvelope {
+  availability: ResearchAvailability;
+  status: "PENDING_SCIENCE_HANDOFF" | "INGESTION_FAILED" | "INGESTED" | string;
+  manifest_path: string;
+  error_code: string | null;
+  error: string | null;
+  manifest: ExperimentManifestFile | null;
+  display_projections: ManifestEntryDisplayProjection[];
 }
 
 export const MISSION_MODES: { value: MissionMode; label: string }[] = [

@@ -3,6 +3,7 @@ import { Gauge } from "lucide-react";
 
 import { AIConfidencePanel } from "@/components/panels/AIConfidencePanel";
 import { ExplanationPanel } from "@/components/panels/ExplanationPanel";
+import { PrimaryVitalsPanel } from "@/components/panels/PrimaryVitalsPanel";
 import { TrendPanel } from "@/components/panels/TrendPanel";
 
 export const metadata: Metadata = {
@@ -15,12 +16,12 @@ export default function AIInsightsPage() {
       <div>
         <h1 className="text-lg font-semibold text-slate-100">AI Insights</h1>
         <p className="text-sm text-slate-500">
-          Explainable AI — every number below is a real SHAP (Shapley value) attribution computed on the live physiology model, not
-          scripted text.
+          Source-labelled AI output. Replay heart rate comes only from the validated synchronized PPG + IMU model.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <PrimaryVitalsPanel />
         <AIConfidencePanel />
         <TrendPanel
           title="Confidence History"

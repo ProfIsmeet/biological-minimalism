@@ -1,9 +1,10 @@
 # `ml/` — Research-Grade Training Scaffolding
 
-This folder is **not** used by the dashboard at runtime. The dashboard
-(`backend/`) runs entirely on the synthetic `MockDataEngine` and a
-transparent rule-based physiology model — no real dataset or trained
-checkpoint is required to run the demo (see the root `README.md`).
+This folder is **not** imported by the dashboard's inference path at runtime.
+The dashboard defaults to the synthetic `MockDataEngine`; its optional
+PPG-DaLiA replay mode reuses the raw subject/archive adapter but intentionally
+does not run the trained heart-rate model yet. No real dataset or trained
+checkpoint is required to run the synthetic demo (see the root `README.md`).
 
 `ml/` is the training pipeline that a follow-on research phase would use to
 turn `backend/app/ml/models.py`'s `BiologicalDigitalTwinNet` (a real,
@@ -185,6 +186,17 @@ windows, config/seed/split/full results in
 
 IMU improved MAE by **2.058 bpm (≈23% relative reduction)**, held-out,
 subject-wise, not cherry-picked.
+
+> **Reconciliation (read this).** The ≈23% figure above is the **single-seed**
+> ablation. The **replicated multi-seed aggregate** (5 seeds, see
+> `results/ppg_dalia_imu_multiseed_replication.json`) is
+> **9.086 → 7.208 bpm ≈ 20.6% relative** — use the multi-seed number for any
+> project-facing claim. Also note the A→B (PPG-only → PPG+IMU) comparison is
+> **capacity-confounded**: baseline A ≈8k params vs candidate B ≈29k params. The
+> capacity-matched **C→B** comparison (shuffled-IMU control vs synchronized IMU,
+> 0.776 bpm) is the cleanest current evidence. The full A→B benefit must **not** be
+> described as "pure IMU sensor value" until a capacity-matched PPG-only control
+> (A_cap) exists.
 
 **Stratified by real motion severity** (accelerometer-magnitude-std
 quartiles, computed on the test set's own distribution — this is the
