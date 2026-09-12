@@ -12,10 +12,20 @@ import type {
   ResearchExperimentSummaryEnvelope,
   ResearchProjectSummary,
   Stage3EvidenceEnvelope,
+  Stage4ArchitectureAcceptanceGates,
+  Stage4ArchitectureCandidateClasses,
   Stage4ArchitectureDecisionInputsScience,
+  Stage4ArchitectureDecisionProjection,
+  Stage4ArchitectureScienceDecisionFramework,
+  Stage4CandidateClassBurdenComparison,
   Stage4EngineeringReadiness,
+  Stage4FinalArchitectureDecisionPacket,
+  Stage4GateDBurdenCompleteness,
+  Stage4GateECoordinatorOptions,
   Stage4ScienceClaimLedger,
   Stage4ScienceConsumptionManifest,
+  Stage4ScientificParetoInputs,
+  Stage4SensorDecisionSensitivity,
   Stage4SensorValueMatrix,
 } from "@/lib/types";
 
@@ -41,6 +51,17 @@ interface ResearchState {
   stage4SensorValueMatrix: Stage4SensorValueMatrix | null;
   stage4ScienceClaims: Stage4ScienceClaimLedger | null;
   stage4ArchitectureDecisionInputsScience: Stage4ArchitectureDecisionInputsScience | null;
+  stage4ArchitectureScienceDecisionFramework: Stage4ArchitectureScienceDecisionFramework | null;
+  stage4SensorDecisionSensitivity: Stage4SensorDecisionSensitivity | null;
+  stage4ScientificParetoInputs: Stage4ScientificParetoInputs | null;
+  stage4ArchitectureAcceptanceGates: Stage4ArchitectureAcceptanceGates | null;
+  stage4ArchitectureCandidateClasses: Stage4ArchitectureCandidateClasses | null;
+  stage4GateDBurdenCompleteness: Stage4GateDBurdenCompleteness | null;
+  stage4GateDBurdenCompletenessError: string | null;
+  stage4CandidateClassBurdenComparison: Stage4CandidateClassBurdenComparison | null;
+  stage4ArchitectureDecisionProjection: Stage4ArchitectureDecisionProjection | null;
+  stage4GateECoordinatorOptions: Stage4GateECoordinatorOptions | null;
+  stage4FinalArchitectureDecisionPacket: Stage4FinalArchitectureDecisionPacket | null;
   // Stored as the WHOLE envelope (not decomposed into data/error) because its
   // 3-way status (PENDING_SCIENCE_HANDOFF / INGESTION_FAILED / INGESTED) is
   // not a simple success/failure — PENDING is an honest, expected state, not
@@ -76,6 +97,17 @@ export const useResearchStore = create<ResearchState>((set) => ({
   stage4SensorValueMatrix: null,
   stage4ScienceClaims: null,
   stage4ArchitectureDecisionInputsScience: null,
+  stage4ArchitectureScienceDecisionFramework: null,
+  stage4SensorDecisionSensitivity: null,
+  stage4ScientificParetoInputs: null,
+  stage4ArchitectureAcceptanceGates: null,
+  stage4ArchitectureCandidateClasses: null,
+  stage4GateDBurdenCompleteness: null,
+  stage4GateDBurdenCompletenessError: null,
+  stage4CandidateClassBurdenComparison: null,
+  stage4ArchitectureDecisionProjection: null,
+  stage4GateECoordinatorOptions: null,
+  stage4FinalArchitectureDecisionPacket: null,
   futureScienceManifest: null,
   experiments: {},
   selectedExperimentId: null,
@@ -126,6 +158,16 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4SensorValueMatrixResult,
         stage4ScienceClaimsResult,
         stage4ArchitectureDecisionInputsScienceResult,
+        stage4ArchitectureScienceDecisionFrameworkResult,
+        stage4SensorDecisionSensitivityResult,
+        stage4ScientificParetoInputsResult,
+        stage4ArchitectureAcceptanceGatesResult,
+        stage4ArchitectureCandidateClassesResult,
+        stage4GateDEnvelope,
+        stage4CandidateBurdenEnvelope,
+        stage4DecisionProjectionEnvelope,
+        stage4GateEEnvelope,
+        stage4FinalPacketEnvelope,
         futureScienceEnvelope,
       ] = await Promise.all([
         optional(api.getOperationalCosts()),
@@ -139,6 +181,16 @@ export const useResearchStore = create<ResearchState>((set) => ({
         optional(api.getStage4SensorValueMatrix()),
         optional(api.getStage4ScienceClaims()),
         optional(api.getStage4ArchitectureDecisionInputsScience()),
+        optional(api.getStage4ArchitectureScienceDecisionFramework()),
+        optional(api.getStage4SensorDecisionSensitivity()),
+        optional(api.getStage4ScientificParetoInputs()),
+        optional(api.getStage4ArchitectureAcceptanceGates()),
+        optional(api.getStage4ArchitectureCandidateClasses()),
+        optional(api.getStage4GateDBurdenCompleteness()),
+        optional(api.getStage4CandidateClassBurdenComparison()),
+        optional(api.getStage4ArchitectureDecisionProjection()),
+        optional(api.getStage4GateECoordinatorOptions()),
+        optional(api.getStage4FinalArchitectureDecisionPacket()),
         optional(api.getFutureScienceManifest()),
       ]);
       const unavailable = [
@@ -193,6 +245,35 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4ArchitectureDecisionInputsScience: stage4ArchitectureDecisionInputsScienceResult.ok
           ? stage4ArchitectureDecisionInputsScienceResult.value
           : null,
+        stage4ArchitectureScienceDecisionFramework: stage4ArchitectureScienceDecisionFrameworkResult.ok
+          ? stage4ArchitectureScienceDecisionFrameworkResult.value
+          : null,
+        stage4SensorDecisionSensitivity: stage4SensorDecisionSensitivityResult.ok
+          ? stage4SensorDecisionSensitivityResult.value
+          : null,
+        stage4ScientificParetoInputs: stage4ScientificParetoInputsResult.ok
+          ? stage4ScientificParetoInputsResult.value
+          : null,
+        stage4ArchitectureAcceptanceGates: stage4ArchitectureAcceptanceGatesResult.ok
+          ? stage4ArchitectureAcceptanceGatesResult.value
+          : null,
+        stage4ArchitectureCandidateClasses: stage4ArchitectureCandidateClassesResult.ok
+          ? stage4ArchitectureCandidateClassesResult.value
+          : null,
+        stage4GateDBurdenCompleteness: stage4GateDEnvelope.ok ? stage4GateDEnvelope.value.assessment : null,
+        stage4GateDBurdenCompletenessError: stage4GateDEnvelope.ok
+          ? (stage4GateDEnvelope.value.availability === "unavailable"
+              ? stage4GateDEnvelope.value.error ?? "Gate D burden-completeness assessment unavailable."
+              : null)
+          : stage4GateDEnvelope.error,
+        stage4CandidateClassBurdenComparison: stage4CandidateBurdenEnvelope.ok
+          ? stage4CandidateBurdenEnvelope.value.comparison
+          : null,
+        stage4ArchitectureDecisionProjection: stage4DecisionProjectionEnvelope.ok
+          ? stage4DecisionProjectionEnvelope.value.projection
+          : null,
+        stage4GateECoordinatorOptions: stage4GateEEnvelope.ok ? stage4GateEEnvelope.value.options : null,
+        stage4FinalArchitectureDecisionPacket: stage4FinalPacketEnvelope.ok ? stage4FinalPacketEnvelope.value.packet : null,
         // A transport/network failure is folded into the same envelope shape
         // as a content-level INGESTION_FAILED, rather than a bare null — the
         // panel always has an honest status string to render, never silence.
@@ -238,6 +319,17 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4SensorValueMatrix: null,
         stage4ScienceClaims: null,
         stage4ArchitectureDecisionInputsScience: null,
+        stage4ArchitectureScienceDecisionFramework: null,
+        stage4SensorDecisionSensitivity: null,
+        stage4ScientificParetoInputs: null,
+        stage4ArchitectureAcceptanceGates: null,
+        stage4ArchitectureCandidateClasses: null,
+        stage4GateDBurdenCompleteness: null,
+        stage4GateDBurdenCompletenessError: error instanceof Error ? error.message : "Gate D assessment could not be loaded.",
+        stage4CandidateClassBurdenComparison: null,
+        stage4ArchitectureDecisionProjection: null,
+        stage4GateECoordinatorOptions: null,
+        stage4FinalArchitectureDecisionPacket: null,
         futureScienceManifest: null,
       });
     }

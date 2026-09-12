@@ -20,10 +20,20 @@ import type {
   SensorHealthSnapshot,
   Stage3EvidenceEnvelope,
   Stage3EvidenceEntry,
+  Stage4ArchitectureAcceptanceGates,
+  Stage4ArchitectureCandidateClasses,
   Stage4ArchitectureDecisionInputsScience,
+  Stage4ArchitectureDecisionProjectionEnvelope,
+  Stage4ArchitectureScienceDecisionFramework,
+  Stage4CandidateClassBurdenComparisonEnvelope,
   Stage4EngineeringReadinessEnvelope,
+  Stage4FinalArchitectureDecisionPacketEnvelope,
+  Stage4GateDBurdenCompletenessEnvelope,
+  Stage4GateECoordinatorOptionsEnvelope,
   Stage4ScienceClaimLedger,
   Stage4ScienceConsumptionManifest,
+  Stage4ScientificParetoInputs,
+  Stage4SensorDecisionSensitivity,
   Stage4SensorValueMatrix,
   SensorName,
   SensorStatus,
@@ -146,4 +156,34 @@ export const api = {
 
   getStage4ArchitectureDecisionInputsScience: () =>
     request<Stage4ArchitectureDecisionInputsScience>("/research/stage4-architecture-decision-inputs-science"),
+
+  getStage4ArchitectureScienceDecisionFramework: () =>
+    request<Stage4ArchitectureScienceDecisionFramework>("/research/stage4-architecture-science-decision-framework"),
+
+  getStage4SensorDecisionSensitivity: () =>
+    request<Stage4SensorDecisionSensitivity>("/research/stage4-sensor-decision-sensitivity"),
+
+  getStage4ScientificParetoInputs: () =>
+    request<Stage4ScientificParetoInputs>("/research/stage4-scientific-pareto-inputs"),
+
+  getStage4ArchitectureAcceptanceGates: () =>
+    request<Stage4ArchitectureAcceptanceGates>("/research/stage4-architecture-acceptance-gates"),
+
+  getStage4ArchitectureCandidateClasses: () =>
+    request<Stage4ArchitectureCandidateClasses>("/research/stage4-architecture-candidate-classes"),
+
+  getStage4GateDBurdenCompleteness: () =>
+    request<Stage4GateDBurdenCompletenessEnvelope>("/research/stage4-gate-d-burden-completeness"),
+
+  getStage4CandidateClassBurdenComparison: () =>
+    request<Stage4CandidateClassBurdenComparisonEnvelope>("/research/stage4-candidate-class-burden-comparison"),
+
+  getStage4ArchitectureDecisionProjection: () =>
+    request<Stage4ArchitectureDecisionProjectionEnvelope>("/research/stage4-architecture-decision-projection"),
+
+  getStage4GateECoordinatorOptions: () =>
+    request<Stage4GateECoordinatorOptionsEnvelope>("/research/stage4-gate-e-coordinator-options"),
+
+  getStage4FinalArchitectureDecisionPacket: () =>
+    request<Stage4FinalArchitectureDecisionPacketEnvelope>("/research/stage4-final-architecture-decision-packet"),
 };

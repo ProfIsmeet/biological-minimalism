@@ -1144,6 +1144,239 @@ export interface Stage4ArchitectureDecisionInputsScience {
   candidates: Stage4ArchitectureDecisionCandidate[];
 }
 
+// --- Stage-4 architecture decision framework (2nd parallel Science Owner --
+// package, `stage4-architecture-decision-framework @ fa71eec`) + this
+// closure-prep sprint's own Integration Owner artifacts (Gate D/E, burden
+// comparison, decision projection, final packet). Same verbatim-rendering
+// discipline as Stage4ScienceConsumptionManifest above for the Science
+// Owner types; `Record<string, unknown>` is used only for genuinely
+// heterogeneous narrative sub-structures (decision-flip scenarios, etc.).
+
+export interface Stage4ConfidenceTier {
+  mechanical_definition: string;
+  current_occupants: string[];
+}
+
+export interface Stage4ArchitectureScienceDecisionFramework {
+  purpose: string;
+  accepted_stage3_sha: string;
+  confidence_dimensions: Record<string, unknown>;
+  confidence_tiers: Record<string, Stage4ConfidenceTier>;
+  tier_assignment_rule: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4SensorDecisionSensitivityEntry {
+  modality: string;
+  current_science_state: string;
+  current_confidence_tier: string;
+  pending_evidence: string | null;
+  decision_sensitivity: "HIGH" | "MEDIUM" | "LOW";
+  decision_flip_condition: string | null;
+  decision_flip_scenarios: Record<string, unknown> | null;
+  reason: string;
+}
+
+export interface Stage4SensorDecisionSensitivity {
+  purpose: string;
+  accepted_stage3_sha: string;
+  sensors: Stage4SensorDecisionSensitivityEntry[];
+}
+
+export interface Stage4ScientificParetoInputs {
+  purpose: string;
+  explicit_non_goal: string;
+  scientific_pareto_axes: Record<string, unknown>;
+  per_modality_axis_values: Record<string, unknown>[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4AcceptanceGate {
+  gate_id: string;
+  requirement: string;
+  rationale: string;
+  severity: "HARD_BLOCK" | "COORDINATOR_DECISION_REQUIRED" | "DISCLOSURE_REQUIRED" | "NONBLOCKING";
+  evidence_needed: string;
+  owner: string;
+  current_readiness: string;
+  what_closes_it: string;
+}
+
+export interface Stage4ArchitectureAcceptanceGates {
+  purpose: string;
+  severity_enum: string[];
+  gates: Stage4AcceptanceGate[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4ArchitectureCandidateClass {
+  class_id: string;
+  description: string;
+  sensors: string[];
+  anatomical_regions: string[];
+  evidence_confidence: string;
+  unresolved_dependencies: string;
+  pending_science_exposure: string;
+}
+
+export interface Stage4ArchitectureCandidateClasses {
+  purpose: string;
+  explicit_non_goal: string;
+  classes: Stage4ArchitectureCandidateClass[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4GateDDimension {
+  dimension: string;
+  status: string;
+  evidence: string;
+  gap: string | null;
+}
+
+export interface Stage4GateDKnownUnknown {
+  item: string;
+  why_it_matters: string;
+  bounded: boolean;
+  could_be_decision_changing: boolean;
+}
+
+export interface Stage4GateDBurdenCompleteness {
+  primary_question: string;
+  dimensions_audited: Stage4GateDDimension[];
+  shared_resource_accounting: Record<string, unknown>;
+  known_unknowns: Stage4GateDKnownUnknown[];
+  bom_final: boolean;
+  bom_still_missing: string[];
+  gate_d_burden_completeness: "READY" | "CONDITIONALLY_READY" | "NOT_READY";
+  rationale: string;
+  what_would_close_it: string[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4GateDBurdenCompletenessEnvelope {
+  availability: ResearchAvailability;
+  assessment: Stage4GateDBurdenCompleteness | null;
+  error: string | null;
+}
+
+export interface Stage4CandidateClassBurden {
+  class_id: string;
+  description: string;
+  sensors: string[];
+  evidence_confidence: string;
+  pending_science_exposure: string;
+  power: Record<string, unknown>;
+  data_rate_raw_bps: Record<string, unknown>;
+  mass: Record<string, unknown>;
+  dominance_flag: "PARETO_RELEVANT" | "POTENTIALLY_DOMINATED" | "BURDEN_DATA_INCOMPLETE";
+  dominance_reason: string;
+}
+
+export interface Stage4CandidateClassBurdenComparison {
+  purpose: string;
+  explicit_non_goal: string;
+  derivation_note: string;
+  classes: Stage4CandidateClassBurden[];
+  allowed_dominance_flags: string[];
+  note_on_dominance: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4CandidateClassBurdenComparisonEnvelope {
+  availability: ResearchAvailability;
+  comparison: Stage4CandidateClassBurdenComparison | null;
+  error: string | null;
+}
+
+export interface Stage4ArchitectureDecisionUnit {
+  decision_unit: string;
+  related_sensor_value_matrix_modalities: Record<string, unknown>[];
+  confidence_tier_decision_framework: string;
+  decision_sensitivity: "HIGH" | "MEDIUM" | "LOW";
+  pending_evidence: string | null;
+  decision_flip_condition: unknown;
+  burden_state: Record<string, unknown> | null;
+  unresolved_science: string | null;
+  unresolved_engineering: string | null;
+  coordinator_decision_requirement: string;
+}
+
+export interface Stage4ArchitectureDecisionProjection {
+  purpose: string;
+  join_note: string;
+  units: Stage4ArchitectureDecisionUnit[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4ArchitectureDecisionProjectionEnvelope {
+  availability: ResearchAvailability;
+  projection: Stage4ArchitectureDecisionProjection | null;
+  error: string | null;
+}
+
+export interface Stage4GateEOption {
+  description: string;
+  [key: string]: unknown;
+}
+
+export interface Stage4GateEHighSensitivityItem {
+  item: string;
+  current_science_state: string;
+  current_confidence_tier: string;
+  pending_evidence: string | null;
+  decision_flip_scenarios: Record<string, unknown>;
+  options: {
+    WAIT: Stage4GateEOption;
+    FREEZE_CONDITIONALLY: Stage4GateEOption;
+    FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE: Stage4GateEOption;
+  };
+}
+
+export interface Stage4GateECoordinatorOptions {
+  purpose: string;
+  gate_reference: string;
+  high_sensitivity_items: Stage4GateEHighSensitivityItem[];
+  no_option_selected: boolean;
+  coordinator_action_required: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4GateECoordinatorOptionsEnvelope {
+  availability: ResearchAvailability;
+  options: Stage4GateECoordinatorOptions | null;
+  error: string | null;
+}
+
+export interface Stage4FinalArchitectureDecisionPacket {
+  purpose: string;
+  statement: string;
+  candidate_configurations: Record<string, unknown>[];
+  scientific_evidence_summary: Record<string, unknown>;
+  burden_evidence_summary: Record<string, unknown>;
+  uncertainties: Record<string, unknown>;
+  pending_science_sensitivity: Record<string, unknown>[];
+  potential_dominance: { class_id: string; dominance_flag: string; dominance_reason: string }[];
+  acceptance_gate_readiness: Stage4AcceptanceGate[];
+  decision_blockers: Record<string, unknown>[];
+  coordinator_choices_required: string[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4FinalArchitectureDecisionPacketEnvelope {
+  availability: ResearchAvailability;
+  packet: Stage4FinalArchitectureDecisionPacket | null;
+  error: string | null;
+}
+
 // --- Phase 2/3: future-science ingestion contract (Stage 2-4 handoff) ------
 // No manifest satisfying this contract exists yet (Ismet's science-completion
 // sprint is in progress). A consumer must ONLY read `display_projections` —

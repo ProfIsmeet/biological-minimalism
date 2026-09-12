@@ -22,6 +22,7 @@ import { EngineeringReadinessView } from "@/components/research/EngineeringReadi
 import { FutureScienceHandoffCard } from "@/components/research/FutureScienceHandoffCard";
 import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
 import { Stage3EvidenceView } from "@/components/research/Stage3EvidenceView";
+import { Stage4ArchitectureDecisionPanel } from "@/components/research/Stage4ArchitectureDecisionPanel";
 import { Stage4EngineeringReadinessCard } from "@/components/research/Stage4EngineeringReadinessCard";
 import { Stage4ScienceManifestView } from "@/components/research/Stage4ScienceManifestView";
 import type {
@@ -556,6 +557,12 @@ export function ResearchMode() {
     stage4SensorValueMatrix,
     stage4ScienceClaims,
     stage4ArchitectureDecisionInputsScience,
+    stage4ArchitectureCandidateClasses,
+    stage4GateDBurdenCompleteness,
+    stage4GateDBurdenCompletenessError,
+    stage4CandidateClassBurdenComparison,
+    stage4GateECoordinatorOptions,
+    stage4ArchitectureAcceptanceGates,
     futureScienceManifest,
     experiments,
     selectedExperimentId,
@@ -644,6 +651,14 @@ export function ResearchMode() {
       {engineeringReadiness ? <EngineeringReadinessView readiness={engineeringReadiness} /> : null}
       {stage4EngineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 4 engineering readiness unavailable: {stage4EngineeringReadinessError}</p> : null}
       {stage4EngineeringReadiness ? <Stage4EngineeringReadinessCard readiness={stage4EngineeringReadiness} /> : null}
+      <Stage4ArchitectureDecisionPanel
+        candidateClasses={stage4ArchitectureCandidateClasses}
+        gateD={stage4GateDBurdenCompleteness}
+        gateDError={stage4GateDBurdenCompletenessError}
+        burdenComparison={stage4CandidateClassBurdenComparison}
+        gateE={stage4GateECoordinatorOptions}
+        acceptanceGates={stage4ArchitectureAcceptanceGates}
+      />
       {stage4ScienceManifestError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Science Owner Stage 4 handoff unavailable: {stage4ScienceManifestError}</p> : null}
       {stage4ScienceManifest ? (
         <Stage4ScienceManifestView
