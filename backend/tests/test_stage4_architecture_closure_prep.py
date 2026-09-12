@@ -76,22 +76,35 @@ def test_candidate_classes_has_4_classes_and_no_selected_winner():
 
 
 # ---------------------------------------------------------------------------
-# Gate D - must be honestly NOT_READY, not forced READY on arithmetic alone.
+# Gate D - upgraded to CONDITIONALLY_READY (Gate D Burden Closure sprint):
+# every material unknown is now bounded and ordering-robustness is computed,
+# not assumed. Must never silently jump to unconditional READY, and the
+# prior NOT_READY assessment must remain in history, never deleted.
 # ---------------------------------------------------------------------------
 
 
-def test_gate_d_is_not_ready_with_unbounded_known_unknowns():
+def test_gate_d_is_conditionally_ready_with_all_unknowns_bounded():
     resp = client.get("/research/stage4-gate-d-burden-completeness")
     assert resp.status_code == 200
     body = resp.json()
     assert body["availability"] == "available"
     assessment = body["assessment"]
-    assert assessment["gate_d_burden_completeness"] == "NOT_READY"
-    unbounded = [u for u in assessment["known_unknowns"] if not u["bounded"]]
-    assert len(unbounded) >= 2, "Gate D NOT_READY should be backed by at least one genuinely unbounded unknown"
-    assert any(u["could_be_decision_changing"] for u in unbounded)
+    assert assessment["gate_d_burden_completeness"] == "CONDITIONALLY_READY"
+    decision_changing_unbounded = [
+        u for u in assessment["known_unknowns"] if u["could_be_decision_changing"] and not u["bounded"]
+    ]
+    assert not decision_changing_unbounded, "CONDITIONALLY_READY requires every decision-changing unknown to be bounded"
     assert assessment["final_architecture_status"] == "UNRESOLVED"
     assert assessment["formal_pareto_status"] == "NOT_READY"
+
+
+def test_gate_d_prior_not_ready_assessment_preserved_in_history():
+    resp = client.get("/research/stage4-gate-d-burden-completeness")
+    assessment = resp.json()["assessment"]
+    assert len(assessment["assessment_history"]) >= 1
+    assert assessment["assessment_history"][0]["gate_d_burden_completeness"] == "NOT_READY"
+    assert assessment["chest_module_decomposition"] is not None
+    assert assessment["eeg_eog_shared_afe_confirmation"]["status"] == "CONFIRMED_BY_STANDARD_ARCHITECTURE"
 
 
 def test_gate_d_question_is_completeness_not_arithmetic():
@@ -188,7 +201,12 @@ def test_final_decision_packet_has_all_required_sections():
     assert any("final architecture selection" in c.lower() for c in packet["coordinator_choices_required"])
 
 
-def test_final_decision_packet_gate_d_reflects_not_ready():
+def test_final_decision_packet_gate_d_reflects_conditionally_ready():
     resp = client.get("/research/stage4-final-architecture-decision-packet")
-    gates = {g["gate_id"]: g for g in resp.json()["packet"]["acceptance_gate_readiness"]}
-    assert "NOT_READY" in gates["GATE_D_BURDEN_COMPLETENESS"]["current_readiness"]
+    packet = resp.json()["packet"]
+    gates = {g["gate_id"]: g for g in packet["acceptance_gate_readiness"]}
+    assert gates["GATE_D_BURDEN_COMPLETENESS"]["current_readiness"].startswith("CONDITIONALLY_READY")
+    assert packet["contact_electrode_burden"] is not None
+    assert packet["battery_topology_scenarios"] is not None
+    assert len(packet["candidate_burden_matrix"]) == 4
+    assert packet["robustness_analysis"]["power_ordering_preserved_across_mcu_radio_interpretations"] is True

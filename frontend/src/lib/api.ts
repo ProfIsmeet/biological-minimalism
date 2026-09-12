@@ -25,7 +25,10 @@ import type {
   Stage4ArchitectureDecisionInputsScience,
   Stage4ArchitectureDecisionProjectionEnvelope,
   Stage4ArchitectureScienceDecisionFramework,
+  Stage4BatteryTopologyScenariosEnvelope,
+  Stage4CandidateBurdenMatrixEnvelope,
   Stage4CandidateClassBurdenComparisonEnvelope,
+  Stage4ContactElectrodeBurdenEnvelope,
   Stage4EngineeringReadinessEnvelope,
   Stage4FinalArchitectureDecisionPacketEnvelope,
   Stage4GateDBurdenCompletenessEnvelope,
@@ -186,4 +189,13 @@ export const api = {
 
   getStage4FinalArchitectureDecisionPacket: () =>
     request<Stage4FinalArchitectureDecisionPacketEnvelope>("/research/stage4-final-architecture-decision-packet"),
+
+  getStage4ContactElectrodeBurden: () =>
+    request<Stage4ContactElectrodeBurdenEnvelope>("/research/stage4-contact-electrode-burden"),
+
+  getStage4BatteryTopologyScenarios: () =>
+    request<Stage4BatteryTopologyScenariosEnvelope>("/research/stage4-battery-topology-scenarios"),
+
+  getStage4CandidateBurdenMatrix: () =>
+    request<Stage4CandidateBurdenMatrixEnvelope>("/research/stage4-candidate-burden-matrix"),
 };

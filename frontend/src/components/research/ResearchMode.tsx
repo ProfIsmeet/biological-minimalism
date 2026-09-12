@@ -563,6 +563,9 @@ export function ResearchMode() {
     stage4CandidateClassBurdenComparison,
     stage4GateECoordinatorOptions,
     stage4ArchitectureAcceptanceGates,
+    stage4ContactElectrodeBurden,
+    stage4BatteryTopologyScenarios,
+    stage4CandidateBurdenMatrix,
     futureScienceManifest,
     experiments,
     selectedExperimentId,
@@ -658,6 +661,9 @@ export function ResearchMode() {
         burdenComparison={stage4CandidateClassBurdenComparison}
         gateE={stage4GateECoordinatorOptions}
         acceptanceGates={stage4ArchitectureAcceptanceGates}
+        contactElectrodeBurden={stage4ContactElectrodeBurden}
+        batteryTopologyScenarios={stage4BatteryTopologyScenarios}
+        candidateBurdenMatrix={stage4CandidateBurdenMatrix}
       />
       {stage4ScienceManifestError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Science Owner Stage 4 handoff unavailable: {stage4ScienceManifestError}</p> : null}
       {stage4ScienceManifest ? (

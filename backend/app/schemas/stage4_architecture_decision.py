@@ -31,6 +31,7 @@ class Stage4GateDKnownUnknown(BaseModel):
     why_it_matters: str
     bounded: bool
     could_be_decision_changing: bool
+    note: str | None = None
 
 
 class Stage4GateDBurdenCompleteness(BaseModel):
@@ -51,6 +52,13 @@ class Stage4GateDBurdenCompleteness(BaseModel):
     what_would_close_it: list[str]
     final_architecture_status: str
     formal_pareto_status: str
+    # v2.0.0 Gate-D Burden Closure fields (absent on a v1.0.0 record read
+    # before this sprint - always optional so older history entries below
+    # still validate as the same model).
+    assessment_history: list[dict[str, Any]] = []
+    chest_module_decomposition: dict[str, Any] | None = None
+    eeg_eog_shared_afe_confirmation: dict[str, Any] | None = None
+    new_artifacts_this_sprint: list[str] = []
 
 
 class Stage4GateDBurdenCompletenessEnvelope(BaseModel):
@@ -164,6 +172,10 @@ class Stage4FinalArchitectureDecisionPacket(BaseModel):
     purpose: str
     statement: str
     candidate_configurations: list[dict[str, Any]]
+    contact_electrode_burden: dict[str, Any] | None = None
+    battery_topology_scenarios: dict[str, Any] | None = None
+    candidate_burden_matrix: list[dict[str, Any]] = []
+    robustness_analysis: dict[str, Any] | None = None
     scientific_evidence_summary: dict[str, Any]
     burden_evidence_summary: dict[str, Any]
     uncertainties: dict[str, Any]
@@ -179,4 +191,85 @@ class Stage4FinalArchitectureDecisionPacket(BaseModel):
 class Stage4FinalArchitectureDecisionPacketEnvelope(BaseModel):
     availability: ResearchAvailability
     packet: Stage4FinalArchitectureDecisionPacket | None = None
+    error: str | None = None
+
+
+class Stage4ContactModality(BaseModel):
+    modality: str
+    anatomical_region: str
+    module_id: str
+    components: list[str]
+    sensing_contacts: dict[str, Any]
+    reference_electrodes: dict[str, Any]
+    ground_bias_electrodes: dict[str, Any]
+    shared_with: list[str]
+    total_contacts: dict[str, Any]
+    incremental_contacts_if_added: dict[str, Any]
+    electrode_type: str
+    disposable_or_reusable: str
+    attachment_type: str
+    external_cable_required: Any = None
+    source: str
+    confidence: str
+    unresolved_topology_question: dict[str, Any] | None = None
+
+
+class Stage4ContactElectrodeBurden(BaseModel):
+    artifact_id: str
+    schema_version: str
+    sprint: str
+    generated_role: str
+    purpose: str
+    method: str
+    source_artifacts: list[str]
+    modalities: list[Stage4ContactModality]
+    new_findings_not_previously_disclosed: list[dict[str, Any]]
+    final_architecture_status: str
+    formal_pareto_status: str
+
+
+class Stage4ContactElectrodeBurdenEnvelope(BaseModel):
+    availability: ResearchAvailability
+    burden: Stage4ContactElectrodeBurden | None = None
+    error: str | None = None
+
+
+class Stage4BatteryTopologyScenarios(BaseModel):
+    artifact_id: str
+    schema_version: str
+    sprint: str
+    generated_role: str
+    purpose: str
+    operating_duration_requirement_status: dict[str, Any]
+    per_module_battery_reference: dict[str, Any]
+    scenarios: dict[str, Any]
+    candidate_class_comparison: list[dict[str, Any]]
+    does_ranking_depend_on_topology: dict[str, Any]
+    not_a_final_battery_selection: bool
+    final_architecture_status: str
+    formal_pareto_status: str
+
+
+class Stage4BatteryTopologyScenariosEnvelope(BaseModel):
+    availability: ResearchAvailability
+    scenarios: Stage4BatteryTopologyScenarios | None = None
+    error: str | None = None
+
+
+class Stage4CandidateBurdenMatrix(BaseModel):
+    artifact_id: str
+    schema_version: str
+    sprint: str
+    generated_role: str
+    purpose: str
+    source_artifacts: list[str]
+    classes: list[dict[str, Any]]
+    robustness_analysis: dict[str, Any]
+    final_architecture_status: str
+    formal_pareto_status: str
+
+
+class Stage4CandidateBurdenMatrixEnvelope(BaseModel):
+    availability: ResearchAvailability
+    matrix: Stage4CandidateBurdenMatrix | None = None
     error: str | None = None

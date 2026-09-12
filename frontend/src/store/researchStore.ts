@@ -17,7 +17,10 @@ import type {
   Stage4ArchitectureDecisionInputsScience,
   Stage4ArchitectureDecisionProjection,
   Stage4ArchitectureScienceDecisionFramework,
+  Stage4BatteryTopologyScenarios,
+  Stage4CandidateBurdenMatrix,
   Stage4CandidateClassBurdenComparison,
+  Stage4ContactElectrodeBurden,
   Stage4EngineeringReadiness,
   Stage4FinalArchitectureDecisionPacket,
   Stage4GateDBurdenCompleteness,
@@ -62,6 +65,12 @@ interface ResearchState {
   stage4ArchitectureDecisionProjection: Stage4ArchitectureDecisionProjection | null;
   stage4GateECoordinatorOptions: Stage4GateECoordinatorOptions | null;
   stage4FinalArchitectureDecisionPacket: Stage4FinalArchitectureDecisionPacket | null;
+  stage4ContactElectrodeBurden: Stage4ContactElectrodeBurden | null;
+  stage4ContactElectrodeBurdenError: string | null;
+  stage4BatteryTopologyScenarios: Stage4BatteryTopologyScenarios | null;
+  stage4BatteryTopologyScenariosError: string | null;
+  stage4CandidateBurdenMatrix: Stage4CandidateBurdenMatrix | null;
+  stage4CandidateBurdenMatrixError: string | null;
   // Stored as the WHOLE envelope (not decomposed into data/error) because its
   // 3-way status (PENDING_SCIENCE_HANDOFF / INGESTION_FAILED / INGESTED) is
   // not a simple success/failure — PENDING is an honest, expected state, not
@@ -108,6 +117,12 @@ export const useResearchStore = create<ResearchState>((set) => ({
   stage4ArchitectureDecisionProjection: null,
   stage4GateECoordinatorOptions: null,
   stage4FinalArchitectureDecisionPacket: null,
+  stage4ContactElectrodeBurden: null,
+  stage4ContactElectrodeBurdenError: null,
+  stage4BatteryTopologyScenarios: null,
+  stage4BatteryTopologyScenariosError: null,
+  stage4CandidateBurdenMatrix: null,
+  stage4CandidateBurdenMatrixError: null,
   futureScienceManifest: null,
   experiments: {},
   selectedExperimentId: null,
@@ -168,6 +183,9 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4DecisionProjectionEnvelope,
         stage4GateEEnvelope,
         stage4FinalPacketEnvelope,
+        stage4ContactElectrodeBurdenEnvelope,
+        stage4BatteryTopologyScenariosEnvelope,
+        stage4CandidateBurdenMatrixEnvelope,
         futureScienceEnvelope,
       ] = await Promise.all([
         optional(api.getOperationalCosts()),
@@ -191,6 +209,9 @@ export const useResearchStore = create<ResearchState>((set) => ({
         optional(api.getStage4ArchitectureDecisionProjection()),
         optional(api.getStage4GateECoordinatorOptions()),
         optional(api.getStage4FinalArchitectureDecisionPacket()),
+        optional(api.getStage4ContactElectrodeBurden()),
+        optional(api.getStage4BatteryTopologyScenarios()),
+        optional(api.getStage4CandidateBurdenMatrix()),
         optional(api.getFutureScienceManifest()),
       ]);
       const unavailable = [
@@ -274,6 +295,24 @@ export const useResearchStore = create<ResearchState>((set) => ({
           : null,
         stage4GateECoordinatorOptions: stage4GateEEnvelope.ok ? stage4GateEEnvelope.value.options : null,
         stage4FinalArchitectureDecisionPacket: stage4FinalPacketEnvelope.ok ? stage4FinalPacketEnvelope.value.packet : null,
+        stage4ContactElectrodeBurden: stage4ContactElectrodeBurdenEnvelope.ok ? stage4ContactElectrodeBurdenEnvelope.value.burden : null,
+        stage4ContactElectrodeBurdenError: stage4ContactElectrodeBurdenEnvelope.ok
+          ? (stage4ContactElectrodeBurdenEnvelope.value.availability === "unavailable"
+              ? stage4ContactElectrodeBurdenEnvelope.value.error ?? "Contact/electrode burden unavailable."
+              : null)
+          : stage4ContactElectrodeBurdenEnvelope.error,
+        stage4BatteryTopologyScenarios: stage4BatteryTopologyScenariosEnvelope.ok ? stage4BatteryTopologyScenariosEnvelope.value.scenarios : null,
+        stage4BatteryTopologyScenariosError: stage4BatteryTopologyScenariosEnvelope.ok
+          ? (stage4BatteryTopologyScenariosEnvelope.value.availability === "unavailable"
+              ? stage4BatteryTopologyScenariosEnvelope.value.error ?? "Battery topology scenarios unavailable."
+              : null)
+          : stage4BatteryTopologyScenariosEnvelope.error,
+        stage4CandidateBurdenMatrix: stage4CandidateBurdenMatrixEnvelope.ok ? stage4CandidateBurdenMatrixEnvelope.value.matrix : null,
+        stage4CandidateBurdenMatrixError: stage4CandidateBurdenMatrixEnvelope.ok
+          ? (stage4CandidateBurdenMatrixEnvelope.value.availability === "unavailable"
+              ? stage4CandidateBurdenMatrixEnvelope.value.error ?? "Candidate burden matrix unavailable."
+              : null)
+          : stage4CandidateBurdenMatrixEnvelope.error,
         // A transport/network failure is folded into the same envelope shape
         // as a content-level INGESTION_FAILED, rather than a bare null — the
         // panel always has an honest status string to render, never silence.
@@ -330,6 +369,12 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4ArchitectureDecisionProjection: null,
         stage4GateECoordinatorOptions: null,
         stage4FinalArchitectureDecisionPacket: null,
+        stage4ContactElectrodeBurden: null,
+        stage4ContactElectrodeBurdenError: error instanceof Error ? error.message : "Contact/electrode burden could not be loaded.",
+        stage4BatteryTopologyScenarios: null,
+        stage4BatteryTopologyScenariosError: error instanceof Error ? error.message : "Battery topology scenarios could not be loaded.",
+        stage4CandidateBurdenMatrix: null,
+        stage4CandidateBurdenMatrixError: error instanceof Error ? error.message : "Candidate burden matrix could not be loaded.",
         futureScienceManifest: null,
       });
     }

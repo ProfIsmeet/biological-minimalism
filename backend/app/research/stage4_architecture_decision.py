@@ -18,8 +18,14 @@ from app.schemas.research import ResearchAvailability
 from app.schemas.stage4_architecture_decision import (
     Stage4ArchitectureDecisionProjection,
     Stage4ArchitectureDecisionProjectionEnvelope,
+    Stage4BatteryTopologyScenarios,
+    Stage4BatteryTopologyScenariosEnvelope,
+    Stage4CandidateBurdenMatrix,
+    Stage4CandidateBurdenMatrixEnvelope,
     Stage4CandidateClassBurdenComparison,
     Stage4CandidateClassBurdenComparisonEnvelope,
+    Stage4ContactElectrodeBurden,
+    Stage4ContactElectrodeBurdenEnvelope,
     Stage4FinalArchitectureDecisionPacket,
     Stage4FinalArchitectureDecisionPacketEnvelope,
     Stage4GateDBurdenCompleteness,
@@ -33,6 +39,9 @@ CANDIDATE_BURDEN_COMPARISON_PATH = "results/stage4_candidate_class_burden_compar
 DECISION_PROJECTION_PATH = "results/stage4_architecture_decision_projection.json"
 GATE_E_PATH = "results/stage4_gate_e_coordinator_options.json"
 FINAL_PACKET_PATH = "results/stage4_final_architecture_decision_packet.json"
+CONTACT_ELECTRODE_BURDEN_PATH = "results/stage4_contact_electrode_burden.json"
+BATTERY_TOPOLOGY_SCENARIOS_PATH = "results/stage4_battery_topology_scenarios.json"
+CANDIDATE_BURDEN_MATRIX_PATH = "results/stage4_candidate_burden_matrix.json"
 
 
 def _read_json(root: Path, relative_path: str) -> tuple[dict | None, str | None]:
@@ -109,6 +118,42 @@ class Stage4ArchitectureDecisionReader:
                 availability=ResearchAvailability.UNAVAILABLE, error=f"{FINAL_PACKET_PATH} failed schema projection: {exc}"
             )
         return Stage4FinalArchitectureDecisionPacketEnvelope(availability=ResearchAvailability.AVAILABLE, packet=packet)
+
+    def contact_electrode_burden(self) -> Stage4ContactElectrodeBurdenEnvelope:
+        raw, error = _read_json(self.repository_root, CONTACT_ELECTRODE_BURDEN_PATH)
+        if error:
+            return Stage4ContactElectrodeBurdenEnvelope(availability=ResearchAvailability.UNAVAILABLE, error=error)
+        try:
+            burden = Stage4ContactElectrodeBurden.model_validate(raw)
+        except ValidationError as exc:
+            return Stage4ContactElectrodeBurdenEnvelope(
+                availability=ResearchAvailability.UNAVAILABLE, error=f"{CONTACT_ELECTRODE_BURDEN_PATH} failed schema projection: {exc}"
+            )
+        return Stage4ContactElectrodeBurdenEnvelope(availability=ResearchAvailability.AVAILABLE, burden=burden)
+
+    def battery_topology_scenarios(self) -> Stage4BatteryTopologyScenariosEnvelope:
+        raw, error = _read_json(self.repository_root, BATTERY_TOPOLOGY_SCENARIOS_PATH)
+        if error:
+            return Stage4BatteryTopologyScenariosEnvelope(availability=ResearchAvailability.UNAVAILABLE, error=error)
+        try:
+            scenarios = Stage4BatteryTopologyScenarios.model_validate(raw)
+        except ValidationError as exc:
+            return Stage4BatteryTopologyScenariosEnvelope(
+                availability=ResearchAvailability.UNAVAILABLE, error=f"{BATTERY_TOPOLOGY_SCENARIOS_PATH} failed schema projection: {exc}"
+            )
+        return Stage4BatteryTopologyScenariosEnvelope(availability=ResearchAvailability.AVAILABLE, scenarios=scenarios)
+
+    def candidate_burden_matrix(self) -> Stage4CandidateBurdenMatrixEnvelope:
+        raw, error = _read_json(self.repository_root, CANDIDATE_BURDEN_MATRIX_PATH)
+        if error:
+            return Stage4CandidateBurdenMatrixEnvelope(availability=ResearchAvailability.UNAVAILABLE, error=error)
+        try:
+            matrix = Stage4CandidateBurdenMatrix.model_validate(raw)
+        except ValidationError as exc:
+            return Stage4CandidateBurdenMatrixEnvelope(
+                availability=ResearchAvailability.UNAVAILABLE, error=f"{CANDIDATE_BURDEN_MATRIX_PATH} failed schema projection: {exc}"
+            )
+        return Stage4CandidateBurdenMatrixEnvelope(availability=ResearchAvailability.AVAILABLE, matrix=matrix)
 
 
 stage4_architecture_decision = Stage4ArchitectureDecisionReader()

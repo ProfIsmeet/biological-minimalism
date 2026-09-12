@@ -1242,6 +1242,7 @@ export interface Stage4GateDKnownUnknown {
   why_it_matters: string;
   bounded: boolean;
   could_be_decision_changing: boolean;
+  note?: string | null;
 }
 
 export interface Stage4GateDBurdenCompleteness {
@@ -1256,6 +1257,10 @@ export interface Stage4GateDBurdenCompleteness {
   what_would_close_it: string[];
   final_architecture_status: string;
   formal_pareto_status: string;
+  assessment_history?: Record<string, unknown>[];
+  chest_module_decomposition?: Record<string, unknown> | null;
+  eeg_eog_shared_afe_confirmation?: Record<string, unknown> | null;
+  new_artifacts_this_sprint?: string[];
 }
 
 export interface Stage4GateDBurdenCompletenessEnvelope {
@@ -1355,10 +1360,103 @@ export interface Stage4GateECoordinatorOptionsEnvelope {
   error: string | null;
 }
 
+export interface Stage4ContactModality {
+  modality: string;
+  anatomical_region: string;
+  module_id: string;
+  components: string[];
+  sensing_contacts: Record<string, unknown>;
+  reference_electrodes: Record<string, unknown>;
+  ground_bias_electrodes: Record<string, unknown>;
+  shared_with: string[];
+  total_contacts: { min: number; max: number; most_likely: number; unit: string; reasoning?: string };
+  incremental_contacts_if_added: Record<string, unknown>;
+  electrode_type: string;
+  disposable_or_reusable: string;
+  attachment_type: string;
+  external_cable_required: unknown;
+  source: string;
+  confidence: string;
+  unresolved_topology_question?: Record<string, unknown> | null;
+}
+
+export interface Stage4ContactElectrodeBurden {
+  purpose: string;
+  method: string;
+  modalities: Stage4ContactModality[];
+  new_findings_not_previously_disclosed: Record<string, unknown>[];
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4ContactElectrodeBurdenEnvelope {
+  availability: ResearchAvailability;
+  burden: Stage4ContactElectrodeBurden | null;
+  error: string | null;
+}
+
+export interface Stage4BatteryTopologyScenarios {
+  purpose: string;
+  operating_duration_requirement_status: Record<string, unknown>;
+  per_module_battery_reference: Record<string, unknown>;
+  scenarios: Record<string, unknown>;
+  candidate_class_comparison: Record<string, unknown>[];
+  does_ranking_depend_on_topology: { verdict: string; reasoning: string };
+  not_a_final_battery_selection: boolean;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4BatteryTopologyScenariosEnvelope {
+  availability: ResearchAvailability;
+  scenarios: Stage4BatteryTopologyScenarios | null;
+  error: string | null;
+}
+
+export interface Stage4CandidateBurdenMatrixClass {
+  class_id: string;
+  modalities: string[];
+  anatomical_regions: string[];
+  modules: string[];
+  module_count: number;
+  total_contacts: { min: number; max: number; most_likely: number; unit: string };
+  incremental_contacts_vs_previous_class: number;
+  power_range_mw: Record<string, unknown>;
+  mass_range_g: Record<string, unknown>;
+  raw_data_rate_bps: Record<string, unknown>;
+  battery_scenario_shared_hub_g: number;
+  battery_scenario_distributed_g: number;
+  major_unknowns: string[];
+  scientific_confidence_summary: string;
+  pending_science_exposure: string;
+}
+
+export interface Stage4CandidateBurdenMatrix {
+  purpose: string;
+  classes: Stage4CandidateBurdenMatrixClass[];
+  robustness_analysis: {
+    power_ordering_preserved_across_mcu_radio_interpretations: boolean;
+    verdict: string;
+    [key: string]: unknown;
+  };
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4CandidateBurdenMatrixEnvelope {
+  availability: ResearchAvailability;
+  matrix: Stage4CandidateBurdenMatrix | null;
+  error: string | null;
+}
+
 export interface Stage4FinalArchitectureDecisionPacket {
   purpose: string;
   statement: string;
   candidate_configurations: Record<string, unknown>[];
+  contact_electrode_burden?: Record<string, unknown> | null;
+  battery_topology_scenarios?: Record<string, unknown> | null;
+  candidate_burden_matrix?: Record<string, unknown>[];
+  robustness_analysis?: Record<string, unknown> | null;
   scientific_evidence_summary: Record<string, unknown>;
   burden_evidence_summary: Record<string, unknown>;
   uncertainties: Record<string, unknown>;

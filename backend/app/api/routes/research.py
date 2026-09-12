@@ -42,7 +42,10 @@ from app.schemas.operational_cost import (
 from app.schemas.stage3_evidence import Stage3EvidenceEntry, Stage3EvidenceEnvelope
 from app.schemas.stage4_architecture_decision import (
     Stage4ArchitectureDecisionProjectionEnvelope,
+    Stage4BatteryTopologyScenariosEnvelope,
+    Stage4CandidateBurdenMatrixEnvelope,
     Stage4CandidateClassBurdenComparisonEnvelope,
+    Stage4ContactElectrodeBurdenEnvelope,
     Stage4FinalArchitectureDecisionPacketEnvelope,
     Stage4GateDBurdenCompletenessEnvelope,
     Stage4GateECoordinatorOptionsEnvelope,
@@ -355,3 +358,30 @@ def get_stage4_gate_e_coordinator_options() -> Stage4GateECoordinatorOptionsEnve
 )
 def get_stage4_final_architecture_decision_packet() -> Stage4FinalArchitectureDecisionPacketEnvelope:
     return stage4_architecture_decision.final_architecture_decision_packet()
+
+
+@router.get(
+    "/stage4-contact-electrode-burden",
+    response_model=Stage4ContactElectrodeBurdenEnvelope,
+    summary="Read bounded [min, max, most_likely] contact/electrode counts per architecture-relevant modality - never an unbounded UNKNOWN where a physical bound exists.",
+)
+def get_stage4_contact_electrode_burden() -> Stage4ContactElectrodeBurdenEnvelope:
+    return stage4_architecture_decision.contact_electrode_burden()
+
+
+@router.get(
+    "/stage4-battery-topology-scenarios",
+    response_model=Stage4BatteryTopologyScenariosEnvelope,
+    summary="Read both modeled battery/electronics topologies (shared-hub vs. distributed-per-module) - no topology selected, no final battery chosen.",
+)
+def get_stage4_battery_topology_scenarios() -> Stage4BatteryTopologyScenariosEnvelope:
+    return stage4_architecture_decision.battery_topology_scenarios()
+
+
+@router.get(
+    "/stage4-candidate-burden-matrix",
+    response_model=Stage4CandidateBurdenMatrixEnvelope,
+    summary="Read the configuration-level burden matrix (contacts, power range, mass range, battery scenarios) across all 4 candidate classes, with a computed robustness analysis - no winner selected.",
+)
+def get_stage4_candidate_burden_matrix() -> Stage4CandidateBurdenMatrixEnvelope:
+    return stage4_architecture_decision.candidate_burden_matrix()
