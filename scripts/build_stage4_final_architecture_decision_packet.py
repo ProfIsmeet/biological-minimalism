@@ -23,6 +23,9 @@ gate_d = _load("results/stage4_gate_d_burden_completeness.json")
 gate_e = _load("results/stage4_gate_e_coordinator_options.json")
 burden_comparison = _load("results/stage4_candidate_class_burden_comparison.json")
 decision_projection = _load("results/stage4_architecture_decision_projection.json")
+contact_electrode_burden = _load("results/stage4_contact_electrode_burden.json")
+battery_topology_scenarios = _load("results/stage4_battery_topology_scenarios.json")
+candidate_burden_matrix = _load("results/stage4_candidate_burden_matrix.json")
 
 # Merge Gate D's own INTEGRATION_OWNER verdict into the Science-Owner-authored
 # gate list's current_readiness field for GATE_D only (that field was
@@ -45,9 +48,9 @@ for g in gates["gates"]:
 
 decision_blockers = [
     {
-        "blocker": "GATE_D_BURDEN_COMPLETENESS is NOT_READY",
+        "blocker": f"GATE_D_BURDEN_COMPLETENESS is {gate_d['gate_d_burden_completeness']} (upgraded from NOT_READY this sprint - see assessment_history for the prior record)",
         "detail": gate_d["rationale"],
-        "what_closes_it": gate_d["what_would_close_it"],
+        "what_closes_it_to_ready": gate_d["what_would_close_it"],
     },
     {
         "blocker": "GATE_E_PENDING_SCIENCE_SENSITIVITY requires an explicit Coordinator choice per HIGH-sensitivity item",
@@ -60,7 +63,9 @@ coordinator_choices_required = [
     "Gate E: EOG/HMC - choose WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE.",
     "Gate E: sparse-vs-full EEG/ds003838 - choose WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE.",
     "Whether to resume HMC full-cohort and/or ds003838 full-cohort work before Stage 5 (explicitly Emir's call, unchanged from the Stage-3 handoff).",
-    "Gate D remediation priority: which of the 4 items in results/stage4_gate_d_burden_completeness.json#what_would_close_it to pursue before a final architecture freeze.",
+    "Battery/electronics topology: shared-hub vs. distributed-per-module, and single-shared vs. per-module MCU/radio (bounded this sprint in results/stage4_battery_topology_scenarios.json and results/stage4_candidate_burden_matrix.json; does not affect candidate ordering, but affects absolute burden magnitude for multi-module classes).",
+    "Final electrode montages for ECG/EEG/thoracic-BioZ/leg-BioZ (bounded ranges exist in results/stage4_contact_electrode_burden.json; not yet frozen to exact counts).",
+    "Leg BioZ unilateral-vs-bilateral module topology (Science Owner scopes it bilateral; engineering module count not yet confirmed either way).",
     "The final architecture selection itself - this packet provides inputs only, never a selection.",
 ]
 
@@ -72,6 +77,14 @@ output = {
     "purpose": "The Coordinator-facing decision packet for the Stage-4 final architecture decision. This is NOT the final architecture - it aggregates candidate configurations, evidence, burden, uncertainty, gate readiness, and required Coordinator choices so Emir/Project Coordinator can make that decision.",
     "statement": "Pure aggregation of already-frozen Stage-4 closure-prep artifacts produced in this sprint. No new science, no new engineering numbers, no reinterpretation, no winner selected.",
     "candidate_configurations": burden_comparison["classes"],
+    "contact_electrode_burden": {
+        "source": "results/stage4_contact_electrode_burden.json",
+        "modalities": contact_electrode_burden["modalities"],
+        "new_findings": contact_electrode_burden["new_findings_not_previously_disclosed"],
+    },
+    "battery_topology_scenarios": battery_topology_scenarios,
+    "candidate_burden_matrix": candidate_burden_matrix["classes"],
+    "robustness_analysis": candidate_burden_matrix["robustness_analysis"],
     "scientific_evidence_summary": {
         "source": "results/stage4_architecture_decision_projection.json",
         "units": decision_projection["units"],

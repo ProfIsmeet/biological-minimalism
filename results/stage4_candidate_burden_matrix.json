@@ -1,0 +1,317 @@
+{
+  "artifact_id": "biological-minimalism-stage4-candidate-burden-matrix-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_GATE_D_BURDEN_CLOSURE",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "Configuration-level burden matrix across all 4 Science-Owner-defined candidate classes, incorporating this sprint's contact-electrode and battery-topology bounding. No winner, no composite score.",
+  "source_artifacts": [
+    "results/stage4_engineering_readiness.json",
+    "results/stage4_architecture_candidate_classes.json",
+    "results/stage4_contact_electrode_burden.json",
+    "results/stage4_battery_topology_scenarios.json",
+    "results/stage4_candidate_class_burden_comparison.json",
+    "results/hardware_topology_contract.json"
+  ],
+  "classes": [
+    {
+      "class_id": "MINIMAL_CORE",
+      "modalities": [
+        "wrist PPG",
+        "wrist IMU",
+        "chest ECG (as reference/ground-truth signal, not itself under incremental-value test)",
+        "frontal EEG"
+      ],
+      "anatomical_regions": [
+        "wrist",
+        "chest (if ECG retained as a monitoring signal, not just reference)",
+        "head (frontal, if EEG retained as a monitoring signal)"
+      ],
+      "modules": [
+        "wrist_module",
+        "chest_module",
+        "head_module"
+      ],
+      "module_count": 3,
+      "total_contacts": {
+        "min": 7,
+        "max": 12,
+        "most_likely": 7,
+        "unit": "electrodes_or_optical_sites"
+      },
+      "incremental_contacts_vs_previous_class": 7,
+      "shared_resources_within_modules": [
+        "enclosure",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock (where applicable)"
+      ],
+      "power_range_mw": {
+        "sensor_only_subtotal": 2.599,
+        "single_shared_mcu_radio": {
+          "load_side": 4.423207,
+          "battery_side": 5.203773
+        },
+        "per_module_mcu_radio": {
+          "load_side": 8.071621,
+          "battery_side": 9.496025
+        },
+        "range_note": "SINGLE_SHARED matches the current authoritative results/stage4_engineering_readiness.json total (1 mcu + 1 radio system-wide); PER_MODULE reflects results/hardware_topology_contract.json's literal per-module 'host MCU'/'wireless radio' shared_resources listing (confirmed present for every module independently) - a genuinely unresolved topology question, not a computation error in either artifact. The gap between the two grows with module_count."
+      },
+      "mass_range_g": {
+        "battery_only_min": 8.763,
+        "battery_plus_worst_case_wiring_max": 11.763,
+        "note": "Battery-only reference point (module-level mass totals remain BURDEN_DATA_INCOMPLETE per results/stage4_candidate_class_burden_comparison.json's chest-module decomposition limitation - not re-derived here)."
+      },
+      "raw_data_rate_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "frontal_eeg_only_derived": 2400.0
+      },
+      "battery_scenario_shared_hub_g": 8.763,
+      "battery_scenario_distributed_g": 8.763,
+      "battery_scenario_wiring_delta_g": {
+        "min": 0.6,
+        "max": 3.0,
+        "most_likely": 1.6
+      },
+      "major_unknowns": [
+        "MCU/radio single-shared-vs-per-module topology (this sprint's new finding, unresolved)",
+        "Battery shared-hub-vs-distributed topology (bounded this sprint, not resolved)",
+        "Contact/electrode exact counts (bounded this sprint via BOUNDED_ENGINEERING_ESTIMATE / PHYSICALLY_CONSTRAINED_BY_FROZEN_METHOD, not exact)"
+      ],
+      "scientific_confidence_summary": "TIER_A for the PPG+IMU pairing; EEG/ECG themselves are foundation signals not under incremental-value test in this evidence set",
+      "pending_science_exposure": "NONE - this class does not depend on any HIGH-decision-sensitivity pending result."
+    },
+    {
+      "class_id": "CORE_PLUS_CONTEXT",
+      "modalities": [
+        "MINIMAL_CORE sensors",
+        "EOG (if sharing EEG AFE/reference infrastructure)"
+      ],
+      "anatomical_regions": [
+        "wrist",
+        "chest",
+        "head (frontal + peri-orbital, sharing EEG module)"
+      ],
+      "modules": [
+        "wrist_module",
+        "chest_module",
+        "head_module"
+      ],
+      "module_count": 3,
+      "total_contacts": {
+        "min": 9,
+        "max": 14,
+        "most_likely": 9,
+        "unit": "electrodes_or_optical_sites"
+      },
+      "incremental_contacts_vs_previous_class": 2,
+      "shared_resources_within_modules": [
+        "enclosure",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock (where applicable)"
+      ],
+      "power_range_mw": {
+        "sensor_only_subtotal": 2.974,
+        "single_shared_mcu_radio": {
+          "load_side": 4.798207,
+          "battery_side": 5.644949
+        },
+        "per_module_mcu_radio": {
+          "load_side": 8.446621,
+          "battery_side": 9.937201
+        },
+        "range_note": "SINGLE_SHARED matches the current authoritative results/stage4_engineering_readiness.json total (1 mcu + 1 radio system-wide); PER_MODULE reflects results/hardware_topology_contract.json's literal per-module 'host MCU'/'wireless radio' shared_resources listing (confirmed present for every module independently) - a genuinely unresolved topology question, not a computation error in either artifact. The gap between the two grows with module_count."
+      },
+      "mass_range_g": {
+        "battery_only_min": 8.763,
+        "battery_plus_worst_case_wiring_max": 11.763,
+        "note": "Battery-only reference point (module-level mass totals remain BURDEN_DATA_INCOMPLETE per results/stage4_candidate_class_burden_comparison.json's chest-module decomposition limitation - not re-derived here)."
+      },
+      "raw_data_rate_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "head_eeg_eog_scientific": 4800
+      },
+      "battery_scenario_shared_hub_g": 8.763,
+      "battery_scenario_distributed_g": 8.763,
+      "battery_scenario_wiring_delta_g": {
+        "min": 0.6,
+        "max": 3.0,
+        "most_likely": 1.6
+      },
+      "major_unknowns": [
+        "MCU/radio single-shared-vs-per-module topology (this sprint's new finding, unresolved)",
+        "Battery shared-hub-vs-distributed topology (bounded this sprint, not resolved)",
+        "Contact/electrode exact counts (bounded this sprint via BOUNDED_ENGINEERING_ESTIMATE / PHYSICALLY_CONSTRAINED_BY_FROZEN_METHOD, not exact)"
+      ],
+      "scientific_confidence_summary": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+      "pending_science_exposure": "HIGH - EOG's standing in this class is directly sensitive to HMC full-cohort results (see results/stage4_sensor_decision_sensitivity.json scenarios HMC-1/2/3)."
+    },
+    {
+      "class_id": "EVIDENCE_EXTENDED",
+      "modalities": [
+        "CORE_PLUS_CONTEXT sensors",
+        "thoracic BioZ/EIS",
+        "leg BioZ"
+      ],
+      "anatomical_regions": [
+        "CORE_PLUS_CONTEXT regions",
+        "thorax",
+        "legs (bilateral)"
+      ],
+      "modules": [
+        "wrist_module",
+        "chest_module",
+        "head_module",
+        "leg_module"
+      ],
+      "module_count": 4,
+      "total_contacts": {
+        "min": 17,
+        "max": 30,
+        "most_likely": 21,
+        "unit": "electrodes_or_optical_sites"
+      },
+      "incremental_contacts_vs_previous_class": 12,
+      "shared_resources_within_modules": [
+        "enclosure",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock (where applicable)"
+      ],
+      "power_range_mw": {
+        "sensor_only_subtotal": 5.6437,
+        "single_shared_mcu_radio": {
+          "load_side": 7.467907,
+          "battery_side": 8.785773
+        },
+        "per_module_mcu_radio": {
+          "load_side": 12.940528,
+          "battery_side": 15.224151
+        },
+        "range_note": "SINGLE_SHARED matches the current authoritative results/stage4_engineering_readiness.json total (1 mcu + 1 radio system-wide); PER_MODULE reflects results/hardware_topology_contract.json's literal per-module 'host MCU'/'wireless radio' shared_resources listing (confirmed present for every module independently) - a genuinely unresolved topology question, not a computation error in either artifact. The gap between the two grows with module_count."
+      },
+      "mass_range_g": {
+        "battery_only_min": 11.684,
+        "battery_plus_worst_case_wiring_max": 16.184,
+        "note": "Battery-only reference point (module-level mass totals remain BURDEN_DATA_INCOMPLETE per results/stage4_candidate_class_burden_comparison.json's chest-module decomposition limitation - not re-derived here)."
+      },
+      "raw_data_rate_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "head_eeg_eog_scientific": 4800,
+        "thoracic_bioz": 16.0,
+        "leg_bioz": 16.0
+      },
+      "battery_scenario_shared_hub_g": 11.684,
+      "battery_scenario_distributed_g": 11.684,
+      "battery_scenario_wiring_delta_g": {
+        "min": 0.9,
+        "max": 4.5,
+        "most_likely": 2.4
+      },
+      "major_unknowns": [
+        "MCU/radio single-shared-vs-per-module topology (this sprint's new finding, unresolved)",
+        "Battery shared-hub-vs-distributed topology (bounded this sprint, not resolved)",
+        "Contact/electrode exact counts (bounded this sprint via BOUNDED_ENGINEERING_ESTIMATE / PHYSICALLY_CONSTRAINED_BY_FROZEN_METHOD, not exact)",
+        "Leg BioZ unilateral-vs-bilateral module count (this sprint's new finding, unresolved)"
+      ],
+      "scientific_confidence_summary": "TIER_D_MIXED_OR_FRAGILE for both thoracic EIS and leg BioZ",
+      "pending_science_exposure": "LOW for both - no currently-planned Stage-3 experiment would resolve either modality's ambiguity further (per results/stage4_sensor_decision_sensitivity.json)."
+    },
+    {
+      "class_id": "EXPERIMENTAL_EXTENDED",
+      "modalities": [
+        "EVIDENCE_EXTENDED sensors",
+        "second-site PPG",
+        "wrist temperature",
+        "wrist light"
+      ],
+      "anatomical_regions": [
+        "EVIDENCE_EXTENDED regions",
+        "secondary PPG site (per PTT protocol)"
+      ],
+      "modules": [
+        "wrist_module",
+        "chest_module",
+        "head_module",
+        "leg_module",
+        "optical_site_evaluation_branch"
+      ],
+      "module_count": 5,
+      "total_contacts": {
+        "min": 18,
+        "max": 31,
+        "most_likely": 22,
+        "unit": "electrodes_or_optical_sites"
+      },
+      "incremental_contacts_vs_previous_class": 1,
+      "shared_resources_within_modules": [
+        "enclosure",
+        "battery",
+        "host MCU",
+        "wireless radio",
+        "clock (where applicable)"
+      ],
+      "power_range_mw": {
+        "sensor_only_subtotal": 14.67919,
+        "single_shared_mcu_radio": {
+          "load_side": 16.503397,
+          "battery_side": 19.415761
+        },
+        "per_module_mcu_radio": {
+          "load_side": 23.800225,
+          "battery_side": 28.000265
+        },
+        "range_note": "SINGLE_SHARED matches the current authoritative results/stage4_engineering_readiness.json total (1 mcu + 1 radio system-wide); PER_MODULE reflects results/hardware_topology_contract.json's literal per-module 'host MCU'/'wireless radio' shared_resources listing (confirmed present for every module independently) - a genuinely unresolved topology question, not a computation error in either artifact. The gap between the two grows with module_count."
+      },
+      "mass_range_g": {
+        "battery_only_min": 14.605,
+        "battery_plus_worst_case_wiring_max": 20.605,
+        "note": "Battery-only reference point (module-level mass totals remain BURDEN_DATA_INCOMPLETE per results/stage4_candidate_class_burden_comparison.json's chest-module decomposition limitation - not re-derived here)."
+      },
+      "raw_data_rate_bps": {
+        "wrist_ppg": 1216,
+        "wrist_imu": 1536,
+        "ecg_chest": 12000,
+        "head_eeg_eog_scientific": 4800,
+        "thoracic_bioz": 16.0,
+        "leg_bioz": 16.0,
+        "second_ppg_site": 28500,
+        "skin_temperature": 16,
+        "light_sensor": 1.6
+      },
+      "battery_scenario_shared_hub_g": 14.605,
+      "battery_scenario_distributed_g": 14.605,
+      "battery_scenario_wiring_delta_g": {
+        "min": 1.2,
+        "max": 6.0,
+        "most_likely": 3.2
+      },
+      "major_unknowns": [
+        "MCU/radio single-shared-vs-per-module topology (this sprint's new finding, unresolved)",
+        "Battery shared-hub-vs-distributed topology (bounded this sprint, not resolved)",
+        "Contact/electrode exact counts (bounded this sprint via BOUNDED_ENGINEERING_ESTIMATE / PHYSICALLY_CONSTRAINED_BY_FROZEN_METHOD, not exact)",
+        "Leg BioZ unilateral-vs-bilateral module count (this sprint's new finding, unresolved)"
+      ],
+      "scientific_confidence_summary": "TIER_E_NEGATIVE_OR_DEPRIORITIZED for second-site PPG; TIER_P_PENDING for wrist temperature/light",
+      "pending_science_exposure": "LOW for second-site PPG (no planned experiment); MEDIUM for wrist temperature/light (any new experiment would be informative given the complete absence of current evidence)."
+    }
+  ],
+  "robustness_analysis": {
+    "power_ordering_preserved_across_mcu_radio_interpretations": true,
+    "power_magnitude_gap_grows_with_module_count": true,
+    "contact_count_ordering_preserved_across_min_max": true,
+    "verdict": "Relative candidate-class ORDERING (MINIMAL_CORE < CORE_PLUS_CONTEXT <= EVIDENCE_EXTENDED <= EXPERIMENTAL_EXTENDED) is preserved across every tested combination of contact-count bound, battery topology, and MCU/radio topology - every additional sensor/module can only add contacts, power, and mass, never subtract them, so strict-superset construction (candidate_classes.json's own note_on_composability) makes ordering structurally robust. HOWEVER, the ABSOLUTE MAGNITUDE of EVIDENCE_EXTENDED and EXPERIMENTAL_EXTENDED's burden is NOT robust: under the PER_MODULE MCU/radio interpretation, EVIDENCE_EXTENDED's battery-side power roughly doubles relative to the currently-published single-shared-total figure, and leg BioZ's bilateral-module question could separately double leg_module's own mass/power. Neither swing reverses ORDERING, but both could change whether a given absolute burden figure is judged acceptable, and both remain unbounded topology decisions, not merely imprecise numbers."
+  },
+  "final_architecture_status": "UNRESOLVED",
+  "formal_pareto_status": "NOT_READY"
+}
