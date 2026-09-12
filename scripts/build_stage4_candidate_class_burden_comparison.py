@@ -33,6 +33,8 @@ data_rate_bps = readiness["data_rate"]["base_topology_raw_bps"]
 eog_incremental_mw = readiness["power"]["head_afe_eeg_eog"]["eog_incremental_power_mw"]["value"]
 head_afe_total_mw = readiness["power"]["head_afe_eeg_eog"]["average_power_mw"]["value"]
 eeg_only_baseline_mw = round(head_afe_total_mw - eog_incremental_mw, 6)  # 1.5 - 0.375 = 1.125, shown not hidden
+head_eeg_eog_bps = data_rate_bps["head_eeg_eog_scientific"]  # 2 ch (1 EEG + 1 EOG) @ 100 Hz @ 24 bit = 4800 bps
+eeg_only_bps = round(head_eeg_eog_bps / 2, 6)  # linear in channel count at fixed rate/bits: 1 ch = 2400 bps, shown not hidden
 thoracic_bioz_mw = contributors_mw["thoracic_bioz"]
 thoracic_bioz_bps = data_rate_bps["thoracic_bioz"]
 leg_bioz_mw = readiness["power"]["system_average_power"]["excluded_from_base_total"]["leg_bioz_mw"]
@@ -66,7 +68,7 @@ for cls in candidate_classes["classes"]:
             "frontal_eeg_only_derived": eeg_only_baseline_mw,
         }
         modules_required = ["wrist_module", "chest_module (shares thoracic BioZ circuitry - see limitation)", "head_module"]
-        data_rate_components = {"wrist_ppg": data_rate_bps["wrist_ppg"], "wrist_imu": data_rate_bps["wrist_imu"], "ecg_chest": data_rate_bps["ecg_chest"]}
+        data_rate_components = {"wrist_ppg": data_rate_bps["wrist_ppg"], "wrist_imu": data_rate_bps["wrist_imu"], "ecg_chest": data_rate_bps["ecg_chest"], "frontal_eeg_only_derived": eeg_only_bps}
         dominance_flag = "PARETO_RELEVANT"
         dominance_reason = "Tier-A evidence only; no HIGH-decision-sensitivity dependency; lowest sensor count."
     elif cid == "CORE_PLUS_CONTEXT":
@@ -160,10 +162,14 @@ output = {
     ),
     "explicit_non_goal": "Does NOT compute TOTAL_SCORE = SCIENCE - MASS - POWER or any weighted composite. Does NOT select a final architecture.",
     "derivation_note": (
-        f"frontal_eeg_only_derived ({eeg_only_baseline_mw} mW) = head_afe_eeg_eog.average_power_mw "
+        f"frontal_eeg_only_derived power ({eeg_only_baseline_mw} mW) = head_afe_eeg_eog.average_power_mw "
         f"({head_afe_total_mw}) - eog_incremental_power_mw ({eog_incremental_mw}), both already-published "
         "ENGINEERING_ASSUMPTION values in results/stage4_engineering_readiness.json - a single disclosed "
-        "subtraction, not a new measurement or a re-labeled datasheet fact."
+        f"subtraction, not a new measurement or a re-labeled datasheet fact. frontal_eeg_only_derived data rate "
+        f"({eeg_only_bps} bps) = head_eeg_eog_scientific raw bps ({head_eeg_eog_bps}) / 2 channels - the published "
+        "figure is DATASHEET_CALCULATED as channels x sample_rate_hz x bits_per_sample (2 ch x 100 Hz x 24 bit = "
+        "4800 bps), so halving for 1 channel at the same rate/bits is linear, not invented; without this, "
+        "MINIMAL_CORE's data-rate breakdown would silently omit EEG entirely rather than showing its cost."
     ),
     "source_artifacts": [
         "results/stage4_engineering_readiness.json",

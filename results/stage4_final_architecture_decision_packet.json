@@ -31,7 +31,8 @@
       "data_rate_raw_bps": {
         "wrist_ppg": 1216,
         "wrist_imu": 1536,
-        "ecg_chest": 12000
+        "ecg_chest": 12000,
+        "frontal_eeg_only_derived": 2400.0
       },
       "mass": {
         "modules_required": [

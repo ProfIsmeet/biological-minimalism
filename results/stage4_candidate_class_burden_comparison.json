@@ -5,7 +5,7 @@
   "generated_role": "INTEGRATION_OWNER",
   "purpose": "Multi-objective burden comparison across the Science Owner's 4 candidate architecture classes (results/stage4_architecture_candidate_classes.json). No winner selected, no composite score computed.",
   "explicit_non_goal": "Does NOT compute TOTAL_SCORE = SCIENCE - MASS - POWER or any weighted composite. Does NOT select a final architecture.",
-  "derivation_note": "frontal_eeg_only_derived (1.125 mW) = head_afe_eeg_eog.average_power_mw (1.5) - eog_incremental_power_mw (0.375), both already-published ENGINEERING_ASSUMPTION values in results/stage4_engineering_readiness.json - a single disclosed subtraction, not a new measurement or a re-labeled datasheet fact.",
+  "derivation_note": "frontal_eeg_only_derived power (1.125 mW) = head_afe_eeg_eog.average_power_mw (1.5) - eog_incremental_power_mw (0.375), both already-published ENGINEERING_ASSUMPTION values in results/stage4_engineering_readiness.json - a single disclosed subtraction, not a new measurement or a re-labeled datasheet fact. frontal_eeg_only_derived data rate (2400.0 bps) = head_eeg_eog_scientific raw bps (4800) / 2 channels - the published figure is DATASHEET_CALCULATED as channels x sample_rate_hz x bits_per_sample (2 ch x 100 Hz x 24 bit = 4800 bps), so halving for 1 channel at the same rate/bits is linear, not invented; without this, MINIMAL_CORE's data-rate breakdown would silently omit EEG entirely rather than showing its cost.",
   "source_artifacts": [
     "results/stage4_engineering_readiness.json",
     "results/stage4_architecture_candidate_classes.json",
@@ -38,7 +38,8 @@
       "data_rate_raw_bps": {
         "wrist_ppg": 1216,
         "wrist_imu": 1536,
-        "ecg_chest": 12000
+        "ecg_chest": 12000,
+        "frontal_eeg_only_derived": 2400.0
       },
       "mass": {
         "modules_required": [
