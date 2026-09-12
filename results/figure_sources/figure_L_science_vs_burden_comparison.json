@@ -1,0 +1,37 @@
+{
+  "title": "Science-vs-burden architecture comparison across 4 candidate classes",
+  "metric": "module count / contacts / battery-side power (mW) per candidate class",
+  "sample_unit": "candidate architecture class (n=4: MINIMAL_CORE, CORE_PLUS_CONTEXT, EVIDENCE_EXTENDED, EXPERIMENTAL_EXTENDED)",
+  "uncertainty_meaning": "each class's figures are bounded engineering estimates from results/stage4_candidate_burden_matrix.json, not measured",
+  "claim_boundary": "Burden strictly increases class-to-class; do not visually imply this ordering also ranks scientific value - see figure_M_pareto_map for the Pareto relationship.",
+  "series": {
+    "MINIMAL_CORE": {
+      "module_count": 3,
+      "total_contacts_most_likely": 7,
+      "battery_side_power_mw": 9.496025,
+      "is_pareto_relevant": true
+    },
+    "CORE_PLUS_CONTEXT": {
+      "module_count": 3,
+      "total_contacts_most_likely": 9,
+      "battery_side_power_mw": 9.937201,
+      "is_pareto_relevant": true
+    },
+    "EVIDENCE_EXTENDED": {
+      "module_count": 4,
+      "total_contacts_most_likely": 21,
+      "battery_side_power_mw": 15.224151,
+      "is_pareto_relevant": false
+    },
+    "EXPERIMENTAL_EXTENDED": {
+      "module_count": 5,
+      "total_contacts_most_likely": 22,
+      "battery_side_power_mw": 28.000265,
+      "is_pareto_relevant": false
+    }
+  },
+  "provenance": [
+    "results/stage4_candidate_burden_matrix.json",
+    "results/stage4_formal_pareto_analysis.json"
+  ]
+}

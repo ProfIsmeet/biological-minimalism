@@ -1,0 +1,82 @@
+{
+  "table_id": "TABLE_B_CONTROLLED_ABLATIONS",
+  "purpose": "Accepted controlled ablation experiments (PPG-DaLiA capacity control, PTT, Sleep-EDF A/B/C, robustness, interaction), including negative results, preserved verbatim.",
+  "header": [
+    "experiment_id",
+    "metric",
+    "baseline_value",
+    "candidate_value",
+    "effect",
+    "effect_direction",
+    "evidence_strength"
+  ],
+  "rows": [
+    [
+      "ppg_dalia_imu_hr",
+      "MAE (bpm)",
+      null,
+      null,
+      0.6053154945373536,
+      "POSITIVE",
+      "replicated-within-dataset"
+    ],
+    [
+      "ptt_second_ppg_site_hr",
+      "MAE (bpm)",
+      17.540314865112304,
+      19.002723693847656,
+      1.4624088287353516,
+      "NEGATIVE",
+      "replicated-within-dataset"
+    ],
+    [
+      "sleep_edf_eeg_eog_sleep_stage_primary",
+      "macro-F1",
+      0.7472525334607252,
+      0.7692599394037367,
+      0.022007405943011628,
+      "POSITIVE",
+      "replicated-with-control"
+    ],
+    [
+      "sleep_edf_eeg_eog_shuffled_control",
+      "macro-F1",
+      0.7692599394037367,
+      0.7420213232275609,
+      0.027238616176175713,
+      "B_BEATS_SHUFFLED",
+      "replicated-with-control"
+    ],
+    [
+      "sleep_edf_secondary_holdout",
+      "macro-F1",
+      0.6529656695652062,
+      0.6857738751954685,
+      0.03280820563026223,
+      "POSITIVE",
+      "replicated-with-control (prospective_secondary_holdout_supported)"
+    ],
+    [
+      "ppg_dalia_fault_robustness",
+      "MAE (bpm) / prediction availability",
+      null,
+      null,
+      null,
+      "DESCRIPTIVE_PER_CONDITION",
+      "descriptive (not a marginal-value claim - separate axis, see SENSOR_MARGINAL_VALUE_METHODOLOGY.md SS13)"
+    ],
+    [
+      "sleep_edf_interaction_eeg_eog_resp",
+      "macro-F1 (derived interaction term)",
+      0.7472525334607252,
+      0.7583032975282097,
+      0.003060978660014868,
+      "approximately_additive_or_unresolved",
+      "preliminary (one interaction pair, n=5 seeds, n=3 subjects)"
+    ]
+  ],
+  "provenance": {
+    "source": "results/paper_tables/table2_main_marginal_value_results.json",
+    "upstream": "results/scientific_master_table_day11.json"
+  }
+}

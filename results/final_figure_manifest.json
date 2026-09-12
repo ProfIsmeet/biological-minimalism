@@ -1,0 +1,143 @@
+{
+  "artifact_id": "biological-minimalism-stage5-final-figure-manifest-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE5_FINAL_SYNTHESIS_AND_RELEASE",
+  "generated_role": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+  "purpose": "Catalog of every reproducible figure-data export for the final paper/presentation, each identifying its source artifact(s), exact fields, transformation, units, and claim boundary. 9 figures (A-I) are existing Stage-4 exports reused verbatim; 5 figures (J-N) are new Stage-5 exports derived strictly from already-accepted data (no new science, no hand-edited plot values).",
+  "no_visual_overclaim_policy": "No figure may imply tiny differences are huge, mixed results are decisive, pending evidence is final, or that the Coordinator's architecture choice equals mathematical Pareto dominance.",
+  "figures": [
+    {
+      "figure_file": "results/figure_sources/figure_A_ppg_capacity_control.json",
+      "figure_type": "PPG-DaLiA controlled IMU result",
+      "title": "PPG-DaLiA: capacity-controlled IMU marginal value",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/ppg_dalia_capacity_control.json",
+        "results/ppg_dalia_imu_multiseed_replication.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_B_ppg_subject_activity_heterogeneity.json",
+      "figure_type": "PPG-DaLiA controlled IMU result (subject/activity heterogeneity)",
+      "title": "PPG-DaLiA: per-subject and per-activity A_cap->B delta",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/ppg_dalia_sensitivity_day11.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_C_ptt_subject_heterogeneity.json",
+      "figure_type": "Negative/mixed modality evidence (second-site PPG)",
+      "title": "PTT: per-subject B-A delta and s2 sensitivity",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/ptt_sensitivity_day11.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_D_sleep_primary_abc.json",
+      "figure_type": "Sleep/EOG result",
+      "title": "Sleep-EDF primary: A/B/C macro-F1",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/sleep_edf_eeg_eog_ablation.json",
+        "results/sleep_edf_eeg_eog_control_analysis.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_E_sleep_secondary_abc.json",
+      "figure_type": "Sleep/EOG result (secondary holdout)",
+      "title": "Sleep-EDF prospective secondary holdout: A/B/C macro-F1",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/sleep_edf_secondary_holdout_evaluation.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_F_sleep_subject_level_b_minus_a.json",
+      "figure_type": "Sleep/EOG result (subject-level)",
+      "title": "Sleep-EDF: per-subject B-A delta, primary vs. secondary",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/sleep_edf_sensitivity_day11.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_G_sleep_class_level_b_minus_a.json",
+      "figure_type": "Sleep/EOG result (class-level)",
+      "title": "Sleep-EDF: per-class F1 delta (B-A), primary and secondary, plus N3 diagnostic",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/sleep_edf_secondary_holdout_evaluation.json",
+        "results/sleep_n3_extended_diagnostic_day11.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_H_robustness.json",
+      "figure_type": "Robustness/fault-injection summary",
+      "title": "PPG-DaLiA robustness: per-condition MAE degradation (S14 only)",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/day10_ppg_dalia_fault_robustness_reproduction.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_I_interaction.json",
+      "figure_type": "Negative/mixed modality evidence (EEG-EOG-respiration interaction)",
+      "title": "Sleep-EDF: EOG x Resp interaction term",
+      "status": "EXISTING_STAGE4_FIGURE_REUSED_VERBATIM",
+      "provenance": [
+        "results/sleep_edf_interaction_resp_day10.json",
+        "results/sleep_interaction_sensitivity_day11.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_J_galaxyppg_external_replication.json",
+      "figure_type": "GalaxyPPG external replication",
+      "title": "GalaxyPPG (corrected cohort): external replication of wrist PPG+IMU HR benefit",
+      "status": "NEW_STAGE5_FIGURE_DERIVED_FROM_ACCEPTED_DATA",
+      "provenance": [
+        "results/galaxyppg_corrected_full_cv_result.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_K_negative_mixed_summary.json",
+      "figure_type": "Negative/mixed modality evidence",
+      "title": "Negative / mixed modality evidence summary",
+      "status": "NEW_STAGE5_FIGURE_DERIVED_FROM_ACCEPTED_DATA",
+      "provenance": [
+        "results/final_tables/table_d_negative_mixed_results.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_L_science_vs_burden_comparison.json",
+      "figure_type": "Science-vs-burden architecture comparison",
+      "title": "Science-vs-burden architecture comparison across 4 candidate classes",
+      "status": "NEW_STAGE5_FIGURE_DERIVED_FROM_ACCEPTED_DATA",
+      "provenance": [
+        "results/stage4_candidate_burden_matrix.json",
+        "results/stage4_formal_pareto_analysis.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_M_pareto_map.json",
+      "figure_type": "Pareto map / candidate comparison",
+      "title": "Formal Pareto dominance map",
+      "status": "NEW_STAGE5_FIGURE_DERIVED_FROM_ACCEPTED_DATA",
+      "provenance": [
+        "results/stage4_formal_pareto_analysis.json"
+      ]
+    },
+    {
+      "figure_file": "results/figure_sources/figure_N_final_architecture_diagram.json",
+      "figure_type": "Final wearable architecture",
+      "title": "Final wearable architecture: CORE_PLUS_CONTEXT",
+      "status": "NEW_STAGE5_FIGURE_DERIVED_FROM_ACCEPTED_DATA",
+      "provenance": [
+        "results/final_wearable_architecture.json"
+      ]
+    }
+  ],
+  "figure_count": 14,
+  "status": "STAGE5_FIGURE_MANIFEST_REPORTED_COMPLETE_PENDING_INDEPENDENT_AUDIT"
+}

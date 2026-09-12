@@ -1,0 +1,83 @@
+{
+  "title": "GalaxyPPG (corrected cohort): external replication of wrist PPG+IMU HR benefit",
+  "metric": "delta MAE (bpm), positive = candidate (B) better",
+  "sample_unit": "participant (n=18 eligible of 24; 6 excluded for a reference-ECG signal-quality defect)",
+  "uncertainty_meaning": "sd_sample_ddof1 across the 18-participant aggregate; per-participant values also shown to disclose heterogeneity",
+  "claim_boundary": "This is external-dataset replication support with real participant heterogeneity (6/18 subjects disfavor B on A_to_B) - never present as uniform or as 24/24 subject cohort.",
+  "series": {
+    "per_subject_A_to_B": {
+      "P17": -2.5475319862365726,
+      "P23": -0.8554219245910639,
+      "P05": -0.713810920715332,
+      "P14": -0.5565853118896484,
+      "P09": -0.21812658309936594,
+      "P20": -0.2032032012939453,
+      "P13": 0.24551372528076154,
+      "P08": 0.329795551300049,
+      "P12": 0.7013363838195801,
+      "P21": 0.8527481079101555,
+      "P06": 1.2908017158508303,
+      "P24": 1.4919212341308592,
+      "P10": 1.872721862792969,
+      "P02": 2.05407223701477,
+      "P18": 2.443019199371337,
+      "P11": 2.7201944351196303,
+      "P04": 2.8912141799926756,
+      "P16": 3.2181647300720213
+    },
+    "per_subject_C_to_B": {
+      "P17": -2.0955636978149412,
+      "P23": -1.437045001983642,
+      "P14": -1.3965555191040036,
+      "P20": -0.4384946823120117,
+      "P05": -0.3474821090698228,
+      "P09": 0.22257223129272408,
+      "P21": 0.3916975021362301,
+      "P13": 0.789027214050293,
+      "P12": 0.8354257583618159,
+      "P10": 1.2272134780883794,
+      "P06": 1.6107783317565918,
+      "P08": 1.77806625366211,
+      "P24": 1.8227541923522947,
+      "P11": 2.2981193542480476,
+      "P18": 2.320194721221924,
+      "P02": 2.450122594833374,
+      "P16": 3.102175998687744,
+      "P04": 3.3591424942016603
+    }
+  },
+  "aggregate": {
+    "A_cap_mae": {
+      "mean": 8.286749135123358,
+      "sd_sample_ddof1": 2.818514313827782,
+      "n": 18
+    },
+    "B_mae": {
+      "mean": 7.452481166521709,
+      "sd_sample_ddof1": 2.9814782366794637,
+      "n": 18
+    },
+    "C_mae": {
+      "mean": 8.36871167288886,
+      "sd_sample_ddof1": 2.791336875921234,
+      "n": 18
+    },
+    "A_to_B": {
+      "mean": 0.8342679686016505,
+      "sd_sample_ddof1": 1.5471357112933417,
+      "n": 18,
+      "n_subjects_favor_B": 12,
+      "n_subjects_total": 18
+    },
+    "C_to_B": {
+      "mean": 0.9162305063671538,
+      "sd_sample_ddof1": 1.5958112979200185,
+      "n": 18,
+      "n_subjects_favor_B": 13,
+      "n_subjects_total": 18
+    }
+  },
+  "provenance": [
+    "results/galaxyppg_corrected_full_cv_result.json"
+  ]
+}

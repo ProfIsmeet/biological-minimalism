@@ -1,0 +1,306 @@
+{
+  "artifact_id": "biological-minimalism-stage5-final-release-manifest-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE5_FINAL_SYNTHESIS_AND_RELEASE",
+  "generated_role": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+  "purpose": "The Stage-5 final release manifest: fail-closed freeze of every authoritative artifact, test results, pending science, and known limitations for the Stage-5 release candidate. Run LAST, after every other Stage-5 artifact-building script, and after all 9 fail-closed preflight checks pass.",
+  "final_project_sha_before_freeze_commit": "3efb49a02e4c824a82410793d245d3141a5942f1",
+  "final_project_sha_note": "This is the repository HEAD SHA immediately before the Stage-5 release-candidate commit that adds this manifest (a file cannot embed its own resulting commit hash without amending). The actual Stage-5 release-candidate commit SHA is reported in the branch push report, not embedded here.",
+  "final_architecture": "CORE_PLUS_CONTEXT",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "stage4_verified_sha": "691bc8c0fd464bc1741da2e69a7c5fa986c3294a",
+  "authoritative_artifacts": [
+    {
+      "artifact_id": "stage4_architecture_acceptance_gates",
+      "path": "results/stage4_architecture_acceptance_gates.json",
+      "purpose": "Acceptance gates A-H",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "afb638c9911fae7f24e38f90b827bc62c21a406562429af1d052584601b48f53",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": false,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "stage4_gate_d_burden_completeness",
+      "path": "results/stage4_gate_d_burden_completeness.json",
+      "purpose": "Gate D burden-completeness, CONDITIONALLY_READY",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "4f5b42d165d45fc42bf58c1b3f4b68ee1bb10ed1936a48dd80476dc739c4d563",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": false,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "stage4_gate_e_coordinator_decisions",
+      "path": "results/stage4_gate_e_coordinator_decisions.json",
+      "purpose": "Gate E decisions, FREEZE_CONDITIONALLY x2",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "ba1c8c90d7c69efc51d720fd5aecc4e83279ec04b03af4f9085030ec9820cf87",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": false,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "stage4_formal_pareto_analysis",
+      "path": "results/stage4_formal_pareto_analysis.json",
+      "purpose": "Formal Pareto dominance analysis - COMPLETE",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "110f7d3f60d5f569681ec589a6d86204bee027544b155e3d101956281562d523",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "final_wearable_architecture",
+      "path": "results/final_wearable_architecture.json",
+      "purpose": "THE canonical final architecture decision - CORE_PLUS_CONTEXT",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "a8989be0ea07023566d741032cbc29a1de2906e9340bfdbdfb58bc1d85fd146c",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "stage4_science_claim_ledger",
+      "path": "results/stage4_science_claim_ledger.json",
+      "purpose": "Science Owner claim ledger (base, superseded partially by closure updates)",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "7a3462b5d9b0b5fe9b272a0b270e9e1602d2fb86c8018d259f744ad12f077c87",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "stage4_final_closure_claim_updates",
+      "path": "results/stage4_final_closure_claim_updates.json",
+      "purpose": "Integration Owner claim updates (final_architecture, pareto only)",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "605ecf78b5296f96e5e1ec9bf52282ffd62f845d5c34662bee8d42a1e14c8477",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "stage4_final_closure_manifest",
+      "path": "results/stage4_final_closure_manifest.json",
+      "purpose": "Stage-4 final closure manifest of record",
+      "owner": "INTEGRATION_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "c4b4e5053e72b5fc5369d8026721f6a5bd2b1b3a7cab560b8e94cbaaa47bb0ae",
+      "source_stage": "STAGE4",
+      "required_for_release": true,
+      "required_for_paper": false,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "digital_twin_architecture_footprint",
+      "path": "results/digital_twin_architecture_footprint.json",
+      "purpose": "Digital Twin status: ARCHITECTURE_ONLY_UNTRAINED_UNVALIDATED",
+      "owner": "SCIENCE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "1670756dfb470ec13e892f1a835a533f327f4607244febbd6606bac0a224db2d",
+      "source_stage": "STAGE3",
+      "required_for_release": true,
+      "required_for_paper": false,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "final_claim_ledger",
+      "path": "results/final_claim_ledger.json",
+      "purpose": "The final project claim contract - all required claim areas.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "4c56f801a20b252605fa9117dc8349f109ef53f48d9065269f171988ae72058a",
+      "source_stage": "STAGE5",
+      "required_for_release": true,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "table_a_modality_evidence",
+      "path": "results/final_tables/table_a_modality_evidence.json",
+      "purpose": "Table A - modality evidence.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "5ee64e8c82976fe2cf04accbb9febdfb5fd906e6e840e58804189ee6c41ba10a",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": false
+    },
+    {
+      "artifact_id": "table_b_controlled_ablations",
+      "path": "results/final_tables/table_b_controlled_ablations.json",
+      "purpose": "Table B - controlled ablations.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "3dc2a00c2bbd9c9776274cb2d545277e71572ea072534ebf16bae426bbd87832",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": false
+    },
+    {
+      "artifact_id": "table_c_external_replication",
+      "path": "results/final_tables/table_c_external_replication.json",
+      "purpose": "Table C - external replication.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "fe7281dba6121db4a811ab342288624ce491791e211091cf9a2abf6edb1cc4b3",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": false
+    },
+    {
+      "artifact_id": "table_d_negative_mixed_results",
+      "path": "results/final_tables/table_d_negative_mixed_results.json",
+      "purpose": "Table D - negative/mixed results.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "86d114137ca236c1ae6f70af40684e6bba7fddafd9aac88d91f2da1ccb9d9520",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": false
+    },
+    {
+      "artifact_id": "table_e_final_architecture_rationale",
+      "path": "results/final_tables/table_e_final_architecture_rationale.json",
+      "purpose": "Table E - final architecture rationale.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "d7560b023ea56490ceafe1a26f170d35cafa26bee4ce5396f5e437711e3f5956",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "table_f_engineering_burden",
+      "path": "results/final_tables/table_f_engineering_burden.json",
+      "purpose": "Table F - engineering burden.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "99a29ac3d7d2698085c4c34788f4efa31f7f1352e2a0fcdea1625601455d0c21",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "final_figure_manifest",
+      "path": "results/final_figure_manifest.json",
+      "purpose": "Catalog of all 14 final figure-data exports with provenance.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "e80fc7b4f9204432c7fdf5737aac9a0436330a80877b131ea8ec76a821f8378b",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": true,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "final_jury_evidence_pack",
+      "path": "presentation/final_jury_evidence_pack.json",
+      "purpose": "Jury Q&A evidence pack, traced to the claim ledger.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "b64c383d642fb63be406053378abf3c58d3fe3a8d8836ba0cfbd1358efb3d6c1",
+      "source_stage": "STAGE5",
+      "required_for_release": false,
+      "required_for_paper": false,
+      "required_for_jury_demo": true
+    },
+    {
+      "artifact_id": "final_reproduction_manifest",
+      "path": "results/final_reproduction_manifest.json",
+      "purpose": "Per-experiment reproducibility classification.",
+      "owner": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+      "current_or_historical": "CURRENT",
+      "sha256_canonical_text": "3a6aab20ee830d731ecb9dc24abd723efc83a0d8db94d777524cb81cd16061a9",
+      "source_stage": "STAGE5",
+      "required_for_release": true,
+      "required_for_paper": false,
+      "required_for_jury_demo": false
+    }
+  ],
+  "authoritative_artifact_count": 19,
+  "tests": {
+    "ml_governance_suite": {
+      "command": ".venv-integration/bin/python -m pytest ml/tests -q",
+      "result": "419 passed, 19 skipped (legitimate dataset/checkpoint-absence guards), 0 failed"
+    },
+    "stage5_hostile_review": {
+      "command": ".venv-integration/bin/python -m pytest ml/tests/test_stage5_final_release_freeze_hostile.py -v",
+      "result": "11 passed (baseline + Attacks A-J), 0 failed"
+    },
+    "stage5_final_consistency": {
+      "command": ".venv-integration/bin/python -m pytest ml/tests/test_stage5_final_synthesis_consistency.py -v",
+      "result": "10 passed, 0 failed"
+    },
+    "backend_suite": {
+      "command": "cd backend && .venv/bin/pytest -q",
+      "result": "321 passed, 0 failed"
+    },
+    "frontend_typecheck": {
+      "command": "cd frontend && npx tsc --noEmit",
+      "result": "clean, no errors"
+    },
+    "frontend_lint": {
+      "command": "cd frontend && npx eslint .",
+      "result": "clean, no errors"
+    },
+    "frontend_build": {
+      "command": "cd frontend && npm run build",
+      "result": "compiled successfully, 12/12 static pages generated"
+    }
+  },
+  "pending_science": {
+    "hmc_full_cohort": "LOWER_PRIORITY_EXTERNAL_WORK_PENDING",
+    "ds003838_full_cohort": "LOWER_PRIORITY_EXTERNAL_WORK_PENDING"
+  },
+  "known_limitations": [
+    "Terrestrial datasets only - no spaceflight/microgravity validation.",
+    "Small held-out biological cohorts in several experiments (n=3 to n=18).",
+    "HMC full-cohort (151 subjects) and ds003838 full-cohort external replication remain pending, lower-priority, not release blockers.",
+    "Engineering burden figures are bounded Tier 0-2 estimates, not measured/vendor-sourced; system-level mass beyond battery cells is SYSTEM_MASS_NOT_READY.",
+    "Digital Twin remains an untrained, unvalidated architecture proposal.",
+    "EOG inclusion and sparse-EEG channel count are FREEZE_CONDITIONALLY, not unconditionally final.",
+    "No unique mathematical Pareto winner exists; CORE_PLUS_CONTEXT is a Coordinator judgment call within the Pareto-relevant set.",
+    "New Stage-5 synthesis artifacts (claim ledger, tables, jury pack) are file-based only in this release - not yet wired into new backend API endpoints or frontend panels; Research Mode continues to serve Stage-4 data, which is unchanged by Stage 5."
+  ],
+  "reproducibility_class_distribution": {
+    "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE": 6,
+    "CHECKPOINT_STATUS_NOT_INDEPENDENTLY_SPOT_CHECKED": 3,
+    "REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE": 1,
+    "BOUNDED_DIAGNOSTIC_REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE": 2
+  },
+  "release_version": "stage5-v1.0.0-release-candidate",
+  "freeze_status": "STAGE5_FINAL_RELEASE_CANDIDATE_REPORTED_COMPLETE_PENDING_INDEPENDENT_FINAL_PROJECT_AUDIT",
+  "fail_closed_checks_passed": [
+    "stage5_validator_passed",
+    "no_missing_authoritative_artifact",
+    "no_duplicate_authoritative_artifact",
+    "no_stale_hash",
+    "final_architecture_consistent",
+    "pending_science_not_silently_promoted",
+    "claim_ledger_governing_evidence_paths_exist",
+    "final_pareto_matches_stage4_closure",
+    "digital_twin_status_unchanged"
+  ]
+}

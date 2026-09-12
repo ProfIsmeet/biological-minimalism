@@ -1,0 +1,87 @@
+{
+  "table_id": "TABLE_F_ENGINEERING_BURDEN",
+  "purpose": "Body regions, modules, contacts, power, mass, data rate, topology, and uncertainty for the final CORE_PLUS_CONTEXT architecture. Bounded engineering estimates, not measured/vendor-sourced figures.",
+  "body_regions": [
+    "wrist",
+    "chest",
+    "head (frontal + peri-orbital, sharing EEG module)"
+  ],
+  "module_topology": "DISTRIBUTED_BODY_MODULE_TOPOLOGY",
+  "modules": [
+    "wrist_module",
+    "chest_module",
+    "head_module"
+  ],
+  "battery_topology_selected": "DISTRIBUTED_PER_MODULE",
+  "mcu_radio_topology_selected": "PER_MODULE",
+  "contacts": {
+    "total": {
+      "min": 9,
+      "max": 14,
+      "most_likely": 9,
+      "unit": "electrodes_or_optical_sites"
+    },
+    "per_modality": {
+      "wrist_ppg_plus_imu": {
+        "min": 1,
+        "max": 1,
+        "most_likely": 1,
+        "unit": "optical_sites"
+      },
+      "ecg_chest": {
+        "min": 3,
+        "max": 5,
+        "most_likely": 3,
+        "unit": "electrodes",
+        "reasoning": "ADS1292R is a 2-channel biopotential AFE (results/hardware_topology_contract.json evidence_id day6_ads1292r_datasheet). A minimal single-vector wearable ECG (the project's stated HR/HRV reference-signal use case, not diagnostic multi-lead ECG) needs 2 sensing electrodes + 1 reference/right-leg-drive electrode = 3 (most_likely, matching the project's HR-reference scope). A dual-vector 2-channel configuration (e.g. adding a respiration-impedance-style second derivation) would need up to 3 sensing + 1-2 reference/ground = 5 (max). dry_electrodes=0 is already confirmed in the topology contract, so wet/adhesive is the constrained electrode type, not an open question."
+      },
+      "frontal_eeg": {
+        "min": 3,
+        "max": 6,
+        "most_likely": 3,
+        "unit": "electrodes",
+        "reasoning": "results/stage4_engineering_readiness.json's already-frozen power scenario (power.head_afe_eeg_eog.scenario) models exactly '2 active_channels (1 EEG + 1 shared EOG)' - i.e. the frozen DESIGN INTENT is 1 EEG signal channel, not the full 4-channel capacity of the ADS1299-4-class AFE (evidence_id day6_ads1299_datasheet). A minimal single-derivation montage is 1 signal + 1 reference + 1 ground/bias = 3 (most_likely, matches the frozen 1-channel power design point). Using the AFE's full 4-channel capacity would need up to 4 signal + reference + ground = 6 (max) - not the currently-modeled scenario, but physically available on the selected AFE class. Unlike ECG/thoracic-BioZ/leg-BioZ, dry_electrodes is None (not 0) in hardware_topology_contract.json - the electrode TYPE itself remains genuinely open, not just the count."
+      },
+      "eog": {
+        "min": 2,
+        "max": 2,
+        "most_likely": 2,
+        "unit": "electrodes",
+        "reasoning": "Already closed by the prior Closure Prep sprint: +2 ocular electrodes + leads only; shares module/AFE/battery, so this is the ONLY incremental mass EOG adds"
+      }
+    }
+  },
+  "power_mw": {
+    "selected_topology_battery_side": 9.937201,
+    "selected_topology_load_side": 8.446621,
+    "alternative_single_shared_battery_side_not_selected": 5.644949,
+    "sensor_only_subtotal": 2.974
+  },
+  "mass_g": {
+    "battery_only": 8.763,
+    "shared_hub_wiring_avoided_g": {
+      "min": 0.6,
+      "max": 3.0,
+      "most_likely": 1.6
+    },
+    "note": "Battery-only reference point (module-level mass totals remain BURDEN_DATA_INCOMPLETE per results/stage4_candidate_class_burden_comparison.json's chest-module decomposition limitation - not re-derived here)."
+  },
+  "raw_data_rate_bps": {
+    "wrist_ppg": 1216,
+    "wrist_imu": 1536,
+    "ecg_chest": 12000,
+    "head_eeg_eog_scientific": 4800
+  },
+  "bounded_not_exact_disclosure": "Every figure above is a bounded engineering estimate carried forward from results/stage4_gate_d_burden_completeness.json (CONDITIONALLY_READY, coordinator-accepted) - not a final/exact BOM. bom_final remains false.",
+  "gate_d_status": "CONDITIONALLY_READY",
+  "residual_disclosure_required_at_freeze": [
+    "Freeze the final battery/electronics topology decision (shared-hub vs. per-module, and single-shared-vs-per-module MCU/radio) - the bounded ranges in results/stage4_battery_topology_scenarios.json and results/stage4_candidate_burden_matrix.json would collapse to a single point estimate.",
+    "Freeze exact electrode montages for ECG, EEG, thoracic BioZ, and leg BioZ (converting results/stage4_contact_electrode_burden.json's bounded ranges to exact counts).",
+    "Resolve the leg BioZ unilateral-vs-bilateral module question with an explicit engineering decision (not just the Science-Owner-implied bilateral scope).",
+    "Obtain vendor-specific part selection for MCU/radio/regulator/battery/sensing ICs (currently class-level only)."
+  ],
+  "provenance": {
+    "source": "results/final_wearable_architecture.json",
+    "burden_matrix": "results/stage4_candidate_burden_matrix.json"
+  }
+}

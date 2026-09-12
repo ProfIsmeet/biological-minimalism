@@ -1,0 +1,357 @@
+{
+  "artifact_id": "biological-minimalism-stage5-final-jury-evidence-pack-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE5_FINAL_SYNTHESIS_AND_RELEASE",
+  "generated_role": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+  "purpose": "Jury/defense evidence pack for the Stage-5-specific final-architecture questions (postdate docs/JURY_DEFENSE_MASTER.md's Day7-11 Q1-Q40, which remains authoritative for its own scope and is not duplicated here). Every answer's evidence field is resolved programmatically from results/final_claim_ledger.json at build time - fail-closed if a cited claim_id does not exist.",
+  "related_pack": "docs/JURY_DEFENSE_MASTER.md",
+  "questions": [
+    {
+      "question": "Why these sensors?",
+      "answer_15s": "We selected CORE_PLUS_CONTEXT - wrist PPG+IMU, chest ECG, frontal EEG+EOG - because every included modality has a measured incremental-value result or a foundational role under controlled testing, not intuition.",
+      "answer_45s": "Each included modality traces to a specific governing experiment: wrist IMU shows a capacity-controlled, externally-replicated (with heterogeneity) HR benefit; EOG shows same-dataset controlled sleep-staging benefit at near-zero marginal burden; ECG and frontal EEG are foundational reference/monitoring signals. A formal Pareto analysis over 4 candidate classes found CORE_PLUS_CONTEXT and MINIMAL_CORE both non-dominated; the Coordinator selected CORE_PLUS_CONTEXT for the EOG capability at low burden, accepting bounded engineering uncertainty (Gate D CONDITIONALLY_READY).",
+      "evidence": [
+        {
+          "claim_id": "sensor_minimalism_framing",
+          "numeric_support": "N/A - methodological framing statement, not a numeric result.",
+          "governing_evidence": [
+            "results/sensor_value_master_matrix_stage3_complete.json",
+            "results/target_evidence_matrix.json",
+            "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md"
+          ]
+        },
+        {
+          "claim_id": "final_architecture",
+          "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+          "governing_evidence": [
+            "results/final_wearable_architecture.json",
+            "results/stage4_gate_e_coordinator_decisions.json"
+          ]
+        },
+        {
+          "claim_id": "ppg_plus_imu",
+          "numeric_support": "PPG-DaLiA A_cap->B +0.605 bpm (5/5 seeds); GalaxyPPG participant A_cap->B +0.834 bpm (12/18 favor B)",
+          "governing_evidence": [
+            "ppg_dalia_capacity_control",
+            "galaxyppg_external_replication"
+          ]
+        },
+        {
+          "claim_id": "eog_incremental_value",
+          "numeric_support": "B_minus_A=+0.0282 (4/5 seeds); B_minus_C=+0.0323 (4/5 seeds).",
+          "governing_evidence": [
+            "sleep_edf_primary_ab",
+            "sleep_edf_shuffled_control_c"
+          ]
+        }
+      ],
+      "limitation": "Applies across the modalities tested in this project; not a universal claim about sensing minimalism in general. No cross-row scoring or aggregation across targets/datasets is performed (each row uses its own metric/sign convention).",
+      "forbidden_overclaim": "'Four sensors are proven sufficient.'"
+    },
+    {
+      "question": "Why remove BioZ?",
+      "answer_15s": "Thoracic BioZ (EIS) showed a COMPLETE_MIXED, negative-leaning result on the corrected LBNP protocol (n=12) that sign-reverses without a single subject - we excluded it rather than force a weak result into the architecture.",
+      "answer_45s": "Under the frozen 0-60 mmHg protocol, thoracic EIS added no stable aggregate benefit over ECG+pleth (A-B = -0.452 mmHg MAE, 3/12 subjects favor it, and the aggregate sign reverses if subject 9 is removed). Leg BioZ (QDE V2) was separately excluded for the same reason: aggregate-negative (n=10) but heterogeneous (7/10 subjects individually favor it). Neither result proves BioZ is useless - both remain visible as mixed/heterogeneous evidence, not erased.",
+      "evidence": [
+        {
+          "claim_id": "thoracic_eis",
+          "numeric_support": "A_minus_B=-0.452 (sign-reverses w/o subject 9); C_minus_B=-1.293 (shrinks substantially w/o subject 9); classification COMPLETE_MIXED.",
+          "governing_evidence": [
+            "lbnp_thoracic_eis"
+          ]
+        },
+        {
+          "claim_id": "leg_bioz",
+          "numeric_support": "A_minus_B=-0.052 (aggregate disfavors B); 7/10 subjects individually favor B.",
+          "governing_evidence": [
+            "qde_v2_leg_bioz"
+          ]
+        }
+      ],
+      "limitation": "n=12; only thoracic site and LBNP-stage target tested; both comparisons subject-9-sensitive.",
+      "forbidden_overclaim": "'BioZ is proven useless'; any claim that this disproves microgravity fluid-shift monitoring."
+    },
+    {
+      "question": "Why retain EOG?",
+      "answer_15s": "EOG showed controlled, same-dataset incremental sleep-staging value (B-A = +0.028 macro-F1, 4/5 seeds) at near-zero marginal burden (+0.375 mW, +0.4 g, +2 contacts) by sharing EEG infrastructure.",
+      "answer_45s": "The primary Sleep-EDF result, its shuffled-EOG control, and a prospective n=8 secondary holdout (zero retraining) all support EOG's same-dataset value, though REM gains strongly while N3 regresses in the secondary cohort - disclosed, not smoothed over. External validity is only bounded (HMC n=7 diagnostic, not a full-cohort replication), so Gate E froze EOG inclusion CONDITIONALLY with an explicit revision trigger tied to the HMC full-cohort result.",
+      "evidence": [
+        {
+          "claim_id": "eog_incremental_value",
+          "numeric_support": "B_minus_A=+0.0282 (4/5 seeds); B_minus_C=+0.0323 (4/5 seeds).",
+          "governing_evidence": [
+            "sleep_edf_primary_ab",
+            "sleep_edf_shuffled_control_c"
+          ]
+        },
+        {
+          "claim_id": "hmc",
+          "numeric_support": "Bounded n=7: B_minus_A=-0.031 (2/5 seeds favor B). Current download state: 59 edf present, 58 complete pairs, 52 SHA256-verified, 1 partial (SN060).",
+          "governing_evidence": [
+            "hmc_bounded_diagnostic",
+            "hmc_current_download_state"
+          ]
+        }
+      ],
+      "limitation": "Same-dataset (Sleep-EDF) only; HMC full-cohort external replication pending; bounded n=7 HMC diagnostic did not reproduce the effect (inconclusive at that scale, not a negative external replication).",
+      "forbidden_overclaim": "'EOG is externally validated on an independent cohort.'"
+    },
+    {
+      "question": "Why not wait for HMC?",
+      "answer_15s": "HMC access works (59/151 subjects downloaded, 52 SHA256-verified) but training the full 151-subject cohort is a compute/time-budget constraint, not an access blocker - so Gate E freezes EOG conditionally with a predefined revision trigger instead of waiting indefinitely.",
+      "answer_45s": "A bounded n=7 diagnostic already exists and does not itself establish external replication in either direction (B-A = -0.031 macro-F1, 2/5 seeds favor B). Rather than block the whole architecture decision on an open-ended full-cohort run, the Coordinator made an explicit, disclosed FREEZE_CONDITIONALLY decision: EOG stays in the architecture now, and a stable, majority-consistent negative full-cohort HMC result would reopen that inclusion.",
+      "evidence": [
+        {
+          "claim_id": "hmc",
+          "numeric_support": "Bounded n=7: B_minus_A=-0.031 (2/5 seeds favor B). Current download state: 59 edf present, 58 complete pairs, 52 SHA256-verified, 1 partial (SN060).",
+          "governing_evidence": [
+            "hmc_bounded_diagnostic",
+            "hmc_current_download_state"
+          ]
+        }
+      ],
+      "limitation": "n=7/1-test-recording is far too small to conclude anything about the 151-recording full cohort.",
+      "forbidden_overclaim": "'HMC replicates or fails to replicate Sleep-EDF' (n=7 is not sufficient to claim either)."
+    },
+    {
+      "question": "Why sparse EEG?",
+      "answer_15s": "The final architecture keeps the same sparse frontal-channel EEG already used in the accepted Sleep-EDF result; a bounded n=3 ds003838 diagnostic only proves the loader/pipeline works, not that sparse channels are validated.",
+      "answer_45s": "ds003838's n=3 diagnostic (sub-032/033/034) is chance-level and driven by 2 of 3 subjects - far too small to justify a channel-count decision either way. Sparse-vs-full-montage EEG is therefore frozen CONDITIONALLY under Gate E, with the ds003838 full cohort (requiring ~93GB additional download, not yet attempted) as the predefined revision trigger.",
+      "evidence": [
+        {
+          "claim_id": "ds003838",
+          "numeric_support": "n=3, inconclusive by design.",
+          "governing_evidence": [
+            "ds003838_bounded_diagnostic"
+          ]
+        }
+      ],
+      "limitation": "Full ~65-subject cohort requires ~93GB/~9.4h additional download, not attempted.",
+      "forbidden_overclaim": "'Sparse EEG is population validated.'"
+    },
+    {
+      "question": "What does GalaxyPPG prove?",
+      "answer_15s": "GalaxyPPG (corrected cohort) is external-cohort corroboration, not identical replication: aligned wrist IMU adds a modest aggregate HR benefit with real participant heterogeneity - 12/18 and 13/18 (of two comparisons) participants favor it, after excluding 6/24 for a reference-signal defect.",
+      "answer_45s": "An earlier GalaxyPPG analysis was invalidated after discovering a reference-ECG signal-quality defect in 6 of 24 subjects; the corrected 18-subject analysis is the only current governing result. It is qualitatively consistent with the PPG-DaLiA finding (A_cap->B +0.834 bpm, C->B +0.916 bpm) but is not framed as proving PPG-DaLiA's exact effect size replicates, and it is not spaceflight or astronaut data.",
+      "evidence": [
+        {
+          "claim_id": "galaxy_replication",
+          "numeric_support": "Participant A_cap->B +0.834268 bpm (12/18), C->B +0.916231 bpm (13/18); window-level agrees to <0.02 bpm.",
+          "governing_evidence": [
+            "galaxyppg_external_replication"
+          ]
+        }
+      ],
+      "limitation": "18 of 24 enrolled (6 excluded for a real data-integrity defect); real subject heterogeneity disclosed.",
+      "forbidden_overclaim": "'GalaxyPPG replicates PPG-DaLiA exactly'; '24/24 subject cohort'; 'astronaut validation.'"
+    },
+    {
+      "question": "Why is the old ~23% IMU number not your headline?",
+      "answer_15s": "That number compared models of very different capacity (8,065 vs ~29,000 parameters); once capacity is matched, about 68% of the apparent gap disappears. The governing number is the capacity-controlled A_cap->B ~0.605 bpm (5/5 seeds).",
+      "answer_45s": "The historical ~20.6%/23%/1.879 bpm figure is capacity-confounded and is explicitly marked HISTORICAL_ONLY in the claim ledger - it must never be cited as a clean IMU effect. The current, governing, capacity-controlled result (PPG-DaLiA A_cap->B +0.605 bpm; GalaxyPPG A_cap->B +0.834 bpm) is smaller but real, and is the number this project defends.",
+      "evidence": [
+        {
+          "claim_id": "old_ppg_imu_headline_20_6_23_percent",
+          "numeric_support": "Historical ~20.6%/23% relative-MAE-reduction figure used unequal-capacity models (Model A 8,065 params vs Model B 28,865/29,089 params) - HISTORICAL_CAPACITY_CONFOUNDED.",
+          "governing_evidence": [
+            "ppg_dalia_capacity_control (supersedes it)"
+          ]
+        },
+        {
+          "claim_id": "ppg_plus_imu",
+          "numeric_support": "PPG-DaLiA A_cap->B +0.605 bpm (5/5 seeds); GalaxyPPG participant A_cap->B +0.834 bpm (12/18 favor B)",
+          "governing_evidence": [
+            "ppg_dalia_capacity_control",
+            "galaxyppg_external_replication"
+          ]
+        }
+      ],
+      "limitation": "Never presentable as clean IMU marginal value under any framing.",
+      "forbidden_overclaim": "Citing 20.6%/23%/1.879 bpm as a current or clean IMU effect."
+    },
+    {
+      "question": "Why are negative results valuable?",
+      "answer_15s": "Negative/mixed results (second-site PPG, leg BioZ, thoracic EIS) tell us where not to spend physical burden budget just as clearly as positive results tell us where to spend it.",
+      "answer_45s": "If this project only reported positive findings, the minimalism claim would be unfalsifiable - anyone could add sensors without evidence and call it 'evidence-driven.' Publishing NOT_READY, mixed, and negative results (second-site PPG worse on aggregate and subject-fragile; leg BioZ aggregate-negative but heterogeneous; thoracic EIS mixed and sign-reversing) is what makes the positive claims (PPG+IMU, EOG) credible by contrast.",
+      "evidence": [
+        {
+          "claim_id": "second_site_ppg",
+          "numeric_support": "B_minus_A=+1.462 MAE (worse); n=4 held-out test subjects.",
+          "governing_evidence": [
+            "ptt_second_ppg_site"
+          ]
+        },
+        {
+          "claim_id": "leg_bioz",
+          "numeric_support": "A_minus_B=-0.052 (aggregate disfavors B); 7/10 subjects individually favor B.",
+          "governing_evidence": [
+            "qde_v2_leg_bioz"
+          ]
+        },
+        {
+          "claim_id": "thoracic_eis",
+          "numeric_support": "A_minus_B=-0.452 (sign-reverses w/o subject 9); C_minus_B=-1.293 (shrinks substantially w/o subject 9); classification COMPLETE_MIXED.",
+          "governing_evidence": [
+            "lbnp_thoracic_eis"
+          ]
+        },
+        {
+          "claim_id": "sensor_minimalism_framing",
+          "numeric_support": "N/A - methodological framing statement, not a numeric result.",
+          "governing_evidence": [
+            "results/sensor_value_master_matrix_stage3_complete.json",
+            "results/target_evidence_matrix.json",
+            "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md"
+          ]
+        }
+      ],
+      "limitation": "n=4 test subjects; sign-sensitive to exclusion (established in prior sprints).",
+      "forbidden_overclaim": "Omitting negative/mixed results from the final presentation to present a cleaner story."
+    },
+    {
+      "question": "Is this validated in astronauts?",
+      "answer_15s": "No. Every governing dataset in this project is terrestrial (healthy or patient populations); LBNP is a terrestrial protocol-analog for hypovolemic stress, not a spaceflight experiment.",
+      "answer_45s": "Spaceflight and microgravity are the motivation for this project, not a validation population it has access to. Terrestrial evidence, physiological plausibility, and spaceflight validation are kept as three explicitly separate tiers throughout the claim ledger, and are never collapsed into one another.",
+      "evidence": [
+        {
+          "claim_id": "astronaut_microgravity_applicability",
+          "numeric_support": "N/A",
+          "governing_evidence": [
+            "all families in results/stage4_science_consumption_manifest.json"
+          ]
+        }
+      ],
+      "limitation": "LBNP is a terrestrial protocol-analog for central hypovolemic stress, not a spaceflight or microgravity experiment.",
+      "forbidden_overclaim": "'Astronaut-validated'; 'proves microgravity fluid-shift monitoring works/doesn't work.'"
+    },
+    {
+      "question": "Is the Digital Twin real?",
+      "answer_15s": "It's a conceptual, synthetic architecture proposal - a 153,801-parameter untrained reference network - not a trained or longitudinally validated personalized model.",
+      "answer_45s": "The Digital Twin architecture (per-modality encoders + fusion Transformer + 9 regression heads) exists as untrained reference code with an explicit ARCHITECTURE_ONLY_UNTRAINED_UNVALIDATED status. No trained checkpoint, no validated multi-target performance, and no runtime/energy/latency measurement is claimed. A synthetic demo exists and is labeled synthetic wherever shown.",
+      "evidence": [
+        {
+          "claim_id": "digital_twin",
+          "numeric_support": "N/A",
+          "governing_evidence": [
+            "N/A - architectural/design proposal, not a trained-model claim"
+          ]
+        }
+      ],
+      "limitation": "No real longitudinal personalization data has been used to train or validate it.",
+      "forbidden_overclaim": "'The Digital Twin learns the astronaut's baseline' (present-tense accomplished capability); presenting it as validated or trained."
+    },
+    {
+      "question": "What does 'minimalism' mean scientifically?",
+      "answer_15s": "Evaluating whether each modality provides measurable incremental value after controlling for model capacity, temporal correspondence, subject separation, heterogeneity, and physical burden - not counting down to the fewest possible sensors for its own sake.",
+      "answer_45s": "Minimalism here is a methodology, not a target sensor count. Every candidate modality is tested the same way: does it add value beyond a capacity-matched, temporally-aligned baseline, on held-out subjects, accounting for how heterogeneous that value is across subjects, weighed against the physical burden it adds? Some modalities pass this test, some are mixed, some fail it outright - the sensor count is an output of that process, not an input goal.",
+      "evidence": [
+        {
+          "claim_id": "sensor_minimalism_framing",
+          "numeric_support": "N/A - methodological framing statement, not a numeric result.",
+          "governing_evidence": [
+            "results/sensor_value_master_matrix_stage3_complete.json",
+            "results/target_evidence_matrix.json",
+            "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md"
+          ]
+        }
+      ],
+      "limitation": "Applies across the modalities tested in this project; not a universal claim about sensing minimalism in general. No cross-row scoring or aggregation across targets/datasets is performed (each row uses its own metric/sign convention).",
+      "forbidden_overclaim": "'We proved four sensors are enough.'"
+    },
+    {
+      "question": "Why CORE_PLUS_CONTEXT instead of MINIMAL_CORE?",
+      "answer_15s": "A formal Pareto analysis found MINIMAL_CORE and CORE_PLUS_CONTEXT both non-dominated - MINIMAL_CORE is strictly lower burden, but CORE_PLUS_CONTEXT adds a capability (sleep staging via EOG) MINIMAL_CORE structurally lacks. The Coordinator chose CORE_PLUS_CONTEXT as a judgment call within that set, not because it's mathematically superior.",
+      "answer_45s": "Formal dominance requires being weakly better on every axis; because the two classes disagree (MINIMAL_CORE wins on burden, CORE_PLUS_CONTEXT wins on science breadth via a capability the other lacks entirely), the comparison is a partial order, not a total ranking - both remain Pareto-relevant, and no_unique_pareto_winner=true is recorded explicitly. The Coordinator's selection rationale: EOG adds controlled sleep-staging evidence at low incremental physical burden without adding a new body region or full module, while accepting conditional external-validation uncertainty.",
+      "evidence": [
+        {
+          "claim_id": "pareto",
+          "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+          "governing_evidence": [
+            "results/stage4_formal_pareto_analysis.json"
+          ]
+        },
+        {
+          "claim_id": "final_architecture",
+          "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+          "governing_evidence": [
+            "results/final_wearable_architecture.json",
+            "results/stage4_gate_e_coordinator_decisions.json"
+          ]
+        }
+      ],
+      "limitation": "MINIMAL_CORE remains Pareto-relevant (non-dominated) alongside CORE_PLUS_CONTEXT - this is not a unique mathematical winner. EVIDENCE_EXTENDED/EXPERIMENTAL_EXTENDED remain POTENTIALLY_DOMINATED, not formally DOMINATED.",
+      "forbidden_overclaim": "'CORE_PLUS_CONTEXT mathematically dominates MINIMAL_CORE.'"
+    },
+    {
+      "question": "Why not EVIDENCE_EXTENDED?",
+      "answer_15s": "EVIDENCE_EXTENDED remains only POTENTIALLY_DOMINATED (burden-superior candidates block it from formal dominance), and it would add modalities (BioZ, second-site PPG) whose own evidence is negative, mixed, or pending.",
+      "answer_45s": "The formal Pareto analysis places EVIDENCE_EXTENDED and EXPERIMENTAL_EXTENDED in a separate potentially_dominated_set - not formally proven dominated (the methodology deliberately under-claims dominance rather than over-claims it), but not selected from the Pareto-relevant set either. Their constituent modalities are exactly the ones this project's own evidence disfavors or has not yet cleared for inclusion.",
+      "evidence": [
+        {
+          "claim_id": "pareto",
+          "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+          "governing_evidence": [
+            "results/stage4_formal_pareto_analysis.json"
+          ]
+        },
+        {
+          "claim_id": "thoracic_eis",
+          "numeric_support": "A_minus_B=-0.452 (sign-reverses w/o subject 9); C_minus_B=-1.293 (shrinks substantially w/o subject 9); classification COMPLETE_MIXED.",
+          "governing_evidence": [
+            "lbnp_thoracic_eis"
+          ]
+        },
+        {
+          "claim_id": "leg_bioz",
+          "numeric_support": "A_minus_B=-0.052 (aggregate disfavors B); 7/10 subjects individually favor B.",
+          "governing_evidence": [
+            "qde_v2_leg_bioz"
+          ]
+        },
+        {
+          "claim_id": "second_site_ppg",
+          "numeric_support": "B_minus_A=+1.462 MAE (worse); n=4 held-out test subjects.",
+          "governing_evidence": [
+            "ptt_second_ppg_site"
+          ]
+        }
+      ],
+      "limitation": "MINIMAL_CORE remains Pareto-relevant (non-dominated) alongside CORE_PLUS_CONTEXT - this is not a unique mathematical winner. EVIDENCE_EXTENDED/EXPERIMENTAL_EXTENDED remain POTENTIALLY_DOMINATED, not formally DOMINATED.",
+      "forbidden_overclaim": "Presenting EVIDENCE_EXTENDED as formally proven dominated (the methodology only supports 'potentially dominated')."
+    },
+    {
+      "question": "What would cause you to revise the architecture?",
+      "answer_15s": "A stable, majority-consistent NEGATIVE full-cohort HMC result would reopen EOG's inclusion; a full-cohort ds003838 result could reopen the sparse-vs-full EEG channel-count decision - both are explicit, predefined Gate E revision triggers.",
+      "answer_45s": "These are not ad hoc - they were defined at the same time as the conditional freeze itself (results/stage4_gate_e_coordinator_decisions.json revision_triggers), so the criteria for reopening the decision were fixed before seeing the outcome. Both HMC full-cohort and ds003838 full-cohort remain LOWER_PRIORITY_EXTERNAL_WORK_PENDING - real future work, not required for this release.",
+      "evidence": [
+        {
+          "claim_id": "hmc",
+          "numeric_support": "Bounded n=7: B_minus_A=-0.031 (2/5 seeds favor B). Current download state: 59 edf present, 58 complete pairs, 52 SHA256-verified, 1 partial (SN060).",
+          "governing_evidence": [
+            "hmc_bounded_diagnostic",
+            "hmc_current_download_state"
+          ]
+        },
+        {
+          "claim_id": "ds003838",
+          "numeric_support": "n=3, inconclusive by design.",
+          "governing_evidence": [
+            "ds003838_bounded_diagnostic"
+          ]
+        },
+        {
+          "claim_id": "final_architecture",
+          "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+          "governing_evidence": [
+            "results/final_wearable_architecture.json",
+            "results/stage4_gate_e_coordinator_decisions.json"
+          ]
+        }
+      ],
+      "limitation": "n=7/1-test-recording is far too small to conclude anything about the 151-recording full cohort.",
+      "forbidden_overclaim": "Implying the architecture is immutable or unconditionally final."
+    }
+  ],
+  "question_count": 14,
+  "status": "STAGE5_JURY_EVIDENCE_PACK_REPORTED_COMPLETE_PENDING_INDEPENDENT_AUDIT"
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Negative / mixed modality evidence summary",
+  "metric": "qualitative classification per modality (see numeric_support for governing numbers)",
+  "sample_unit": "modality (n=4: second-site PPG, leg BioZ, thoracic EIS, EEG-EOG-respiration interaction)",
+  "uncertainty_meaning": "each modality's own numeric_support field carries its governing sd/n; no cross-modality aggregation is performed",
+  "claim_boundary": "These results must remain visible in any final presentation - never omitted to present a cleaner minimalism story.",
+  "series": {
+    "second_site_ppg": {
+      "finding": "A second PPG measurement site did not demonstrate stable aggregate incremental value for HR/PTT estimation under the tested protocol, and the result is fragile to subject exclusion.",
+      "numeric_support": "B_minus_A=+1.462 MAE (worse); n=4 held-out test subjects."
+    },
+    "leg_bioz": {
+      "finding": "Additional leg BioZ did not demonstrate stable aggregate incremental value in the terrestrial body-mass-change proxy experiment and remained heterogeneous/sensitivity-fragile.",
+      "numeric_support": "A_minus_B=-0.052 (aggregate disfavors B); 7/10 subjects individually favor B."
+    },
+    "thoracic_eis": {
+      "finding": "Under the frozen terrestrial 0-60 mmHg LBNP protocol, thoracic EIS did not show stable aggregate incremental value beyond ECG+pleth, with substantial subject heterogeneity.",
+      "numeric_support": "A_minus_B=-0.452 (sign-reverses w/o subject 9); C_minus_B=-1.293 (shrinks substantially w/o subject 9); classification COMPLETE_MIXED."
+    },
+    "sleep_interaction": {
+      "finding": "No stable evidence of synergy or antagonism between EOG and respiration-derived features for sleep staging under the tested protocol.",
+      "numeric_support": "interaction_mean=-0.0078, mixed-sign seeds."
+    }
+  },
+  "provenance": [
+    "results/final_tables/table_d_negative_mixed_results.json"
+  ]
+}

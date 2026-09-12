@@ -1,0 +1,54 @@
+{
+  "table_id": "TABLE_D_NEGATIVE_MIXED_RESULTS",
+  "purpose": "Negative/mixed/fragile results (second-site PPG, leg BioZ, thoracic EIS, EEG-EOG-respiration interaction), explicitly preserved as scientifically important - never hidden from final presentation.",
+  "rows": [
+    {
+      "claim_id": "second_site_ppg",
+      "finding": "A second PPG measurement site did not demonstrate stable aggregate incremental value for HR/PTT estimation under the tested protocol, and the result is fragile to subject exclusion.",
+      "numeric_support": "B_minus_A=+1.462 MAE (worse); n=4 held-out test subjects.",
+      "population_scope": "n=4 held-out test subjects.",
+      "limitation": "n=4 test subjects; sign-sensitive to exclusion (established in prior sprints).",
+      "architecture_relevance": "EXCLUDED_MODALITY_SECOND_SITE_PPG",
+      "governing_evidence": [
+        "ptt_second_ppg_site"
+      ]
+    },
+    {
+      "claim_id": "leg_bioz",
+      "finding": "Additional leg BioZ did not demonstrate stable aggregate incremental value in the terrestrial body-mass-change proxy experiment and remained heterogeneous/sensitivity-fragile.",
+      "numeric_support": "A_minus_B=-0.052 (aggregate disfavors B); 7/10 subjects individually favor B.",
+      "population_scope": "QDE V2 n=10 subjects.",
+      "limitation": "n=10; single-outlier-dominated ambiguity.",
+      "architecture_relevance": "EXCLUDED_MODALITY_LEG_BIOZ",
+      "governing_evidence": [
+        "qde_v2_leg_bioz"
+      ]
+    },
+    {
+      "claim_id": "thoracic_eis",
+      "finding": "Under the frozen terrestrial 0-60 mmHg LBNP protocol, thoracic EIS did not show stable aggregate incremental value beyond ECG+pleth, with substantial subject heterogeneity.",
+      "numeric_support": "A_minus_B=-0.452 (sign-reverses w/o subject 9); C_minus_B=-1.293 (shrinks substantially w/o subject 9); classification COMPLETE_MIXED.",
+      "population_scope": "LBNP corrected protocol-compliant cohort: n=12/16 eligible subjects.",
+      "limitation": "n=12; only thoracic site and LBNP-stage target tested; both comparisons subject-9-sensitive.",
+      "architecture_relevance": "EXCLUDED_MODALITY_THORACIC_BIOZ_EIS",
+      "governing_evidence": [
+        "lbnp_thoracic_eis"
+      ]
+    },
+    {
+      "claim_id": "sleep_interaction",
+      "finding": "No stable evidence of synergy or antagonism between EOG and respiration-derived features for sleep staging under the tested protocol.",
+      "numeric_support": "interaction_mean=-0.0078, mixed-sign seeds.",
+      "population_scope": "Sleep-EDF EEG+EOG+Respiration factorial interaction experiment, same cohort as the primary Sleep-EDF result.",
+      "limitation": "Same-dataset only; interaction estimate itself noisy at n=5 seeds.",
+      "architecture_relevance": "NOT_USED_FOR_ARCHITECTURE_DECISION_INSUFFICIENT_TO_JUSTIFY_A_JOINT_EOG_RESPIRATION_MODULE",
+      "governing_evidence": [
+        "sleep_edf_interaction"
+      ]
+    }
+  ],
+  "row_count": 4,
+  "provenance": {
+    "source": "results/final_claim_ledger.json"
+  }
+}

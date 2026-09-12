@@ -1,0 +1,134 @@
+{
+  "artifact_id": "biological-minimalism-stage5-abstract-fact-sheet-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE5_FINAL_SYNTHESIS_AND_RELEASE",
+  "generated_role": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+  "purpose": "Every quantitative/qualitative statement fit for the IAC paper abstract, each resolved fail-closed against results/final_claim_ledger.json at build time. No unsupported number may enter the abstract.",
+  "central_scientific_message": "Biological Minimalism evaluates whether sensing modalities provide measurable incremental value after controlling for model capacity, temporal correspondence, subject separation, heterogeneity, and physical burden. Some modalities retain value under stronger controls and external replication, while others become mixed, negative, fragile, or deprioritized.",
+  "statements": [
+    {
+      "claim_id": "sensor_minimalism_framing",
+      "metric": "central scientific message / methodology",
+      "exact_safe_wording": "Biological Minimalism evaluates whether sensing modalities provide measurable incremental value after controlling for model capacity, temporal correspondence, subject separation, heterogeneity, and physical burden. Some modalities retain value under stronger controls and external replication, while others become mixed, negative, fragile, or deprioritized.",
+      "numeric_support": "N/A - methodological framing statement, not a numeric result.",
+      "limitation": "Applies across the modalities tested in this project; not a universal claim about sensing minimalism in general. No cross-row scoring or aggregation across targets/datasets is performed (each row uses its own metric/sign convention).",
+      "governing_evidence": [
+        "results/sensor_value_master_matrix_stage3_complete.json",
+        "results/target_evidence_matrix.json",
+        "docs/SENSOR_MARGINAL_VALUE_METHODOLOGY.md"
+      ],
+      "prohibited_stronger_wording": "'We proved four sensors are enough.'; any wording asserting a single minimal sufficient sensor set exists universally."
+    },
+    {
+      "claim_id": "ppg_plus_imu",
+      "metric": "capacity-controlled wrist IMU HR benefit",
+      "exact_safe_wording": "IMU provides modest incremental HR-estimation value beyond a capacity-near-matched PPG-only architecture under the tested protocol.",
+      "numeric_support": "PPG-DaLiA A_cap->B +0.605 bpm (5/5 seeds); GalaxyPPG participant A_cap->B +0.834 bpm (12/18 favor B)",
+      "limitation": "Two datasets; GalaxyPPG shows real subject heterogeneity (6/18 disfavor).",
+      "governing_evidence": [
+        "ppg_dalia_capacity_control",
+        "galaxyppg_external_replication"
+      ],
+      "prohibited_stronger_wording": "Universal IMU necessity; benefit for every participant/subject."
+    },
+    {
+      "claim_id": "galaxy_replication",
+      "metric": "external corroboration of wrist IMU HR benefit",
+      "exact_safe_wording": "Aligned IMU provides a modest aggregate benefit over the capacity-near-matched PPG baseline and deranged-IMU control in the corrected GalaxyPPG cohort, with meaningful participant heterogeneity.",
+      "numeric_support": "Participant A_cap->B +0.834268 bpm (12/18), C->B +0.916231 bpm (13/18); window-level agrees to <0.02 bpm.",
+      "limitation": "18 of 24 enrolled (6 excluded for a real data-integrity defect); real subject heterogeneity disclosed.",
+      "governing_evidence": [
+        "galaxyppg_external_replication"
+      ],
+      "prohibited_stronger_wording": "'GalaxyPPG replicates PPG-DaLiA' (use 'qualitatively consistent with'); 24/24 subject cohort; astronaut validation."
+    },
+    {
+      "claim_id": "eog_incremental_value",
+      "metric": "controlled sleep-staging benefit of EOG",
+      "exact_safe_wording": "Aligned EOG provides bounded same-dataset incremental sleep-staging value beyond EEG-only and shuffled/control conditions under the tested protocol.",
+      "numeric_support": "B_minus_A=+0.0282 (4/5 seeds); B_minus_C=+0.0323 (4/5 seeds).",
+      "limitation": "Same-dataset (Sleep-EDF) only; HMC full-cohort external replication pending; bounded n=7 HMC diagnostic did not reproduce the effect (inconclusive at that scale, not a negative external replication).",
+      "governing_evidence": [
+        "sleep_edf_primary_ab",
+        "sleep_edf_shuffled_control_c"
+      ],
+      "prohibited_stronger_wording": "'EOG is externally replicated' or 'validated on an independent clinical cohort'."
+    },
+    {
+      "claim_id": "second_site_ppg",
+      "metric": "negative second-site PPG result",
+      "exact_safe_wording": "A second PPG measurement site did not demonstrate stable aggregate incremental value for HR/PTT estimation under the tested protocol, and the result is fragile to subject exclusion.",
+      "numeric_support": "B_minus_A=+1.462 MAE (worse); n=4 held-out test subjects.",
+      "limitation": "n=4 test subjects; sign-sensitive to exclusion (established in prior sprints).",
+      "governing_evidence": [
+        "ptt_second_ppg_site"
+      ],
+      "prohibited_stronger_wording": "Presenting second-site PPG as architecture-supported."
+    },
+    {
+      "claim_id": "leg_bioz",
+      "metric": "aggregate-negative, heterogeneous leg BioZ result",
+      "exact_safe_wording": "Additional leg BioZ did not demonstrate stable aggregate incremental value in the terrestrial body-mass-change proxy experiment and remained heterogeneous/sensitivity-fragile.",
+      "numeric_support": "A_minus_B=-0.052 (aggregate disfavors B); 7/10 subjects individually favor B.",
+      "limitation": "n=10; single-outlier-dominated ambiguity.",
+      "governing_evidence": [
+        "qde_v2_leg_bioz"
+      ],
+      "prohibited_stronger_wording": "BioZ universally useless; microgravity fluid-shift invalidation."
+    },
+    {
+      "claim_id": "thoracic_eis",
+      "metric": "mixed, sign-reversing thoracic EIS result",
+      "exact_safe_wording": "Under the frozen terrestrial 0-60 mmHg LBNP protocol, thoracic EIS did not show stable aggregate incremental value beyond ECG+pleth, with substantial subject heterogeneity.",
+      "numeric_support": "A_minus_B=-0.452 (sign-reverses w/o subject 9); C_minus_B=-1.293 (shrinks substantially w/o subject 9); classification COMPLETE_MIXED.",
+      "limitation": "n=12; only thoracic site and LBNP-stage target tested; both comparisons subject-9-sensitive.",
+      "governing_evidence": [
+        "lbnp_thoracic_eis"
+      ],
+      "prohibited_stronger_wording": "Universal BioZ uselessness; a stable/uniform negative; microgravity/astronaut fluid-shift disproven; citing the old 607-window HISTORICAL_SUPERSEDED_OUT_OF_PROTOCOL result."
+    },
+    {
+      "claim_id": "final_architecture",
+      "metric": "selected final architecture",
+      "exact_safe_wording": "A final Stage-4 wearable architecture has been selected: CORE_PLUS_CONTEXT. Selection is evidence-driven and burden-aware (Gate D CONDITIONALLY_READY, coordinator-accepted bounded engineering uncertainty). EOG inclusion is conditional on pending external replication (HMC full-cohort); sparse EEG channel choice is conditional on pending full-cohort evidence (ds003838).",
+      "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+      "limitation": "Both HIGH-sensitivity conditional freezes (EOG/HMC, sparse-EEG/ds003838) remain subject to explicit revision triggers - this is a conditional, disclosed final decision, not an unconditional one.",
+      "governing_evidence": [
+        "results/final_wearable_architecture.json",
+        "results/stage4_gate_e_coordinator_decisions.json"
+      ],
+      "prohibited_stronger_wording": "'Four sensors are proven sufficient'; 'EOG is externally validated'; 'sparse EEG is population validated'; 'the architecture is immutable/unconditionally final'; any claim omitting the conditional-freeze/revision-trigger scope above."
+    },
+    {
+      "claim_id": "pareto",
+      "metric": "formal Pareto analysis outcome",
+      "exact_safe_wording": "A formal multi-objective Pareto dominance analysis has been completed (no single collapsed score). Pareto-relevant set: MINIMAL_CORE, CORE_PLUS_CONTEXT. Coordinator selected CORE_PLUS_CONTEXT from within that set on evidence-driven, burden-aware judgment, not because it mathematically dominates every alternative.",
+      "numeric_support": "N/A - this claim is a decision/methodology synthesis, not a single numeric result; see governing_evidence.",
+      "limitation": "MINIMAL_CORE remains Pareto-relevant (non-dominated) alongside CORE_PLUS_CONTEXT - this is not a unique mathematical winner. EVIDENCE_EXTENDED/EXPERIMENTAL_EXTENDED remain POTENTIALLY_DOMINATED, not formally DOMINATED.",
+      "governing_evidence": [
+        "results/stage4_formal_pareto_analysis.json"
+      ],
+      "prohibited_stronger_wording": "'CORE_PLUS_CONTEXT mathematically dominates every architecture'; 'Pareto winner'; presenting any ranked sensor list as establishing a unique optimum."
+    },
+    {
+      "claim_id": "engineering_burden",
+      "metric": "bounded engineering burden estimate",
+      "exact_safe_wording": "Reference engineering burden estimates (power, mass, data rate, contact/electrode count) for the final architecture are bounded engineering estimates (component-datasheet or class-level, Tier 0-2), not measured, vendor-sourced, or flight-qualified figures. Ranges reflect explicit topology and assumption uncertainty and are not yet collapsed to point estimates.",
+      "numeric_support": "Selected (per-module) topology battery-side power 9.937201 mW vs alternative single-shared battery-side 5.644949 mW (not selected); battery-only mass 8.763 g (3 x 2.921 g); contacts 9 most-likely (range 9-14); base-topology raw data rate ~19.6 kbps excluding the excluded second-PPG-site branch.",
+      "limitation": "Excludes PCB/enclosure/attachment/wiring mass beyond battery cells (module-level total mass is SYSTEM_MASS_NOT_READY); no vendor-specific parts selected (class-level components only, e.g. 'Cortex-M4F BLE SoC class'); no target operating duration exists in the project so battery capacity is held at a frozen 150 mAh/module reference rather than duration-derived.",
+      "governing_evidence": [
+        "results/final_wearable_architecture.json",
+        "results/stage4_candidate_burden_matrix.json",
+        "results/reference_power_budget_day11_part2.json",
+        "results/reference_mass_readiness_day11_part2.json",
+        "results/reference_bom_readiness_day11_part2.json",
+        "results/reference_data_rate_budget_day11.json",
+        "docs/STAGE4_ENGINEERING_SAFE_UNSAFE_CLAIMS.md"
+      ],
+      "prohibited_stronger_wording": "'This BOM is final/flight-ready'; 'the final wearable weighs 30.5 g'; presenting any burden figure as measured, guaranteed, or vendor-sourced."
+    }
+  ],
+  "statement_count": 10,
+  "source": "results/final_claim_ledger.json",
+  "status": "STAGE5_ABSTRACT_FACT_SHEET_REPORTED_COMPLETE_PENDING_INDEPENDENT_AUDIT"
+}

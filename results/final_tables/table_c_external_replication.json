@@ -1,0 +1,60 @@
+{
+  "table_id": "TABLE_C_EXTERNAL_REPLICATION",
+  "purpose": "Every external-dataset validity check in this project, explicitly classed as full replication, bounded diagnostic, or pending - never conflated.",
+  "rows": [
+    {
+      "modality": "Wrist PPG + IMU -> HR",
+      "external_dataset": "GalaxyPPG (corrected cohort)",
+      "replication_class": "EXTERNAL_REPLICATION_SUPPORTIVE_WITH_HETEROGENEITY",
+      "numeric_support": "Participant A_cap->B +0.834268 bpm (12/18), C->B +0.916231 bpm (13/18); window-level agrees to <0.02 bpm.",
+      "limitation": "18 of 24 enrolled (6 excluded for a real data-integrity defect); real subject heterogeneity disclosed.",
+      "governing_evidence": [
+        "galaxyppg_external_replication"
+      ]
+    },
+    {
+      "modality": "Frontal EEG + EOG -> sleep stage",
+      "external_dataset": "HMC (bounded n=7 subset of 151-subject cohort)",
+      "replication_class": "BOUNDED_EXTERNAL_DIAGNOSTIC_NOT_A_FULL_REPLICATION",
+      "numeric_support": "Bounded n=7: B_minus_A=-0.031 (2/5 seeds favor B). Current download state: 59 edf present, 58 complete pairs, 52 SHA256-verified, 1 partial (SN060).",
+      "limitation": "n=7/1-test-recording is far too small to conclude anything about the 151-recording full cohort.",
+      "governing_evidence": [
+        "hmc_bounded_diagnostic",
+        "hmc_current_download_state"
+      ]
+    },
+    {
+      "modality": "Sparse vs full-montage frontal EEG -> sleep stage",
+      "external_dataset": "ds003838 (bounded n=3 subset)",
+      "replication_class": "BOUNDED_EXTERNAL_DIAGNOSTIC_NOT_A_FULL_REPLICATION",
+      "numeric_support": "n=3, inconclusive by design.",
+      "limitation": "Full ~65-subject cohort requires ~93GB/~9.4h additional download, not attempted.",
+      "governing_evidence": [
+        "ds003838_bounded_diagnostic"
+      ]
+    },
+    {
+      "modality": "HMC full cohort (151 subjects)",
+      "external_dataset": "HMC",
+      "replication_class": "PENDING_EXTERNAL_REPLICATION_LOWER_PRIORITY_NOT_A_RELEASE_BLOCKER",
+      "numeric_support": "N/A - not run.",
+      "limitation": "Access working (59/151 downloaded); compute/time-budget limited, not an access blocker.",
+      "governing_evidence": [
+        "results/hmc_current_download_inventory.json"
+      ]
+    },
+    {
+      "modality": "ds003838 full cohort",
+      "external_dataset": "ds003838",
+      "replication_class": "PENDING_EXTERNAL_REPLICATION_LOWER_PRIORITY_NOT_A_RELEASE_BLOCKER",
+      "numeric_support": "N/A - not run.",
+      "limitation": "Requires ~93GB / ~9.4h additional download, not attempted.",
+      "governing_evidence": [
+        "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json"
+      ]
+    }
+  ],
+  "provenance": {
+    "source": "results/final_claim_ledger.json"
+  }
+}

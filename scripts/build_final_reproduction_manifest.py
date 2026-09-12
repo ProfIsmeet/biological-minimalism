@@ -1,0 +1,235 @@
+"""Stage 5 Final Synthesis: final reproduction manifest (master prompt
+Part IX, Sections 39-41).
+
+Per-experiment reproducibility classification, typed per Section 40 (never
+treating all experiments as equally reproducible), built from the existing
+checkpoint/environment/clean-clone evidence already in this repo
+(docs/REPRODUCIBILITY.md, docs/CLEAN_CLONE_REPRODUCTION_DAY13.md,
+results/clean_clone_reproduction_day13.json, results/environment_manifest.json).
+No new reproduction runs are performed by this script - it classifies what
+has already been verified.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+OUTPUT_PATH = REPO_ROOT / "results" / "final_reproduction_manifest.json"
+
+# Reproducibility classes (Section 40) - explicit, typed, never collapsed to
+# a single "reproducible: true/false".
+REPRO_CLASSES = {
+    "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE": "A frozen checkpoint exists, was retrieved from a GitHub Release archive during the Day-13 clean-clone drill, SHA256-verified, and re-evaluation matched the committed artifact exactly (or within stated tolerance).",
+    "BOUNDED_DIAGNOSTIC_REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE": "The result is itself a bounded/small-n diagnostic (not a full-cohort claim); reproducing it requires the external dataset subset to be downloaded locally, not committed to the repo.",
+    "REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE": "Deterministic builder script exists; reproducing requires the raw dataset to be downloaded locally per datasets/*/README.md (never committed to the repo).",
+    "CHECKPOINT_STATUS_NOT_INDEPENDENTLY_SPOT_CHECKED": "A deterministic builder script and (for trained results) a checkpoint exist, but this specific experiment was not among those spot-checked in the Day-13 clean-clone drill; reproducibility is expected but not independently confirmed by that drill.",
+    "HISTORICALLY_UNVERIFIABLE_DUE_TO_MISSING_BYTES": "A checkpoint or intermediate artifact referenced by a committed result no longer exists anywhere (not locally, not archived) and cannot be regenerated bit-identically. NOTE: as of this manifest, 0 experiments fall in this class - all 60/60 checkpoints exercised in the Day-13 clean-clone drill were retrieved and SHA256-verified from GitHub Release archives.",
+    "PENDING_NOT_YET_RUN": "The experiment (full-cohort HMC, full-cohort ds003838) has not been run at all; nothing to reproduce yet.",
+}
+
+EXPERIMENTS = [
+    {
+        "experiment_id": "ppg_dalia_capacity_control",
+        "governing_artifact": "results/ppg_dalia_capacity_control.json",
+        "source_dataset": "PPG-DaLiA (PhysioNet/UCI, external download)",
+        "data_availability": "Not committed to repo; download per datasets/ppg_dalia/README.md",
+        "environment": "results/environment_manifest.json (Python 3.13.0, torch 2.6.0+cpu)",
+        "checkpoints": "5 seed checkpoints; Day-13 clean-clone: 5/5 exact match",
+        "expected_metrics": "A_cap->B +0.605 bpm, C->B +0.776 bpm (5/5 seeds)",
+        "tolerance": "exact (bitwise/float match on frozen checkpoints)",
+        "reference_entry_point": "ml/verify_ppg_dalia_capacity_control_reproducibility.py",
+        "reproducibility_class": "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE",
+    },
+    {
+        "experiment_id": "ppg_dalia_fault_robustness",
+        "governing_artifact": "results/ppg_dalia_fault_robustness.json",
+        "source_dataset": "PPG-DaLiA, held-out subject S14",
+        "data_availability": "Not committed to repo; download per datasets/ppg_dalia/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "Re-evaluation from a single frozen Model B checkpoint across 114 fault-injection conditions",
+        "expected_metrics": "114/114 conditions within 1e-4 bpm tolerance (max observed 7.6e-6 bpm)",
+        "tolerance": "1e-4 bpm",
+        "reference_entry_point": "results/day10_ppg_dalia_fault_robustness_reproduction.json (Day-10 re-run record)",
+        "reproducibility_class": "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE",
+    },
+    {
+        "experiment_id": "ptt_second_ppg_site",
+        "governing_artifact": "results/ptt_ppg_site_ablation.json",
+        "source_dataset": "PPG-DaLiA-derived PTT dual-site subset",
+        "data_availability": "Not committed to repo; download per datasets/ppg_dalia/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "10 checkpoints; Day-13 clean-clone: 10/10 exact match",
+        "expected_metrics": "B-A = +1.462 MAE (bpm), n=4 held-out subjects",
+        "tolerance": "exact",
+        "reference_entry_point": "ml/verify_ptt_reproducibility.py",
+        "reproducibility_class": "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE",
+    },
+    {
+        "experiment_id": "sleep_edf_primary",
+        "governing_artifact": "results/sleep_edf_primary_seedfix_v2.json",
+        "source_dataset": "Sleep-EDF Expanded (PhysioNet, external download)",
+        "data_availability": "Not committed to repo; download per datasets/sleep_edf/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "10 checkpoints (5 seeds x A/B); Day-13 clean-clone: 10/10 exact match",
+        "expected_metrics": "B-A = +0.0282 macro-F1 (4/5 seeds); B-C = +0.0323 (4/5 seeds)",
+        "tolerance": "exact",
+        "reference_entry_point": "ml/verify_sleep_edf_primary_seedfix_v2_reproducibility.py",
+        "reproducibility_class": "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE",
+    },
+    {
+        "experiment_id": "sleep_edf_shuffled_eog_control",
+        "governing_artifact": "results/sleep_edf_shuffled_eog_control_seedfix_v2.json",
+        "source_dataset": "Sleep-EDF Expanded (same cohort as primary)",
+        "data_availability": "Not committed to repo; download per datasets/sleep_edf/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "5 seed checkpoints (Condition C)",
+        "expected_metrics": "B-C = +0.0323 macro-F1 (4/5 seeds)",
+        "tolerance": "exact",
+        "reference_entry_point": "ml/verify_sleep_edf_shuffled_eog_reproducibility.py",
+        "reproducibility_class": "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE",
+    },
+    {
+        "experiment_id": "sleep_edf_secondary_holdout",
+        "governing_artifact": "results/sleep_edf_secondary_holdout_evaluation.json",
+        "source_dataset": "Sleep-EDF Expanded, prospective n=8 holdout subjects",
+        "data_availability": "Not committed to repo; download per datasets/sleep_edf/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "5 existing frozen checkpoints, zero retraining; Day-13 clean-clone: 5/5 exact match",
+        "expected_metrics": "5/5 seeds A->B, 6/8 subjects B>A, 7/8 B>C",
+        "tolerance": "exact",
+        "reference_entry_point": "ml/verify_sleep_edf_secondary_holdout_reproducibility.py",
+        "reproducibility_class": "CHECKPOINT_REPRODUCIBLE_FROM_ARCHIVE",
+    },
+    {
+        "experiment_id": "sleep_edf_interaction_eeg_eog_resp",
+        "governing_artifact": "results/sleep_edf_interaction_resp_seedfix_v2.json",
+        "source_dataset": "Sleep-EDF Expanded (same cohort as primary)",
+        "data_availability": "Not committed to repo; download per datasets/sleep_edf/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "5 seed checkpoints (M0/M_A/M_B/M_AB factorial)",
+        "expected_metrics": "interaction_mean = -0.0078 +/- 0.0363 macro-F1 (mixed-sign, 3/5 pos, 2/5 neg)",
+        "tolerance": "exact",
+        "reference_entry_point": "ml/verify_sleep_edf_interaction_reproducibility.py",
+        "reproducibility_class": "CHECKPOINT_STATUS_NOT_INDEPENDENTLY_SPOT_CHECKED",
+    },
+    {
+        "experiment_id": "galaxyppg_external_replication_corrected",
+        "governing_artifact": "results/galaxyppg_corrected_full_cv_result.json",
+        "source_dataset": "GalaxyPPG (external, 18/24 eligible participants after excluding 6 for a reference-ECG signal-quality defect)",
+        "data_availability": "Not committed to repo; external download, third-party dataset access terms apply",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "N/A - cross-validation re-uses frozen PPG-DaLiA-trained checkpoints, no new training",
+        "expected_metrics": "A_cap->B +0.834 bpm (12/18 favor B); C->B +0.916 bpm (13/18 favor B)",
+        "tolerance": "exact (deterministic inference from frozen checkpoints)",
+        "reference_entry_point": "no dedicated ml/verify_*.py script yet; rerun the galaxyppg builder script and diff against results/galaxyppg_corrected_full_cv_result.json",
+        "reproducibility_class": "REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE",
+    },
+    {
+        "experiment_id": "hmc_sleep_external_replication_bounded_n7",
+        "governing_artifact": "results/hmc_sleep_external_replication_stage3_bounded_n7.json",
+        "source_dataset": "Haaglanden Medisch Centrum (HMC) sleep staging dataset, bounded n=7 diagnostic subset (of a 151-subject full cohort)",
+        "data_availability": "59/151 EDF downloaded, 52 SHA256-verified, 1 partial; not committed to repo",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "5 seed checkpoints re-evaluated on the n=7 subset, no new training",
+        "expected_metrics": "B-A = -0.031 macro-F1 (2/5 seeds favor B)",
+        "tolerance": "exact",
+        "reference_entry_point": "no dedicated ml/verify_*.py script yet; rerun the HMC bounded-diagnostic builder script and diff against results/hmc_sleep_external_replication_stage3_bounded_n7.json",
+        "reproducibility_class": "BOUNDED_DIAGNOSTIC_REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE",
+    },
+    {
+        "experiment_id": "ds003838_eeg_minimalism_bounded_n3",
+        "governing_artifact": "results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+        "source_dataset": "OpenNeuro ds003838, bounded n=3 diagnostic subset (sub-032/033/034)",
+        "data_availability": "n=3 subset downloaded; full cohort needs ~93GB / ~9.4h additional download, not attempted",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "N/A - LOSO evaluation, no persistent checkpoint referenced",
+        "expected_metrics": "LOSO macro-F1 A=0.2263, B=0.2765, C=0.2167 (chance-level, B driven by 2/3 subjects)",
+        "tolerance": "exact",
+        "reference_entry_point": "no dedicated ml/verify_*.py script yet; rerun the ds003838 bounded-diagnostic builder script and diff against results/ds003838_eeg_minimalism_stage3_bounded_diagnostic.json",
+        "reproducibility_class": "BOUNDED_DIAGNOSTIC_REPRODUCIBLE_IF_DATASET_LOCALLY_AVAILABLE",
+    },
+    {
+        "experiment_id": "qde_v2_leg_bioz",
+        "governing_artifact": "results/qde_v2_leg_bioz_stage2.json",
+        "source_dataset": "QDE (quasi-dynamic exercise) upper-body + leg BioZ, n=10 subjects",
+        "data_availability": "Not committed to repo; download per datasets/*/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "Not spot-checked in Day-13 clean-clone drill",
+        "expected_metrics": "A-B = -0.0518 (aggregate disfavors B), C-B = -0.0596; 7/10 subjects individually favor B",
+        "tolerance": "exact (expected, not independently confirmed)",
+        "reference_entry_point": "no dedicated ml/verify_*.py script yet; rerun the QDE V2 builder script and diff against results/qde_v2_leg_bioz_stage2.json",
+        "reproducibility_class": "CHECKPOINT_STATUS_NOT_INDEPENDENTLY_SPOT_CHECKED",
+    },
+    {
+        "experiment_id": "lbnp_thoracic_eis_v2_protocol_compliant",
+        "governing_artifact": "results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+        "source_dataset": "LBNP (lower-body negative pressure) protocol, n=12/16 eligible subjects",
+        "data_availability": "Not committed to repo; download per datasets/*/README.md",
+        "environment": "results/environment_manifest.json",
+        "checkpoints": "Not spot-checked in Day-13 clean-clone drill",
+        "expected_metrics": "A-B = -0.452 mmHg MAE (3/12 favor B, sign-reverses without subject 9)",
+        "tolerance": "exact (expected, not independently confirmed)",
+        "reference_entry_point": "no dedicated ml/verify_*.py script yet; rerun the LBNP V2 builder script and diff against results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json",
+        "reproducibility_class": "CHECKPOINT_STATUS_NOT_INDEPENDENTLY_SPOT_CHECKED",
+    },
+]
+
+
+def build() -> dict:
+    class_counts: dict[str, int] = {}
+    for exp in EXPERIMENTS:
+        cls = exp["reproducibility_class"]
+        class_counts[cls] = class_counts.get(cls, 0) + 1
+
+    return {
+        "artifact_id": "biological-minimalism-stage5-final-reproduction-manifest-v1",
+        "schema_version": "1.0.0",
+        "sprint": "STAGE5_FINAL_SYNTHESIS_AND_RELEASE",
+        "generated_role": "FINAL_SYNTHESIS_AND_RELEASE_OWNER",
+        "purpose": (
+            "Per-experiment reproducibility classification for every governing experiment cited in the final "
+            "synthesis tables, typed per master prompt Section 40 - never treating all experiments as equally "
+            "reproducible. Built from existing verified evidence (Day-13 clean-clone drill, environment freeze "
+            "manifests); performs no new reproduction runs."
+        ),
+        "reproducibility_classes": REPRO_CLASSES,
+        "class_distribution": class_counts,
+        "environment_snapshot": {
+            "source": "results/environment_manifest.json",
+            "python_version": "3.13.0",
+            "os": "Windows-2022Server-10.0.20348-SP0",
+            "cuda_available": False,
+            "key_packages": {
+                "torch": "2.6.0+cpu",
+                "numpy": "2.5.2 (frozen) / 2.5.3 observed in Day-13 clean-clone, patch-level drift, no observed impact",
+                "scipy": "1.18.1",
+                "scikit-learn": "1.9.0",
+                "mne": "1.12.1",
+                "wfdb": "4.3.1",
+                "pandas": "3.0.5",
+            },
+            "note": "ML environment is largely unpinned beyond this frozen snapshot (docs/REPRODUCIBILITY.md SS3: 'the weakest link'); backend environment is pinned with == in backend/requirements.txt.",
+        },
+        "clean_clone_drill": {
+            "source": "results/clean_clone_reproduction_day13.json",
+            "verdict": "CLEAN_CLONE_PASS_WITH_MANUAL_DATA_SETUP",
+            "clone_commit_verified": "e414ef5c0c2b00f7d80b681848d37d7c59e523b5",
+            "checkpoints_retrieved": 60,
+            "checkpoints_verified": 60,
+            "manual_steps_disclosed": [
+                "gh auth login for private-repo checkpoint GitHub Release archives",
+                "PhysioNet/UCI/external dataset download for from-scratch dataset acquisition",
+            ],
+        },
+        "experiments": EXPERIMENTS,
+        "experiment_count": len(EXPERIMENTS),
+        "status": "STAGE5_REPRODUCTION_MANIFEST_REPORTED_COMPLETE_PENDING_INDEPENDENT_AUDIT",
+    }
+
+
+if __name__ == "__main__":
+    output = build()
+    OUTPUT_PATH.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Wrote {OUTPUT_PATH} ({len(output['experiments'])} experiments)")

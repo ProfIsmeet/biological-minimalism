@@ -1,0 +1,52 @@
+{
+  "table_id": "TABLE_E_FINAL_ARCHITECTURE_RATIONALE",
+  "purpose": "For every included/excluded modality in the final CORE_PLUS_CONTEXT architecture: evidence, burden, replication, decision, and rationale.",
+  "final_architecture": "CORE_PLUS_CONTEXT",
+  "rows": [
+    {
+      "modality": "MINIMAL_CORE sensors",
+      "decision": "INCLUDE",
+      "evidence_confidence": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+      "rationale": "Minimal Core plus modalities with bounded-but-controlled same-dataset support, assuming low marginal burden via shared infrastructure."
+    },
+    {
+      "modality": "EOG (if sharing EEG AFE/reference infrastructure)",
+      "decision": "INCLUDE",
+      "evidence_confidence": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+      "rationale": "Minimal Core plus modalities with bounded-but-controlled same-dataset support, assuming low marginal burden via shared infrastructure."
+    },
+    {
+      "modality": "eog",
+      "decision": "INCLUDE",
+      "evidence_confidence": "TIER_B_CONTROLLED_SUPPORT for EOG (same-dataset); TIER_C_BOUNDED_SUPPORT for EOG's external validity",
+      "rationale": "Aligned EOG provides bounded same-dataset incremental sleep-staging value beyond EEG-only and shuffled/control conditions under the tested protocol (TIER_B_CONTROLLED_SUPPORT same-dataset; TIER_C_BOUNDED_SUPPORT external, via HMC bounded n=7 - NOT externally replicated). Included at low incremental physical burden (+0.375 mW, +0.4 g, +2 contacts) via shared EEG AFE/reference infrastructure, without adding a new body region or full module."
+    },
+    {
+      "modality": "thoracic_bioz_eis",
+      "decision": "EXCLUDE",
+      "reason": "Corrected protocol-compliant LBNP evidence is COMPLETE_MIXED, negative-leaning and heterogeneous (results/lbnp_thoracic_eis_stage3_v2_protocol_compliant.json). Does not demonstrate stable incremental value sufficient to justify final architecture inclusion.",
+      "prohibited_claim": "BioZ is useless - NOT the finding. Preserved in scientific history/evidence, excluded from hardware architecture only."
+    },
+    {
+      "modality": "leg_bioz",
+      "decision": "EXCLUDE",
+      "reason": "QDE V2 is aggregate-negative, heterogeneous, and sensitivity-fragile (7/10 subjects individually favor B despite a negative aggregate mean), while leg BioZ adds a new body region, electrode/contact burden, and attachment/module burden.",
+      "prohibited_claim": "Generalization beyond the tested terrestrial endpoint is not supported."
+    },
+    {
+      "modality": "second_site_ppg",
+      "decision": "EXCLUDE",
+      "reason": "Current PTT evidence is negative/deprioritized (B_minus_A=+1.462 MAE, worse; n=4 held-out test subjects) and it adds substantial sensor power (9.018 mW, the single largest sensor contributor in the entire burden model), data rate (28500 bps), and a new sensing location.",
+      "prohibited_claim": "'Second PPG never helps' as an absolute/permanent claim - NOT supported; only this tested implementation is deprioritized."
+    },
+    {
+      "modality": "wrist_temperature_light",
+      "decision": "EXCLUDE",
+      "reason": "No governing scientific experiment currently establishes incremental value (TIER_P_PENDING - complete absence of governing evidence, not a negative result).",
+      "prohibited_claim": "Labeling these modalities negative - NOT supported. Correct status is insufficient/pending evidence."
+    }
+  ],
+  "provenance": {
+    "source": "results/final_wearable_architecture.json"
+  }
+}
