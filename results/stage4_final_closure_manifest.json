@@ -182,7 +182,7 @@
     ],
     "coordinator_selection_rationale": "Coordinator selected CORE_PLUS_CONTEXT from the Pareto-relevant set because the EOG increment adds controlled sleep-staging evidence at low incremental physical burden without adding a new body region or full module, while accepting conditional external-validation uncertainty."
   },
-  "repository_sha_after_closure": "51a644e0a797ba65b4b3f38acb3c8ee25f1dd95d",
+  "repository_sha_after_closure": "4b50e7c32c6dcafe7768f8199815489c9370f8f5",
   "repository_sha_note": "This is the repository HEAD SHA at manifest-generation time (the parent of this sprint's closure commit(s) - a file cannot embed its own resulting commit hash without amending, which this project's git discipline avoids). The actual final closure commit SHA is reported in the branch push report/PR, not embedded here.",
   "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
   "status": "STAGE4_FINAL_CLOSURE_CANDIDATE_REPORTED_COMPLETE_PENDING_INDEPENDENT_AUDIT"
