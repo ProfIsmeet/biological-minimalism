@@ -23,6 +23,18 @@ STAGE4_ARTIFACTS = [
     "results/stage4_scientific_pareto_inputs.json",
     "results/stage4_architecture_acceptance_gates.json",
     "results/stage4_architecture_candidate_classes.json",
+    # Integration Owner's own closure-prep artifacts (Stage-4 Gate D Burden
+    # Closure sprint, master prompt Part XII Attack F): must never claim a
+    # final architecture or a resolved formal Pareto, same as every
+    # Science Owner artifact above.
+    "results/stage4_gate_d_burden_completeness.json",
+    "results/stage4_candidate_class_burden_comparison.json",
+    "results/stage4_architecture_decision_projection.json",
+    "results/stage4_gate_e_coordinator_options.json",
+    "results/stage4_final_architecture_decision_packet.json",
+    "results/stage4_contact_electrode_burden.json",
+    "results/stage4_battery_topology_scenarios.json",
+    "results/stage4_candidate_burden_matrix.json",
 ]
 
 DECISION_STATUS_FIELDS = ("architecture_implication", "consumption_status", "evidence_classification")
