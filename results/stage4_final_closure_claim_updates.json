@@ -1,0 +1,42 @@
+{
+  "artifact_id": "biological-minimalism-stage4-final-closure-claim-updates-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_FINAL_ARCHITECTURE_CLOSURE",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "Supersedes only the `final_architecture` and `pareto` claims in the Science-Owner-authored results/stage4_science_claim_ledger.json (left otherwise untouched) with new safe wording reflecting the Coordinator's actual final decision.",
+  "updated_claims": [
+    {
+      "claim_id": "final_architecture",
+      "supersedes": {
+        "artifact": "results/stage4_science_claim_ledger.json",
+        "original_exact_safe_wording": "Final sensor architecture selection remains UNRESOLVED; a formal Pareto frontier is NOT_READY.",
+        "original_strength": "PENDING"
+      },
+      "exact_safe_wording": "A final Stage-4 wearable architecture has been selected: CORE_PLUS_CONTEXT. Selection is evidence-driven and burden-aware (Gate D CONDITIONALLY_READY, coordinator-accepted bounded engineering uncertainty). EOG inclusion is conditional on pending external replication (HMC full-cohort); sparse EEG channel choice is conditional on pending full-cohort evidence (ds003838).",
+      "strength": "SAFE_WITH_LIMITATION",
+      "governing_evidence": [
+        "results/final_wearable_architecture.json",
+        "results/stage4_gate_e_coordinator_decisions.json"
+      ],
+      "scope_limitation": "Both HIGH-sensitivity conditional freezes (EOG/HMC, sparse-EEG/ds003838) remain subject to explicit revision triggers - this is a conditional, disclosed final decision, not an unconditional one.",
+      "prohibited_stronger_wording": "'Four sensors are proven sufficient'; 'EOG is externally validated'; 'sparse EEG is population validated'; 'the architecture is immutable/unconditionally final'; any claim omitting the conditional-freeze/revision-trigger scope above.",
+      "stage4_consumer_guidance": "Cite results/final_wearable_architecture.json and docs/STAGE4_FINAL_ARCHITECTURE_CLOSURE.md for this claim; never the pre-closure PENDING wording in results/stage4_science_claim_ledger.json alone."
+    },
+    {
+      "claim_id": "pareto",
+      "supersedes": {
+        "artifact": "results/stage4_science_claim_ledger.json",
+        "original_exact_safe_wording": "A formal Pareto (scientific-value vs. burden) frontier has not been computed - NOT_READY.",
+        "original_strength": "PENDING"
+      },
+      "exact_safe_wording": "A formal multi-objective Pareto dominance analysis has been completed (no single collapsed score). Pareto-relevant set: MINIMAL_CORE, CORE_PLUS_CONTEXT. Coordinator selected CORE_PLUS_CONTEXT from within that set on evidence-driven, burden-aware judgment, not because it mathematically dominates every alternative.",
+      "strength": "SAFE_WITH_LIMITATION",
+      "governing_evidence": [
+        "results/stage4_formal_pareto_analysis.json"
+      ],
+      "scope_limitation": "MINIMAL_CORE remains Pareto-relevant (non-dominated) alongside CORE_PLUS_CONTEXT - this is not a unique mathematical winner. EVIDENCE_EXTENDED/EXPERIMENTAL_EXTENDED remain POTENTIALLY_DOMINATED, not formally DOMINATED.",
+      "prohibited_stronger_wording": "'CORE_PLUS_CONTEXT mathematically dominates every architecture'; 'Pareto winner'; presenting any ranked sensor list as establishing a unique optimum.",
+      "stage4_consumer_guidance": "Cite results/stage4_formal_pareto_analysis.json; never present potential_dominance as confirmed mathematical dominance."
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "artifact_id": "biological-minimalism-stage4-final-closure-manifest-v1",
+  "schema_version": "1.0.0",
+  "sprint": "STAGE4_FINAL_ARCHITECTURE_CLOSURE",
+  "generated_role": "INTEGRATION_OWNER",
+  "purpose": "The Stage-4 final closure manifest: every authoritative artifact path/hash, the final architecture decision, formal Pareto status, acceptance gates A-H closure record, pending science, and Coordinator decisions, for independent audit.",
+  "authoritative_artifacts": [
+    {
+      "path": "results/stage4_architecture_acceptance_gates.json",
+      "sha256": "afb638c9911fae7f24e38f90b827bc62c21a406562429af1d052584601b48f53",
+      "description": "Acceptance gates A-H (Science Owner authored, severity/evidence/owner)"
+    },
+    {
+      "path": "results/stage4_architecture_candidate_classes.json",
+      "sha256": "7054d5c59f505af4d2963f97106176a1b66a8b8369f281015d5a21759308e5b4",
+      "description": "4 candidate architecture classes (Science Owner authored)"
+    },
+    {
+      "path": "results/stage4_architecture_decision_projection.json",
+      "sha256": "a4b7046770341081dee2ebe50b00eb186178031360ecf7c1d49aae0af1cd8197",
+      "description": "Per-decision-unit science+burden join (pre-closure input)"
+    },
+    {
+      "path": "results/stage4_gate_d_burden_completeness.json",
+      "sha256": "4f5b42d165d45fc42bf58c1b3f4b68ee1bb10ed1936a48dd80476dc739c4d563",
+      "description": "Gate D burden-completeness assessment, v3.0.0, CONDITIONALLY_READY + coordinator_acceptance"
+    },
+    {
+      "path": "results/stage4_gate_e_coordinator_options.json",
+      "sha256": "6d66629912fdd8014fd554a0c47a59430b179a41e77eadb4a2f892a5ce28e5a3",
+      "description": "Gate E options prepared (historical, no_option_selected=true - superseded by decisions below)"
+    },
+    {
+      "path": "results/stage4_gate_e_coordinator_decisions.json",
+      "sha256": "ba1c8c90d7c69efc51d720fd5aecc4e83279ec04b03af4f9085030ec9820cf87",
+      "description": "Gate E Coordinator decisions - FREEZE_CONDITIONALLY x2, with revision triggers"
+    },
+    {
+      "path": "results/stage4_candidate_burden_matrix.json",
+      "sha256": "d04d63e24abe118b26ec2dada5b16032927a811e7fb2e32132fb2dd19b742e2b",
+      "description": "Configuration-level burden matrix, 4 classes, computed robustness"
+    },
+    {
+      "path": "results/stage4_contact_electrode_burden.json",
+      "sha256": "b4054deb539048dab5e1652120ad6432d2c62b91107f140148de41f9c44443f4",
+      "description": "Bounded contact/electrode topology, 7 modalities"
+    },
+    {
+      "path": "results/stage4_battery_topology_scenarios.json",
+      "sha256": "3b8426a465b4016af52bbf123da1a54302fb0736ce1124bdd0c5f5cfe1db70ee",
+      "description": "Battery/electronics topology scenarios (shared-hub vs distributed)"
+    },
+    {
+      "path": "results/stage4_candidate_class_burden_comparison.json",
+      "sha256": "e0cd9cd9c534ca88c8db26257f535ea08e185e26778987e5a4de2ec8b9affbe7",
+      "description": "Per-class burden comparison, dominance flags"
+    },
+    {
+      "path": "results/stage4_scientific_pareto_inputs.json",
+      "sha256": "b64043b8cc9814f7cdf57c7fb432e3c236b266e4ab17b8fb73fe0583ca037ca1",
+      "description": "Science-only Pareto axes (Science Owner authored)"
+    },
+    {
+      "path": "results/stage4_formal_pareto_analysis.json",
+      "sha256": "110f7d3f60d5f569681ec589a6d86204bee027544b155e3d101956281562d523",
+      "description": "Formal multi-objective Pareto dominance analysis - COMPLETE"
+    },
+    {
+      "path": "results/final_wearable_architecture.json",
+      "sha256": "a8989be0ea07023566d741032cbc29a1de2906e9340bfdbdfb58bc1d85fd146c",
+      "description": "THE canonical final architecture decision - CORE_PLUS_CONTEXT"
+    },
+    {
+      "path": "results/stage4_final_architecture_decision_packet.json",
+      "sha256": "aeee5a0ee6d2759ee559ad4ab2e54774d4aae59d94ca35308fae3f877bd18feb",
+      "description": "Pre-closure decision packet (historical aggregation input, superseded by final_wearable_architecture.json as the decision-of-record)"
+    },
+    {
+      "path": "results/stage4_science_claim_ledger.json",
+      "sha256": "7a3462b5d9b0b5fe9b272a0b270e9e1602d2fb86c8018d259f744ad12f077c87",
+      "description": "Science Owner claim ledger - exact safe wording per claim area"
+    },
+    {
+      "path": "results/stage4_final_closure_claim_updates.json",
+      "sha256": "605ecf78b5296f96e5e1ec9bf52282ffd62f845d5c34662bee8d42a1e14c8477",
+      "description": "Integration Owner claim-update - supersedes final_architecture/pareto claim wording only"
+    }
+  ],
+  "final_architecture": "CORE_PLUS_CONTEXT",
+  "formal_pareto_status": "COMPLETE",
+  "acceptance_gates": [
+    {
+      "gate_id": "GATE_A_SCIENTIFIC_PROVENANCE",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "Every sensor included in the frozen architecture has a documented scientific rationale traceable to a specific governing Stage-3 family.",
+      "evidence": "A citation from results/stage4_science_consumption_manifest.json or results/stage4_science_claim_ledger.json for every included sensor.",
+      "closure_mechanism": "Coordinator's final architecture document cites this manifest/ledger per sensor.",
+      "final_state": "PASS - every included sensor traces to results/stage4_science_consumption_manifest.json / results/stage4_science_claim_ledger.json (cited in final_wearable_architecture.json science_rationale)."
+    },
+    {
+      "gate_id": "GATE_B_EXCLUDED_SENSOR_RATIONALE",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "Every serious candidate sensor that is excluded has a documented reason (not silence).",
+      "evidence": "A citation from results/stage4_scientific_sensor_value_matrix.json or results/stage4_architecture_decision_inputs_science.json explaining the exclusion.",
+      "closure_mechanism": "Coordinator's final architecture document cites the specific exclusion rationale per excluded sensor.",
+      "final_state": "PASS - every excluded sensor (thoracic BioZ, leg BioZ, second-site PPG, wrist temp/light) has documented evidence-based rationale in final_wearable_architecture.json exclusion_rationale."
+    },
+    {
+      "gate_id": "GATE_C_EVIDENCE_STATUS_HONESTY",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "No bounded or pending result is represented as a verified external replication in the final architecture document.",
+      "evidence": "Cross-check final architecture wording against results/stage4_science_claim_ledger.json's prohibited_stronger_wording fields.",
+      "closure_mechanism": "Running the claim-consistency validator against the final architecture document text before freeze.",
+      "final_state": "PASS - EOG/sparse-EEG wording remains bounded/conditional per results/stage4_gate_e_coordinator_decisions.json claim_limitations; validated by ml/validate_stage4_final_architecture_closure.py."
+    },
+    {
+      "gate_id": "GATE_D_BURDEN_COMPLETENESS",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "Engineering burden accounting includes body region, contact/electrode count, module count, and attachment/strap burden - not chip/component count alone.",
+      "evidence": "Integration Owner's burden analysis explicitly covering all four dimensions per candidate sensor.",
+      "closure_mechanism": "Integration Owner publishes a burden analysis artifact covering all four dimensions; Science Owner's role is limited to flagging which dimensions matter scientifically (done in results/stage4_scientific_pareto_inputs.json's uniqueness/dependency fields).",
+      "final_state": "CONDITIONALLY_READY, CLOSED_FOR_STAGE4_BY_COORDINATOR_ACCEPTANCE_OF_BOUNDED_ENGINEERING_UNCERTAINTY (results/stage4_gate_d_burden_completeness.json coordinator_acceptance) - NOT silently relabeled READY."
+    },
+    {
+      "gate_id": "GATE_E_PENDING_SCIENCE_SENSITIVITY",
+      "original_severity": "COORDINATOR_DECISION_REQUIRED",
+      "original_requirement": "For every modality with decision_sensitivity=HIGH in results/stage4_sensor_decision_sensitivity.json, the Coordinator has explicitly chosen one of: WAIT, FREEZE_CONDITIONALLY, or FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE.",
+      "evidence": "An explicit Coordinator statement for EOG (HMC-dependent) and sparse/full EEG (ds003838-dependent), the two current HIGH-sensitivity items.",
+      "closure_mechanism": "A recorded Coordinator decision (WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE) for each current HIGH-sensitivity item.",
+      "final_state": "CLOSED_BY_COORDINATOR_DECISION - both HIGH-sensitivity items (EOG/HMC, sparse-vs-full EEG/ds003838) FREEZE_CONDITIONALLY with explicit revision triggers (results/stage4_gate_e_coordinator_decisions.json)."
+    },
+    {
+      "gate_id": "GATE_F_NEGATIVE_RESULT_PRESERVATION",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "The final architecture rationale must not omit or contradict adverse evidence (thoracic EIS mixed/negative-leaning, second-site PPG negative, leg BioZ heterogeneous).",
+      "evidence": "Final architecture document explicitly references and does not contradict results/stage4_science_consumption_manifest.json's negative/mixed families.",
+      "closure_mechanism": "Final architecture document is checked against the manifest for consistency before freeze.",
+      "final_state": "PASS - thoracic BioZ COMPLETE_MIXED, leg BioZ aggregate-negative, second-site PPG negative all preserved verbatim in final_wearable_architecture.json exclusion_rationale, never rewritten as clean negatives or erased."
+    },
+    {
+      "gate_id": "GATE_G_CLAIM_CONSISTENCY",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "The final architecture's public/jury-facing claims match the scientific evidence exactly - no stronger wording than the claim ledger permits.",
+      "evidence": "Final claims cross-checked against results/stage4_science_claim_ledger.json's exact_safe_wording and prohibited_stronger_wording fields.",
+      "closure_mechanism": "Running the claim-consistency validator against all final public-facing claim text.",
+      "final_state": "PASS - validated by ml/validate_stage4_science_claim_consistency.py (18 pre-closure artifacts remain UNRESOLVED/NOT_READY) and ml/validate_stage4_final_architecture_closure.py (4 new closure artifacts internally consistent, no false dominance, no premature HMC/ds003838 completion)."
+    },
+    {
+      "gate_id": "GATE_H_DIGITAL_TWIN_SEPARATION",
+      "original_severity": "HARD_BLOCK",
+      "original_requirement": "The final wearable architecture decision does not imply, state, or suggest that the Digital Twin has been validated as a trained, longitudinal, personalized model.",
+      "evidence": "Final architecture document explicitly states the Digital Twin's conceptual/synthetic/unvalidated status wherever it is mentioned.",
+      "closure_mechanism": "Final architecture document is checked for Digital Twin mentions and verified against the ledger's required disclaimer.",
+      "final_state": "PASS - Digital Twin not mentioned in any new closure artifact; results/digital_twin_architecture_footprint.json's ARCHITECTURE_ONLY_UNTRAINED_UNVALIDATED status is untouched and unreferenced by the wearable architecture decision."
+    }
+  ],
+  "pending_science": {
+    "hmc_full_cohort": "LOWER_PRIORITY_EXTERNAL_WORK_PENDING - not run, not marked complete, not required for Stage-4 closure under FREEZE_CONDITIONALLY.",
+    "ds003838_full_cohort": "LOWER_PRIORITY_EXTERNAL_WORK_PENDING - not run, not marked complete, not required for Stage-4 closure under FREEZE_CONDITIONALLY.",
+    "digital_twin": "ARCHITECTURE_ONLY_UNTRAINED_UNVALIDATED (results/digital_twin_architecture_footprint.json) - unaffected by, and not implied by, this architecture closure."
+  },
+  "coordinator_decisions": {
+    "final_architecture_class": "CORE_PLUS_CONTEXT",
+    "module_topology": "DISTRIBUTED_BODY_MODULE_TOPOLOGY",
+    "battery_topology": "DISTRIBUTED_PER_MODULE",
+    "mcu_radio_topology": "PER_MODULE",
+    "gate_d_acceptance": "CLOSED_FOR_STAGE4_BY_COORDINATOR_ACCEPTANCE_OF_BOUNDED_ENGINEERING_UNCERTAINTY",
+    "gate_e_decisions": [
+      {
+        "item": "EOG external validity (HMC full-cohort)",
+        "decision": "FREEZE_CONDITIONALLY"
+      },
+      {
+        "item": "Sparse-vs-full EEG electrode-count minimization (ds003838 full cohort)",
+        "decision": "FREEZE_CONDITIONALLY"
+      }
+    ],
+    "formal_pareto_status": "COMPLETE",
+    "pareto_relevant_set": [
+      "MINIMAL_CORE",
+      "CORE_PLUS_CONTEXT"
+    ],
+    "coordinator_selection_rationale": "Coordinator selected CORE_PLUS_CONTEXT from the Pareto-relevant set because the EOG increment adds controlled sleep-staging evidence at low incremental physical burden without adding a new body region or full module, while accepting conditional external-validation uncertainty."
+  },
+  "repository_sha_after_closure": "51a644e0a797ba65b4b3f38acb3c8ee25f1dd95d",
+  "repository_sha_note": "This is the repository HEAD SHA at manifest-generation time (the parent of this sprint's closure commit(s) - a file cannot embed its own resulting commit hash without amending, which this project's git discipline avoids). The actual final closure commit SHA is reported in the branch push report/PR, not embedded here.",
+  "accepted_stage3_sha": "5c381014af61e5d10d41223963831b25b9ff23e6",
+  "status": "STAGE4_FINAL_CLOSURE_CANDIDATE_REPORTED_COMPLETE_PENDING_INDEPENDENT_AUDIT"
+}

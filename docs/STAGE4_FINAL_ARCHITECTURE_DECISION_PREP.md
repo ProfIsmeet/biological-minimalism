@@ -1,5 +1,12 @@
 # Stage 4 Final Architecture Decision Preparation
 
+> **Superseded-for-the-decision note (Stage 4 Final Architecture Closure sprint):**
+> The Coordinator has since made every decision this memo lists as open in
+> Section 8. This document is preserved verbatim as the historical
+> pre-closure record — it is **not rewritten**. See
+> `docs/STAGE4_FINAL_ARCHITECTURE_CLOSURE.md` and
+> `results/final_wearable_architecture.json` for the actual final decision.
+
 For Emir/Project Coordinator. This memo is understandable without reading
 the rest of the repo. It is **decision preparation, not a decision** — no
 final architecture, no Pareto winner, and no Gate-E choice is made here.

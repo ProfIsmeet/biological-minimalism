@@ -1475,6 +1475,99 @@ export interface Stage4FinalArchitectureDecisionPacketEnvelope {
   error: string | null;
 }
 
+// --- Stage 4 Final Architecture Closure (Coordinator decisions) -----------
+
+export interface Stage4GateECoordinatorDecision {
+  item: string;
+  decision: string;
+  architecture_disposition: string;
+  claim_limitations: string;
+  what_could_trigger_revision?: string | null;
+  revision_trigger: Record<string, unknown>;
+  decided_by: string;
+  near_zero_result_note?: string | null;
+}
+
+export interface Stage4GateECoordinatorDecisions {
+  purpose: string;
+  gate_reference: string;
+  decisions: Stage4GateECoordinatorDecision[];
+  no_option_selected: boolean;
+  gate_e_pending_science_sensitivity: string;
+  pending_science_still_pending: string;
+}
+
+export interface Stage4GateECoordinatorDecisionsEnvelope {
+  availability: ResearchAvailability;
+  decisions: Stage4GateECoordinatorDecisions | null;
+  error: string | null;
+}
+
+export interface Stage4FormalParetoAnalysis {
+  purpose: string;
+  methodology: Record<string, unknown>;
+  pairwise_dominance_analysis: { class_a: string; class_b: string; verdict: string; [key: string]: unknown }[];
+  pareto_relevant_set: string[];
+  potentially_dominated_set: string[];
+  no_unique_pareto_winner: boolean;
+  no_unique_pareto_winner_reason: string;
+  coordinator_selected_architecture: string;
+  coordinator_selection_rationale: string;
+  coordinator_selection_is_not_mathematical_dominance: string;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface Stage4FormalParetoAnalysisEnvelope {
+  availability: ResearchAvailability;
+  analysis: Stage4FormalParetoAnalysis | null;
+  error: string | null;
+}
+
+export interface FinalWearableArchitecture {
+  purpose: string;
+  selected_class: string;
+  selected_modalities: string[];
+  selected_body_regions: string[];
+  module_topology: Record<string, unknown>;
+  contact_model: Record<string, unknown>;
+  burden_ranges: Record<string, unknown>;
+  science_rationale: Record<string, unknown>;
+  exclusion_rationale: Record<string, { excluded_from_final_architecture: boolean; reason: string; prohibited_claim: string }>;
+  gate_d_status: Record<string, unknown>;
+  gate_e_decisions: Record<string, unknown>;
+  revision_triggers: Record<string, unknown>[];
+  provenance: Record<string, unknown>;
+  coordinator_decision_status: Record<string, unknown>;
+  final_architecture_status: string;
+  formal_pareto_status: string;
+}
+
+export interface FinalWearableArchitectureEnvelope {
+  availability: ResearchAvailability;
+  architecture: FinalWearableArchitecture | null;
+  error: string | null;
+}
+
+export interface Stage4FinalClosureManifest {
+  purpose: string;
+  authoritative_artifacts: { path: string; sha256: string; description: string }[];
+  final_architecture: string;
+  formal_pareto_status: string;
+  acceptance_gates: { gate_id: string; original_severity: string; final_state: string; [key: string]: unknown }[];
+  pending_science: Record<string, unknown>;
+  coordinator_decisions: Record<string, unknown>;
+  repository_sha_after_closure: string;
+  accepted_stage3_sha: string;
+  status: string;
+}
+
+export interface Stage4FinalClosureManifestEnvelope {
+  availability: ResearchAvailability;
+  manifest: Stage4FinalClosureManifest | null;
+  error: string | null;
+}
+
 // --- Phase 2/3: future-science ingestion contract (Stage 2-4 handoff) ------
 // No manifest satisfying this contract exists yet (Ismet's science-completion
 // sprint is in progress). A consumer must ONLY read `display_projections` —

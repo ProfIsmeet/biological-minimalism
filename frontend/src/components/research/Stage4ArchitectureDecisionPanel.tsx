@@ -175,8 +175,8 @@ export function Stage4ArchitectureDecisionPanel({
 }) {
   return (
     <Panel
-      title="Stage 4 Architecture Decision Prep"
-      subtitle="Coordinator decision-preparation only — no final architecture, no Pareto winner selected here"
+      title="Stage 4 Architecture Decision Prep (historical inputs)"
+      subtitle="Pre-closure preparation inputs, preserved as-is — the Coordinator's actual final selection is recorded in the 'Stage 4 Final Architecture' panel above, not here"
       icon={<GitBranch size={16} />}
       contentClassName="space-y-4"
     >
@@ -286,8 +286,8 @@ export function Stage4ArchitectureDecisionPanel({
       ) : null}
 
       <p className="text-[10px] text-slate-600">
-        final_architecture: {candidateClasses?.final_architecture_status ?? "UNRESOLVED"} · formal_pareto:{" "}
-        {candidateClasses?.formal_pareto_status ?? "NOT_READY"}
+        pre-closure input snapshot — final_architecture: {candidateClasses?.final_architecture_status ?? "UNRESOLVED"} · formal_pareto:{" "}
+        {candidateClasses?.formal_pareto_status ?? "NOT_READY"} (see the Final Architecture panel above for the actual Coordinator decision)
       </p>
     </Panel>
   );

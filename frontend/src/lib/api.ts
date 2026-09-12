@@ -31,7 +31,11 @@ import type {
   Stage4ContactElectrodeBurdenEnvelope,
   Stage4EngineeringReadinessEnvelope,
   Stage4FinalArchitectureDecisionPacketEnvelope,
+  Stage4FinalClosureManifestEnvelope,
+  FinalWearableArchitectureEnvelope,
+  Stage4FormalParetoAnalysisEnvelope,
   Stage4GateDBurdenCompletenessEnvelope,
+  Stage4GateECoordinatorDecisionsEnvelope,
   Stage4GateECoordinatorOptionsEnvelope,
   Stage4ScienceClaimLedger,
   Stage4ScienceConsumptionManifest,
@@ -198,4 +202,16 @@ export const api = {
 
   getStage4CandidateBurdenMatrix: () =>
     request<Stage4CandidateBurdenMatrixEnvelope>("/research/stage4-candidate-burden-matrix"),
+
+  getStage4GateECoordinatorDecisions: () =>
+    request<Stage4GateECoordinatorDecisionsEnvelope>("/research/stage4-gate-e-coordinator-decisions"),
+
+  getStage4FormalParetoAnalysis: () =>
+    request<Stage4FormalParetoAnalysisEnvelope>("/research/stage4-formal-pareto-analysis"),
+
+  getFinalWearableArchitecture: () =>
+    request<FinalWearableArchitectureEnvelope>("/research/final-wearable-architecture"),
+
+  getStage4FinalClosureManifest: () =>
+    request<Stage4FinalClosureManifestEnvelope>("/research/stage4-final-closure-manifest"),
 };

@@ -59,6 +59,9 @@ class Stage4GateDBurdenCompleteness(BaseModel):
     chest_module_decomposition: dict[str, Any] | None = None
     eeg_eog_shared_afe_confirmation: dict[str, Any] | None = None
     new_artifacts_this_sprint: list[str] = []
+    # v3.0.0 Stage-4 Final Architecture Closure field (absent on v1.0.0/v2.0.0
+    # records preserved verbatim under assessment_history above).
+    coordinator_acceptance: dict[str, Any] | None = None
 
 
 class Stage4GateDBurdenCompletenessEnvelope(BaseModel):

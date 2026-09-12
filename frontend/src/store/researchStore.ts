@@ -23,7 +23,11 @@ import type {
   Stage4ContactElectrodeBurden,
   Stage4EngineeringReadiness,
   Stage4FinalArchitectureDecisionPacket,
+  Stage4FinalClosureManifest,
+  FinalWearableArchitecture,
+  Stage4FormalParetoAnalysis,
   Stage4GateDBurdenCompleteness,
+  Stage4GateECoordinatorDecisions,
   Stage4GateECoordinatorOptions,
   Stage4ScienceClaimLedger,
   Stage4ScienceConsumptionManifest,
@@ -71,6 +75,14 @@ interface ResearchState {
   stage4BatteryTopologyScenariosError: string | null;
   stage4CandidateBurdenMatrix: Stage4CandidateBurdenMatrix | null;
   stage4CandidateBurdenMatrixError: string | null;
+  stage4GateECoordinatorDecisions: Stage4GateECoordinatorDecisions | null;
+  stage4GateECoordinatorDecisionsError: string | null;
+  stage4FormalParetoAnalysis: Stage4FormalParetoAnalysis | null;
+  stage4FormalParetoAnalysisError: string | null;
+  finalWearableArchitecture: FinalWearableArchitecture | null;
+  finalWearableArchitectureError: string | null;
+  stage4FinalClosureManifest: Stage4FinalClosureManifest | null;
+  stage4FinalClosureManifestError: string | null;
   // Stored as the WHOLE envelope (not decomposed into data/error) because its
   // 3-way status (PENDING_SCIENCE_HANDOFF / INGESTION_FAILED / INGESTED) is
   // not a simple success/failure — PENDING is an honest, expected state, not
@@ -123,6 +135,14 @@ export const useResearchStore = create<ResearchState>((set) => ({
   stage4BatteryTopologyScenariosError: null,
   stage4CandidateBurdenMatrix: null,
   stage4CandidateBurdenMatrixError: null,
+  stage4GateECoordinatorDecisions: null,
+  stage4GateECoordinatorDecisionsError: null,
+  stage4FormalParetoAnalysis: null,
+  stage4FormalParetoAnalysisError: null,
+  finalWearableArchitecture: null,
+  finalWearableArchitectureError: null,
+  stage4FinalClosureManifest: null,
+  stage4FinalClosureManifestError: null,
   futureScienceManifest: null,
   experiments: {},
   selectedExperimentId: null,
@@ -186,6 +206,10 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4ContactElectrodeBurdenEnvelope,
         stage4BatteryTopologyScenariosEnvelope,
         stage4CandidateBurdenMatrixEnvelope,
+        stage4GateECoordinatorDecisionsEnvelope,
+        stage4FormalParetoAnalysisEnvelope,
+        finalWearableArchitectureEnvelope,
+        stage4FinalClosureManifestEnvelope,
         futureScienceEnvelope,
       ] = await Promise.all([
         optional(api.getOperationalCosts()),
@@ -212,6 +236,10 @@ export const useResearchStore = create<ResearchState>((set) => ({
         optional(api.getStage4ContactElectrodeBurden()),
         optional(api.getStage4BatteryTopologyScenarios()),
         optional(api.getStage4CandidateBurdenMatrix()),
+        optional(api.getStage4GateECoordinatorDecisions()),
+        optional(api.getStage4FormalParetoAnalysis()),
+        optional(api.getFinalWearableArchitecture()),
+        optional(api.getStage4FinalClosureManifest()),
         optional(api.getFutureScienceManifest()),
       ]);
       const unavailable = [
@@ -313,6 +341,30 @@ export const useResearchStore = create<ResearchState>((set) => ({
               ? stage4CandidateBurdenMatrixEnvelope.value.error ?? "Candidate burden matrix unavailable."
               : null)
           : stage4CandidateBurdenMatrixEnvelope.error,
+        stage4GateECoordinatorDecisions: stage4GateECoordinatorDecisionsEnvelope.ok ? stage4GateECoordinatorDecisionsEnvelope.value.decisions : null,
+        stage4GateECoordinatorDecisionsError: stage4GateECoordinatorDecisionsEnvelope.ok
+          ? (stage4GateECoordinatorDecisionsEnvelope.value.availability === "unavailable"
+              ? stage4GateECoordinatorDecisionsEnvelope.value.error ?? "Gate E coordinator decisions unavailable."
+              : null)
+          : stage4GateECoordinatorDecisionsEnvelope.error,
+        stage4FormalParetoAnalysis: stage4FormalParetoAnalysisEnvelope.ok ? stage4FormalParetoAnalysisEnvelope.value.analysis : null,
+        stage4FormalParetoAnalysisError: stage4FormalParetoAnalysisEnvelope.ok
+          ? (stage4FormalParetoAnalysisEnvelope.value.availability === "unavailable"
+              ? stage4FormalParetoAnalysisEnvelope.value.error ?? "Formal Pareto analysis unavailable."
+              : null)
+          : stage4FormalParetoAnalysisEnvelope.error,
+        finalWearableArchitecture: finalWearableArchitectureEnvelope.ok ? finalWearableArchitectureEnvelope.value.architecture : null,
+        finalWearableArchitectureError: finalWearableArchitectureEnvelope.ok
+          ? (finalWearableArchitectureEnvelope.value.availability === "unavailable"
+              ? finalWearableArchitectureEnvelope.value.error ?? "Final wearable architecture unavailable."
+              : null)
+          : finalWearableArchitectureEnvelope.error,
+        stage4FinalClosureManifest: stage4FinalClosureManifestEnvelope.ok ? stage4FinalClosureManifestEnvelope.value.manifest : null,
+        stage4FinalClosureManifestError: stage4FinalClosureManifestEnvelope.ok
+          ? (stage4FinalClosureManifestEnvelope.value.availability === "unavailable"
+              ? stage4FinalClosureManifestEnvelope.value.error ?? "Final closure manifest unavailable."
+              : null)
+          : stage4FinalClosureManifestEnvelope.error,
         // A transport/network failure is folded into the same envelope shape
         // as a content-level INGESTION_FAILED, rather than a bare null — the
         // panel always has an honest status string to render, never silence.
@@ -375,6 +427,14 @@ export const useResearchStore = create<ResearchState>((set) => ({
         stage4BatteryTopologyScenariosError: error instanceof Error ? error.message : "Battery topology scenarios could not be loaded.",
         stage4CandidateBurdenMatrix: null,
         stage4CandidateBurdenMatrixError: error instanceof Error ? error.message : "Candidate burden matrix could not be loaded.",
+        stage4GateECoordinatorDecisions: null,
+        stage4GateECoordinatorDecisionsError: error instanceof Error ? error.message : "Gate E coordinator decisions could not be loaded.",
+        stage4FormalParetoAnalysis: null,
+        stage4FormalParetoAnalysisError: error instanceof Error ? error.message : "Formal Pareto analysis could not be loaded.",
+        finalWearableArchitecture: null,
+        finalWearableArchitectureError: error instanceof Error ? error.message : "Final wearable architecture could not be loaded.",
+        stage4FinalClosureManifest: null,
+        stage4FinalClosureManifestError: error instanceof Error ? error.message : "Final closure manifest could not be loaded.",
         futureScienceManifest: null,
       });
     }

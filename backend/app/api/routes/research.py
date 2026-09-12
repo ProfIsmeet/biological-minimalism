@@ -16,6 +16,7 @@ from app.research.stage3_evidence import (
     get_stage3_evidence_envelope,
 )
 from app.research.stage4_architecture_decision import stage4_architecture_decision
+from app.research.stage4_final_architecture_closure import stage4_final_architecture_closure
 from app.research.stage4_architecture_framework import (
     get_architecture_acceptance_gates,
     get_architecture_candidate_classes,
@@ -49,6 +50,12 @@ from app.schemas.stage4_architecture_decision import (
     Stage4FinalArchitectureDecisionPacketEnvelope,
     Stage4GateDBurdenCompletenessEnvelope,
     Stage4GateECoordinatorOptionsEnvelope,
+)
+from app.schemas.stage4_final_architecture_closure import (
+    FinalWearableArchitectureEnvelope,
+    Stage4FinalClosureManifestEnvelope,
+    Stage4FormalParetoAnalysisEnvelope,
+    Stage4GateECoordinatorDecisionsEnvelope,
 )
 from app.schemas.stage4_architecture_framework import (
     Stage4ArchitectureAcceptanceGates,
@@ -385,3 +392,39 @@ def get_stage4_battery_topology_scenarios() -> Stage4BatteryTopologyScenariosEnv
 )
 def get_stage4_candidate_burden_matrix() -> Stage4CandidateBurdenMatrixEnvelope:
     return stage4_architecture_decision.candidate_burden_matrix()
+
+
+@router.get(
+    "/stage4-gate-e-coordinator-decisions",
+    response_model=Stage4GateECoordinatorDecisionsEnvelope,
+    summary="Read the Project Coordinator's recorded Gate E decisions (FREEZE_CONDITIONALLY per HIGH-sensitivity item, with revision triggers) - supersedes no_option_selected in stage4-gate-e-coordinator-options.",
+)
+def get_stage4_gate_e_coordinator_decisions() -> Stage4GateECoordinatorDecisionsEnvelope:
+    return stage4_final_architecture_closure.gate_e_coordinator_decisions()
+
+
+@router.get(
+    "/stage4-formal-pareto-analysis",
+    response_model=Stage4FormalParetoAnalysisEnvelope,
+    summary="Read the formal multi-objective Pareto dominance analysis - no composite score, no unique winner asserted unless the methodology genuinely establishes one.",
+)
+def get_stage4_formal_pareto_analysis() -> Stage4FormalParetoAnalysisEnvelope:
+    return stage4_final_architecture_closure.formal_pareto_analysis()
+
+
+@router.get(
+    "/final-wearable-architecture",
+    response_model=FinalWearableArchitectureEnvelope,
+    summary="Read the ONE canonical final Stage-4 wearable architecture artifact - selected class, modalities, burden, exclusion rationale, Gate D/E status, revision triggers, provenance.",
+)
+def get_final_wearable_architecture() -> FinalWearableArchitectureEnvelope:
+    return stage4_final_architecture_closure.final_wearable_architecture()
+
+
+@router.get(
+    "/stage4-final-closure-manifest",
+    response_model=Stage4FinalClosureManifestEnvelope,
+    summary="Read the Stage-4 final closure manifest - every authoritative artifact path/hash, gates A-H, pending science, Coordinator decisions, exact repository SHA at closure.",
+)
+def get_stage4_final_closure_manifest() -> Stage4FinalClosureManifestEnvelope:
+    return stage4_final_architecture_closure.final_closure_manifest()

@@ -23,6 +23,7 @@ import { FutureScienceHandoffCard } from "@/components/research/FutureScienceHan
 import { HardwareArchitectureView } from "@/components/research/HardwareArchitectureView";
 import { Stage3EvidenceView } from "@/components/research/Stage3EvidenceView";
 import { Stage4ArchitectureDecisionPanel } from "@/components/research/Stage4ArchitectureDecisionPanel";
+import { Stage4FinalArchitecturePanel } from "@/components/research/Stage4FinalArchitecturePanel";
 import { Stage4EngineeringReadinessCard } from "@/components/research/Stage4EngineeringReadinessCard";
 import { Stage4ScienceManifestView } from "@/components/research/Stage4ScienceManifestView";
 import type {
@@ -566,6 +567,11 @@ export function ResearchMode() {
     stage4ContactElectrodeBurden,
     stage4BatteryTopologyScenarios,
     stage4CandidateBurdenMatrix,
+    stage4GateECoordinatorDecisions,
+    stage4FormalParetoAnalysis,
+    finalWearableArchitecture,
+    finalWearableArchitectureError,
+    stage4FinalClosureManifest,
     futureScienceManifest,
     experiments,
     selectedExperimentId,
@@ -654,6 +660,13 @@ export function ResearchMode() {
       {engineeringReadiness ? <EngineeringReadinessView readiness={engineeringReadiness} /> : null}
       {stage4EngineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 4 engineering readiness unavailable: {stage4EngineeringReadinessError}</p> : null}
       {stage4EngineeringReadiness ? <Stage4EngineeringReadinessCard readiness={stage4EngineeringReadiness} /> : null}
+      <Stage4FinalArchitecturePanel
+        finalArchitecture={finalWearableArchitecture}
+        finalArchitectureError={finalWearableArchitectureError}
+        formalParetoAnalysis={stage4FormalParetoAnalysis}
+        gateECoordinatorDecisions={stage4GateECoordinatorDecisions}
+        closureManifest={stage4FinalClosureManifest}
+      />
       <Stage4ArchitectureDecisionPanel
         candidateClasses={stage4ArchitectureCandidateClasses}
         gateD={stage4GateDBurdenCompleteness}
