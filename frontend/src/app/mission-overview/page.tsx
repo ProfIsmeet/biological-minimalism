@@ -4,6 +4,7 @@ import { AIConfidencePanel } from "@/components/panels/AIConfidencePanel";
 import { CognitiveStatusPanel } from "@/components/panels/CognitiveStatusPanel";
 import { DigitalTwinPreview } from "@/components/panels/DigitalTwinPreview";
 import { PrimaryVitalsPanel } from "@/components/panels/PrimaryVitalsPanel";
+import { SelectedArchitecturePanel } from "@/components/panels/SelectedArchitecturePanel";
 import { SensorHealthPanel } from "@/components/panels/SensorHealthPanel";
 import { SpaceAdaptationPanel } from "@/components/panels/SpaceAdaptationPanel";
 import { MissionModeSwitcher } from "@/components/demos/MissionModeSwitcher";
@@ -21,6 +22,8 @@ export default function MissionOverviewPage() {
           Source-labelled telemetry over WebSocket. Synthetic demo and real recorded-data replay remain explicitly distinguished.
         </p>
       </div>
+
+      <SelectedArchitecturePanel />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <PrimaryVitalsPanel />
