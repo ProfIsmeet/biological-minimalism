@@ -20,7 +20,7 @@ const SENSOR_ICONS: Record<SensorName, LucideIcon> = {
 // frozen selected architecture (CORE_PLUS_CONTEXT = PPG+IMU / ECG / EEG+EOG).
 // Peripheral temperature and bio-impedance were evaluated but not selected;
 // they are tagged here so a viewer never mistakes the demo signal stream for
-// the deployed sensor set (see SelectedArchitecturePanel).
+// the selected sensor set (see SelectedArchitecturePanel).
 const NOT_SELECTED_SENSORS: ReadonlySet<SensorName> = new Set(["temperature", "bioimpedance"]);
 
 function statusToLevel(status: SensorStatus): StatusLevel {
@@ -41,7 +41,7 @@ export function SensorHealthPanel() {
   return (
     <Panel
       title="Sensor Health"
-      subtitle="Synthetic demo signal stream — not the selected flight architecture"
+      subtitle="Synthetic demo signal stream — not the selected wearable architecture"
       icon={<Radio size={16} />}
     >
       <div className="grid grid-cols-2 gap-3">
@@ -90,7 +90,7 @@ export function SensorHealthPanel() {
         })}
       </div>
       <p className="mt-3 text-[10px] leading-relaxed text-slate-500">
-        These are the synthetic mock-data engine&apos;s demo channels, not the deployed sensor set. Peripheral temperature and
+        These are the synthetic mock-data engine&apos;s demo channels, not the selected sensor set. Peripheral temperature and
         bio-impedance were evaluated but are not in the selected architecture — see Selected Architecture above for the frozen
         Wrist (PPG + IMU) · Chest (ECG) · Head (frontal EEG + EOG) selection.
       </p>

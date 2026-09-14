@@ -203,7 +203,7 @@ function SelectedArchitectureBody({ architecture }: { architecture: FinalWearabl
           ))}
         </div>
         <p className="mt-1.5 text-[10px] leading-relaxed text-slate-600">
-          Excluded from the deployed architecture only — their scientific evidence is preserved in Research Mode. Not selected
+          Excluded from the selected architecture only — their scientific evidence is preserved in Research Mode. Not selected
           does not mean generally useless.
         </p>
       </div>
