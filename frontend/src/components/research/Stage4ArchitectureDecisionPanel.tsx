@@ -253,7 +253,8 @@ export function Stage4ArchitectureDecisionPanel({
       {candidateClasses ? (
         <div>
           <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-            Candidate architecture classes ({candidateClasses.classes.length}, no winner selected)
+            Candidate architecture classes ({candidateClasses.classes.length}, pre-decision comparison set — the
+            Coordinator&rsquo;s final selection, CORE_PLUS_CONTEXT, is recorded above)
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {candidateClasses.classes.map((c) => (

@@ -136,7 +136,7 @@ export function Stage4ScienceManifestView({
 
       {architectureDecisionInputs ? (
         <p className="text-[10px] text-slate-600">
-          architecture decision inputs: {architectureDecisionInputs.candidates.length} candidates ·
+          pre-closure input snapshot — architecture decision inputs: {architectureDecisionInputs.candidates.length} candidates ·
           final_architecture: {architectureDecisionInputs.final_architecture_status} · formal_pareto:{" "}
           {architectureDecisionInputs.formal_pareto_status} (decision inputs only — not a selection)
         </p>

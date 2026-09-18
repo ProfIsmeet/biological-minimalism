@@ -16,7 +16,7 @@ export default function AIInsightsPage() {
       <div>
         <h1 className="text-lg font-semibold text-slate-100">AI Insights</h1>
         <p className="text-sm text-slate-500">
-          Source-labelled AI output. Replay heart rate comes only from the validated synchronized PPG + IMU model.
+          Source-labelled AI output. Replay heart rate comes only from the PPG + IMU heart-rate estimate, evaluated on PPG-DaLiA.
         </p>
       </div>
 

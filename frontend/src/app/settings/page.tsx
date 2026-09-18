@@ -107,13 +107,14 @@ export default function SettingsPage() {
           <p>
             <span className="font-medium text-slate-200">Biological Minimalism</span> — an evidence-driven methodology for
             determining the target-specific marginal value of sensing components for autonomous astronaut health monitoring. The
-            final minimal architecture is <span className="font-medium text-slate-200">not yet resolved</span>. Prepared for IAC 2026
+            final selected wearable architecture is <span className="font-medium text-slate-200">CORE_PLUS_CONTEXT</span>,
+            a conditional evidence–burden trade-off, not a unique mathematical optimum. Prepared for IAC 2026
             (Interactive Presentation, IAF/IAA Space Life Sciences Symposium).
           </p>
           <p>
             Synthetic demo mode uses the mock engine. PPG-DaLiA replay mode streams previously recorded, synchronized real human channels
-            with explicit dataset/subject provenance; it is not live hardware. Replay heart rate is an AI estimate from the validated PPG + IMU
-            model, while unsupported physiology remains unavailable. SHAP views apply only to the synthetic physiology scoring functions.
+            with explicit dataset/subject provenance; it is not live hardware. Replay heart rate is a PPG + IMU heart-rate estimate
+            evaluated on PPG-DaLiA, while unsupported physiology remains unavailable. SHAP views apply only to the synthetic physiology scoring functions.
           </p>
           <p>See <span className="tabular-nums-mono">docs/PDD_Biological_Minimalism_IAC2026.md</span> for the full project design document.</p>
         </div>

@@ -121,7 +121,7 @@ export function Stage3EvidenceView({ evidence }: { evidence: Stage3EvidenceEnvel
       </div>
 
       <p className="text-[10px] text-slate-600">
-        final_architecture: {evidence.final_architecture_status} · formal_pareto: {evidence.formal_pareto_status} ·
+        pre-closure input snapshot — final_architecture: {evidence.final_architecture_status} · formal_pareto: {evidence.formal_pareto_status} ·
         source: {evidence.source_registry}
       </p>
     </Panel>

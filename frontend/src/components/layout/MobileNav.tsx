@@ -11,7 +11,7 @@ export function MobileNav() {
 
   return (
     <nav
-      className="flex items-center justify-between gap-1 overflow-x-auto border-b border-white/5 bg-space-900/60 px-2 py-2 md:hidden"
+      className="flex items-center justify-between gap-1 overflow-x-auto border-b border-jury-border-subtle bg-jury-sidebar px-2 py-2 md:hidden"
       aria-label="Primary"
     >
       {NAV_ITEMS.map((item) => {
@@ -23,8 +23,8 @@ export function MobileNav() {
             href={item.href}
             aria-current={isActive ? "page" : undefined}
             className={clsx(
-              "flex shrink-0 flex-col items-center gap-1 rounded-lg px-3 py-1.5 text-[10px] font-medium",
-              isActive ? "text-cyan-300" : "text-slate-500",
+              "flex min-h-10 shrink-0 flex-col items-center gap-1 rounded-lg px-3 py-1.5 text-[10px] font-medium",
+              isActive ? "text-final-accent" : "text-ink-muted",
             )}
           >
             <Icon size={16} />

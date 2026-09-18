@@ -96,16 +96,21 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
   return (
     <Panel
       title="Engineering readiness (Day 11)"
-      subtitle="What physical burden each candidate adds — and why no final architecture is selected"
+      subtitle="Historical pre-selection burden evidence used to inform the final conditional architecture decision."
       icon={<ShieldQuestion size={16} />}
       actions={
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-500/25 bg-slate-500/[0.08] px-2.5 py-1 text-[10px] font-semibold text-slate-300">
-          <AlertTriangle size={12} /> {readiness.final_architecture_status}
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-experimental/30 bg-experimental-soft px-2.5 py-1 text-[10px] font-semibold text-experimental">
+          Historical pre-selection artifact
         </span>
       }
       contentClassName="space-y-4"
     >
-      <p className="text-[11px] leading-relaxed text-slate-500">{readiness.statement}</p>
+      <p className="text-[11px] leading-relaxed text-slate-500">
+        {readiness.statement} This artifact&rsquo;s own <code>final_architecture_status</code> field
+        (&ldquo;{readiness.final_architecture_status}&rdquo;) is preserved verbatim below as raw historical record — the
+        final selection, CORE_PLUS_CONTEXT, is recorded separately in the Stage-4 closure artifact shown further down
+        this archive.
+      </p>
 
       <section className="overflow-hidden rounded-lg border border-white/5">
         <div className="border-b border-white/5 px-4 py-3">

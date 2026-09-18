@@ -94,7 +94,7 @@ export function Stage4EngineeringReadinessCard({ readiness }: { readiness: Stage
       </div>
 
       <p className="text-[10px] text-slate-600">
-        final_architecture: {readiness.final_architecture_status} · formal_pareto: {readiness.formal_pareto_status}
+        pre-closure input snapshot — final_architecture: {readiness.final_architecture_status} · formal_pareto: {readiness.formal_pareto_status}
       </p>
     </Panel>
   );

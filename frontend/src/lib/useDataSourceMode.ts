@@ -3,15 +3,18 @@
 import { useMissionStore } from "@/store/missionStore";
 
 /**
- * Combines WebSocket provenance with the authoritative REST source state.
- * The REST check covers replay that was loaded but remains paused, before a
- * replay frame has replaced the last synthetic WebSocket snapshot.
+ * Prompt-2 corrective pass §2: REST `/data-source/state` is authoritative
+ * once it has resolved at least once. The previous "conservative OR" (WS
+ * says replay OR REST says replay) could keep the interface labeled as
+ * replay after a confirmed replay → synthetic switch, if a late-arriving
+ * WS frame from the old replay source landed after the REST confirmation.
+ * The WebSocket-derived source type is now used only during the brief
+ * startup window before the first REST response lands.
  */
 export function useDatasetReplayMode(): boolean {
-  const liveSourceType = useMissionStore((state) => state.latest?.source.source_type);
   const restSourceType = useMissionStore((state) => state.dataSourceStatus?.source_type);
+  const liveSourceType = useMissionStore((state) => state.latest?.source.source_type);
 
-  // When either view still says replay, hide synthetic-only values. This is
-  // intentionally conservative during source-transition races.
-  return liveSourceType === "dataset_replay" || restSourceType === "dataset_replay";
+  if (restSourceType !== undefined) return restSourceType === "dataset_replay";
+  return liveSourceType === "dataset_replay";
 }

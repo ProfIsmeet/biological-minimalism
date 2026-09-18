@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 
 import { TrendLineChart } from "@/components/charts/TrendLineChart";
 import { Panel } from "@/components/ui/Panel";
+import { useConfirmedHistory } from "@/lib/monitoring/useConfirmedSnapshot";
 import { toTrend } from "@/lib/trend";
 import type { LiveMetricsSnapshot } from "@/lib/types";
-import { useMissionStore } from "@/store/missionStore";
 
 /**
  * Trend metrics are looked up by key (rather than accepting a selector
@@ -41,7 +41,7 @@ interface TrendPanelProps {
 }
 
 export function TrendPanel({ title, subtitle, icon, color, unit, domain, metric }: TrendPanelProps) {
-  const history = useMissionStore((state) => state.history);
+  const history = useConfirmedHistory();
   const selector = SELECTORS[metric];
   const latest = history.reduce<number | null>((value, snapshot) => selector(snapshot) ?? value, null);
 

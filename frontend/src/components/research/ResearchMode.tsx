@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import clsx from "clsx";
 import {
   AlertTriangle,
@@ -581,9 +580,11 @@ export function ResearchMode() {
     selectExperiment,
   } = useResearchStore();
 
-  useEffect(() => {
-    void load();
-  }, [load]);
+  // load() is now triggered exactly once by ResearchDataLoader, which wraps
+  // this component's parent page — see components/experimental/
+  // ResearchDataLoader.tsx (corrective-pass fix: multiple sibling sections
+  // now read this same store, so the trigger moved up to avoid duplicate
+  // fetches).
 
   const experimentList = summaries
     .map((item) => experiments[item.experiment_id])
@@ -594,8 +595,13 @@ export function ResearchMode() {
     <div className="flex flex-col gap-5">
       <header className="flex flex-col justify-between gap-3 lg:flex-row lg:items-end">
         <div>
-          <div className="mb-1.5 flex items-center gap-2 text-cyan-400"><FlaskConical size={18} /><span className="text-[11px] font-semibold uppercase tracking-[0.18em]">Research Mode</span></div>
-          <h1 className="text-xl font-semibold text-slate-100">Measured marginal sensor evidence</h1>
+          <div className="mb-1.5 flex items-center gap-2 text-experimental"><FlaskConical size={18} /><span className="text-[11px] font-semibold uppercase tracking-[0.18em]">Research Mode</span></div>
+          {/* h3, not h1/h2: this component only ever renders inside the
+              "Additional Research Archive" disclosure on /research/experimental,
+              whose own summary is the page's second-level heading. The page's
+              sole h1 is ExperimentalHero; h2 is used by the primary narrative
+              sections (corrective-pass §4). */}
+          <h3 className="text-xl font-semibold text-slate-100">Measured marginal sensor evidence</h3>
           <p className="mt-1 max-w-4xl text-sm leading-relaxed text-slate-500">Biological Minimalism evaluates each added sensing component by measured target-specific marginal value rather than assuming more sensors are inherently better.</p>
         </div>
         {projectSummary ? <div className="flex gap-2 text-[11px]"><span className="rounded-full border border-white/10 px-2.5 py-1 text-slate-400">{projectSummary.available_count}/{projectSummary.experiment_count} artifacts available</span><span className="rounded-full border border-emerald-400/20 bg-emerald-400/[0.05] px-2.5 py-1 text-emerald-300">Read only</span></div> : null}
@@ -708,7 +714,7 @@ export function ResearchMode() {
       {futureScienceManifest ? <FutureScienceHandoffCard envelope={futureScienceManifest} /> : null}
 
       {projectSummary ? (
-        <footer className="rounded-lg border border-white/5 bg-white/[0.015] px-4 py-3 text-xs leading-relaxed text-slate-500">{projectSummary.statement} Operational costs remain separate, provenance-bearing dimensions; no Pareto score or final architecture ranking is calculated.</footer>
+        <footer className="rounded-lg border border-white/5 bg-white/[0.015] px-4 py-3 text-xs leading-relaxed text-slate-500">{projectSummary.statement} Experiment-level evidence and operational burdens remain provenance-bearing dimensions. The final CORE_PLUS_CONTEXT selection is recorded as a conditional evidence–burden decision, not a unique mathematical optimum.</footer>
       ) : null}
     </div>
   );

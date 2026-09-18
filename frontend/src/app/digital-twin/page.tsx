@@ -62,6 +62,9 @@ export default function DigitalTwinPage() {
     <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
+        <p className="mb-1.5 inline-block rounded border border-amber-400/30 bg-amber-400/[0.06] px-2 py-1 text-xs font-semibold text-amber-300">
+          Architecture-only concept — untrained and unvalidated.
+        </p>
         <p className="text-sm text-slate-500">
           Demo — Digital Twin Evolution. A <span className="text-slate-400">synthetic, conceptual</span> illustration of a
           <em> proposed</em> personalized baseline: the model is architecture/reference code only, untrained and not validated.

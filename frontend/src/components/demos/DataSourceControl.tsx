@@ -6,7 +6,10 @@ import { Database } from "lucide-react";
 
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
+import { deriveFaultSummaryLabel } from "@/lib/monitoring/inferenceState";
+import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
 import type { DataSourceStatus, ReplayFaultTarget, ReplayFaultType } from "@/lib/types";
+import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
 
 const SPEEDS = [1, 5, 10] as const;
@@ -22,8 +25,26 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Data-source request failed.";
 }
 
+/**
+ * Prompt-2B corrective §4.1 — this control used to keep its own local
+ * `status` copy of `DataSourceStatus`, fetched independently on mount, in
+ * addition to the canonical `missionStore.dataSourceStatus` that
+ * `LiveFeedProvider` (root layout) already populates on every route before
+ * any page content mounts. Two independent copies of the same authoritative
+ * value can only ever diverge, never help, so this now reads
+ * `dataSourceStatus` directly from the store — there is exactly one
+ * representation of "the current REST-confirmed source state" in the app.
+ * The only fetch this component still performs on mount is the
+ * control-specific subject list, which nothing else on this route already
+ * loads. Per-frame information (fault, position) is read only through
+ * `useConfirmedSnapshot()`, never a raw `latest`.
+ */
 export function DataSourceControl() {
-  const [status, setStatus] = useState<DataSourceStatus | null>(null);
+  const status = useMissionStore((state) => state.dataSourceStatus);
+  const setDataSourceStatus = useMissionStore((state) => state.setDataSourceStatus);
+  const { snapshot: latest } = useConfirmedSnapshot();
+  const isReplay = useDatasetReplayMode();
+
   const [subjects, setSubjects] = useState<string[]>([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [pending, setPending] = useState<string | null>(null);
@@ -32,20 +53,9 @@ export function DataSourceControl() {
   const [faultTarget, setFaultTarget] = useState<ReplayFaultTarget>("ppg");
   const [faultSeverity, setFaultSeverity] = useState(1);
   const [faultSeed, setFaultSeed] = useState(0);
-  const latestSource = useMissionStore((state) => state.latest?.source);
-  const latestFault = useMissionStore((state) => state.latest?.fault_injection);
-  const setDataSourceStatus = useMissionStore((state) => state.setDataSourceStatus);
 
   useEffect(() => {
     let cancelled = false;
-    api.getDataSourceState().then((result) => {
-      if (!cancelled) {
-        setStatus(result);
-        setDataSourceStatus(result);
-      }
-    }).catch((reason: unknown) => {
-      if (!cancelled) setError(errorMessage(reason));
-    });
     api.getReplaySubjects().then((result) => {
       if (cancelled) return;
       setSubjects(result.subjects);
@@ -54,14 +64,13 @@ export function DataSourceControl() {
     return () => {
       cancelled = true;
     };
-  }, [setDataSourceStatus]);
+  }, []);
 
   async function run(key: string, operation: () => Promise<DataSourceStatus>) {
     setPending(key);
     setError(null);
     try {
       const result = await operation();
-      setStatus(result);
       setDataSourceStatus(result);
     } catch (reason) {
       setError(errorMessage(reason));
@@ -70,17 +79,26 @@ export function DataSourceControl() {
     }
   }
 
-  const isReplay = (status?.source_type ?? latestSource?.source_type) === "dataset_replay";
-  const latestMatchesStatus = latestSource?.source_type === status?.source_type && latestSource?.subject_id === status?.subject_id;
-  const playbackState = status?.playback_state === "playing" && latestMatchesStatus
-    ? (latestSource?.playback_state ?? status.playback_state)
-    : (status?.playback_state ?? latestSource?.playback_state);
+  const latestSource = latest?.source;
+  const latestFault = latest?.fault_injection;
+  const playbackState = status?.playback_state ?? latestSource?.playback_state;
   const speed = status?.playback_speed ?? latestSource?.playback_speed ?? 1;
-  const position = playbackState === "playing" || playbackState === "ended"
-    ? (latestSource?.replay_position_seconds ?? status?.replay_position_seconds ?? 0)
-    : (status?.replay_position_seconds ?? latestSource?.replay_position_seconds ?? 0);
+  // Prompt-2C §5 — replay position is continuously advancing frame telemetry,
+  // not identity/configuration, so it must prefer the confirmed WebSocket
+  // snapshot over REST. `status.replay_position_seconds` is only a snapshot
+  // taken at the moment of the last control action (play/pause/seek) and
+  // does not advance on its own between REST polls; `latestSource` comes
+  // from `useConfirmedSnapshot()`, so it is already fail-closed to the
+  // authoritative source type and replay subject, and therefore safe to
+  // prefer here without risking a cross-source position leak.
+  const position = latestSource?.replay_position_seconds ?? status?.replay_position_seconds ?? 0;
   const duration = status?.duration_seconds ?? latestSource?.duration_seconds ?? 0;
   const activeSubject = status?.subject_id ?? latestSource?.subject_id;
+  // A rejected (mismatched-source) snapshot's fault must never override the
+  // current REST fault state — `latestFault` here already comes only from
+  // the confirmed snapshot, so falling back to `status.fault_injection`
+  // (part of the same authoritative REST payload as `status` itself) is
+  // always safe.
   const activeFault = latestFault?.active ? latestFault : status?.fault_injection;
   const severityIsConfigurable = faultType === "packet_loss" || faultType === "additive_noise" || faultType === "saturation";
 
@@ -152,12 +170,15 @@ export function DataSourceControl() {
             <p className="font-semibold uppercase tracking-wider text-cyan-300">Real Recorded Data — Replay Mode</p>
             <p className="mt-1">PPG-DaLiA · {activeSubject} · {playbackState} · {position.toFixed(1)} / {duration.toFixed(1)} s · {speed}x</p>
             <p className="mt-1 text-slate-500">Recorded/measured: wrist PPG, wrist IMU, chest ECG, and temperature when loaded.</p>
-            <p className="mt-1 text-slate-500">AI estimated: Heart Rate from the validated PPG + IMU model. Not live astronaut monitoring.</p>
+            <p className="mt-1 text-slate-500">AI estimated: PPG + IMU heart-rate estimate. Not live astronaut monitoring.</p>
+            {activeSubject === "S14" ? (
+              <p className="mt-1 text-amber-300/90">S14 single-participant robustness demonstration; not population validation.</p>
+            ) : null}
           </div>
         ) : null}
         {isReplay ? (
           <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-300">Replay fault injection</p>
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-300">Simulated fault injection</p>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
               <select
                 value={faultType}
@@ -231,9 +252,7 @@ export function DataSourceControl() {
               </button>
             </div>
             {activeFault?.active ? (
-              <p className="mt-2 text-xs text-amber-200">
-                FAULT-INJECTED REPLAY · {activeFault.fault_type?.replaceAll("_", " ")} · {activeFault.target} · severity {activeFault.severity} · seed {activeFault.seed}
-              </p>
+              <p className="mt-2 text-xs text-amber-200">{deriveFaultSummaryLabel(activeFault)} · seed {activeFault.seed}</p>
             ) : (
               <p className="mt-2 text-xs text-slate-500">Disabled — clean replay samples pass through unchanged.</p>
             )}
