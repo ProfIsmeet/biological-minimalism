@@ -10,6 +10,12 @@ services:
       BIOMIN_TICK_INTERVAL_SECONDS: "0.5"
       BIOMIN_ROLLING_HISTORY_LENGTH: "600"
       BIOMIN_PPG_DALIA_PATH: "/data/ppg-dalia"
+      # Exact browser origins allowed to call the API (CORSMiddleware), as a
+      # JSON array. These match the frontend published at localhost:3000 below.
+      # Wildcards are rejected by the backend; set this explicitly for a
+      # non-local host. This is the allowed *browser origin* list, not the
+      # frontend URL and not the backend bind address.
+      BIOMIN_ALLOWED_ORIGINS: '["http://localhost:3000","http://127.0.0.1:3000"]'
     volumes:
       - ./datasets/ppg-dalia:/data/ppg-dalia:ro
       - ./ml/checkpoints:/app/ml/checkpoints:ro
@@ -27,11 +33,14 @@ services:
       # NEXT_PUBLIC_* variables are inlined into the client bundle at build
       # time, so overriding the backend origin (e.g. a non-default port, or
       # a real host name in a non-local deployment) requires a build arg,
-      # not just a runtime environment variable. The defaults baked into
-      # frontend/src/lib/config.ts already point at http://localhost:8000,
-      # which is correct for this compose file's default port mapping.
+      # not just a runtime environment variable. These are PUBLIC browser
+      # config values (never secrets) and must be reachable FROM the browser.
+      # The API and WebSocket URLs are pinned explicitly here so the client
+      # contract does not depend on runtime derivation. The defaults match
+      # this compose file's localhost:8000 backend port mapping.
       args:
         NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+        NEXT_PUBLIC_WS_URL: ws://localhost:8000/ws/live-feed
     container_name: biomin-frontend
     ports:
       - "3000:3000"

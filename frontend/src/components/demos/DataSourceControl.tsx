@@ -259,7 +259,7 @@ export function DataSourceControl() {
           </div>
         ) : null}
         {!status?.dataset_configured && !subjects.length ? (
-          <p className="text-xs text-slate-500">Set <span className="tabular-nums-mono">BIOMIN_PPG_DALIA_PATH</span> in the backend environment to enable replay.</p>
+          <p className="text-xs text-slate-500">Recorded PPG-DaLiA replay is not available on this deployment. Contact the demo administrator or run the presenter preflight to enable it.</p>
         ) : null}
         {error ? <p className="text-xs text-signal-critical">{error}</p> : null}
       </div>
