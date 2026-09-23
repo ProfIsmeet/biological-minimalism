@@ -48,6 +48,11 @@ const PROTECTED_FILES = [
   "components/panels/PrimaryVitalsPanel.tsx",
   "components/panels/AIConfidencePanel.tsx",
   "components/panels/TrendPanel.tsx",
+  "components/operations/MissionStatusBar.tsx",
+  "components/operations/CrewPhysiologyMap.tsx",
+  "components/operations/HRInferenceCore.tsx",
+  "components/operations/SensorConstellation.tsx",
+  "components/operations/OperationalEventLogWatcher.tsx",
 ];
 
 /** Strips `//` and `/* *\/` comments so an explanatory doc comment that

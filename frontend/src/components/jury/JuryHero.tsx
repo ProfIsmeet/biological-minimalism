@@ -19,7 +19,7 @@ export function JuryHero() {
         <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">Biological Minimalism / Final System</span>
       </div>
 
-      <h1 className="max-w-[760px] text-[34px] font-semibold leading-[1.08] tracking-[-0.035em] text-ink-primary sm:text-[38px] lg:text-[44px]">
+      <h1 className="max-w-[760px] text-[38px] font-semibold leading-[1.06] tracking-[-0.04em] text-ink-primary sm:text-[46px] sm:leading-[1.04] lg:text-[56px] lg:leading-[1.02] lg:tracking-[-0.045em]">
         Three body regions. Five sensing modalities. One fault-aware physiological layer.
       </h1>
 
@@ -28,16 +28,26 @@ export function JuryHero() {
         MINIMAL_CORE.
       </p>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-md border border-final-accent/40 bg-final-accent-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-final-accent">
-          Final architecture
-        </span>
-        <span className="rounded-md border border-final-accent/40 bg-final-accent-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-final-accent">
-          Conditional selection
-        </span>
-        <span className="rounded-md border border-information/40 bg-information-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-information">
-          {sourceLabel}
-        </span>
+      <div className="flex flex-wrap items-stretch gap-6 border-t border-jury-border-subtle pt-5 sm:gap-8">
+        <div className="flex flex-col gap-0.5">
+          <span className="font-mono text-[32px] font-medium leading-none tabular-nums text-ink-primary">03</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">Body regions</span>
+        </div>
+        <span aria-hidden="true" className="w-px self-stretch bg-jury-border-subtle" />
+        <div className="flex flex-col gap-0.5">
+          <span className="font-mono text-[32px] font-medium leading-none tabular-nums text-ink-primary">05</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">Modalities</span>
+        </div>
+        <span aria-hidden="true" className="w-px self-stretch bg-jury-border-subtle" />
+        <div className="flex flex-col gap-0.5">
+          <span className="font-mono text-[32px] font-medium leading-none tabular-nums text-final-accent">+01</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">EOG context</span>
+        </div>
+        <span aria-hidden="true" className="w-px self-stretch bg-jury-border-subtle" />
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm font-semibold text-information">{sourceLabel}</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted">Current source</span>
+        </div>
       </div>
 
       <div className="flex flex-col gap-3 pt-1 sm:flex-row">

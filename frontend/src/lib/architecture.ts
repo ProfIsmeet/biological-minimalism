@@ -32,6 +32,17 @@ export const FINAL_SENSOR_INVENTORY: FinalSensorInventoryEntry[] = [
   { modality: "EOG", region: "Frontal", order: 5, description: "Ocular context" },
 ];
 
+// Single canonical modality->color mapping (master prompt §5/§12/§14) — every
+// operational and system-brief visual reuses this instead of redeclaring its
+// own copy, so a color can never silently drift between surfaces.
+export const MODALITY_COLOR: Record<FinalModality, string> = {
+  PPG: "#56C5B5",
+  IMU: "#7D9FD3",
+  ECG: "#D97979",
+  EEG: "#A58BD0",
+  EOG: "#D0A25E",
+};
+
 export interface FinalModule {
   id: string;
   order: string;

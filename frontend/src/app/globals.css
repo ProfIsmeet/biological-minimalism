@@ -6,25 +6,24 @@
   color-scheme: dark;
 }
 
-html,
+/* Prompt 3B §4 — document-level scrolling. `height: 100%` (combined with the
+   old `h-full` shell + `main` overflow-y-auto) trapped the page in one
+   viewport; `min-height` lets the document grow and scroll normally. */
+html {
+  min-height: 100%;
+}
 body {
-  height: 100%;
+  min-height: 100dvh;
 }
 
 body {
-  @apply bg-space-950 text-slate-200 antialiased;
-  background-image:
-    radial-gradient(1px 1px at 12% 22%, rgba(255, 255, 255, 0.55) 0, transparent 100%),
-    radial-gradient(1px 1px at 32% 68%, rgba(255, 255, 255, 0.35) 0, transparent 100%),
-    radial-gradient(1.5px 1.5px at 68% 15%, rgba(255, 255, 255, 0.45) 0, transparent 100%),
-    radial-gradient(1px 1px at 82% 78%, rgba(255, 255, 255, 0.3) 0, transparent 100%),
-    radial-gradient(1px 1px at 48% 42%, rgba(255, 255, 255, 0.25) 0, transparent 100%),
-    radial-gradient(ellipse at top, #0b1120 0%, #04070d 60%);
-  background-attachment: fixed;
+  @apply bg-canvas text-ink-primary antialiased;
+  background-image: radial-gradient(1200px 600px at 50% -200px, rgba(105, 183, 173, 0.055), transparent 72%);
+  background-repeat: no-repeat;
 }
 
 ::selection {
-  @apply bg-cyan-500/40 text-white;
+  @apply bg-final-accent/30 text-ink-primary;
 }
 
 * {
@@ -61,6 +60,66 @@ body {
 
   .tabular-nums-mono {
     @apply font-mono tabular-nums;
+  }
+}
+
+/* Master prompt 3A §8/§16 — /mission-overview operational grid. One
+   grid-template-areas source of truth so every component mounts exactly
+   once, reflowed via plain media queries rather than JS viewport detection
+   (avoids SSR/hydration mismatch). Three buckets: mobile (<768, single
+   column, HR above the stage), tablet (768–1365 — covers the required
+   1024×768 viewport — stage full width then HR/Polar side by side), desktop
+   (≥1366 — covers 1440×900 — true 8/4 split with HR+Polar stacked in the
+   right column). `OperationalPhysiologyStage` bundles the avatar, selected-
+   sensor detail, priority ribbons, and event ticker as one integrated
+   surface per §9, so it occupies exactly one grid area at every breakpoint. */
+.mission-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "status"
+    "hr"
+    "stage"
+    "polar";
+}
+
+@media (min-width: 768px) and (max-width: 1365px) {
+  .mission-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "status status"
+      "stage stage"
+      "hr polar";
+  }
+}
+
+@media (min-width: 1366px) {
+  .mission-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+      "status status status status status status status status status status status status"
+      "stage stage stage stage stage stage stage hr hr hr hr hr"
+      "stage stage stage stage stage stage stage polar polar polar polar polar";
+  }
+}
+
+/* Prompt 3A.1 §5 — mission-status-bar field grid. Every field gets its own
+   grid track with a guaranteed minimum width and explicit gap, so no value
+   can visually touch the next field (the flex-wrap layout it replaces had
+   no such guarantee and collided at 1440px once fields carried longer
+   values, e.g. a dataset name next to a subject id). Two columns on mobile
+   keeps the compact status card compact rather than one value per row. */
+.mission-status-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .mission-status-fields {
+    grid-template-columns: repeat(auto-fit, minmax(128px, max-content));
+    gap: 0.5rem 1.75rem;
   }
 }
 

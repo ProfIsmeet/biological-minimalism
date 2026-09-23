@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Activity, FlaskConical, LayoutDashboard } from "lucide-react";
+import { Activity, BookOpen, Clock, FlaskConical, LayoutDashboard, Orbit, Settings as SettingsIcon, Sparkles } from "lucide-react";
 
 export interface NavItem {
   href: string;
@@ -7,27 +7,49 @@ export interface NavItem {
   icon: LucideIcon;
 }
 
-// Master-prompt §5: primary navigation contains exactly these three
-// destinations, in this order. Digital Twin, AI Insights, Mission Timeline,
-// Settings, and Research Mode remain reachable by direct link (§4.7) but are
-// intentionally excluded here so they never compete with the three demo
-// destinations.
-export const NAV_ITEMS: NavItem[] = [
-  { href: "/mission-overview", label: "Overview", icon: LayoutDashboard },
-  { href: "/live-monitoring", label: "Live Signals", icon: Activity },
-  { href: "/research/experimental", label: "Experimental Research", icon: FlaskConical },
-];
+export type NavGroupAccent = "final" | "system" | "experimental" | "neutral";
 
-export interface SecondaryNavItem {
-  href: string;
+export interface NavGroup {
+  id: string;
   label: string;
+  accent: NavGroupAccent;
+  items: NavItem[];
 }
 
-// Secondary/subordinate links (§4.6, §4.7) — not part of primary navigation,
-// rendered in a visually subordinate footer/overflow area only.
-export const SECONDARY_NAV_ITEMS: SecondaryNavItem[] = [
-  { href: "/digital-twin", label: "Digital Twin (reference)" },
-  { href: "/ai-insights", label: "AI Insights" },
-  { href: "/mission-timeline", label: "Mission Timeline" },
-  { href: "/settings", label: "Settings" },
+// Master prompt 3 §4 — desktop sidebar groups, in this exact order. The
+// active operational route gets the strongest final-system teal marker;
+// Experimental Research uses ochre; Digital Twin Reference and the rest of
+// Research & Reference use neutral/information coloring, never final-system
+// success coloring (§4/§14).
+export const NAV_GROUPS: NavGroup[] = [
+  {
+    id: "operations",
+    label: "Operations",
+    accent: "final",
+    items: [
+      { href: "/mission-overview", label: "Mission Overview", icon: LayoutDashboard },
+      { href: "/live-monitoring", label: "Live Signals", icon: Activity },
+    ],
+  },
+  {
+    id: "system",
+    label: "System",
+    accent: "system",
+    items: [{ href: "/system-brief", label: "System Brief", icon: BookOpen }],
+  },
+  {
+    id: "research",
+    label: "Research & Reference",
+    accent: "neutral",
+    items: [
+      { href: "/research/experimental", label: "Experimental Research", icon: FlaskConical },
+      { href: "/digital-twin", label: "Digital Twin Reference", icon: Orbit },
+      { href: "/ai-insights", label: "AI Insights", icon: Sparkles },
+      { href: "/mission-timeline", label: "Mission Timeline", icon: Clock },
+      { href: "/settings", label: "Settings", icon: SettingsIcon },
+    ],
+  },
 ];
+
+/** Flattened for consumers (mobile "More" sheet) that need every destination without group headers. */
+export const ALL_NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((group) => group.items);

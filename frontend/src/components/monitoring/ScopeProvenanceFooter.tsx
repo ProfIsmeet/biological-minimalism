@@ -27,44 +27,44 @@ export function ScopeProvenanceFooter() {
   const availableChannels = latest?.source.available_channels ?? status?.channels.map((channel) => channel.name) ?? [];
 
   return (
-    <footer className="flex flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.015] p-4 text-xs text-slate-400">
+    <footer className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4 text-xs text-ink-secondary">
       <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-slate-600">Active source</dt>
-          <dd className="mt-0.5 text-slate-300">{sourceLabel}</dd>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Active source</dt>
+          <dd className="mt-0.5 text-ink-secondary">{sourceLabel}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-slate-600">Dataset</dt>
-          <dd className="mt-0.5 text-slate-300">{isReplay ? (datasetName ?? "Dataset unavailable") : "Not applicable"}</dd>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Dataset</dt>
+          <dd className="mt-0.5 text-ink-secondary">{isReplay ? (datasetName ?? "Dataset unavailable") : "Not applicable"}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-slate-600">Subject</dt>
-          <dd className="mt-0.5 text-slate-300">{isReplay ? (subjectId ?? "No subject selected") : "Not applicable"}</dd>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Subject</dt>
+          <dd className="mt-0.5 text-ink-secondary">{isReplay ? (subjectId ?? "No subject selected") : "Not applicable"}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-slate-600">Model identity</dt>
-          <dd className="mt-0.5 break-all text-slate-300">{prediction ? prediction.provenance.model_id : "Not available"}</dd>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Model identity</dt>
+          <dd className="mt-0.5 break-all text-ink-secondary">{prediction ? prediction.provenance.model_id : "Not available"}</dd>
         </div>
         <div className="sm:col-span-2 lg:col-span-2">
-          <dt className="text-[10px] uppercase tracking-wide text-slate-600">Channel list</dt>
-          <dd className="mt-0.5 text-slate-300">{availableChannels.length ? availableChannels.join(", ") : "None reported by current source"}</dd>
+          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Channel list</dt>
+          <dd className="mt-0.5 text-ink-secondary">{availableChannels.length ? availableChannels.join(", ") : "None reported by current source"}</dd>
         </div>
         <div className="sm:col-span-2 lg:col-span-2">
-          <dt className="text-[10px] uppercase tracking-wide text-slate-600">Current limitation</dt>
-          <dd className="mt-0.5 text-slate-300">
+          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Current limitation</dt>
+          <dd className="mt-0.5 text-ink-secondary">
             No reference/ground-truth HR channel exists in the current runtime contract; accuracy metrics are only
             available as frozen, offline evaluation artifacts.
           </dd>
         </div>
       </dl>
 
-      <div className="flex flex-col gap-1 border-t border-white/5 pt-3">
+      <div className="flex flex-col gap-1 border-t border-jury-border-subtle pt-3 text-ink-muted">
         <p>Recorded replay is not live astronaut monitoring.</p>
         <p>The S14 replay, when selected, is a single-participant stress test and not population validation.</p>
         <p>Dashboard values are not the source of scientific Results.</p>
       </div>
 
-      <Link href="/research/experimental" className="w-fit text-cyan-300 underline underline-offset-2">
+      <Link href="/research/experimental" className="w-fit text-information underline underline-offset-2">
         See Experimental Research
       </Link>
     </footer>

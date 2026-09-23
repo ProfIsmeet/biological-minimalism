@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { api } from "@/lib/api";
+import { planDemoReset, type DemoResetResult, type DemoResetStep } from "@/lib/monitoring/presenterOps";
 import type { DataSourceStatus, ReplayFaultTarget, ReplayFaultType } from "@/lib/types";
 import { useMissionStore } from "@/store/missionStore";
 
@@ -61,6 +62,14 @@ interface MonitoringSessionValue {
   setSpeed: (speed: 1 | 5 | 10) => Promise<void>;
   configureFault: (config: { fault_type: ReplayFaultType; target: ReplayFaultTarget; severity: number; seed: number }) => Promise<void>;
   clearFault: () => Promise<void>;
+  /**
+   * Prompt-4 §22 — run the one-click demo reset's backend steps (pause / reset
+   * to start / speed 1× / clear fault, as applicable to the current source),
+   * returning a structured result so the caller can report partial failure
+   * honestly. Preserves the current source and subject; never switches to
+   * synthetic and never loads a subject.
+   */
+  resetDemoState: () => Promise<DemoResetResult>;
 }
 
 const MonitoringSessionCtx = createContext<MonitoringSessionValue | null>(null);
@@ -163,6 +172,46 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
     [applyDataSourceStatus],
   );
 
+  // §22 — the compound demo reset. Runs only the backend steps that apply to
+  // the current status (see planDemoReset), collecting per-step failures so a
+  // partial failure is never reported as full success. The non-backend parts
+  // of the reset (clearing the session event log, returning the mission
+  // modality to PPG, scrolling to the top) are owned by the drawer, which
+  // sequences them after this resolves.
+  const resetDemoState = useCallback(async (): Promise<DemoResetResult> => {
+    setPending("reset-demo");
+    setRequestError(null);
+    const plan = planDemoReset(status);
+    const runners: Record<DemoResetStep, () => Promise<DataSourceStatus>> = {
+      pause: api.pauseReplay,
+      reset: api.resetReplay,
+      "speed-1x": () => api.setReplaySpeed(1),
+      "clear-fault": api.clearReplayFault,
+    };
+    const ranSteps: DemoResetStep[] = [];
+    const failedSteps: DemoResetStep[] = [];
+    let lastStatus: DataSourceStatus | null = null;
+    // Prompt-4A HIGH-2 — `pending` is cleared in `finally` so an unexpected
+    // throw (e.g. applyDataSourceStatus) can never leave the controls stuck in
+    // a pending/disabled state.
+    try {
+      for (const step of plan.steps) {
+        try {
+          lastStatus = await runners[step]();
+          ranSteps.push(step);
+        } catch {
+          failedSteps.push(step);
+        }
+      }
+      if (lastStatus) applyDataSourceStatus(lastStatus);
+    } finally {
+      setPending(null);
+    }
+    const ok = failedSteps.length === 0;
+    if (!ok) setRequestError(`Reset incomplete — ${failedSteps.join(", ")} failed. Other steps applied.`);
+    return { ok, ranSteps, failedSteps };
+  }, [status, applyDataSourceStatus]);
+
   const value = useMemo<MonitoringSessionValue>(
     () => ({
       status,
@@ -186,8 +235,9 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
       setSpeed: (speed: 1 | 5 | 10) => run(`speed-${speed}`, () => api.setReplaySpeed(speed)),
       configureFault: (config) => run("fault-enable", () => api.configureReplayFault(config)),
       clearFault: () => run("fault-disable", api.clearReplayFault),
+      resetDemoState,
     }),
-    [status, datasetConfigured, sourceStateStatus, sourceStateError, subjects, subjectListState, subjectListError, selectedSubjectId, pending, requestError, run],
+    [status, datasetConfigured, sourceStateStatus, sourceStateError, subjects, subjectListState, subjectListError, selectedSubjectId, pending, requestError, run, resetDemoState],
   );
 
   return <MonitoringSessionCtx.Provider value={value}>{children}</MonitoringSessionCtx.Provider>;

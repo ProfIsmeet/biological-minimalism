@@ -6,6 +6,11 @@ export interface PlotSeries {
   values: number[];
   unit: string | null;
   transform: string | null;
+  /** Grounded in RawChannelBatch.sample_rate_hz — null when no such channel exists (e.g. synthetic PPG). */
+  sampleRateHz: number | null;
+  /** Grounded in RawChannelBatch.start_timestamp_seconds — never fabricated for sources without real timing metadata. */
+  startTimestampSeconds: number | null;
+  endTimestampSeconds: number | null;
 }
 
 function isMatrix(samples: number[] | number[][]): samples is number[][] {
@@ -35,17 +40,38 @@ export function resolvePlotSeries(
 ): PlotSeries | null {
   if (isReplay) {
     if (!observation.channelBatch) return null;
-    const { samples, units } = observation.channelBatch;
+    const { samples, units, sample_rate_hz, start_timestamp_seconds, end_timestamp_seconds } = observation.channelBatch;
     if (modality === "IMU" && isMatrix(samples)) {
-      return { values: computeAccelerationMagnitude(samples), unit: units, transform: "Derived acceleration magnitude" };
+      return {
+        values: computeAccelerationMagnitude(samples),
+        unit: units,
+        transform: "Derived acceleration magnitude",
+        sampleRateHz: sample_rate_hz,
+        startTimestampSeconds: start_timestamp_seconds,
+        endTimestampSeconds: end_timestamp_seconds,
+      };
     }
     if (!isMatrix(samples)) {
-      return { values: samples, unit: units, transform: null };
+      return {
+        values: samples,
+        unit: units,
+        transform: null,
+        sampleRateHz: sample_rate_hz,
+        startTimestampSeconds: start_timestamp_seconds,
+        endTimestampSeconds: end_timestamp_seconds,
+      };
     }
     return null;
   }
   if (modality === "PPG" && syntheticPpgWaveform?.length) {
-    return { values: syntheticPpgWaveform, unit: null, transform: null };
+    return {
+      values: syntheticPpgWaveform,
+      unit: null,
+      transform: null,
+      sampleRateHz: null,
+      startTimestampSeconds: null,
+      endTimestampSeconds: null,
+    };
   }
   return null;
 }

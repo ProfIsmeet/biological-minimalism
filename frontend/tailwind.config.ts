@@ -30,70 +30,75 @@ const config: Config = {
           400: "#ffb545",
           500: "#ff9d1f",
         },
-        // Master-prompt §6.2 jury/experimental design tokens. Additive to the
-        // existing space/cyan/signal palette (still used by non-primary-nav
-        // routes like /ai-insights and /research's preserved Stage-3/4 views);
-        // do not remove those while this coexists.
-        canvas: "#0B0F12",
-        "jury-sidebar": "#0E1418",
+        // Prompt-3 §5.2 exact jury/experimental design-system palette.
+        // Additive to the legacy space/cyan/signal palette (still used by
+        // non-primary-nav reference routes like /ai-insights,
+        // /mission-timeline, /settings, and /research's preserved Stage-3/4
+        // views); do not remove those while this coexists.
+        canvas: "#081013",
+        "jury-sidebar": "#0B1418",
         surface: {
-          1: "#11181C",
-          2: "#151E23",
-          3: "#1A242A",
+          1: "#0D181C",
+          2: "#111E23",
+          3: "#16262C",
         },
         "jury-border": {
-          subtle: "#243038",
-          strong: "#34434C",
+          subtle: "#203239",
+          strong: "#30464F",
         },
         ink: {
-          primary: "#F2F5F6",
-          secondary: "#B5C0C6",
-          muted: "#7F8E97",
-          disabled: "#56636B",
+          primary: "#F2F6F7",
+          secondary: "#B6C4C9",
+          muted: "#758990",
+          disabled: "#516269",
         },
         "final-accent": {
-          DEFAULT: "#63AAA2",
-          hover: "#79BDB5",
-          soft: "rgba(99, 170, 162, 0.12)",
+          DEFAULT: "#69B7AD",
+          hover: "#7FC5BC",
+          soft: "rgba(105, 183, 173, 0.12)",
         },
         information: {
-          DEFAULT: "#789BC2",
-          soft: "rgba(120, 155, 194, 0.12)",
+          DEFAULT: "#79A7D3",
+          soft: "rgba(121, 167, 211, 0.12)",
         },
         experimental: {
-          DEFAULT: "#C69A58",
-          soft: "rgba(198, 154, 88, 0.12)",
+          DEFAULT: "#C79A5B",
+          soft: "rgba(199, 154, 91, 0.12)",
         },
         "jury-warning": {
-          DEFAULT: "#D0A45F",
-          soft: "rgba(208, 164, 95, 0.12)",
+          DEFAULT: "#D5A45E",
+          soft: "rgba(213, 164, 94, 0.12)",
         },
         "jury-fault": {
-          DEFAULT: "#CF6D6D",
-          soft: "rgba(207, 109, 109, 0.12)",
+          DEFAULT: "#D46F70",
+          soft: "rgba(212, 111, 112, 0.12)",
         },
         "jury-success": {
-          DEFAULT: "#69A98B",
-          soft: "rgba(105, 169, 139, 0.12)",
+          DEFAULT: "#72B491",
+          soft: "rgba(114, 180, 145, 0.12)",
+        },
+        modality: {
+          ppg: "#56C5B5",
+          imu: "#7D9FD3",
+          ecg: "#D97979",
+          eeg: "#A58BD0",
+          eog: "#D0A25E",
         },
       },
       fontFamily: {
         mono: [
           "ui-monospace",
-          "Cascadia Code",
           "SFMono-Regular",
-          "Consolas",
+          "SF Mono",
           "Menlo",
+          "Consolas",
           "monospace",
         ],
         sans: [
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "Segoe UI",
-          "Roboto",
           "Helvetica Neue",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
           "Arial",
           "sans-serif",
         ],

@@ -5,10 +5,13 @@ import { CheckCircle2, Info, Settings as SettingsIcon, XCircle } from "lucide-re
 
 import { Panel } from "@/components/ui/Panel";
 import { DataSourceControl } from "@/components/demos/DataSourceControl";
-import { API_BASE_URL, WS_URL } from "@/lib/config";
 import { api } from "@/lib/api";
-
-const REDUCE_MOTION_KEY = "biomin:reduce-motion";
+import {
+  REDUCE_MOTION_KEY,
+  REDUCE_MOTION_OFF,
+  REDUCE_MOTION_ON,
+  reduceMotionEnabledFromStorage,
+} from "@/lib/runtime/reduceMotion";
 
 export default function SettingsPage() {
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -16,7 +19,9 @@ export default function SettingsPage() {
   const [latencyMs, setLatencyMs] = useState<number | null>(null);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(REDUCE_MOTION_KEY) === "1";
+    // HIGH-1: read through the shared predicate so Settings and the boot script
+    // agree on the accepted values.
+    const stored = reduceMotionEnabledFromStorage(window.localStorage.getItem(REDUCE_MOTION_KEY));
     setReduceMotion(stored);
     document.documentElement.classList.toggle("reduce-motion", stored);
   }, []);
@@ -25,7 +30,7 @@ export default function SettingsPage() {
     const next = !reduceMotion;
     setReduceMotion(next);
     document.documentElement.classList.toggle("reduce-motion", next);
-    window.localStorage.setItem(REDUCE_MOTION_KEY, next ? "1" : "0");
+    window.localStorage.setItem(REDUCE_MOTION_KEY, next ? REDUCE_MOTION_ON : REDUCE_MOTION_OFF);
   }
 
   async function testConnection() {
@@ -48,32 +53,32 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Panel title="API Connection" subtitle="Backend endpoints in use" icon={<SettingsIcon size={16} />}>
+        {/* HIGH-3: no raw REST/WS URLs, no env vars, and no shell start
+            instructions in the public UI. A user-safe reachability check with
+            composed product copy. */}
+        <Panel title="Telemetry service" subtitle="Operational connection status" icon={<SettingsIcon size={16} />}>
           <div className="flex flex-col gap-3 text-sm">
-            <div className="flex flex-col gap-1">
-              <span className="text-[11px] uppercase tracking-wider text-slate-500">REST Base URL</span>
-              <span className="tabular-nums-mono text-slate-300">{API_BASE_URL}</span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[11px] uppercase tracking-wider text-slate-500">WebSocket URL</span>
-              <span className="tabular-nums-mono text-slate-300">{WS_URL}</span>
-            </div>
+            <p className="text-xs text-slate-500">
+              Check whether the operational telemetry service is reachable. The explanatory pages (System Brief,
+              Experimental Research, Digital Twin) remain readable regardless of this status.
+            </p>
             <button
               type="button"
               onClick={testConnection}
               disabled={testState === "testing"}
               className="mt-1 w-fit rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3.5 py-2 text-xs font-medium text-cyan-300 transition-colors hover:bg-cyan-500/20 disabled:opacity-60"
             >
-              {testState === "testing" ? "Testing…" : "Test Connection"}
+              {testState === "testing" ? "Testing…" : "Test connection"}
             </button>
             {testState === "ok" ? (
               <p className="flex items-center gap-1.5 text-xs text-signal-nominal">
-                <CheckCircle2 size={14} /> Connected — {latencyMs}ms round-trip.
+                <CheckCircle2 size={14} /> Telemetry service reachable — {latencyMs}ms round-trip.
               </p>
             ) : null}
             {testState === "error" ? (
               <p className="flex items-center gap-1.5 text-xs text-signal-critical">
-                <XCircle size={14} /> Could not reach the backend. Is `uvicorn app.main:app` running?
+                <XCircle size={14} /> The telemetry service is unavailable, so live vitals and replay will not update.
+                Check the configured service and try again.
               </p>
             ) : null}
           </div>
@@ -116,7 +121,7 @@ export default function SettingsPage() {
             with explicit dataset/subject provenance; it is not live hardware. Replay heart rate is a PPG + IMU heart-rate estimate
             evaluated on PPG-DaLiA, while unsupported physiology remains unavailable. SHAP views apply only to the synthetic physiology scoring functions.
           </p>
-          <p>See <span className="tabular-nums-mono">docs/PDD_Biological_Minimalism_IAC2026.md</span> for the full project design document.</p>
+          <p>Refer to the project design document (PDD) for the full methodology and scope.</p>
         </div>
       </Panel>
     </div>

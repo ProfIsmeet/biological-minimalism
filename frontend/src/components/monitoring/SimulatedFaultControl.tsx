@@ -21,11 +21,13 @@ const FAULT_TARGETS: { value: ReplayFaultTarget; label: string }[] = [
   { value: "both", label: "PPG + IMU" },
 ];
 
-// Master-prompt §8.6 — simulated fault injection. Only the backend's own
+// Master-prompt 3 §8.5 — simulated fault injection. Only the backend's own
 // target/fault-type enums are exposed (ReplayFaultTarget/ReplayFaultType in
 // backend/app/schemas/fault_injection.py); nothing here invents an
 // unsupported combination. Disabled entirely outside recorded replay, with
-// an explicit reason rather than a silently greyed-out control.
+// an explicit reason rather than a silently greyed-out control. No flash,
+// pulse, glow, or shake motion; fault-red is reserved for an actually-active
+// fault or a failed request, never for the idle control state.
 export function SimulatedFaultControl() {
   const isReplay = useDatasetReplayMode();
   const { pending, requestError, configureFault, clearFault } = useMonitoringSession();
@@ -40,14 +42,14 @@ export function SimulatedFaultControl() {
 
   if (!isReplay) {
     return (
-      <section aria-labelledby="fault-control-heading" className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
+      <section aria-labelledby="fault-control-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 id="fault-control-heading" className="text-sm font-semibold text-slate-200">Simulated fault injection</h2>
-          <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-            Demonstration control — recorded replay only
+          <h2 id="fault-control-heading" className="text-sm font-semibold text-ink-primary">Simulated fault injection</h2>
+          <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">
+            Recorded replay only
           </span>
         </div>
-        <p className="mt-2 text-xs leading-relaxed text-slate-500">
+        <p className="mt-2 text-xs leading-relaxed text-ink-muted">
           Fault injection is available only for recorded replay because it tests the inference pipeline against
           controlled signal corruption.
         </p>
@@ -56,16 +58,16 @@ export function SimulatedFaultControl() {
   }
 
   return (
-    <section aria-labelledby="fault-control-heading" className="flex flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.02] p-4">
+    <section aria-labelledby="fault-control-heading" className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="fault-control-heading" className="text-sm font-semibold text-slate-200">Simulated fault injection</h2>
-        <span className="rounded-full border border-amber-400/25 bg-amber-400/[0.06] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
-          Demonstration control — recorded replay only
+        <h2 id="fault-control-heading" className="text-sm font-semibold text-ink-primary">Simulated fault injection</h2>
+        <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">
+          Recorded replay only
         </span>
       </div>
 
       {isWaitingForConfirmation ? (
-        <p role="status" className="rounded-md border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs text-cyan-200">
+        <p role="status" className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">
           Waiting for a confirmed frame from the selected source.
         </p>
       ) : null}
@@ -82,7 +84,7 @@ export function SimulatedFaultControl() {
             setSeverity(value === "modality_dropout" || value === "frozen_sensor" ? 1 : 0.25);
           }}
           disabled={pending !== null}
-          className="rounded-lg border border-white/10 bg-space-900 px-3 py-2 text-xs text-slate-200 disabled:opacity-50"
+          className="rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
         >
           {FAULT_TYPES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
@@ -93,11 +95,11 @@ export function SimulatedFaultControl() {
           value={target}
           onChange={(event) => setTarget(event.target.value as ReplayFaultTarget)}
           disabled={pending !== null}
-          className="rounded-lg border border-white/10 bg-space-900 px-3 py-2 text-xs text-slate-200 disabled:opacity-50"
+          className="rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
         >
           {FAULT_TARGETS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
-        <label className="flex items-center gap-2 text-xs text-slate-400" htmlFor="fault-severity-input">
+        <label className="flex items-center gap-2 text-xs text-ink-secondary" htmlFor="fault-severity-input">
           Severity
           <input
             id="fault-severity-input"
@@ -109,10 +111,10 @@ export function SimulatedFaultControl() {
             value={severity}
             disabled={!severityIsConfigurable || pending !== null}
             onChange={(event) => setSeverity(Number(event.target.value))}
-            className="w-20 rounded-md border border-white/10 bg-space-900 px-2 py-1.5 text-slate-200 disabled:opacity-40"
+            className="w-20 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-ink-primary disabled:opacity-40"
           />
         </label>
-        <label className="flex items-center gap-2 text-xs text-slate-400" htmlFor="fault-seed-input">
+        <label className="flex items-center gap-2 text-xs text-ink-secondary" htmlFor="fault-seed-input">
           Seed
           <input
             id="fault-seed-input"
@@ -123,7 +125,7 @@ export function SimulatedFaultControl() {
             value={seed}
             disabled={pending !== null}
             onChange={(event) => setSeed(Number(event.target.value))}
-            className="w-24 rounded-md border border-white/10 bg-space-900 px-2 py-1.5 text-slate-200 disabled:opacity-40"
+            className="w-24 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-ink-primary disabled:opacity-40"
           />
         </label>
       </div>
@@ -133,7 +135,7 @@ export function SimulatedFaultControl() {
           type="button"
           disabled={pending !== null}
           onClick={() => void configureFault({ fault_type: faultType, target, severity: severityIsConfigurable ? severity : 1, seed })}
-          className="rounded-md border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-medium text-amber-300 disabled:opacity-40"
+          className="rounded-[6px] border border-experimental/40 bg-experimental-soft px-3 py-1.5 text-xs font-medium text-experimental disabled:opacity-40"
         >
           Apply fault
         </button>
@@ -141,20 +143,23 @@ export function SimulatedFaultControl() {
           type="button"
           disabled={!active || pending !== null}
           onClick={() => void clearFault()}
-          className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-slate-400 disabled:opacity-40"
+          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
           title={!active ? "No simulated fault is active to clear." : undefined}
         >
           Clear fault
         </button>
       </div>
 
-      <p className={active ? "text-xs font-medium text-amber-200" : "text-xs text-slate-500"}>
+      <p className={active ? "text-xs font-medium text-jury-fault" : "text-xs text-ink-muted"}>
         {active
           ? `Simulated fault active — ${latestFault?.target?.toUpperCase()} · ${formatFaultTypeLabel(latestFault?.fault_type)} · severity ${latestFault?.severity}`
           : "No simulated fault is active."}
       </p>
+      <p className="text-[11px] leading-relaxed text-ink-muted">
+        Applies a simulated interface fault condition. It does not represent a physical sensor failure.
+      </p>
 
-      {requestError ? <p role="alert" className="text-xs text-signal-critical">{requestError}</p> : null}
+      {requestError ? <p role="alert" className="text-xs text-jury-fault">{requestError}</p> : null}
     </section>
   );
 }

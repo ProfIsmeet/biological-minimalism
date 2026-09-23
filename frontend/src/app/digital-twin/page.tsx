@@ -1,103 +1,83 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Orbit } from "lucide-react";
+import dynamic from "next/dynamic";
 
-import { DigitalTwinDaySlider } from "@/components/demos/DigitalTwinDaySlider";
-import { DigitalTwinPanel } from "@/components/panels/DigitalTwinPanel";
-import { Panel } from "@/components/ui/Panel";
-import { confidenceLevel } from "@/lib/format";
-import { StatusBadge } from "@/components/ui/StatusBadge";
-import { api } from "@/lib/api";
-import type { DigitalTwinState } from "@/lib/types";
-import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
+const ConceptualTwinStage = dynamic(() => import("@/components/visualization/human/ConceptualTwinStage").then((m) => m.ConceptualTwinStage), {
+  ssr: false,
+  loading: () => <div className="flex h-[380px] items-center justify-center text-xs text-ink-muted sm:h-[520px]">Loading conceptual twin stage…</div>,
+});
+
+// Prompt 3A.2 §8 — Digital Twin composition rebuilt. The figure is a purely
+// conceptual, architecture-only volumetric illustration, so this route no
+// longer calls the backend, holds no mission-day state, and renders no
+// scenario-day control (all of which only ever changed a conceptual label and
+// risked implying a modeled time-series). The domains are fixed conceptual
+// domains, not day-dependent state; the second right-panel card states the
+// proposed computation boundary categorically, not as a metric. A single
+// page-level safety badge is shown; no text is overlaid on the mannequin.
+const PROPOSED_DOMAINS = ["Cardiovascular", "Cognitive", "Fluid Balance", "Thermal Regulation"];
+
+const COMPUTATION_BOUNDARY: { label: string; value: string }[] = [
+  { label: "Inputs", value: "Final sensing architecture" },
+  { label: "Model layer", value: "Future personalized baseline" },
+  { label: "Output boundary", value: "No trained output in this demonstrator" },
+];
 
 export default function DigitalTwinPage() {
-  const [day, setDay] = useState(1);
-  const [state, setState] = useState<DigitalTwinState | null>(null);
-  const [loading, setLoading] = useState(false);
-  const isReplay = useDatasetReplayMode();
-
-  useEffect(() => {
-    if (isReplay) {
-      setState(null);
-      setLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setLoading(true);
-    api
-      .getDigitalTwin(day)
-      .then((result) => {
-        if (!cancelled) setState(result);
-      })
-      .catch(() => {
-        if (!cancelled) setState(null);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [day, isReplay]);
-
-  if (isReplay) {
-    return (
-      <div className="flex flex-col gap-5">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
-          <p className="text-sm text-slate-500">REAL RECORDED DATA — REPLAY MODE</p>
-        </div>
-        <Panel title="Adaptation State" subtitle="Unavailable during recorded-data replay" icon={<Orbit size={16} />}>
-          <p className="text-sm leading-relaxed text-slate-500">
-            Digital Twin unavailable during recorded-data replay until real personalized inference is implemented.
-          </p>
-        </Panel>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col gap-5">
+    <div className="mx-auto flex min-w-0 max-w-[1200px] flex-col gap-5 overflow-x-hidden px-0 py-2">
       <div>
-        <h1 className="text-lg font-semibold text-slate-100">Digital Twin</h1>
-        <p className="mb-1.5 inline-block rounded border border-amber-400/30 bg-amber-400/[0.06] px-2 py-1 text-xs font-semibold text-amber-300">
-          Architecture-only concept — untrained and unvalidated.
+        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-information">Reference / Digital Twin</span>
+        <h1 className="mt-2 text-[28px] font-semibold leading-tight tracking-[-0.025em] text-ink-primary sm:text-[34px]">
+          Digital Twin reference
+        </h1>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-secondary">
+          Conceptual architecture demonstration for a future personalized physiological model. No model is trained,
+          personalized, or validated in this demonstrator.
         </p>
-        <p className="text-sm text-slate-500">
-          Demo — Digital Twin Evolution. A <span className="text-slate-400">synthetic, conceptual</span> illustration of a
-          <em> proposed</em> personalized baseline: the model is architecture/reference code only, untrained and not validated.
-          Move the slider to see the illustrative adaptation across a simulated 30-day mission.
-        </p>
+        <span className="mt-2 inline-block rounded-[4px] border border-jury-warning/40 bg-jury-warning-soft px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-jury-warning">
+          ARCHITECTURE ONLY · UNTRAINED · UNVALIDATED
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Panel title="Adaptation State" subtitle={state?.milestone_label ?? "Loading…"} icon={<Orbit size={16} />} className="lg:col-span-2">
-          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-around">
-            <DigitalTwinPanel state={state} size={320} />
-            <div className="flex w-full max-w-sm flex-col gap-4">
-              <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
-                <p className="mb-2 text-[11px] uppercase tracking-wider text-slate-500">Twin Narrative</p>
-                <p className={loading ? "text-sm text-slate-500" : "text-sm leading-relaxed text-slate-200"}>
-                  {state?.narrative ?? "Loading digital twin narrative…"}
-                </p>
-              </div>
-              {state ? (
-                <StatusBadge level={confidenceLevel(state.overall_adaptation)} label={`${state.overall_adaptation.toFixed(0)}% Adapted`} />
-              ) : null}
-            </div>
-          </div>
-        </Panel>
-
-        <Panel title="Mission Day" subtitle="Day 1 · 5 · 12 · 30 milestones" icon={<Orbit size={16} />}>
-          <DigitalTwinDaySlider day={day} onChange={setDay} />
-          <p className="mt-4 text-xs leading-relaxed text-slate-500">
-            The Digital Twin is designed to support future personalized-baseline learning and deviation tracking across four
-            physiological systems when sufficient longitudinal subject-specific data are available. This is a synthetic, untrained
-            illustration — no model is trained here, so the adaptation shown is simulated, not learned.
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+        {/* Primary visual (§8.3): 8 columns, visually dominant, figure fully framed, no overlaid text. */}
+        <div className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4 lg:col-span-8">
+          <h2 className="text-sm font-semibold text-ink-primary">Conceptual architecture view</h2>
+          <ConceptualTwinStage />
+          <p className="text-xs leading-relaxed text-ink-secondary">
+            Illustrative spatial model scaffold. No trained personalized state is active. The scan rings and wireframe
+            are decorative spatial elements, not measurements — this figure reports no adaptation percentage,
+            confidence value, or measured quantity.
           </p>
-        </Panel>
+        </div>
+
+        {/* Supporting information (§8.3): 4 columns. */}
+        <div className="flex flex-col gap-5 lg:col-span-4">
+          <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
+            <h2 className="text-sm font-semibold text-ink-primary">Proposed model domains</h2>
+            <ul className="flex flex-col gap-1 text-xs text-ink-secondary">
+              {PROPOSED_DOMAINS.map((domain) => (
+                <li key={domain}>{domain}</li>
+              ))}
+            </ul>
+            <p className="text-[11px] leading-relaxed text-ink-muted">
+              Conceptual domains only. No currently inferred physiological state is reported.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
+            <h2 className="text-sm font-semibold text-ink-primary">Proposed computation boundary</h2>
+            <dl className="flex flex-col gap-2">
+              {COMPUTATION_BOUNDARY.map((row) => (
+                <div key={row.label} className="flex flex-col gap-0.5 border-b border-jury-border-subtle pb-2 last:border-0 last:pb-0">
+                  <dt className="text-[10px] font-semibold uppercase tracking-wide text-ink-muted">{row.label}</dt>
+                  <dd className="text-xs text-ink-secondary">{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
       </div>
     </div>
   );

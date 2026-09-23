@@ -5,6 +5,8 @@
  * differently in five places.
  */
 
+import { downsampleExtremaPreserving } from "./waveformDisplay";
+
 export function formatSecondsClock(value: number | null | undefined): string {
   if (value === null || value === undefined || Number.isNaN(value)) return "—";
   return `${value.toFixed(1)}s`;
@@ -35,17 +37,15 @@ export function computeAccelerationMagnitude(rows: number[][]): number[] {
 }
 
 /**
- * Simple stride decimation for display only (master prompt §9.5) — never
- * applied to model input, never mutates the source array. Labeled
- * "Display downsampled" by the caller whenever this actually reduces the
- * sample count.
+ * Display-only decimation (master prompt 3 §8.6) — never applied to model
+ * input, never mutates the source array. Labeled "Display downsampled" by
+ * the caller whenever this actually reduces the sample count. Delegates to
+ * the deterministic extrema-preserving bucket algorithm in
+ * lib/monitoring/waveformDisplay.ts so a narrow peak/trough between flat
+ * regions is never discarded the way plain stride decimation would discard
+ * it; this wrapper keeps the flat `values` shape existing callers expect.
  */
 export function downsampleForDisplay(data: number[], maxPoints = 400): { values: number[]; downsampled: boolean } {
-  if (data.length <= maxPoints) return { values: data, downsampled: false };
-  const stride = Math.ceil(data.length / maxPoints);
-  const values: number[] = [];
-  for (let index = 0; index < data.length; index += stride) {
-    values.push(data[index]!);
-  }
-  return { values, downsampled: true };
+  const { points, downsampled } = downsampleExtremaPreserving(data, maxPoints);
+  return { values: points.map((point) => point.value), downsampled };
 }

@@ -78,18 +78,32 @@ export function MonitoringSourceStrip() {
         </div>
       ) : null}
       {isWaitingForConfirmation ? (
-        <p role="status" className="rounded-md border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-xs text-cyan-200">
+        <p role="status" className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">
           Waiting for a confirmed frame from the selected source.
         </p>
       ) : null}
       <div
         role="status"
-        className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-white/5 bg-white/[0.02] px-4 py-3 sm:grid-cols-3 lg:grid-cols-7"
+        className={
+          fault?.active
+            ? "grid grid-cols-2 gap-x-4 gap-y-3 rounded-[6px] border border-jury-fault/40 bg-surface-1 px-4 py-3 sm:grid-cols-3 lg:grid-cols-7"
+            : "grid grid-cols-2 gap-x-4 gap-y-3 rounded-[6px] border border-jury-border-subtle bg-surface-1 px-4 py-3 sm:grid-cols-3 lg:grid-cols-7"
+        }
       >
-        {fields.map((field) => (
+        {fields.map((field, index) => (
           <div key={field.label} className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{field.label}</span>
-            <span className="text-xs font-medium text-slate-200">{field.value}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">{field.label}</span>
+            <span
+              className={
+                index < 2
+                  ? "text-sm font-semibold text-ink-primary"
+                  : field.label === "Simulated fault" && fault?.active
+                    ? "text-xs font-medium text-jury-fault"
+                    : "text-xs font-medium text-ink-secondary"
+              }
+            >
+              {field.value}
+            </span>
           </div>
         ))}
       </div>

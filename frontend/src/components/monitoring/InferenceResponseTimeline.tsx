@@ -7,11 +7,11 @@
 // render time or reusing the trend history as if it were an event log.
 export function InferenceResponseTimeline() {
   return (
-    <section aria-labelledby="inference-response-heading" className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
-      <h2 id="inference-response-heading" className="text-sm font-semibold text-slate-200">
+    <section aria-labelledby="inference-response-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
+      <h2 id="inference-response-heading" className="text-sm font-semibold text-ink-primary">
         Inference response
       </h2>
-      <p className="mt-2 text-xs leading-relaxed text-slate-500">
+      <p className="mt-2 text-xs leading-relaxed text-ink-muted">
         Event history is not retained by the current frontend session. The source strip, HR inference panel, and fault
         control above always reflect the current window; they do not reconstruct a timeline of past replay, fault, or
         inference events.

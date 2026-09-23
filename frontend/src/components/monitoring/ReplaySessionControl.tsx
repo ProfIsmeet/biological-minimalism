@@ -50,14 +50,14 @@ export function ReplaySessionControl() {
 
   if (datasetConfigured === false) {
     return (
-      <section aria-labelledby="replay-unavailable-heading" className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
+      <section aria-labelledby="replay-unavailable-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
         <div className="flex items-start gap-2.5">
-          <Info size={16} className="mt-0.5 shrink-0 text-slate-400" aria-hidden="true" />
+          <Info size={16} className="mt-0.5 shrink-0 text-ink-muted" aria-hidden="true" />
           <div>
-            <h2 id="replay-unavailable-heading" className="text-sm font-semibold text-slate-200">
+            <h2 id="replay-unavailable-heading" className="text-sm font-semibold text-ink-primary">
               Recorded replay unavailable
             </h2>
-            <p className="mt-1.5 max-w-xl text-xs leading-relaxed text-slate-400">
+            <p className="mt-1.5 max-w-xl text-xs leading-relaxed text-ink-secondary">
               The PPG-DaLiA replay source is not configured in this environment. Synthetic demo mode remains
               available, but it is not a substitute for recorded replay evidence.
             </p>
@@ -74,8 +74,8 @@ export function ReplaySessionControl() {
   const activeSubject = status?.subject_id ?? latestSource?.subject_id;
 
   return (
-    <section aria-labelledby="replay-session-heading" className="flex flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.02] p-4">
-      <h2 id="replay-session-heading" className="text-sm font-semibold text-slate-200">
+    <section aria-labelledby="replay-session-heading" className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
+      <h2 id="replay-session-heading" className="text-sm font-semibold text-ink-primary">
         Recorded replay session
       </h2>
 
@@ -100,6 +100,7 @@ export function ReplaySessionControl() {
           </button>
         </div>
       ) : (
+        // Row 1 — subject selection and load.
         <div className="flex flex-col gap-2 sm:flex-row">
           <label className="sr-only" htmlFor="replay-subject-select">Replay subject</label>
           <select
@@ -107,7 +108,7 @@ export function ReplaySessionControl() {
             value={selectedSubjectId}
             onChange={(event) => setSelectedSubjectId(event.target.value)}
             disabled={subjectListState !== "available" || pending !== null}
-            className="min-w-40 rounded-lg border border-white/10 bg-space-900 px-3 py-2 text-xs text-slate-200 disabled:opacity-50"
+            className="min-w-40 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
           >
             {subjectListState === "loading"
               ? <option>Loading subjects…</option>
@@ -120,7 +121,7 @@ export function ReplaySessionControl() {
             onClick={() => void loadSubject(selectedSubjectId)}
             disabled={!selectedSubjectId || pending !== null}
             title={!selectedSubjectId ? "Select a subject returned by the backend before loading." : undefined}
-            className="rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-xs font-medium text-cyan-300 disabled:opacity-50"
+            className="rounded-[6px] bg-final-accent px-3 py-2 text-xs font-semibold text-[#07100F] disabled:opacity-40"
           >
             {pending === "load" ? "Loading real subject…" : "Load subject"}
           </button>
@@ -128,7 +129,7 @@ export function ReplaySessionControl() {
             type="button"
             onClick={() => void switchToSynthetic()}
             disabled={pending !== null || !isReplay}
-            className="rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-slate-300 disabled:opacity-50"
+            className="rounded-[6px] border border-jury-border-strong px-3 py-2 text-xs font-medium text-ink-secondary disabled:opacity-40"
           >
             Switch to synthetic demo
           </button>
@@ -136,16 +137,17 @@ export function ReplaySessionControl() {
       )}
 
       {selectedSubjectId && subjectLabel(selectedSubjectId).note ? (
-        <p className="text-[11px] leading-relaxed text-amber-300/90">{subjectLabel(selectedSubjectId).note}</p>
+        <p className="text-[11px] leading-relaxed text-jury-warning">{subjectLabel(selectedSubjectId).note}</p>
       ) : null}
 
+      {/* Row 2 — playback controls. */}
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
           disabled={!isReplay || pending !== null || playbackState === "ended"}
           title={!isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void play()}
-          className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-slate-300 disabled:opacity-40"
+          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
         >
           Play
         </button>
@@ -154,7 +156,7 @@ export function ReplaySessionControl() {
           disabled={!isReplay || pending !== null}
           title={!isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void pause()}
-          className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-slate-300 disabled:opacity-40"
+          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
         >
           Pause
         </button>
@@ -163,11 +165,18 @@ export function ReplaySessionControl() {
           disabled={!isReplay || pending !== null}
           title={!isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void reset()}
-          className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-slate-300 disabled:opacity-40"
+          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
         >
           Reset
         </button>
-        <span className="mx-1 text-[10px] uppercase tracking-wider text-slate-600">Speed</span>
+        <span className="rounded-[4px] border border-jury-border-subtle px-2 py-1 text-[11px] text-ink-muted">
+          {playbackState ? playbackState : "unloaded"}
+        </span>
+      </div>
+
+      {/* Row 3 — playback speed and position. */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[10px] uppercase tracking-wider text-ink-muted">Speed</span>
         {SPEEDS.map((value) => (
           <button
             key={value}
@@ -175,25 +184,24 @@ export function ReplaySessionControl() {
             disabled={!isReplay || pending !== null}
             onClick={() => void setSpeed(value)}
             className={clsx(
-              "rounded-md border px-2.5 py-1.5 text-xs disabled:opacity-40",
-              speed === value ? "border-cyan-400/40 text-cyan-300" : "border-white/10 text-slate-500",
+              "rounded-[6px] border px-2.5 py-1.5 text-xs disabled:opacity-40",
+              speed === value ? "border-final-accent/50 text-final-accent" : "border-jury-border-subtle text-ink-muted",
             )}
           >
             {value}x
           </button>
         ))}
+        <div className="ml-auto flex items-center gap-2 rounded-[6px] border border-jury-border-subtle bg-surface-2 px-3 py-2 text-xs text-ink-secondary">
+          <Database size={13} className="shrink-0 text-ink-muted" aria-hidden="true" />
+          <span>
+            {isReplay
+              ? `PPG-DaLiA · ${activeSubject ?? "subject not loaded"} · ${playbackState ?? "unloaded"} · ${formatReplayPosition(position, duration)}`
+              : "Replay not active — synthetic demo is the current session."}
+          </span>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 rounded-md border border-white/5 bg-space-900/50 px-3 py-2 text-xs text-slate-400">
-        <Database size={13} className="shrink-0 text-slate-500" aria-hidden="true" />
-        <span>
-          {isReplay
-            ? `PPG-DaLiA · ${activeSubject ?? "subject not loaded"} · ${playbackState ?? "unloaded"} · ${formatReplayPosition(position, duration)}`
-            : "Replay not active — synthetic demo is the current session."}
-        </span>
-      </div>
-
-      {requestError ? <p role="alert" className="text-xs text-signal-critical">{requestError}</p> : null}
+      {requestError ? <p role="alert" className="text-xs text-jury-fault">{requestError}</p> : null}
     </section>
   );
 }
