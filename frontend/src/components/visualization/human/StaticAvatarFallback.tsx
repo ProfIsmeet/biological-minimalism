@@ -18,8 +18,22 @@ const FALLBACK_POSITION: Record<string, { left: number; top: number }> = {
  * §3/§20). Same body outline/anchor-button language as the 3D scene's
  * accessible layer, so the operator loses only the volumetric rendering,
  * never the operational information.
+ *
+ * Stage 2 A4: `onRetry` is supplied only when recovery is technically
+ * possible — a lost WebGL context or a transient render error, both of
+ * which a fresh Canvas mount can recover from. It is omitted when WebGL is
+ * simply unsupported on this device/browser, since no retry could help
+ * there; the "Try 3D view again" button is rendered only when present.
  */
-export function StaticAvatarFallback({ anchors, onSelect }: { anchors: SensorAnchorModel[]; onSelect: (modality: SensorAnchorModel["modality"]) => void }) {
+export function StaticAvatarFallback({
+  anchors,
+  onSelect,
+  onRetry,
+}: {
+  anchors: SensorAnchorModel[];
+  onSelect: (modality: SensorAnchorModel["modality"]) => void;
+  onRetry?: () => void;
+}) {
   return (
     <div className="relative mx-auto aspect-[3/4] w-full max-w-[320px]">
       <svg viewBox="0 0 300 400" className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -55,7 +69,16 @@ export function StaticAvatarFallback({ anchors, onSelect }: { anchors: SensorAnc
           </button>
         );
       })}
-      <p className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-ink-muted">3D rendering unavailable — static sensor map</p>
+      <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-[10px] text-ink-muted">3D rendering unavailable — static sensor map</p>
+      {onRetry ? (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-[4px] border border-jury-border-strong px-2 py-1 text-[10px] font-medium text-ink-secondary hover:bg-surface-2"
+        >
+          Try 3D view again
+        </button>
+      ) : null}
     </div>
   );
 }

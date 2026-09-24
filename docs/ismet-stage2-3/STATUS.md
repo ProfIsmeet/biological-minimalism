@@ -1,6 +1,6 @@
 # STATUS
 
-**Active milestone**: Milestone A (Stage 2 accessibility) — A1, A2, A3 complete, moving to A4 (WebGL/Digital Twin failure fallback).
+**Active milestone**: Milestone A (Stage 2 accessibility) — A1, A2, A3, A4 complete. A5 (Stage 2 verification checkpoint) passed on the same gate below. Next up: Milestone B (Stage 3A deployment hardening).
 
 **Completed work**:
 - Hard-stop gate verified: both required remotes present, deployment branch SHA matches exactly.
@@ -19,7 +19,18 @@
 
 **Current blockers**: none.
 
-**Exact next action**: commit the A3 changes (files listed below, staged explicitly), then start A4 — accessible, honest WebGL/Digital Twin failure fallback (unsupported WebGL, renderer init failure, context loss, render-time error, unavailable 3D implementation), via a proper error boundary, tested for all paths.
+**Exact next action**: commit the A4 changes (files listed below, staged explicitly) as the Stage 2 checkpoint commit, then move to Milestone B (Stage 3A) — inspect the complete diff of `origin/claude/deployment-hardening` and port only valid changes (Docker/npm ci install, `NEXT_PUBLIC_WS_URL` config, exact-origin CORS, env examples, jury runbook, read-only env verifier, release-evidence manifest/verifier, Presenter Preflight wording correction).
+
+**A4 summary (WebGL/Digital Twin failure fallback)**:
+- Audit found `ConceptualTwinStage.tsx` (the `/digital-twin` reference figure) had **no WebGL detection or error handling at all** — an unsupported device, a renderer init failure, a lost context, or any render-time error would leave a blank/broken panel. `PhysiologyAvatar3D.tsx` (the operational avatar) only handled the up-front "unsupported" case via a private `detectWebgl()`; it had no handling for a runtime render error or a lost context either.
+- Added `components/visualization/human/detectWebgl.ts` — the one shared WebGL-support check (previously duplicated only in `PhysiologyAvatar3D.tsx`).
+- Added `components/visualization/human/WebglErrorBoundary.tsx` — a real React class-component error boundary (`getDerivedStateFromError`/`componentDidCatch`), since render-time throws inside a `react-three-fiber` scene tree have no hook-based equivalent.
+- Added `components/visualization/human/WebglStage.tsx` — the shared wrapper combining all three failure paths (unsupported, render-time error via the boundary, lost context via a `webglcontextlost` listener registered in `onCreated`) behind one `renderFallback(retry | null)` API. `retry` is `null` (no recovery control offered) only for the hard-unsupported case, per A4's "recovery action only when technically possible" rule; for a render error or lost context, `retry` remounts the Canvas with a fresh WebGL context via a `key` bump.
+- `PhysiologyAvatar3D.tsx` now renders `<WebglStage>` instead of a raw `<Canvas>`; its fallback is the existing `StaticAvatarFallback` (now accepting an optional `onRetry`), and the interactive `OperationalAvatarOverlay` column stays mounted regardless — only the volumetric rendering itself is ever replaced, so the operator never loses the sensor panel.
+- Added `components/visualization/human/ConceptualTwinFallback.tsx` for `ConceptualTwinStage.tsx` (no sensor anchors, so a static text panel rather than an anchor map) — preserves the exact same architecture-only/untrained/unvalidated scientific-boundary language the live disclaimer carries, reports no rotation angle or any other invented quantity, and includes the same conditional retry button.
+- Added `frontend/scripts/verify-webgl-fallback.mjs`, wired into `verify:monitoring`, asserting: `WebglStage` covers all three failure paths and the null-vs-retry rule; `WebglErrorBoundary` is a genuine React error boundary; both `PhysiologyAvatar3D.tsx` and `ConceptualTwinStage.tsx` render `<WebglStage>` and never a raw `<Canvas>`; both fallback components declare an optional `onRetry` and render it conditionally.
+- No pre-existing Stage 1 check referenced the old WebGL/Canvas structure, so no existing check needed updating this time.
+- Full gate re-verified: `verify:monitoring` 933/933 (unchanged — A4 added no new monitoring-state checks) + all five structural checks PASSED, lint clean, `tsc --noEmit` clean, `next build` 14/14 pages, `git diff --check` clean. This also serves as the A5 Stage 2 verification checkpoint — no regressions found across the full A1–A4 change set; keyboard-only and adversarial screen-reader review were not performed live (no browser automation available in this environment) and are reported as `NOT_RUN_DOCKER_UNAVAILABLE`-style gaps in the final report, not claimed as passed.
 
 **A3 summary (mobile "More" dialog focus containment)**:
 - Audit of the pre-existing `MobileNav.tsx` sheet found it had only Escape-to-close and a first-focusable-child focus-on-open — no Tab/Shift+Tab containment (focus could escape to the page behind the sheet), no scroll lock, and no background inert/aria-hidden (a screen reader's virtual cursor and Tab could still reach content behind the open sheet).
@@ -41,12 +52,21 @@
 - Added `frontend/scripts/verify-reduced-motion-unification.mjs`, wired into `verify:monitoring`, asserting: the shared hook combines both sources and all three live-update listeners exist; Settings dispatches the same-tab event; `MotionConfigProvider` wraps `layout.tsx` and is driven by the hook; the two former OS-only offenders now use the hook and contain no local `matchMedia` call; all three `useFrame` loops still gate on `reducedMotion`.
 - Full gate re-verified after the change: `verify:monitoring` 932/932 + both new checks PASSED, lint clean, `tsc --noEmit` clean, `next build` 14/14 pages, `git diff --check` clean.
 
-**Files intentionally changed so far (cumulative, A1+A2+A3)**:
+**Files intentionally changed so far (cumulative, A1+A2+A3+A4)**:
 - `frontend/src/lib/runtime/useModalDialog.ts` (new — A3 shared focus/scroll/inert primitive)
 - `frontend/src/components/operations/DemoControlDrawer.tsx` (A3 — refactored to use shared hook, no behavior change)
 - `frontend/src/components/layout/MobileNav.tsx` (A3 — portaled + uses shared hook, gains Tab trap/scroll lock/inert it lacked)
 - `frontend/scripts/verify-modal-dialog-primitives.mjs` (new — A3 structural test)
 - `frontend/scripts/verify-monitoring-state.ts` (A3 — updated "modal: ..." checks to match new architecture, +1 new check, guarantees preserved)
+- `frontend/src/components/visualization/human/detectWebgl.ts` (new — A4 shared WebGL support check)
+- `frontend/src/components/visualization/human/WebglErrorBoundary.tsx` (new — A4 real React error boundary)
+- `frontend/src/components/visualization/human/WebglStage.tsx` (new — A4 shared unsupported/error/context-loss wrapper)
+- `frontend/src/components/visualization/human/ConceptualTwinFallback.tsx` (new — A4 fallback for the Digital Twin reference figure)
+- `frontend/src/components/visualization/human/StaticAvatarFallback.tsx` (A4 — added optional conditional `onRetry`)
+- `frontend/src/components/visualization/human/PhysiologyAvatar3D.tsx` (A4 — uses WebglStage instead of raw Canvas)
+- `frontend/src/components/visualization/human/ConceptualTwinStage.tsx` (A4 — uses WebglStage instead of raw Canvas, previously had zero WebGL handling)
+- `frontend/scripts/verify-webgl-fallback.mjs` (new — A4 structural test)
+- `frontend/package.json` (wired all Stage 2 verification scripts into `verify:monitoring`)
 - `frontend/src/components/operations/MissionStatusBar.tsx` (A1 fix)
 - `frontend/src/components/monitoring/MonitoringSourceStrip.tsx` (A1 fix)
 - `frontend/src/components/visualization/human/ConceptualTwinStage.tsx` (A1 fix, A2 fix)

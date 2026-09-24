@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import type * as THREE from "three";
 import clsx from "clsx";
 
@@ -11,6 +11,7 @@ import { HumanScanRings } from "@/components/visualization/human/HumanScanRings"
 import { HumanSensorContacts } from "@/components/visualization/human/HumanSensorContacts";
 import { OperationalAvatarOverlay } from "@/components/visualization/human/OperationalAvatarOverlay";
 import { StaticAvatarFallback } from "@/components/visualization/human/StaticAvatarFallback";
+import { WebglStage } from "@/components/visualization/human/WebglStage";
 import { ORTHO_VIEW, computeOrthographicFit, orthoCameraPosition } from "@/components/visualization/human/humanLayout";
 import { H_FIGURE_CENTER_Y, H_FIGURE_HALF_WIDTH, H_FIGURE_TOTAL_HEIGHT } from "@/components/visualization/human/holographicGeometry";
 import type { PhysiologyAvatarPresentationModel } from "@/components/visualization/human/types";
@@ -30,15 +31,6 @@ const COMPACT_HEIGHT_FRACTION = 0.64;
 // desktop canvas while still fitting the contact markers.
 const OPERATIONAL_FIT = { halfWidth: H_FIGURE_HALF_WIDTH, marginFraction: 0.06, totalHeight: H_FIGURE_TOTAL_HEIGHT };
 const HOLO_TARGET: [number, number, number] = [0, H_FIGURE_CENTER_Y, 0];
-
-function detectWebgl(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Prompt 3A.2 §6 — the single place that configures the deterministic
@@ -79,16 +71,11 @@ function OrthoFitRig({ aspect, heightFraction }: { aspect: number; heightFractio
  * `StaticAvatarFallback` when WebGL is unavailable.
  */
 export function PhysiologyAvatar3D({ anchors, reducedMotion, onSelectModality }: PhysiologyAvatarPresentationModel) {
-  const [webglAvailable, setWebglAvailable] = useState<boolean | null>(null);
   const [inView, setInView] = useState(true);
   const [compact, setCompact] = useState(false);
   const [canvasAspect, setCanvasAspect] = useState(0.7);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasWrapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setWebglAvailable(detectWebgl());
-  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -132,10 +119,6 @@ export function PhysiologyAvatar3D({ anchors, reducedMotion, onSelectModality }:
 
   const handleSelect = (modality: Parameters<NonNullable<typeof onSelectModality>>[0]) => onSelectModality?.(modality);
 
-  if (webglAvailable === false) {
-    return <StaticAvatarFallback anchors={anchors} onSelect={handleSelect} />;
-  }
-
   const heightFraction = compact ? COMPACT_HEIGHT_FRACTION : DESKTOP_HEIGHT_FRACTION;
 
   return (
@@ -143,18 +126,24 @@ export function PhysiologyAvatar3D({ anchors, reducedMotion, onSelectModality }:
       ref={containerRef}
       className={clsx("relative w-full", compact ? "flex h-[540px] flex-col" : "flex h-full min-h-[340px] flex-row")}
     >
-      {webglAvailable === null ? (
-        <div className="absolute inset-0 z-10 flex items-center justify-center text-xs text-ink-muted">Loading physiology stage…</div>
-      ) : null}
-
       <div ref={canvasWrapRef} className={clsx("relative", compact ? "h-[56%] w-full" : "h-full w-[62%]")}>
-        <Canvas
-          dpr={[1, 2]}
-          orthographic
-          frameloop={inView ? "always" : "never"}
-          camera={{ manual: true, position: orthoCameraPosition(), near: 0.1, far: ORTHO_VIEW.distance + 12 }}
-          gl={{ antialias: true, alpha: false }}
-          style={{ opacity: webglAvailable === null ? 0 : 1, transition: "opacity 200ms" }}
+        {/* Stage 2 A4 — WebglStage covers all three failure paths (unsupported
+            WebGL, a render-time error anywhere in the scene tree, and a lost
+            WebGL context at runtime) with one shared mechanism instead of
+            only the up-front unsupported check this component used to have.
+            The OperationalAvatarOverlay column stays mounted regardless, so
+            the operator never loses the interactive sensor panel — only the
+            volumetric rendering itself is ever replaced. */}
+        <WebglStage
+          canvasProps={{
+            dpr: [1, 2],
+            orthographic: true,
+            frameloop: inView ? "always" : "never",
+            camera: { manual: true, position: orthoCameraPosition(), near: 0.1, far: ORTHO_VIEW.distance + 12 },
+            gl: { antialias: true, alpha: false },
+          }}
+          renderLoading={() => <div className="absolute inset-0 z-10 flex items-center justify-center text-xs text-ink-muted">Loading physiology stage…</div>}
+          renderFallback={(retry) => <StaticAvatarFallback anchors={anchors} onSelect={handleSelect} onRetry={retry ?? undefined} />}
         >
           {/* Prompt 3B §6 — holographic human system: deep-navy atmosphere +
               spatial scan rings + translucent/wireframe figure + on-body
@@ -165,7 +154,7 @@ export function PhysiologyAvatar3D({ anchors, reducedMotion, onSelectModality }:
           <HumanScanRings reducedMotion={reducedMotion} />
           <HolographicHumanFigure />
           <HumanSensorContacts anchors={anchors} />
-        </Canvas>
+        </WebglStage>
       </div>
 
       <div className={clsx("relative", compact ? "w-full flex-1" : "h-full w-[38%]")}>

@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Pause, Play, RotateCcw, RotateCw } from "lucide-react";
 import type * as THREE from "three";
 
+import { ConceptualTwinFallback } from "@/components/visualization/human/ConceptualTwinFallback";
 import { HolographicHumanFigure } from "@/components/visualization/human/HolographicHumanFigure";
 import { HolographicStageAtmosphere } from "@/components/visualization/human/HolographicStageAtmosphere";
 import { HumanScanRings } from "@/components/visualization/human/HumanScanRings";
+import { WebglStage } from "@/components/visualization/human/WebglStage";
 import { ORTHO_VIEW, computeOrthographicFit, orthoCameraPosition } from "@/components/visualization/human/humanLayout";
 import { H_FIGURE_CENTER_Y, H_FIGURE_HALF_WIDTH, H_FIGURE_TOTAL_HEIGHT } from "@/components/visualization/human/holographicGeometry";
 import { useReducedMotionPreference } from "@/lib/runtime/reduceMotion";
@@ -125,18 +127,26 @@ export function ConceptualTwinStage() {
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Stage 2 A4 — previously this Canvas had no WebGL detection or error
+          handling at all: an unsupported device, a renderer init failure, a
+          lost context, or a render-time error would leave a blank/broken
+          panel. WebglStage now covers all four paths with the same shared
+          mechanism PhysiologyAvatar3D.tsx uses. */}
       <div ref={containerRef} className="relative h-[380px] w-full overflow-hidden rounded-[10px] border border-jury-border-subtle sm:h-[540px]" style={{ background: "#061A26" }}>
-        <Canvas
-          dpr={[1, 2]}
-          orthographic
-          camera={{ manual: true, position: orthoCameraPosition(), near: 0.1, far: ORTHO_VIEW.distance + 12 }}
-          gl={{ antialias: true, alpha: false }}
+        <WebglStage
+          canvasProps={{
+            dpr: [1, 2],
+            orthographic: true,
+            camera: { manual: true, position: orthoCameraPosition(), near: 0.1, far: ORTHO_VIEW.distance + 12 },
+            gl: { antialias: true, alpha: false },
+          }}
+          renderFallback={(retry) => <ConceptualTwinFallback onRetry={retry ?? undefined} />}
         >
           <OrthoFitRig aspect={canvasAspect} heightFraction={compact ? COMPACT_HEIGHT_FRACTION : DESKTOP_HEIGHT_FRACTION} />
           <HolographicStageAtmosphere />
           <HumanScanRings reducedMotion={reducedMotion} />
           <RotatingFigure playing={playing} reducedMotion={reducedMotion} angleRef={angleRef} onAngleChange={setAngleDeg} />
-        </Canvas>
+        </WebglStage>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
