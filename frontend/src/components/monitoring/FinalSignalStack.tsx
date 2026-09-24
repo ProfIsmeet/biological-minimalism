@@ -1,11 +1,10 @@
 "use client";
 
 import { WaveformChart } from "@/components/charts/WaveformChart";
-import { FINAL_SENSOR_INVENTORY, MODALITY_COLOR, type FinalModality } from "@/lib/architecture";
-import { deriveModalityObservation, type ModalityObservation } from "@/lib/monitoring/modalityObservation";
-import { resolvePlotSeries, type PlotSeries } from "@/lib/monitoring/plotSeries";
-import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
-import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
+import { MODALITY_COLOR, type FinalModality } from "@/lib/architecture";
+import type { ModalityObservation } from "@/lib/monitoring/modalityObservation";
+import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
+import type { PlotSeries } from "@/lib/monitoring/plotSeries";
 
 function SignalRow({ modality, region, observation, plot }: {
   modality: FinalModality;
@@ -74,16 +73,10 @@ function SignalRow({ modality, region, observation, plot }: {
 // placeholder waveform. WaveformChart owns downsampling/domain internally
 // (lib/monitoring/waveformDisplay.ts), so this component only supplies raw
 // values plus the payload-derived unit/sample-rate/timing metadata.
-// Prompt-2 corrective pass §2: reads the confirmed snapshot rather than raw
-// `latest`, so a stale cross-source frame can never populate a channel row
-// with the wrong source's samples.
+// Corrective package 01 F-01: rows consume the authoritative operational
+// model, including its source-error/disconnect gate and fault overrides.
 export function FinalSignalStack() {
-  const isReplay = useDatasetReplayMode();
-  const { snapshot: latest, isWaitingForConfirmation } = useConfirmedSnapshot();
-  const channels = latest?.channels;
-  const availableChannels = latest?.source.available_channels;
-  const sensors = latest?.sensor_health?.sensors;
-  const syntheticPpgWaveform = latest?.vitals?.ppg_waveform;
+  const view = useOperationalViewModel();
 
   return (
     <section aria-labelledby="signal-stack-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
@@ -93,17 +86,15 @@ export function FinalSignalStack() {
         </h2>
         <span className="text-[11px] uppercase tracking-wide text-ink-muted">Selected — CORE_PLUS_CONTEXT</span>
       </div>
-      {isWaitingForConfirmation ? (
+      {view.telemetryAvailability === "awaiting_confirmation" ? (
         <p role="status" className="mt-2 rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">
           Waiting for a confirmed frame from the selected source.
         </p>
       ) : null}
       <div className="mt-2">
-        {FINAL_SENSOR_INVENTORY.map((entry) => {
-          const observation = deriveModalityObservation(entry.modality, { isReplay, channels, availableChannels, sensors });
-          const plot = resolvePlotSeries(entry.modality, isReplay, observation, syntheticPpgWaveform);
-          return <SignalRow key={entry.modality} modality={entry.modality} region={entry.region} observation={observation} plot={plot} />;
-        })}
+        {view.modalities.map((entry) => (
+          <SignalRow key={entry.modality} modality={entry.modality} region={entry.region} observation={entry.observation} plot={entry.plot} />
+        ))}
       </div>
     </section>
   );

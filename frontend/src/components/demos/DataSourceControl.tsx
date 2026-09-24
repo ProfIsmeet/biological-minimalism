@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { Database } from "lucide-react";
 
+import { useLegacyAuthoritativeMutation } from "@/components/layout/LiveFeedProvider";
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import { deriveFaultSummaryLabel } from "@/lib/monitoring/inferenceState";
@@ -44,6 +45,7 @@ export function DataSourceControl() {
   const setDataSourceStatus = useMissionStore((state) => state.setDataSourceStatus);
   const { snapshot: latest } = useConfirmedSnapshot();
   const isReplay = useDatasetReplayMode();
+  const startAuthoritativeMutation = useLegacyAuthoritativeMutation();
 
   const [subjects, setSubjects] = useState<string[]>([]);
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -69,14 +71,22 @@ export function DataSourceControl() {
   async function run(key: string, operation: () => Promise<DataSourceStatus>) {
     setPending(key);
     setError(null);
-    try {
-      const result = await operation();
-      setDataSourceStatus(result);
-    } catch (reason) {
-      setError(errorMessage(reason));
-    } finally {
+    const registration = startAuthoritativeMutation(
+      operation,
+      (result) => {
+        setDataSourceStatus(result);
+        setPending(null);
+      },
+      (reason) => {
+        setError(errorMessage(reason));
+        setPending(null);
+      },
+    );
+    if (!registration) {
       setPending(null);
+      return;
     }
+    await registration.outcome;
   }
 
   const latestSource = latest?.source;

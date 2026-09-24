@@ -1,9 +1,13 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { api } from "@/lib/api";
 import { planDemoReset, type DemoResetResult, type DemoResetStep } from "@/lib/monitoring/presenterOps";
+import {
+  classifySourceConvergenceStatus,
+  sourceStateRequestCoordinator,
+} from "@/lib/monitoring/sourceConvergence";
 import type { DataSourceStatus, ReplayFaultTarget, ReplayFaultType } from "@/lib/types";
 import { useMissionStore } from "@/store/missionStore";
 
@@ -88,6 +92,20 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
   const [sourceStateReloadToken, setSourceStateReloadToken] = useState(0);
   const [subjectsReloadToken, setSubjectsReloadToken] = useState(0);
   const setDataSourceStatus = useMissionStore((state) => state.setDataSourceStatus);
+  const sourceConvergenceKey = useMissionStore((state) => state.sourceConvergenceKey);
+  const requestOwnerRef = useRef(Symbol("full-monitoring-source-state-owner"));
+  const handledSourceStateReloadTokenRef = useRef(0);
+
+  // The full-route provider owns one source-state request epoch. The shared
+  // coordinator transfers that epoch safely to/from the legacy route owner
+  // and preserves a same-token in-flight request through Strict Mode replay.
+  useEffect(() => {
+    const owner = requestOwnerRef.current;
+    sourceStateRequestCoordinator.activateOwner(owner);
+    return () => {
+      sourceStateRequestCoordinator.releaseOwner(owner);
+    };
+  }, []);
 
   // Applied on every successful DataSourceStatus response — the initial
   // load, its own retry, or any replay action (play/pause/load/fault/etc.).
@@ -97,38 +115,54 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
   // to specifically hit the source-state retry (corrective §6).
   const applyDataSourceStatus = useCallback(
     (result: DataSourceStatus) => {
+      const missionState = useMissionStore.getState();
+      const convergenceDisposition = classifySourceConvergenceStatus(
+        result,
+        missionState.sourceConvergenceKey,
+        missionState.sourceConvergenceBaseKey,
+      );
       setStatus(result);
       setDatasetConfigured(result.dataset_configured);
       setDataSourceStatus(result);
+      if (convergenceDisposition === "unchanged_pre_convergence_authority") {
+        setSourceStateStatus("error");
+        setSourceStateError("Observed telemetry identity is not yet confirmed by authoritative source state.");
+        return false;
+      }
       setSourceStateStatus("available");
       setSourceStateError(null);
+      return true;
     },
     [setDataSourceStatus],
   );
 
-  // Data-source/state fetch — independent from the subject-list fetch below
-  // (Prompt-2 corrective §4/§6: a subject-list retry must not duplicate this
-  // request, and this retry must not duplicate the subject-list request).
+  // Initial seed, explicit source-state retry, and identity convergence share
+  // one lifecycle. Mounting with pending B plans only B (not seed + B), while
+  // request generations reject stale promise completions.
   useEffect(() => {
-    let cancelled = false;
-    setSourceStateStatus("loading");
-    setSourceStateError(null);
-    api
-      .getDataSourceState()
-      .then((result) => {
-        if (cancelled) return;
+    const owner = requestOwnerRef.current;
+    sourceStateRequestCoordinator.activateOwner(owner);
+    const forceRetry = sourceStateReloadToken !== handledSourceStateReloadTokenRef.current;
+    handledSourceStateReloadTokenRef.current = sourceStateReloadToken;
+    const registration = sourceStateRequestCoordinator.startOrAdoptRequest(
+      owner,
+      sourceConvergenceKey,
+      api.getDataSourceState,
+      (result) => {
         applyDataSourceStatus(result);
         setSelectedSubjectId((current) => current || result.subject_id || "");
-      })
-      .catch((reason: unknown) => {
-        if (cancelled) return;
+      },
+      (reason) => {
         setSourceStateStatus("error");
         setSourceStateError(errorMessage(reason));
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [sourceStateReloadToken, applyDataSourceStatus]);
+      },
+      { force: forceRetry },
+    );
+    if (!registration) return;
+
+    setSourceStateStatus("loading");
+    setSourceStateError(null);
+  }, [sourceConvergenceKey, sourceStateReloadToken, applyDataSourceStatus]);
 
   // Subject-list fetch. A request failure (network/5xx) and a genuine 200
   // response with an empty array are kept as distinct states — see
@@ -160,14 +194,23 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
     async (key: string, operation: () => Promise<DataSourceStatus>) => {
       setPending(key);
       setRequestError(null);
-      try {
-        const result = await operation();
-        applyDataSourceStatus(result);
-      } catch (reason) {
-        setRequestError(errorMessage(reason));
-      } finally {
+      const registration = sourceStateRequestCoordinator.startAuthoritativeMutation(
+        requestOwnerRef.current,
+        operation,
+        (result) => {
+          applyDataSourceStatus(result);
+          setPending(null);
+        },
+        (reason) => {
+          setRequestError(errorMessage(reason));
+          setPending(null);
+        },
+      );
+      if (!registration) {
         setPending(null);
+        return;
       }
+      await registration.outcome;
     },
     [applyDataSourceStatus],
   );
@@ -182,6 +225,15 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
     setPending("reset-demo");
     setRequestError(null);
     const plan = planDemoReset(status);
+    if (!plan.steps.length) {
+      setPending(null);
+      return { ok: true, ranSteps: [], failedSteps: [] };
+    }
+    const mutationTicket = sourceStateRequestCoordinator.beginAuthoritativeMutation(requestOwnerRef.current);
+    if (!mutationTicket) {
+      setPending(null);
+      return { ok: false, ranSteps: [], failedSteps: [] };
+    }
     const runners: Record<DemoResetStep, () => Promise<DataSourceStatus>> = {
       pause: api.pauseReplay,
       reset: api.resetReplay,
@@ -196,6 +248,7 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
     // a pending/disabled state.
     try {
       for (const step of plan.steps) {
+        if (!sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) break;
         try {
           lastStatus = await runners[step]();
           ranSteps.push(step);
@@ -203,12 +256,22 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
           failedSteps.push(step);
         }
       }
-      if (lastStatus) applyDataSourceStatus(lastStatus);
+      if (lastStatus) {
+        sourceStateRequestCoordinator.acceptAuthoritativeMutation(
+          mutationTicket,
+          lastStatus,
+          applyDataSourceStatus,
+        );
+      }
     } finally {
-      setPending(null);
+      if (sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) {
+        setPending(null);
+      }
     }
     const ok = failedSteps.length === 0;
-    if (!ok) setRequestError(`Reset incomplete — ${failedSteps.join(", ")} failed. Other steps applied.`);
+    if (!ok && sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) {
+      setRequestError(`Reset incomplete — ${failedSteps.join(", ")} failed. Other steps applied.`);
+    }
     return { ok, ranSteps, failedSteps };
   }, [status, applyDataSourceStatus]);
 

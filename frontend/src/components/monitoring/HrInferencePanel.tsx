@@ -2,14 +2,12 @@
 
 import {
   computeCurrentWindowAbsoluteDifference,
-  deriveFaultSummaryLabel,
-  derivePredictionAvailability,
   inferenceStatusLabel,
   predictionAvailabilityLabel,
 } from "@/lib/monitoring/inferenceState";
-import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
-import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
-import { useMissionStore } from "@/store/missionStore";
+import { deriveFaultControlPresentation } from "@/lib/monitoring/controlPresentation";
+import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
+import { telemetryAvailabilityLabel } from "@/lib/monitoring/telemetryAvailability";
 
 // Master-prompt 3 §8.8 — HR inference panel. Estimate, reference,
 // current-window difference, availability, and error metrics are five
@@ -19,20 +17,19 @@ import { useMissionStore } from "@/store/missionStore";
 // this panel always honestly reports it as unavailable rather than
 // fabricating a comparison.
 //
-// Prompt-2 corrective pass §2: `latest` is read only through
-// `useConfirmedSnapshot()`, so a late frame from a source the user has
-// switched away from can never repopulate the estimate, inference status,
-// or fault fields below.
+// Corrective package 01 F-01: prediction, inference, fault, and availability
+// all come from the shared authoritative operational model.
 export function HrInferencePanel() {
-  const isReplay = useDatasetReplayMode();
-  const connectionStatus = useMissionStore((state) => state.connectionStatus);
-  const { snapshot: latest, isWaitingForConfirmation } = useConfirmedSnapshot();
-  const connected = connectionStatus === "open";
-  const prediction = isReplay ? latest?.heart_rate_prediction ?? null : null;
-  const inference = isReplay ? latest?.heart_rate_inference ?? null : null;
-  const fault = isReplay ? (prediction?.provenance.fault_injection ?? latest?.fault_injection ?? null) : null;
+  const view = useOperationalViewModel();
+  const { prediction, inference, fault } = view;
 
-  const availability = derivePredictionAvailability({ connected, isReplay, prediction });
+  const availability = view.predictionAvailability;
+  const faultPresentation = deriveFaultControlPresentation({
+    telemetry: view.telemetryAvailability,
+    isReplay: view.isReplay,
+    fault,
+    pendingAction: view.pendingAction,
+  });
   const referenceBpm: number | null = null; // No reference channel exists in this runtime contract — see note above.
   const currentWindowDifference = computeCurrentWindowAbsoluteDifference(prediction?.value ?? null, referenceBpm);
   const hasEstimate = availability === "available" && Boolean(prediction);
@@ -43,7 +40,7 @@ export function HrInferencePanel() {
         Heart-rate inference
       </h2>
 
-      {isWaitingForConfirmation ? (
+      {view.telemetryAvailability === "awaiting_confirmation" ? (
         <p role="status" className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">
           Waiting for a confirmed frame from the selected source.
         </p>
@@ -65,11 +62,19 @@ export function HrInferencePanel() {
       <dl className="grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
         <div>
           <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Availability</dt>
-          <dd className="mt-0.5 text-ink-primary">{predictionAvailabilityLabel(availability)}</dd>
+          <dd className="mt-0.5 text-ink-primary">
+            {view.telemetryAvailability === "active"
+              ? predictionAvailabilityLabel(availability)
+              : telemetryAvailabilityLabel(view.telemetryAvailability)}
+          </dd>
         </div>
         <div>
           <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Inference status</dt>
-          <dd className="mt-0.5 text-ink-primary">{inferenceStatusLabel(inference, isReplay)}</dd>
+          <dd className="mt-0.5 text-ink-primary">
+            {view.telemetryAvailability === "active"
+              ? inferenceStatusLabel(inference, view.isReplay)
+              : telemetryAvailabilityLabel(view.telemetryAvailability)}
+          </dd>
         </div>
         <div>
           <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Model input modalities</dt>
@@ -105,7 +110,9 @@ export function HrInferencePanel() {
         </div>
         <div>
           <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Active simulated fault</dt>
-          <dd className={fault?.active ? "mt-0.5 text-jury-fault" : "mt-0.5 text-ink-secondary"}>{deriveFaultSummaryLabel(fault)}</dd>
+          <dd className={faultPresentation.faultActive ? "mt-0.5 text-jury-fault" : "mt-0.5 text-ink-secondary"}>
+            {faultPresentation.currentFaultLabel}
+          </dd>
         </div>
         <div>
           <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Fallback status</dt>

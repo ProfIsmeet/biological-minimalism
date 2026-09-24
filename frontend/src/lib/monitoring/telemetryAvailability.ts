@@ -35,6 +35,7 @@ export function deriveTelemetryAvailability(params: {
   const { connected, sourceStateStatus, hasConfirmedSnapshot } = params;
   if (sourceStateStatus === "error") return "source_error";
   if (!connected) return "disconnected";
+  if (sourceStateStatus !== "available") return "awaiting_confirmation";
   if (!hasConfirmedSnapshot) return "awaiting_confirmation";
   return "active";
 }
@@ -53,6 +54,10 @@ const GATE_COPY: Record<Exclude<TelemetryAvailability, "active">, { statusLabel:
     unavailableReason: "Source error — current samples unavailable",
   },
 };
+
+export function telemetryAvailabilityLabel(telemetry: TelemetryAvailability): string {
+  return telemetry === "active" ? "Current telemetry confirmed" : GATE_COPY[telemetry].unavailableReason;
+}
 
 /**
  * Prompt 3A.1 §4.3/§4.4/§4.5 — rewrites a per-modality observation to the

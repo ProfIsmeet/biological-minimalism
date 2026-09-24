@@ -3,10 +3,9 @@
 import { useState } from "react";
 
 import { useMonitoringSession } from "@/components/monitoring/MonitoringSessionContext";
-import { formatFaultTypeLabel } from "@/lib/monitoring/formatMonitoringValue";
-import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
+import { deriveFaultControlPresentation } from "@/lib/monitoring/controlPresentation";
+import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 import type { ReplayFaultTarget, ReplayFaultType } from "@/lib/types";
-import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
 const FAULT_TYPES: { value: ReplayFaultType; label: string }[] = [
   { value: "modality_dropout", label: "Modality dropout" },
@@ -29,18 +28,21 @@ const FAULT_TARGETS: { value: ReplayFaultTarget; label: string }[] = [
 // pulse, glow, or shake motion; fault-red is reserved for an actually-active
 // fault or a failed request, never for the idle control state.
 export function SimulatedFaultControl() {
-  const isReplay = useDatasetReplayMode();
   const { pending, requestError, configureFault, clearFault } = useMonitoringSession();
-  const { snapshot: confirmedLatest, isWaitingForConfirmation } = useConfirmedSnapshot();
-  const latestFault = confirmedLatest?.fault_injection;
+  const view = useOperationalViewModel();
   const [faultType, setFaultType] = useState<ReplayFaultType>("modality_dropout");
   const [target, setTarget] = useState<ReplayFaultTarget>("ppg");
   const [severity, setSeverity] = useState(1);
   const [seed, setSeed] = useState(0);
   const severityIsConfigurable = faultType === "packet_loss" || faultType === "additive_noise" || faultType === "saturation";
-  const active = latestFault?.active ?? false;
+  const control = deriveFaultControlPresentation({
+    telemetry: view.telemetryAvailability,
+    isReplay: view.isReplay,
+    fault: view.fault,
+    pendingAction: pending,
+  });
 
-  if (!isReplay) {
+  if (!view.isReplay && control.authoritativeCurrent) {
     return (
       <section aria-labelledby="fault-control-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
         <div className="flex items-center justify-between gap-2">
@@ -66,9 +68,9 @@ export function SimulatedFaultControl() {
         </span>
       </div>
 
-      {isWaitingForConfirmation ? (
+      {control.unavailableMessage ? (
         <p role="status" className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">
-          Waiting for a confirmed frame from the selected source.
+          Current fault state unavailable. {control.unavailableMessage}
         </p>
       ) : null}
 
@@ -83,7 +85,7 @@ export function SimulatedFaultControl() {
             setFaultType(value);
             setSeverity(value === "modality_dropout" || value === "frozen_sensor" ? 1 : 0.25);
           }}
-          disabled={pending !== null}
+          disabled={!control.canApply}
           className="rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
         >
           {FAULT_TYPES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
@@ -94,7 +96,7 @@ export function SimulatedFaultControl() {
           name="faultTarget"
           value={target}
           onChange={(event) => setTarget(event.target.value as ReplayFaultTarget)}
-          disabled={pending !== null}
+          disabled={!control.canApply}
           className="rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
         >
           {FAULT_TARGETS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
@@ -109,7 +111,7 @@ export function SimulatedFaultControl() {
             max={1}
             step={0.05}
             value={severity}
-            disabled={!severityIsConfigurable || pending !== null}
+            disabled={!severityIsConfigurable || !control.canApply}
             onChange={(event) => setSeverity(Number(event.target.value))}
             className="w-20 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-ink-primary disabled:opacity-40"
           />
@@ -123,7 +125,7 @@ export function SimulatedFaultControl() {
             min={0}
             step={1}
             value={seed}
-            disabled={pending !== null}
+            disabled={!control.canApply}
             onChange={(event) => setSeed(Number(event.target.value))}
             className="w-24 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-ink-primary disabled:opacity-40"
           />
@@ -133,7 +135,7 @@ export function SimulatedFaultControl() {
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          disabled={pending !== null}
+          disabled={!control.canApply}
           onClick={() => void configureFault({ fault_type: faultType, target, severity: severityIsConfigurable ? severity : 1, seed })}
           className="rounded-[6px] border border-experimental/40 bg-experimental-soft px-3 py-1.5 text-xs font-medium text-experimental disabled:opacity-40"
         >
@@ -141,19 +143,17 @@ export function SimulatedFaultControl() {
         </button>
         <button
           type="button"
-          disabled={!active || pending !== null}
+          disabled={!control.canClear}
           onClick={() => void clearFault()}
           className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
-          title={!active ? "No simulated fault is active to clear." : undefined}
+          title={!control.authoritativeCurrent ? "Current fault state must be confirmed before clearing." : !control.faultActive ? "No simulated fault is active to clear." : undefined}
         >
           Clear fault
         </button>
       </div>
 
-      <p className={active ? "text-xs font-medium text-jury-fault" : "text-xs text-ink-muted"}>
-        {active
-          ? `Simulated fault active — ${latestFault?.target?.toUpperCase()} · ${formatFaultTypeLabel(latestFault?.fault_type)} · severity ${latestFault?.severity}`
-          : "No simulated fault is active."}
+      <p className={control.faultActive ? "text-xs font-medium text-jury-fault" : "text-xs text-ink-muted"}>
+        {control.currentFaultLabel}
       </p>
       <p className="text-[11px] leading-relaxed text-ink-muted">
         Applies a simulated interface fault condition. It does not represent a physical sensor failure.

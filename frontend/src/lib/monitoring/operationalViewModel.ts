@@ -58,6 +58,9 @@ export interface OperationalViewModel {
   // --- session identity ------------------------------------------------------
   datasetName: string | null;
   subjectId: string | null;
+  /** Last REST-confirmed configuration, for explicitly retained context only. */
+  retainedDatasetName: string | null;
+  retainedSubjectId: string | null;
   isS14: boolean;
   subjects: string[];
   subjectListState: "loading" | "available" | "empty" | "error";
@@ -100,6 +103,7 @@ const FAULT_TARGET_MODALITIES: Record<ReplayFaultTarget, FinalModality[]> = {
 
 export function useOperationalViewModel(): OperationalViewModel {
   const connectionStatus = useMissionStore((state) => state.connectionStatus);
+  const sourceConvergenceKey = useMissionStore((state) => state.sourceConvergenceKey);
   // Prompt 3A.1 §4.3 — deliberately read independently of `latest`/`current`
   // below: this is the one field explicitly permitted to survive a
   // disconnect (missionStore only clears it on a genuine identity/fault
@@ -146,7 +150,10 @@ export function useOperationalViewModel(): OperationalViewModel {
   // first matching frame) is informative, not stale data, and explicitly
   // allowed. Disconnected and source_error must not fall back to anything
   // here (§4.3/§4.4 — "do not fall back to previous... session identity").
-  const statusFallbackAllowed = telemetryAvailability === "awaiting_confirmation";
+  const statusFallbackAllowed =
+    telemetryAvailability === "awaiting_confirmation"
+    && sourceStateStatus === "available"
+    && sourceConvergenceKey === null;
 
   const datasetName = current?.source.dataset_name ?? (statusFallbackAllowed ? status?.dataset_name : null) ?? null;
   // `selectedSubjectId` is the replay subject-selector's pending value — it
@@ -158,6 +165,8 @@ export function useOperationalViewModel(): OperationalViewModel {
   const subjectId =
     current?.source.subject_id ?? (statusFallbackAllowed ? (status?.subject_id ?? (isReplay ? selectedSubjectId || null : null)) : null);
   const isS14 = subjectId === "S14";
+  const retainedDatasetName = status?.dataset_name ?? null;
+  const retainedSubjectId = status?.subject_id ?? null;
 
   const rawReplaySessionState = deriveReplaySessionState({
     datasetConfigured,
@@ -231,6 +240,8 @@ export function useOperationalViewModel(): OperationalViewModel {
     telemetryAvailability,
     datasetName,
     subjectId,
+    retainedDatasetName,
+    retainedSubjectId,
     isS14,
     subjects,
     subjectListState,

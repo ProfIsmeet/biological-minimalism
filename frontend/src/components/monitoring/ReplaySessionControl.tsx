@@ -4,9 +4,9 @@ import clsx from "clsx";
 import { AlertTriangle, Database, Info, RefreshCw } from "lucide-react";
 
 import { useMonitoringSession } from "@/components/monitoring/MonitoringSessionContext";
+import { deriveReplayControlPresentation } from "@/lib/monitoring/controlPresentation";
 import { formatReplayPosition } from "@/lib/monitoring/formatMonitoringValue";
-import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
-import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
+import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 
 const SPEEDS = [1, 5, 10] as const;
 
@@ -27,7 +27,6 @@ function subjectLabel(subjectId: string): { label: string; note: string | null }
 // of the interactive controls.
 export function ReplaySessionControl() {
   const {
-    status,
     datasetConfigured,
     subjects,
     subjectListState,
@@ -44,11 +43,19 @@ export function ReplaySessionControl() {
     reset,
     setSpeed,
   } = useMonitoringSession();
-  const isReplay = useDatasetReplayMode();
-  const { snapshot: confirmedLatest } = useConfirmedSnapshot();
-  const latestSource = confirmedLatest?.source;
+  const view = useOperationalViewModel();
+  const control = deriveReplayControlPresentation({
+    telemetry: view.telemetryAvailability,
+    isReplay: view.isReplay,
+    replaySessionState: view.replaySessionState,
+    playbackSpeed: view.playbackSpeed,
+    replayPositionSeconds: view.replayPositionSeconds,
+    replayDurationSeconds: view.replayDurationSeconds,
+    subjectId: view.subjectId,
+    pendingAction: pending,
+  });
 
-  if (datasetConfigured === false) {
+  if (datasetConfigured === false && control.authoritativeCurrent) {
     return (
       <section aria-labelledby="replay-unavailable-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
         <div className="flex items-start gap-2.5">
@@ -67,17 +74,17 @@ export function ReplaySessionControl() {
     );
   }
 
-  const playbackState = latestSource?.playback_state ?? status?.playback_state;
-  const speed = status?.playback_speed ?? latestSource?.playback_speed ?? 1;
-  const position = latestSource?.replay_position_seconds ?? status?.replay_position_seconds ?? 0;
-  const duration = status?.duration_seconds ?? latestSource?.duration_seconds ?? 0;
-  const activeSubject = status?.subject_id ?? latestSource?.subject_id;
-
   return (
     <section aria-labelledby="replay-session-heading" className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
       <h2 id="replay-session-heading" className="text-sm font-semibold text-ink-primary">
         Recorded replay session
       </h2>
+
+      {control.unavailableMessage ? (
+        <p role="status" className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">
+          Current replay state unavailable. {control.unavailableMessage}
+        </p>
+      ) : null}
 
       {subjectListState === "error" ? (
         <div className="flex flex-col gap-2 rounded-md border border-jury-fault/30 bg-jury-fault-soft px-4 py-3 sm:flex-row sm:items-start sm:justify-between">
@@ -101,38 +108,43 @@ export function ReplaySessionControl() {
         </div>
       ) : (
         // Row 1 — subject selection and load.
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <label className="sr-only" htmlFor="replay-subject-select">Replay subject</label>
-          <select
-            id="replay-subject-select"
-            value={selectedSubjectId}
-            onChange={(event) => setSelectedSubjectId(event.target.value)}
-            disabled={subjectListState !== "available" || pending !== null}
-            className="min-w-40 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
-          >
-            {subjectListState === "loading"
-              ? <option>Loading subjects…</option>
-              : subjectListState === "available"
-                ? subjects.map((subject) => <option key={subject} value={subject}>{subjectLabel(subject).label}</option>)
-                : <option>No subjects returned by backend</option>}
-          </select>
-          <button
-            type="button"
-            onClick={() => void loadSubject(selectedSubjectId)}
-            disabled={!selectedSubjectId || pending !== null}
-            title={!selectedSubjectId ? "Select a subject returned by the backend before loading." : undefined}
-            className="rounded-[6px] bg-final-accent px-3 py-2 text-xs font-semibold text-[#07100F] disabled:opacity-40"
-          >
-            {pending === "load" ? "Loading real subject…" : "Load subject"}
-          </button>
-          <button
-            type="button"
-            onClick={() => void switchToSynthetic()}
-            disabled={pending !== null || !isReplay}
-            className="rounded-[6px] border border-jury-border-strong px-3 py-2 text-xs font-medium text-ink-secondary disabled:opacity-40"
-          >
-            Switch to synthetic demo
-          </button>
+        <div className="flex flex-col gap-1.5">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+            Replay subject configuration{control.authoritativeCurrent ? "" : " — retained selection, not current telemetry"}
+          </p>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <label className="sr-only" htmlFor="replay-subject-select">Replay subject configuration</label>
+            <select
+              id="replay-subject-select"
+              value={selectedSubjectId}
+              onChange={(event) => setSelectedSubjectId(event.target.value)}
+              disabled={subjectListState !== "available" || !control.canChangeSource}
+              className="min-w-40 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+            >
+              {subjectListState === "loading"
+                ? <option>Loading subjects…</option>
+                : subjectListState === "available"
+                  ? subjects.map((subject) => <option key={subject} value={subject}>{subjectLabel(subject).label}</option>)
+                  : <option>No subjects returned by backend</option>}
+            </select>
+            <button
+              type="button"
+              onClick={() => void loadSubject(selectedSubjectId)}
+              disabled={!selectedSubjectId || !control.canChangeSource}
+              title={!selectedSubjectId ? "Select a subject returned by the backend before loading." : undefined}
+              className="rounded-[6px] bg-final-accent px-3 py-2 text-xs font-semibold text-[#07100F] disabled:opacity-40"
+            >
+              {pending === "load" ? "Loading real subject…" : "Load subject"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void switchToSynthetic()}
+              disabled={!control.canChangeSource || !view.isReplay}
+              className="rounded-[6px] border border-jury-border-strong px-3 py-2 text-xs font-medium text-ink-secondary disabled:opacity-40"
+            >
+              Switch to synthetic demo
+            </button>
+          </div>
         </div>
       )}
 
@@ -144,8 +156,8 @@ export function ReplaySessionControl() {
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
-          disabled={!isReplay || pending !== null || playbackState === "ended"}
-          title={!isReplay ? "Load a subject before playback controls are available." : undefined}
+          disabled={!control.canPlay}
+          title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void play()}
           className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
         >
@@ -153,8 +165,8 @@ export function ReplaySessionControl() {
         </button>
         <button
           type="button"
-          disabled={!isReplay || pending !== null}
-          title={!isReplay ? "Load a subject before playback controls are available." : undefined}
+          disabled={!control.canControlPlayback}
+          title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void pause()}
           className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
         >
@@ -162,15 +174,15 @@ export function ReplaySessionControl() {
         </button>
         <button
           type="button"
-          disabled={!isReplay || pending !== null}
-          title={!isReplay ? "Load a subject before playback controls are available." : undefined}
+          disabled={!control.canControlPlayback}
+          title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void reset()}
           className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
         >
           Reset
         </button>
         <span className="rounded-[4px] border border-jury-border-subtle px-2 py-1 text-[11px] text-ink-muted">
-          {playbackState ? playbackState : "unloaded"}
+          {control.playbackStateLabel}
         </span>
       </div>
 
@@ -181,11 +193,11 @@ export function ReplaySessionControl() {
           <button
             key={value}
             type="button"
-            disabled={!isReplay || pending !== null}
+            disabled={!control.canControlPlayback}
             onClick={() => void setSpeed(value)}
             className={clsx(
               "rounded-[6px] border px-2.5 py-1.5 text-xs disabled:opacity-40",
-              speed === value ? "border-final-accent/50 text-final-accent" : "border-jury-border-subtle text-ink-muted",
+              control.playbackSpeed === value ? "border-final-accent/50 text-final-accent" : "border-jury-border-subtle text-ink-muted",
             )}
           >
             {value}x
@@ -194,9 +206,11 @@ export function ReplaySessionControl() {
         <div className="ml-auto flex items-center gap-2 rounded-[6px] border border-jury-border-subtle bg-surface-2 px-3 py-2 text-xs text-ink-secondary">
           <Database size={13} className="shrink-0 text-ink-muted" aria-hidden="true" />
           <span>
-            {isReplay
-              ? `PPG-DaLiA · ${activeSubject ?? "subject not loaded"} · ${playbackState ?? "unloaded"} · ${formatReplayPosition(position, duration)}`
-              : "Replay not active — synthetic demo is the current session."}
+            {!control.authoritativeCurrent
+              ? `Current replay details unavailable — ${control.unavailableMessage}`
+              : view.isReplay
+                ? `${view.datasetName ?? "Dataset unavailable"} · ${control.activeSubjectId ?? "subject not loaded"} · ${control.playbackStateLabel} · ${formatReplayPosition(control.replayPositionSeconds, control.replayDurationSeconds)}`
+                : "Replay not active — synthetic demo is the current session."}
           </span>
         </div>
       </div>

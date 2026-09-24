@@ -23,15 +23,31 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { deriveTransportState, deriveReplaySessionState, replaySessionStateLabel } from "../src/lib/monitoring/runtimeState";
-import { applyFaultOverride, applyTelemetryGate, deriveTelemetryAvailability, resolveReplayStateLabel } from "../src/lib/monitoring/telemetryAvailability";
+import { applyFaultOverride, applyTelemetryGate, deriveTelemetryAvailability, resolveReplayStateLabel, telemetryAvailabilityLabel } from "../src/lib/monitoring/telemetryAvailability";
 import { useMissionStore } from "../src/store/missionStore";
 import { computeOrthographicFit, orthoCameraPosition } from "../src/components/visualization/human/humanLayout";
 import { deriveSourceLabel, deriveConnectionLabel } from "../src/lib/monitoring/sourceState";
 import {
   sourceIdentityFromStatus,
   sourceIdentityFromSnapshot,
+  sourceIdentityKey,
   snapshotMatchesConfirmedSource,
 } from "../src/lib/monitoring/sourceIdentity";
+import { deriveIdentityContextDisplay } from "../src/lib/monitoring/liveMonitoringPresentation";
+import {
+  deriveConfidenceDisplay,
+  isFiniteMetricValue,
+  metricGroupLevelForAvailability,
+  metricLevelForAvailability,
+} from "../src/lib/monitoring/insightDisplay";
+import { deriveFaultControlPresentation, deriveReplayControlPresentation } from "../src/lib/monitoring/controlPresentation";
+import {
+  classifySourceConvergenceStatus,
+  planSourceConvergenceRequest,
+  SourceStateRequestCoordinator,
+  statusConfirmsSourceConvergence,
+} from "../src/lib/monitoring/sourceConvergence";
+import { confirmedHistoryForState, confirmedSnapshotForState } from "../src/lib/monitoring/useConfirmedSnapshot";
 import {
   derivePredictionAvailability,
   predictionAvailabilityLabel,
@@ -299,6 +315,28 @@ checkEqual("connection label: disconnected", deriveConnectionLabel("closed"), "D
   checkEqual("sourceIdentityFromStatus: replay subject carried through", s1Identity?.subjectId, "FIXTURE_S1");
   const syntheticIdentity = sourceIdentityFromSnapshot(syntheticSnapshot);
   checkEqual("sourceIdentityFromSnapshot: synthetic subjectId is always null", syntheticIdentity?.subjectId, null);
+
+  const replayDatasetA = fixtureDataSourceStatus({ source_type: "dataset_replay", dataset_name: "FIXTURE_A", subject_id: "FIXTURE_S1" });
+  const replayDatasetB = fixtureSnapshot({ source: { source_type: "dataset_replay", dataset_name: "FIXTURE_B", subject_id: "FIXTURE_S1" } });
+  check(
+    "identity F-23: same source + subject from a different dataset is rejected",
+    !snapshotMatchesConfirmedSource(replayDatasetB, replayDatasetA),
+  );
+  const replayDatasetAMatch = fixtureSnapshot({ source: { source_type: "dataset_replay", dataset_name: "FIXTURE_A", subject_id: "FIXTURE_S1" } });
+  check("identity F-23: same dataset + source + subject remains confirmed", snapshotMatchesConfirmedSource(replayDatasetAMatch, replayDatasetA));
+
+  const unknownDatasetIdentity = sourceIdentityFromStatus(
+    fixtureDataSourceStatus({ source_type: "dataset_replay", dataset_name: null, subject_id: "FIXTURE_S1" }),
+  );
+  const literalDatasetIdentity = sourceIdentityFromStatus(
+    fixtureDataSourceStatus({ source_type: "dataset_replay", dataset_name: "unconfirmed", subject_id: "FIXTURE_S1" }),
+  );
+  check(
+    "identity F-23: tagged missing dataset cannot collide with a real dataset name",
+    unknownDatasetIdentity !== null
+      && literalDatasetIdentity !== null
+      && sourceIdentityKey(unknownDatasetIdentity) !== sourceIdentityKey(literalDatasetIdentity),
+  );
 
   // Prompt-2B corrective §7: explicit proof that a mismatched snapshot
   // carrying an ACTIVE fault and a valid prediction is still rejected in
@@ -828,6 +866,11 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     "source_error",
   );
   checkEqual(
+    "telemetry availability F-01: WebSocket connected + retained snapshot + REST failure still fails closed",
+    deriveTelemetryAvailability({ connected: true, sourceStateStatus: "error", hasConfirmedSnapshot: true }),
+    "source_error",
+  );
+  checkEqual(
     "telemetry availability: transport disconnected (no REST error) -> disconnected",
     deriveTelemetryAvailability({ connected: false, sourceStateStatus: "available", hasConfirmedSnapshot: true }),
     "disconnected",
@@ -835,6 +878,11 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkEqual(
     "telemetry availability: connected, no confirmed snapshot yet -> awaiting_confirmation",
     deriveTelemetryAvailability({ connected: true, sourceStateStatus: "available", hasConfirmedSnapshot: false }),
+    "awaiting_confirmation",
+  );
+  checkEqual(
+    "telemetry availability F-01: WebSocket frame cannot become current while authoritative REST state is still loading",
+    deriveTelemetryAvailability({ connected: true, sourceStateStatus: "loading", hasConfirmedSnapshot: true }),
     "awaiting_confirmation",
   );
   checkEqual(
@@ -881,6 +929,32 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkNotIncludes("fault override: no stale clean statusLabel survives", faultOverridden.statusLabel, "current samples available");
   checkIncludes("fault override: exact required sentence names the modality", faultOverridden.unavailableReason ?? "", "Simulated PPG fault active — current input unavailable");
   check("fault override: channel batch cleared (no plot can be resolved)", faultOverridden.channelBatch === null);
+  const imuFaultOverridden = applyFaultOverride(activeObservation, "IMU");
+  checkIncludes("fault override F-01: IMU fault explicitly identifies unavailable IMU input", imuFaultOverridden.unavailableReason ?? "", "Simulated IMU fault");
+  checkEqual("fault override F-01: IMU fault exposes no current channel batch", imuFaultOverridden.channelBatch, null);
+
+  const rebuildingAvailability = derivePredictionAvailability({ connected: true, isReplay: true, prediction: null });
+  const recoveredAvailability = derivePredictionAvailability({ connected: true, isReplay: true, prediction: fixturePrediction({ value: 71 }) });
+  checkEqual("live F-01: rebuilding after fault clear has no current HR", rebuildingAvailability, "unavailable_no_prediction");
+  checkEqual("live F-01: recovered valid PPG+IMU window restores HR availability", recoveredAvailability, "available");
+
+  const retainedDataset = deriveIdentityContextDisplay({
+    kind: "Dataset",
+    telemetry: "source_error",
+    currentValue: null,
+    retainedValue: "FIXTURE_A",
+  });
+  checkEqual("live F-01: retained dataset is labeled as context", retainedDataset.label, "Dataset context");
+  checkIncludes("live F-01: retained dataset says retained configuration", retainedDataset.value, "retained configuration");
+  checkIncludes("live F-01: retained dataset explicitly says it is not current telemetry", retainedDataset.value, "not current telemetry");
+  checkEqual("live F-01: retained dataset is marked retained", retainedDataset.retained, true);
+  const awaitingDataset = deriveIdentityContextDisplay({ kind: "Dataset", telemetry: "awaiting_confirmation", currentValue: null, retainedValue: "FIXTURE_A" });
+  checkEqual("live F-01: identity mismatch/awaiting state labels retained dataset as context", awaitingDataset.label, "Dataset context");
+  checkIncludes("live F-01: identity mismatch/awaiting state cannot present retained dataset as current", awaitingDataset.value, "not current telemetry");
+  const activeDataset = deriveIdentityContextDisplay({ kind: "Dataset", telemetry: "active", currentValue: "FIXTURE_A", retainedValue: "OLD" });
+  checkEqual("live F-01: active identity uses current dataset, not retained value", activeDataset.value, "FIXTURE_A");
+  checkEqual("live F-01: active identity is not marked retained", activeDataset.retained, false);
+  checkEqual("live F-01: source_error availability copy never claims current HR", telemetryAvailabilityLabel("source_error"), "Source error — current samples unavailable");
 
   // §9 item 4 — the mission-status-strip replay-state field must never say
   // "Playing" while telemetry cannot be trusted, even though the raw
@@ -1019,7 +1093,1254 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   useMissionStore.getState().setDataSourceStatus(fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "OtherDataset" }));
   checkEqual("lifecycle 3B §19: same source_type+subject but a different dataset clears last-confirmed ts", useMissionStore.getState().lastConfirmedTimestampSeconds, null);
 
-  useMissionStore.setState({ latest: null, history: [], lastConfirmedTimestampSeconds: null, dataSourceStatus: null, connectionStatus: "connecting" });
+  // F-23 — history itself is segmented by the same canonical identity and a
+  // late prior-dataset frame cannot repopulate the active session.
+  const statusDatasetA = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "Dataset-A" });
+  const statusDatasetB = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "Dataset-B" });
+  const frameA1 = fixtureSnapshot({ timestamp: 10, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "Dataset-A" } });
+  const frameA2 = fixtureSnapshot({ timestamp: 11, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "Dataset-A" } });
+  const frameB = fixtureSnapshot({ timestamp: 20, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "Dataset-B" } });
+  useMissionStore.setState({ latest: null, history: [], lastConfirmedTimestampSeconds: null, dataSourceStatus: null, connectionStatus: "open" });
+  useMissionStore.getState().setDataSourceStatus(statusDatasetA);
+  useMissionStore.getState().ingest(frameA1);
+  useMissionStore.getState().ingest(frameA2);
+  checkEqual("history F-23: same dataset/source/subject retains both frames", useMissionStore.getState().history.length, 2);
+  useMissionStore.getState().setDataSourceStatus(statusDatasetA);
+  checkEqual("history F-23: repeated authoritative identity preserves history", useMissionStore.getState().history.length, 2);
+  useMissionStore.getState().setDataSourceStatus(statusDatasetB);
+  checkEqual("history F-23: dataset change clears active history", useMissionStore.getState().history.length, 0);
+  useMissionStore.getState().ingest(frameA2);
+  checkEqual("history F-23: late frame from previous dataset is rejected", useMissionStore.getState().history.length, 0);
+  checkEqual("history F-23: late frame from previous dataset cannot replace latest", useMissionStore.getState().latest, null);
+  useMissionStore.getState().ingest(frameB);
+  checkEqual("history F-23: first valid frame in new dataset starts distinct history", useMissionStore.getState().history.length, 1);
+  checkEqual("history F-23: valid new-dataset frame becomes latest", useMissionStore.getState().latest, frameB);
+
+  const unknownDatasetStatus = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: null });
+  const literalUnknownFrame = fixtureSnapshot({ timestamp: 30, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "unconfirmed" } });
+  useMissionStore.getState().setDataSourceStatus(unknownDatasetStatus);
+  useMissionStore.getState().ingest(literalUnknownFrame);
+  checkEqual("history F-23: missing dataset does not accept a real dataset named 'unconfirmed'", useMissionStore.getState().history.length, 0);
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "connecting",
+  });
+}
+
+// ===========================================================================
+// Corrective review residual 1 — complete A → observed B mismatch → REST B
+// convergence. This exercises the real store plus the pure request planner.
+// ===========================================================================
+
+{
+  const statusA = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" });
+  const statusB = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" });
+  const frameA1 = fixtureSnapshot({ timestamp: 100, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } });
+  const frameA2 = fixtureSnapshot({ timestamp: 150, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } });
+  const frameB1 = fixtureSnapshot({ timestamp: 200, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } });
+  const frameB2 = fixtureSnapshot({ timestamp: 201, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } });
+  const frameB3 = fixtureSnapshot({ timestamp: 202, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } });
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "open",
+  });
+  useMissionStore.getState().setDataSourceStatus(statusA);
+  useMissionStore.getState().ingest(frameA1);
+  checkEqual("convergence residual 1: authoritative A frame becomes current", useMissionStore.getState().latest, frameA1);
+  checkEqual("convergence residual 1: A history starts active", useMissionStore.getState().history.length, 1);
+
+  useMissionStore.getState().ingest(frameB1);
+  const mismatchKey = useMissionStore.getState().sourceConvergenceKey;
+  checkEqual("convergence residual 1: observed B immediately clears stale A latest", useMissionStore.getState().latest, null);
+  checkEqual("convergence residual 1: observed B immediately clears stale A current history", useMissionStore.getState().history.length, 0);
+  checkEqual(
+    "convergence residual 1: cleared current frame makes operational telemetry unavailable immediately",
+    deriveTelemetryAvailability({
+      connected: useMissionStore.getState().connectionStatus === "open",
+      sourceStateStatus: "available",
+      hasConfirmedSnapshot: useMissionStore.getState().latest !== null,
+    }),
+    "awaiting_confirmation",
+  );
+  check("convergence residual 1: observed B creates a convergence key", mismatchKey !== null);
+  checkEqual("convergence residual 1: REST remains authoritative A until convergence", useMissionStore.getState().dataSourceStatus?.dataset_name, "A");
+
+  let lastRequestedKey: string | null = null;
+  let requestCount = 0;
+  function consumePlan(key: string | null) {
+    const plan = planSourceConvergenceRequest(key, lastRequestedKey);
+    lastRequestedKey = plan.nextLastRequestedKey;
+    if (plan.shouldRequest) requestCount += 1;
+    return plan;
+  }
+  const firstPlan = consumePlan(mismatchKey);
+  check("convergence residual 1: first observed B transition requests REST convergence", firstPlan.shouldRequest);
+  checkEqual("convergence residual 1: exactly one request planned for first B identity", requestCount, 1);
+
+  useMissionStore.getState().ingest(frameB2);
+  const repeatedPlan = consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("convergence residual 1: repeated identical B frame is deduplicated", repeatedPlan.shouldRequest, false);
+  checkEqual("convergence residual 1: repeated B frame does not increment request count", requestCount, 1);
+  checkEqual("convergence residual 1: repeated B frame keeps current telemetry unavailable", useMissionStore.getState().latest, null);
+
+  checkEqual("convergence residual 1: authoritative A does not confirm pending B", statusConfirmsSourceConvergence(statusA, mismatchKey), false);
+  useMissionStore.getState().setDataSourceStatus(statusA);
+  checkEqual("convergence residual 1: unsuccessful convergence does not restore stale A", useMissionStore.getState().latest, null);
+  checkEqual("convergence residual 1: unsuccessful convergence keeps history empty", useMissionStore.getState().history.length, 0);
+  checkEqual("convergence residual 1: unsuccessful convergence retains pending B key without retry loop", useMissionStore.getState().sourceConvergenceKey, mismatchKey);
+  check("event ordering A: unchanged REST A retains the pre-convergence authority record", useMissionStore.getState().sourceConvergenceBaseKey !== null);
+  consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("convergence residual 1: unchanged failed convergence does not create a request loop", requestCount, 1);
+
+  // Second independent review: an old-authoritative A frame after failed B
+  // convergence must not cross the shared pending boundary on legacy routes.
+  useMissionStore.getState().ingest(frameA2);
+  const pendingAfterOldFrame = useMissionStore.getState();
+  checkEqual("cross-route convergence: old-authoritative A2 is rejected while B remains pending", pendingAfterOldFrame.latest, null);
+  checkEqual("cross-route convergence: rejected A2 cannot repopulate current history", pendingAfterOldFrame.history.length, 0);
+  checkEqual("cross-route convergence: rejected A2 cannot advance last-confirmed timestamp", pendingAfterOldFrame.lastConfirmedTimestampSeconds, 100);
+  checkEqual("cross-route convergence: rejected A2 cannot replace pending B identity", pendingAfterOldFrame.sourceConvergenceKey, mismatchKey);
+  checkEqual("cross-route convergence: rejected A2 keeps observed convergence target on B", pendingAfterOldFrame.observedSourceIdentityKey, mismatchKey);
+  const confirmedWhilePending = confirmedSnapshotForState(
+    pendingAfterOldFrame.latest,
+    pendingAfterOldFrame.dataSourceStatus,
+    pendingAfterOldFrame.sourceConvergenceKey,
+  );
+  checkEqual("cross-route convergence: confirmed-snapshot boundary exposes no A2 while B is pending", confirmedWhilePending.snapshot, null);
+  checkEqual("cross-route convergence: confirmed-snapshot boundary reports pending confirmation", confirmedWhilePending.isWaitingForConfirmation, true);
+  checkEqual(
+    "cross-route convergence: confirmed-history boundary exposes no A history while B is pending",
+    confirmedHistoryForState(
+      pendingAfterOldFrame.history,
+      pendingAfterOldFrame.dataSourceStatus,
+      pendingAfterOldFrame.sourceConvergenceKey,
+    ).length,
+    0,
+  );
+  const defensiveSnapshotGate = confirmedSnapshotForState(frameA2, statusA, mismatchKey);
+  checkEqual("cross-route convergence: selector defense-in-depth withholds matching stale A residue while B is pending", defensiveSnapshotGate.snapshot, null);
+  checkEqual("cross-route convergence: selector defense-in-depth identifies pending confirmation despite stale residue", defensiveSnapshotGate.isWaitingForConfirmation, true);
+  checkEqual(
+    "cross-route convergence: history selector defense-in-depth withholds matching stale A residue while B is pending",
+    confirmedHistoryForState([frameA1, frameA2], statusA, mismatchKey).length,
+    0,
+  );
+  consumePlan(pendingAfterOldFrame.sourceConvergenceKey);
+  checkEqual("cross-route convergence: repeated old A frame does not plan another convergence request", requestCount, 1);
+
+  useMissionStore.getState().ingest(frameB2);
+  checkEqual("cross-route convergence: repeated pending B frame stays unavailable", useMissionStore.getState().latest, null);
+  checkEqual("cross-route convergence: repeated pending B frame does not advance confirmed timestamp", useMissionStore.getState().lastConfirmedTimestampSeconds, 100);
+  consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("cross-route convergence: repeated pending B frame remains request-deduplicated", requestCount, 1);
+
+  checkEqual("convergence residual 1: authoritative B confirms pending B", statusConfirmsSourceConvergence(statusB, mismatchKey), true);
+  useMissionStore.getState().setDataSourceStatus(statusB);
+  checkEqual("convergence residual 1: confirmed REST B clears pending convergence key", useMissionStore.getState().sourceConvergenceKey, null);
+  checkEqual("event ordering A: confirmed REST B clears the pre-convergence authority record", useMissionStore.getState().sourceConvergenceBaseKey, null);
+  const clearedPlan = consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("convergence residual 1: clearing convergence does not issue another request", clearedPlan.shouldRequest, false);
+  checkEqual("convergence residual 1: clearing convergence resets dedupe boundary", lastRequestedKey, null);
+
+  useMissionStore.getState().ingest(frameB3);
+  checkEqual("convergence residual 1: valid B frame recovers current telemetry", useMissionStore.getState().latest, frameB3);
+  checkEqual("convergence residual 1: recovered history contains one B frame", useMissionStore.getState().history.length, 1);
+  check("convergence residual 1: recovered history contains only dataset B", useMissionStore.getState().history.every((frame) => frame.source.dataset_name === "B"));
+  const recoveredState = useMissionStore.getState();
+  checkEqual(
+    "cross-route convergence: confirmed-snapshot boundary recovers with authoritative B3",
+    confirmedSnapshotForState(recoveredState.latest, recoveredState.dataSourceStatus, recoveredState.sourceConvergenceKey).snapshot,
+    frameB3,
+  );
+  checkEqual(
+    "cross-route convergence: confirmed-history boundary recovers with B-only history",
+    confirmedHistoryForState(recoveredState.history, recoveredState.dataSourceStatus, recoveredState.sourceConvergenceKey).length,
+    1,
+  );
+  checkEqual("convergence residual 1: normal accepted B traffic has no convergence trigger", useMissionStore.getState().sourceConvergenceKey, null);
+  consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("convergence residual 1: normal stream traffic does not poll", requestCount, 1);
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "connecting",
+  });
+}
+
+// A genuinely new mismatch identity replaces the pending target exactly once;
+// pre-REST provisional startup remains unchanged.
+{
+  const statusA = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" });
+  const frameA1 = fixtureSnapshot({ timestamp: 300, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } });
+  const frameB1 = fixtureSnapshot({ timestamp: 400, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } });
+  const frameC1 = fixtureSnapshot({ timestamp: 500, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "C" } });
+  const frameC2 = fixtureSnapshot({ timestamp: 501, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "C" } });
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "open",
+  });
+  useMissionStore.getState().setDataSourceStatus(statusA);
+  useMissionStore.getState().ingest(frameA1);
+  useMissionStore.getState().ingest(frameB1);
+
+  let lastRequestedKey: string | null = null;
+  let requestCount = 0;
+  function consumePlan(key: string | null) {
+    const plan = planSourceConvergenceRequest(key, lastRequestedKey);
+    lastRequestedKey = plan.nextLastRequestedKey;
+    if (plan.shouldRequest) requestCount += 1;
+    return plan;
+  }
+  const pendingB = useMissionStore.getState().sourceConvergenceKey;
+  consumePlan(pendingB);
+  checkEqual("cross-route convergence: initial B mismatch plans exactly one request", requestCount, 1);
+
+  useMissionStore.getState().ingest(frameC1);
+  const pendingC = useMissionStore.getState().sourceConvergenceKey;
+  check("cross-route convergence: new mismatched C replaces pending B", pendingC !== null && pendingC !== pendingB);
+  checkEqual("cross-route convergence: C replacement remains fail-closed", useMissionStore.getState().latest, null);
+  checkEqual("cross-route convergence: C replacement does not advance confirmed timestamp", useMissionStore.getState().lastConfirmedTimestampSeconds, 300);
+  consumePlan(pendingC);
+  checkEqual("cross-route convergence: new C identity plans one additional request", requestCount, 2);
+
+  useMissionStore.getState().ingest(frameC2);
+  consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("cross-route convergence: repeated C remains request-deduplicated", requestCount, 2);
+  checkEqual("cross-route convergence: repeated C remains unavailable", useMissionStore.getState().latest, null);
+  checkEqual("cross-route convergence: repeated C cannot advance confirmed timestamp", useMissionStore.getState().lastConfirmedTimestampSeconds, 300);
+
+  useMissionStore.getState().ingest(frameB1);
+  consumePlan(useMissionStore.getState().sourceConvergenceKey);
+  checkEqual("cross-route convergence: superseded B cannot replace newer pending C", useMissionStore.getState().sourceConvergenceKey, pendingC);
+  checkEqual("cross-route convergence: late superseded B creates no request loop", requestCount, 2);
+  checkEqual("cross-route convergence: late superseded B remains fail-closed", useMissionStore.getState().latest, null);
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "open",
+  });
+  const provisionalFrame = fixtureSnapshot({ timestamp: 600, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "STARTUP" } });
+  useMissionStore.getState().ingest(provisionalFrame);
+  const provisionalState = useMissionStore.getState();
+  checkEqual("cross-route convergence: pre-REST startup still accepts provisional telemetry", provisionalState.latest, provisionalFrame);
+  checkEqual("cross-route convergence: pre-REST startup begins provisional history", provisionalState.history.length, 1);
+  checkEqual("cross-route convergence: pre-REST provisional frame advances confirmed timestamp", provisionalState.lastConfirmedTimestampSeconds, 600);
+  checkEqual(
+    "cross-route convergence: confirmed-snapshot helper preserves pre-REST provisional contract",
+    confirmedSnapshotForState(provisionalState.latest, provisionalState.dataSourceStatus, provisionalState.sourceConvergenceKey).snapshot,
+    provisionalFrame,
+  );
+  checkEqual(
+    "cross-route convergence: confirmed-history helper preserves pre-REST provisional contract",
+    confirmedHistoryForState(provisionalState.history, provisionalState.dataSourceStatus, provisionalState.sourceConvergenceKey).length,
+    1,
+  );
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "connecting",
+  });
+}
+
+// ===========================================================================
+// Third independent review — authoritative A/B/C transition semantics.
+// ===========================================================================
+
+{
+  const statusA = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" });
+  const statusB = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" });
+  const statusC = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "C" });
+  const pendingB = "pending-B";
+  const fullOwner = "full-owner";
+  const legacyOwner = "legacy-owner";
+
+  function deferred<T>() {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: unknown) => void;
+    const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+      resolve = resolvePromise;
+      reject = rejectPromise;
+    });
+    return { promise, resolve, reject };
+  }
+
+  const seedCoordinator = new SourceStateRequestCoordinator();
+  const seedOwner = "seed-owner";
+  const seedResponse = deferred<DataSourceStatus>();
+  let seedRequests = 0;
+  let seedAccepted = 0;
+  seedCoordinator.activateOwner(seedOwner);
+  const seedRegistration = seedCoordinator.startOrAdoptRequest(
+    seedOwner,
+    null,
+    () => {
+      seedRequests += 1;
+      return seedResponse.promise;
+    },
+    () => {
+      seedAccepted += 1;
+    },
+    () => undefined,
+  );
+  const repeatedSeedRegistration = seedCoordinator.startOrAdoptRequest(
+    seedOwner,
+    null,
+    () => {
+      seedRequests += 1;
+      return seedResponse.promise;
+    },
+    () => {
+      seedAccepted += 1;
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: owner without pending starts an initial seed", seedRegistration?.reason, "initial_seed");
+  checkEqual("request ordering B: owner without pending starts exactly one request", seedRequests, 1);
+  checkEqual("request ordering B: repeated seed registration adopts physical request", repeatedSeedRegistration?.adopted, true);
+  seedResponse.resolve(statusA);
+  checkEqual("request ordering B: adopted seed result is accepted", await repeatedSeedRegistration?.outcome, "accepted");
+  checkEqual("request ordering B: adopted seed invokes one active callback", seedAccepted, 1);
+
+  const pendingCoordinator = new SourceStateRequestCoordinator();
+  const pendingOwner = "pending-owner";
+  const pendingResponse = deferred<DataSourceStatus>();
+  let pendingRequests = 0;
+  pendingCoordinator.activateOwner(pendingOwner);
+  const pendingRegistration = pendingCoordinator.startOrAdoptRequest(
+    pendingOwner,
+    pendingB,
+    () => {
+      pendingRequests += 1;
+      return pendingResponse.promise;
+    },
+    () => undefined,
+    () => undefined,
+  );
+  const repeatedPendingRegistration = pendingCoordinator.startOrAdoptRequest(
+    pendingOwner,
+    pendingB,
+    () => {
+      pendingRequests += 1;
+      return pendingResponse.promise;
+    },
+    () => undefined,
+    () => undefined,
+  );
+  checkEqual("request ordering B: owner starting with pending B requests convergence, not seed", pendingRegistration?.reason, "convergence");
+  checkEqual("request ordering B: pending B mount starts exactly one total request", pendingRequests, 1);
+  checkEqual("request ordering B: repeated B frame while request is in flight stays single-flight", repeatedPendingRegistration?.adopted, true);
+  pendingResponse.resolve(statusB);
+  await repeatedPendingRegistration?.outcome;
+
+  const strictCoordinator = new SourceStateRequestCoordinator();
+  const strictOwner = "strict-owner";
+  const strictResponse = deferred<DataSourceStatus>();
+  let strictRequests = 0;
+  let strictOldCallbacks = 0;
+  let strictActiveCallbacks = 0;
+  strictCoordinator.activateOwner(strictOwner);
+  const strictOriginal = strictCoordinator.startOrAdoptRequest(
+    strictOwner,
+    null,
+    () => {
+      strictRequests += 1;
+      return strictResponse.promise;
+    },
+    () => {
+      strictOldCallbacks += 1;
+    },
+    () => undefined,
+  );
+  strictCoordinator.releaseOwner(strictOwner);
+  strictCoordinator.activateOwner(strictOwner);
+  const strictReplay = strictCoordinator.startOrAdoptRequest(
+    strictOwner,
+    null,
+    () => {
+      strictRequests += 1;
+      return strictResponse.promise;
+    },
+    () => {
+      strictActiveCallbacks += 1;
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: Strict Mode same-owner replay does not duplicate initial seed", strictRequests, 1);
+  checkEqual("request ordering B: same-owner reactivation adopts original physical request", strictReplay?.adopted, true);
+  strictResponse.resolve(statusA);
+  checkEqual("request ordering B: Strict Mode destination receives adopted result", await strictReplay?.outcome, "accepted");
+  checkEqual("request ordering B: Strict Mode original registration becomes stale", await strictOriginal?.outcome, "stale");
+  checkEqual("request ordering B: Strict Mode result is accepted exactly once", strictActiveCallbacks, 1);
+  checkEqual("request ordering B: Strict Mode superseded callback is blocked", strictOldCallbacks, 0);
+
+  async function verifySameKeyTransfer(
+    fromOwner: string,
+    toOwner: string,
+    direction: "full-to-legacy" | "legacy-to-full",
+  ) {
+    const coordinator = new SourceStateRequestCoordinator();
+    const response = deferred<DataSourceStatus>();
+    let physicalRequests = 0;
+    let oldCallbacks = 0;
+    let destinationCallbacks = 0;
+    coordinator.activateOwner(fromOwner);
+    const original = coordinator.startOrAdoptRequest(
+      fromOwner,
+      pendingB,
+      () => {
+        physicalRequests += 1;
+        return response.promise;
+      },
+      () => {
+        oldCallbacks += 1;
+      },
+      () => undefined,
+    );
+    coordinator.releaseOwner(fromOwner);
+    coordinator.activateOwner(toOwner);
+    const adopted = coordinator.startOrAdoptRequest(
+      toOwner,
+      pendingB,
+      () => {
+        physicalRequests += 1;
+        return response.promise;
+      },
+      (result) => {
+        if (result.dataset_name === "B") destinationCallbacks += 1;
+      },
+      () => undefined,
+    );
+    checkEqual(`request ordering B: ${direction} transfer reuses one physical request`, physicalRequests, 1);
+    checkEqual(`request ordering B: ${direction} destination adopts unresolved B`, adopted?.adopted, true);
+    response.resolve(statusB);
+    checkEqual(`request ordering B: ${direction} destination accepts B`, await adopted?.outcome, "accepted");
+    checkEqual(`request ordering B: ${direction} old registration is stale`, await original?.outcome, "stale");
+    checkEqual(`request ordering B: ${direction} destination callback runs once`, destinationCallbacks, 1);
+    checkEqual(`request ordering B: ${direction} superseded callbacks do not run`, oldCallbacks, 0);
+  }
+
+  await verifySameKeyTransfer(fullOwner, legacyOwner, "full-to-legacy");
+  await verifySameKeyTransfer(legacyOwner, fullOwner, "legacy-to-full");
+
+  const transferredSeedCoordinator = new SourceStateRequestCoordinator();
+  const transferredSeedResponse = deferred<DataSourceStatus>();
+  let transferredSeedRequests = 0;
+  let transferredSeedOldCallbacks = 0;
+  let transferredSeedDestinationCallbacks = 0;
+  transferredSeedCoordinator.activateOwner(fullOwner);
+  const transferredSeedOriginal = transferredSeedCoordinator.startOrAdoptRequest(
+    fullOwner,
+    null,
+    () => {
+      transferredSeedRequests += 1;
+      return transferredSeedResponse.promise;
+    },
+    () => {
+      transferredSeedOldCallbacks += 1;
+    },
+    () => undefined,
+  );
+  transferredSeedCoordinator.releaseOwner(fullOwner);
+  transferredSeedCoordinator.activateOwner(legacyOwner);
+  const transferredSeedAdoption = transferredSeedCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    null,
+    () => {
+      transferredSeedRequests += 1;
+      return transferredSeedResponse.promise;
+    },
+    () => {
+      transferredSeedDestinationCallbacks += 1;
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: initial-seed transfer keeps one physical request", transferredSeedRequests, 1);
+  checkEqual("request ordering B: initial-seed destination adopts unresolved request", transferredSeedAdoption?.adopted, true);
+  transferredSeedResponse.resolve(statusA);
+  checkEqual("request ordering B: initial-seed destination accepts result", await transferredSeedAdoption?.outcome, "accepted");
+  checkEqual("request ordering B: initial-seed old registration is stale", await transferredSeedOriginal?.outcome, "stale");
+  checkEqual("request ordering B: initial-seed destination callback runs once", transferredSeedDestinationCallbacks, 1);
+  checkEqual("request ordering B: initial-seed old callback does not run", transferredSeedOldCallbacks, 0);
+
+  const settlementGapCoordinator = new SourceStateRequestCoordinator();
+  const settlementGapResponse = deferred<DataSourceStatus>();
+  let settlementGapRequests = 0;
+  let settlementGapOldCallbacks = 0;
+  let settlementGapDestinationCallbacks = 0;
+  settlementGapCoordinator.activateOwner(fullOwner);
+  const settlementGapOriginal = settlementGapCoordinator.startOrAdoptRequest(
+    fullOwner,
+    pendingB,
+    () => {
+      settlementGapRequests += 1;
+      return settlementGapResponse.promise;
+    },
+    () => {
+      settlementGapOldCallbacks += 1;
+    },
+    () => undefined,
+  );
+  settlementGapCoordinator.releaseOwner(fullOwner);
+  settlementGapResponse.resolve(statusB);
+  await Promise.resolve();
+  settlementGapCoordinator.activateOwner(legacyOwner);
+  const settlementGapAdoption = settlementGapCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    pendingB,
+    () => {
+      settlementGapRequests += 1;
+      return settlementGapResponse.promise;
+    },
+    () => {
+      settlementGapDestinationCallbacks += 1;
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: settlement during owner gap remains one physical request", settlementGapRequests, 1);
+  checkEqual("request ordering B: destination adopts result settled during owner gap", settlementGapAdoption?.adopted, true);
+  checkEqual("request ordering B: owner-gap adopted result is accepted", await settlementGapAdoption?.outcome, "accepted");
+  checkEqual("request ordering B: owner-gap original registration is stale", await settlementGapOriginal?.outcome, "stale");
+  checkEqual("request ordering B: owner-gap destination callback runs once", settlementGapDestinationCallbacks, 1);
+  checkEqual("request ordering B: owner-gap superseded callback stays blocked", settlementGapOldCallbacks, 0);
+
+  const unmountedCoordinator = new SourceStateRequestCoordinator();
+  const unmountedOwner = "unmounted-owner";
+  const unmountedResponse = deferred<DataSourceStatus>();
+  let unmountedRequests = 0;
+  let unmountedWrites = 0;
+  unmountedCoordinator.activateOwner(unmountedOwner);
+  const unmountedRegistration = unmountedCoordinator.startOrAdoptRequest(
+    unmountedOwner,
+    pendingB,
+    () => {
+      unmountedRequests += 1;
+      return unmountedResponse.promise;
+    },
+    () => {
+      unmountedWrites += 1;
+    },
+    () => {
+      unmountedWrites += 1;
+    },
+  );
+  unmountedCoordinator.releaseOwner(unmountedOwner);
+  unmountedResponse.resolve(statusB);
+  checkEqual("request ordering B: no-replacement request factory runs once", unmountedRequests, 1);
+  checkEqual("request ordering B: unmounted owner response is stale", await unmountedRegistration?.outcome, "stale");
+  checkEqual("request ordering B: unmounted owner cannot write", unmountedWrites, 0);
+  const frameA1 = fixtureSnapshot({ timestamp: 700, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } });
+  const frameB1 = fixtureSnapshot({ timestamp: 800, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } });
+  const frameC1 = fixtureSnapshot({ timestamp: 900, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "C" } });
+  const lateA2 = fixtureSnapshot({ timestamp: 701, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } });
+
+  const identityA = sourceIdentityFromStatus(statusA);
+  const identityB = sourceIdentityFromStatus(statusB);
+  check("event ordering A: fixture identities are available", identityA !== null && identityB !== null);
+  const keyA = identityA ? sourceIdentityKey(identityA) : null;
+  const keyB = identityB ? sourceIdentityKey(identityB) : null;
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "open",
+  });
+  useMissionStore.getState().setDataSourceStatus(statusA);
+  useMissionStore.getState().ingest(frameA1);
+  useMissionStore.getState().ingest(frameB1);
+  checkEqual("event ordering A: B frame opens pending B", useMissionStore.getState().sourceConvergenceKey, keyB);
+  checkEqual("event ordering A: convergence records pre-transition authority A", useMissionStore.getState().sourceConvergenceBaseKey, keyA);
+  checkEqual(
+    "event ordering A: unchanged REST A is classified separately from third authority",
+    classifySourceConvergenceStatus(statusA, keyB, keyA),
+    "unchanged_pre_convergence_authority",
+  );
+  checkEqual(
+    "event ordering A: REST B confirms pending B",
+    classifySourceConvergenceStatus(statusB, keyB, keyA),
+    "confirmed_pending_identity",
+  );
+  checkEqual(
+    "event ordering A: REST C is a third authoritative transition",
+    classifySourceConvergenceStatus(statusC, keyB, keyA),
+    "advanced_to_third_authority",
+  );
+
+  useMissionStore.getState().setDataSourceStatus(statusC);
+  checkEqual("event ordering A: REST C clears obsolete pending B", useMissionStore.getState().sourceConvergenceKey, null);
+  checkEqual("event ordering A: REST C clears the completed transition base", useMissionStore.getState().sourceConvergenceBaseKey, null);
+  checkEqual("event ordering A: REST C becomes authoritative", useMissionStore.getState().dataSourceStatus?.dataset_name, "C");
+  checkEqual("event ordering A: REST C restores no stale A latest", useMissionStore.getState().latest, null);
+  checkEqual("event ordering A: REST C restores no speculative B history", useMissionStore.getState().history.length, 0);
+  check("event ordering A: pre-convergence A is recorded as retired", keyA !== null && useMissionStore.getState().retiredSourceIdentityKeys.includes(keyA));
+  check("event ordering A: abandoned speculative B is recorded as retired", keyB !== null && useMissionStore.getState().retiredSourceIdentityKeys.includes(keyB));
+
+  let lastRequestedKey: string | null = null;
+  let requestCount = 0;
+  const firstBPlan = planSourceConvergenceRequest(keyB, lastRequestedKey);
+  lastRequestedKey = firstBPlan.nextLastRequestedKey;
+  if (firstBPlan.shouldRequest) requestCount += 1;
+  const clearedPlan = planSourceConvergenceRequest(useMissionStore.getState().sourceConvergenceKey, lastRequestedKey);
+  if (clearedPlan.shouldRequest) requestCount += 1;
+  checkEqual("event ordering A: REST C resolution opens no redundant convergence request", requestCount, 1);
+
+  useMissionStore.getState().ingest(frameC1);
+  checkEqual("event ordering A: first valid C frame recovers current telemetry", useMissionStore.getState().latest, frameC1);
+  checkEqual("event ordering A: recovered history contains one C frame", useMissionStore.getState().history.length, 1);
+  check("event ordering A: recovered history contains only C", useMissionStore.getState().history.every((frame) => frame.source.dataset_name === "C"));
+  checkEqual("event ordering A: C recovery does not reopen pending convergence", useMissionStore.getState().sourceConvergenceKey, null);
+
+  useMissionStore.getState().ingest(lateA2);
+  checkEqual("event ordering A: retired late A cannot overwrite current C", useMissionStore.getState().latest, frameC1);
+  check("event ordering A: retired late A cannot enter C history", useMissionStore.getState().history.every((frame) => frame.source.dataset_name === "C"));
+  checkEqual("event ordering A: retired late A cannot reopen stale convergence", useMissionStore.getState().sourceConvergenceKey, null);
+  checkEqual("event ordering A: retired late A cannot advance confirmed timestamp", useMissionStore.getState().lastConfirmedTimestampSeconds, 900);
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "connecting",
+  });
+}
+
+// ===========================================================================
+// Third independent review — shared request ownership/generation controller.
+// ===========================================================================
+
+{
+  const pendingB = "pending-B";
+  const pendingC = "pending-C";
+  const fullOwner = "full-owner";
+  const legacyOwner = "legacy-owner";
+
+  function deferred<T>() {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: unknown) => void;
+    const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+      resolve = resolvePromise;
+      reject = rejectPromise;
+    });
+    return { promise, resolve, reject };
+  }
+
+  const statusA = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" });
+  const statusB = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" });
+  const statusC = fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: "S14", dataset_name: "C" });
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "open",
+  });
+  useMissionStore.getState().setDataSourceStatus(statusA);
+  useMissionStore.getState().ingest(fixtureSnapshot({ timestamp: 1000, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } }));
+  useMissionStore.getState().ingest(fixtureSnapshot({ timestamp: 1100, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } }));
+  const realPendingB = useMissionStore.getState().sourceConvergenceKey;
+  check("request ordering B: real store provides pending B for response-order test", realPendingB !== null);
+
+  const outOfOrder = new SourceStateRequestCoordinator();
+  const orderOwner = "order-owner";
+  outOfOrder.activateOwner(orderOwner);
+  const olderResponse = deferred<DataSourceStatus>();
+  let acceptedAuthority: string | null = null;
+  let acceptedWrites = 0;
+  let outOfOrderRequests = 0;
+  const olderRegistration = outOfOrder.startOrAdoptRequest(
+    orderOwner,
+    null,
+    () => {
+      outOfOrderRequests += 1;
+      return olderResponse.promise;
+    },
+    (result) => {
+      acceptedAuthority = result.dataset_name;
+      acceptedWrites += 1;
+      useMissionStore.getState().setDataSourceStatus(result);
+    },
+    () => undefined,
+  );
+  const newerResponse = deferred<DataSourceStatus>();
+  const newerRegistration = outOfOrder.startOrAdoptRequest(
+    orderOwner,
+    realPendingB,
+    () => {
+      outOfOrderRequests += 1;
+      return newerResponse.promise;
+    },
+    (result) => {
+      acceptedAuthority = result.dataset_name;
+      acceptedWrites += 1;
+      useMissionStore.getState().setDataSourceStatus(result);
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: A to B creates exactly two distinct physical requests", outOfOrderRequests, 2);
+  newerResponse.resolve(statusB);
+  checkEqual("request ordering B: newer B response is accepted", await newerRegistration?.outcome, "accepted");
+  checkEqual("request ordering B: newer B becomes accepted authority", acceptedAuthority, "B");
+  checkEqual("request ordering B: newer B updates the real authoritative store", useMissionStore.getState().dataSourceStatus?.dataset_name, "B");
+  checkEqual("request ordering B: newer B clears real pending convergence", useMissionStore.getState().sourceConvergenceKey, null);
+  olderResponse.resolve(statusA);
+  checkEqual("request ordering B: older A resolving after B is rejected as stale", await olderRegistration?.outcome, "stale");
+  checkEqual("request ordering B: stale older A cannot roll authority backward", acceptedAuthority, "B");
+  checkEqual("request ordering B: stale older A cannot roll real store backward", useMissionStore.getState().dataSourceStatus?.dataset_name, "B");
+  checkEqual("request ordering B: out-of-order pair produces one authoritative write", acceptedWrites, 1);
+
+  const inverseOrder = new SourceStateRequestCoordinator();
+  inverseOrder.activateOwner(orderOwner);
+  const inverseOlderResponse = deferred<DataSourceStatus>();
+  let inverseAuthority: string | null = null;
+  let inverseRequests = 0;
+  const inverseOlderRegistration = inverseOrder.startOrAdoptRequest(
+    orderOwner,
+    null,
+    () => {
+      inverseRequests += 1;
+      return inverseOlderResponse.promise;
+    },
+    (result) => {
+      inverseAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  const inverseNewerResponse = deferred<DataSourceStatus>();
+  const inverseNewerRegistration = inverseOrder.startOrAdoptRequest(
+    orderOwner,
+    pendingC,
+    () => {
+      inverseRequests += 1;
+      return inverseNewerResponse.promise;
+    },
+    (result) => {
+      inverseAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: inverse A to C creates one physical request per identity", inverseRequests, 2);
+  inverseOlderResponse.resolve(statusA);
+  checkEqual("request ordering B: superseded A is stale even when it resolves first", await inverseOlderRegistration?.outcome, "stale");
+  checkEqual("request ordering B: early stale A performs no write", inverseAuthority, null);
+  inverseNewerResponse.resolve(statusC);
+  checkEqual("request ordering B: newer C is accepted after early stale A", await inverseNewerRegistration?.outcome, "accepted");
+  checkEqual("request ordering B: inverse completion order ends at C", inverseAuthority, "C");
+
+  const supersededCoordinator = new SourceStateRequestCoordinator();
+  supersededCoordinator.activateOwner(fullOwner);
+  const oldOwnerResponse = deferred<DataSourceStatus>();
+  let supersededAuthority: string | null = null;
+  let supersededRequests = 0;
+  let supersededOldCallbacks = 0;
+  const oldOwnerRegistration = supersededCoordinator.startOrAdoptRequest(
+    fullOwner,
+    pendingB,
+    () => {
+      supersededRequests += 1;
+      return oldOwnerResponse.promise;
+    },
+    () => {
+      supersededOldCallbacks += 1;
+    },
+    () => undefined,
+  );
+  supersededCoordinator.releaseOwner(fullOwner);
+  supersededCoordinator.activateOwner(legacyOwner);
+  const newOwnerResponse = deferred<DataSourceStatus>();
+  const newOwnerRegistration = supersededCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    pendingC,
+    () => {
+      supersededRequests += 1;
+      return newOwnerResponse.promise;
+    },
+    (result) => {
+      supersededAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  checkEqual("request ordering B: B-to-C transfer starts exactly one request for each identity", supersededRequests, 2);
+  checkEqual("request ordering B: B-to-C destination starts rather than adopts C", newOwnerRegistration?.adopted, false);
+  newOwnerResponse.resolve(statusC);
+  checkEqual("request ordering B: replacement owner accepts C", await newOwnerRegistration?.outcome, "accepted");
+  oldOwnerResponse.resolve(statusA);
+  checkEqual("request ordering B: superseded owner's later A response is stale", await oldOwnerRegistration?.outcome, "stale");
+  checkEqual("request ordering B: superseded owner cannot roll C back", supersededAuthority, "C");
+  checkEqual("request ordering B: superseded B callbacks stay blocked when C resolves first", supersededOldCallbacks, 0);
+
+  const earlyBTransfer = new SourceStateRequestCoordinator();
+  const earlyBResponse = deferred<DataSourceStatus>();
+  const laterCResponse = deferred<DataSourceStatus>();
+  let earlyBTransferRequests = 0;
+  let earlyBTransferWrites = 0;
+  let earlyBTransferAuthority: string | null = null;
+  earlyBTransfer.activateOwner(fullOwner);
+  const earlyBRegistration = earlyBTransfer.startOrAdoptRequest(
+    fullOwner,
+    pendingB,
+    () => {
+      earlyBTransferRequests += 1;
+      return earlyBResponse.promise;
+    },
+    () => {
+      earlyBTransferWrites += 1;
+    },
+    () => undefined,
+  );
+  earlyBTransfer.releaseOwner(fullOwner);
+  earlyBTransfer.activateOwner(legacyOwner);
+  const laterCRegistration = earlyBTransfer.startOrAdoptRequest(
+    legacyOwner,
+    pendingC,
+    () => {
+      earlyBTransferRequests += 1;
+      return laterCResponse.promise;
+    },
+    (result) => {
+      earlyBTransferWrites += 1;
+      earlyBTransferAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  earlyBResponse.resolve(statusB);
+  checkEqual("request ordering B: transferred B is stale when it resolves before C", await earlyBRegistration?.outcome, "stale");
+  checkEqual("request ordering B: early superseded B performs no write", earlyBTransferWrites, 0);
+  laterCResponse.resolve(statusC);
+  checkEqual("request ordering B: C is accepted after early stale B", await laterCRegistration?.outcome, "accepted");
+  checkEqual("request ordering B: C is sole accepted authority in inverse completion order", earlyBTransferAuthority, "C");
+  checkEqual("request ordering B: inverse B-to-C transfer creates exactly two physical requests", earlyBTransferRequests, 2);
+  checkEqual("request ordering B: inverse B-to-C transfer produces one accepted write", earlyBTransferWrites, 1);
+
+  const errorCoordinator = new SourceStateRequestCoordinator();
+  const errorOwner = "error-owner";
+  const errorResponse = deferred<DataSourceStatus>();
+  let errorRequests = 0;
+  let oldOwnerErrors = 0;
+  let destinationErrors = 0;
+  errorCoordinator.activateOwner(errorOwner);
+  const errorOriginal = errorCoordinator.startOrAdoptRequest(
+    errorOwner,
+    pendingB,
+    () => {
+      errorRequests += 1;
+      return errorResponse.promise;
+    },
+    () => undefined,
+    () => {
+      oldOwnerErrors += 1;
+    },
+  );
+  errorCoordinator.releaseOwner(errorOwner);
+  errorCoordinator.activateOwner(legacyOwner);
+  const errorAdoption = errorCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    pendingB,
+    () => {
+      errorRequests += 1;
+      return errorResponse.promise;
+    },
+    () => undefined,
+    () => {
+      destinationErrors += 1;
+    },
+  );
+  checkEqual("request ordering B: error transfer adopts one physical request", errorRequests, 1);
+  checkEqual("request ordering B: error transfer registration is adopted", errorAdoption?.adopted, true);
+  errorResponse.reject(new Error("fixture failure"));
+  checkEqual("request ordering B: current-owner request failure reports error", await errorAdoption?.outcome, "error");
+  checkEqual("request ordering B: superseded error registration is stale", await errorOriginal?.outcome, "stale");
+  checkEqual("request ordering B: active destination error callback runs once", destinationErrors, 1);
+  checkEqual("request ordering B: superseded owner error callback is blocked", oldOwnerErrors, 0);
+  const noAutomaticRetry = errorCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    pendingB,
+    () => {
+      errorRequests += 1;
+      return Promise.resolve(statusB);
+    },
+    () => undefined,
+    () => undefined,
+  );
+  checkEqual("request ordering B: failure does not create an automatic retry loop", noAutomaticRetry, null);
+  const retryResponse = deferred<DataSourceStatus>();
+  let retryAccepted = 0;
+  const explicitRetry = errorCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    pendingB,
+    () => {
+      errorRequests += 1;
+      return retryResponse.promise;
+    },
+    () => {
+      retryAccepted += 1;
+    },
+    () => undefined,
+    { force: true },
+  );
+  const repeatedExplicitRetry = errorCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    pendingB,
+    () => {
+      errorRequests += 1;
+      return retryResponse.promise;
+    },
+    () => {
+      retryAccepted += 1;
+    },
+    () => undefined,
+    { force: true },
+  );
+  checkEqual("request ordering B: explicit source-state retry remains available after failure", explicitRetry?.reason, "retry");
+  checkEqual("request ordering B: explicit retry creates exactly one new physical request", errorRequests, 2);
+  checkEqual("request ordering B: explicit retry remains single-flight", repeatedExplicitRetry?.adopted, true);
+  retryResponse.resolve(statusB);
+  checkEqual("request ordering B: adopted explicit retry accepts recovery", await repeatedExplicitRetry?.outcome, "accepted");
+  checkEqual("request ordering B: explicit retry recovery callback runs once", retryAccepted, 1);
+
+  // Fifth independent review — authoritative mutation ordering shares the
+  // production owner/epoch/generation lifecycle with physical GET requests.
+  const lateGetCoordinator = new SourceStateRequestCoordinator();
+  const lateGetResponse = deferred<DataSourceStatus>();
+  const mutationBResponse = deferred<DataSourceStatus>();
+  let lateGetFactories = 0;
+  let mutationBFactories = 0;
+  let lateGetWrites = 0;
+  let lateGetAuthority: string | null = null;
+  lateGetCoordinator.activateOwner(legacyOwner);
+  const lateGetRegistration = lateGetCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    null,
+    () => {
+      lateGetFactories += 1;
+      return lateGetResponse.promise;
+    },
+    (result) => {
+      lateGetWrites += 1;
+      lateGetAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  const mutationBRegistration = lateGetCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => {
+      mutationBFactories += 1;
+      return mutationBResponse.promise;
+    },
+    (result) => {
+      lateGetWrites += 1;
+      lateGetAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  checkEqual("mutation ordering: legacy seed GET factory runs exactly once", lateGetFactories, 1);
+  checkEqual("mutation ordering: legacy mutation B factory runs exactly once", mutationBFactories, 1);
+  mutationBResponse.resolve(statusB);
+  checkEqual("mutation ordering: newer legacy mutation B is accepted", await mutationBRegistration?.outcome, "accepted");
+  checkEqual("mutation ordering: mutation B establishes authority", lateGetAuthority, "B");
+  checkEqual("mutation ordering: exactly one authority write occurs when B is accepted", lateGetWrites, 1);
+  lateGetResponse.resolve(statusA);
+  checkEqual("mutation ordering: earlier seed GET A is stale after mutation B", await lateGetRegistration?.outcome, "stale");
+  checkEqual("mutation ordering: late seed GET cannot roll B back to A", lateGetAuthority, "B");
+  checkEqual("mutation ordering: late seed GET performs no additional write", lateGetWrites, 1);
+
+  const inverseMutationCoordinator = new SourceStateRequestCoordinator();
+  const inverseGetResponse = deferred<DataSourceStatus>();
+  const inverseMutationResponse = deferred<DataSourceStatus>();
+  let inverseMutationWrites = 0;
+  let inverseMutationAuthority: string | null = null;
+  inverseMutationCoordinator.activateOwner(legacyOwner);
+  const inverseGetRegistration = inverseMutationCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    null,
+    () => inverseGetResponse.promise,
+    (result) => {
+      inverseMutationWrites += 1;
+      inverseMutationAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  const inverseMutationRegistration = inverseMutationCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => inverseMutationResponse.promise,
+    (result) => {
+      inverseMutationWrites += 1;
+      inverseMutationAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  inverseGetResponse.resolve(statusA);
+  checkEqual("mutation ordering: GET A is stale even when it physically resolves before mutation B", await inverseGetRegistration?.outcome, "stale");
+  checkEqual("mutation ordering: earlier GET completion performs no write", inverseMutationWrites, 0);
+  inverseMutationResponse.resolve(statusB);
+  checkEqual("mutation ordering: chronologically newer mutation wins inverse completion order", await inverseMutationRegistration?.outcome, "accepted");
+  checkEqual("mutation ordering: inverse completion order ends at B", inverseMutationAuthority, "B");
+  checkEqual("mutation ordering: inverse completion order produces one authority write", inverseMutationWrites, 1);
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "open",
+  });
+  useMissionStore.getState().setDataSourceStatus(statusA);
+  useMissionStore.getState().ingest(fixtureSnapshot({ timestamp: 2100, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "A" } }));
+  useMissionStore.getState().ingest(fixtureSnapshot({ timestamp: 2200, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "B" } }));
+  const mutationPendingB = useMissionStore.getState().sourceConvergenceKey;
+  check("mutation ordering: real store opens pending B before convergence GET", mutationPendingB !== null);
+  const convergenceMutationCoordinator = new SourceStateRequestCoordinator();
+  const convergenceBResponse = deferred<DataSourceStatus>();
+  const mutationCResponse = deferred<DataSourceStatus>();
+  let convergenceMutationWrites = 0;
+  convergenceMutationCoordinator.activateOwner(legacyOwner);
+  const convergenceBRegistration = convergenceMutationCoordinator.startOrAdoptRequest(
+    legacyOwner,
+    mutationPendingB,
+    () => convergenceBResponse.promise,
+    (result) => {
+      convergenceMutationWrites += 1;
+      useMissionStore.getState().setDataSourceStatus(result);
+    },
+    () => undefined,
+  );
+  const mutationCRegistration = convergenceMutationCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => mutationCResponse.promise,
+    (result) => {
+      convergenceMutationWrites += 1;
+      useMissionStore.getState().setDataSourceStatus(result);
+    },
+    () => undefined,
+  );
+  mutationCResponse.resolve(statusC);
+  checkEqual("mutation ordering: mutation C superseding pending-B GET is accepted", await mutationCRegistration?.outcome, "accepted");
+  checkEqual("mutation ordering: mutation C is authoritative in the real store", useMissionStore.getState().dataSourceStatus?.dataset_name, "C");
+  checkEqual("mutation ordering: authoritative C resolves obsolete pending B", useMissionStore.getState().sourceConvergenceKey, null);
+  convergenceBResponse.resolve(statusB);
+  checkEqual("mutation ordering: late convergence GET B is stale after mutation C", await convergenceBRegistration?.outcome, "stale");
+  checkEqual("mutation ordering: late convergence B cannot roll C backward", useMissionStore.getState().dataSourceStatus?.dataset_name, "C");
+  checkEqual("mutation ordering: pending-B GET plus mutation C produces one store write", convergenceMutationWrites, 1);
+  const recoveryFrameC = fixtureSnapshot({ timestamp: 2300, source: { source_type: "dataset_replay", subject_id: "S14", dataset_name: "C" } });
+  useMissionStore.getState().ingest(recoveryFrameC);
+  checkEqual("mutation ordering: C-compatible telemetry recovers after mutation", useMissionStore.getState().latest, recoveryFrameC);
+  check("mutation ordering: recovered telemetry history contains only C", useMissionStore.getState().history.every((frame) => frame.source.dataset_name === "C"));
+
+  const unmountedMutationCoordinator = new SourceStateRequestCoordinator();
+  const unmountedMutationResponse = deferred<DataSourceStatus>();
+  let unmountedMutationWrites = 0;
+  let unmountedMutationLocalCallbacks = 0;
+  let unmountedMutationFactories = 0;
+  unmountedMutationCoordinator.activateOwner(legacyOwner);
+  const unmountedMutationRegistration = unmountedMutationCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => {
+      unmountedMutationFactories += 1;
+      return unmountedMutationResponse.promise;
+    },
+    () => {
+      unmountedMutationWrites += 1;
+      unmountedMutationLocalCallbacks += 1;
+    },
+    () => {
+      unmountedMutationLocalCallbacks += 1;
+    },
+  );
+  unmountedMutationCoordinator.releaseOwner(legacyOwner);
+  unmountedMutationResponse.resolve(statusB);
+  checkEqual("mutation ordering: unmounted legacy mutation factory ran once", unmountedMutationFactories, 1);
+  checkEqual("mutation ordering: mutation resolving after unmount is stale", await unmountedMutationRegistration?.outcome, "stale");
+  checkEqual("mutation ordering: unmounted legacy mutation performs zero store writes", unmountedMutationWrites, 0);
+  checkEqual("mutation ordering: unmounted legacy mutation performs zero local callbacks", unmountedMutationLocalCallbacks, 0);
+
+  const transferredMutationCoordinator = new SourceStateRequestCoordinator();
+  const obsoleteLegacyResponse = deferred<DataSourceStatus>();
+  const currentFullResponse = deferred<DataSourceStatus>();
+  let transferredMutationAuthority: string | null = null;
+  let obsoleteLegacyCallbacks = 0;
+  transferredMutationCoordinator.activateOwner(legacyOwner);
+  const obsoleteLegacyMutation = transferredMutationCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => obsoleteLegacyResponse.promise,
+    () => {
+      obsoleteLegacyCallbacks += 1;
+    },
+    () => {
+      obsoleteLegacyCallbacks += 1;
+    },
+  );
+  transferredMutationCoordinator.releaseOwner(legacyOwner);
+  transferredMutationCoordinator.activateOwner(fullOwner);
+  const currentFullMutation = transferredMutationCoordinator.startAuthoritativeMutation(
+    fullOwner,
+    () => currentFullResponse.promise,
+    (result) => {
+      transferredMutationAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  currentFullResponse.resolve(statusC);
+  checkEqual("mutation ordering: newer full-owner mutation is accepted", await currentFullMutation?.outcome, "accepted");
+  obsoleteLegacyResponse.resolve(statusB);
+  checkEqual("mutation ordering: obsolete legacy mutation is stale after owner transfer", await obsoleteLegacyMutation?.outcome, "stale");
+  checkEqual("mutation ordering: obsolete legacy owner cannot overwrite full authority", transferredMutationAuthority, "C");
+  checkEqual("mutation ordering: obsolete legacy owner receives no callbacks", obsoleteLegacyCallbacks, 0);
+
+  const reversedMutationsCoordinator = new SourceStateRequestCoordinator();
+  const olderMutationResponse = deferred<DataSourceStatus>();
+  const newerMutationResponse = deferred<DataSourceStatus>();
+  let reversedMutationAuthority: string | null = null;
+  let reversedMutationWrites = 0;
+  reversedMutationsCoordinator.activateOwner(legacyOwner);
+  const olderMutationRegistration = reversedMutationsCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => olderMutationResponse.promise,
+    (result) => {
+      reversedMutationWrites += 1;
+      reversedMutationAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  const newerMutationRegistration = reversedMutationsCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => newerMutationResponse.promise,
+    (result) => {
+      reversedMutationWrites += 1;
+      reversedMutationAuthority = result.dataset_name;
+    },
+    () => undefined,
+  );
+  newerMutationResponse.resolve(statusC);
+  checkEqual("mutation ordering: newer of two mutations is accepted first", await newerMutationRegistration?.outcome, "accepted");
+  olderMutationResponse.resolve(statusB);
+  checkEqual("mutation ordering: older mutation is stale in reversed completion order", await olderMutationRegistration?.outcome, "stale");
+  checkEqual("mutation ordering: reversed mutation completion ends at newer C", reversedMutationAuthority, "C");
+  checkEqual("mutation ordering: reversed mutations produce one authoritative write", reversedMutationWrites, 1);
+
+  const activeFailureCoordinator = new SourceStateRequestCoordinator();
+  const activeFailureResponse = deferred<DataSourceStatus>();
+  let activeFailureWrites = 0;
+  let activeFailureErrors = 0;
+  activeFailureCoordinator.activateOwner(legacyOwner);
+  const activeFailureRegistration = activeFailureCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => activeFailureResponse.promise,
+    () => {
+      activeFailureWrites += 1;
+    },
+    () => {
+      activeFailureErrors += 1;
+    },
+  );
+  activeFailureResponse.reject(new Error("mutation failed"));
+  checkEqual("mutation ordering: active mutation failure reports error", await activeFailureRegistration?.outcome, "error");
+  checkEqual("mutation ordering: failed mutation performs no authority write", activeFailureWrites, 0);
+  checkEqual("mutation ordering: active owner receives mutation error once", activeFailureErrors, 1);
+
+  const obsoleteFailureCoordinator = new SourceStateRequestCoordinator();
+  const obsoleteFailureResponse = deferred<DataSourceStatus>();
+  let obsoleteFailureCallbacks = 0;
+  obsoleteFailureCoordinator.activateOwner(legacyOwner);
+  const obsoleteFailureRegistration = obsoleteFailureCoordinator.startAuthoritativeMutation(
+    legacyOwner,
+    () => obsoleteFailureResponse.promise,
+    () => {
+      obsoleteFailureCallbacks += 1;
+    },
+    () => {
+      obsoleteFailureCallbacks += 1;
+    },
+  );
+  obsoleteFailureCoordinator.releaseOwner(legacyOwner);
+  obsoleteFailureResponse.reject(new Error("obsolete mutation failed"));
+  checkEqual("mutation ordering: obsolete mutation failure is stale", await obsoleteFailureRegistration?.outcome, "stale");
+  checkEqual("mutation ordering: obsolete owner receives no success or error callback", obsoleteFailureCallbacks, 0);
+
+  useMissionStore.setState({
+    latest: null,
+    history: [],
+    observedSourceIdentityKey: null,
+    sourceConvergenceKey: null,
+    sourceConvergenceBaseKey: null,
+    sourceConvergenceSupersededKeys: [],
+    retiredSourceIdentityKeys: [],
+    lastConfirmedTimestampSeconds: null,
+    dataSourceStatus: null,
+    connectionStatus: "connecting",
+  });
 }
 
 // ===========================================================================
@@ -2013,6 +3334,254 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   check("modal: prior aria-hidden state is restored", drawerSource.includes('removeAttribute("aria-hidden")'));
   check("modal: focus restored to trigger after inert cleared", /for \(const restore of restores\) restore\(\);[\s\S]*trigger\?\.focus\(\)/.test(drawerSource));
   check("modal: document scroll is locked while open", drawerSource.includes('document.body.style.overflow = "hidden"'));
+}
+
+// ===========================================================================
+// Corrective review residual 2 — behavioral control-surface derivation.
+// Covers active, loading, REST error, disconnected, no confirmed frame, and
+// identity-mismatch-awaiting-convergence without mounting client components.
+// ===========================================================================
+
+{
+  const activeTelemetry = deriveTelemetryAvailability({ connected: true, sourceStateStatus: "available", hasConfirmedSnapshot: true });
+  const unavailableCases = [
+    {
+      name: "source loading",
+      telemetry: deriveTelemetryAvailability({ connected: true, sourceStateStatus: "loading", hasConfirmedSnapshot: true }),
+    },
+    {
+      name: "REST source error",
+      telemetry: deriveTelemetryAvailability({ connected: true, sourceStateStatus: "error", hasConfirmedSnapshot: true }),
+    },
+    {
+      name: "disconnected",
+      telemetry: deriveTelemetryAvailability({ connected: false, sourceStateStatus: "available", hasConfirmedSnapshot: true }),
+    },
+    {
+      name: "no confirmed frame",
+      telemetry: deriveTelemetryAvailability({ connected: true, sourceStateStatus: "available", hasConfirmedSnapshot: false }),
+    },
+    {
+      name: "identity mismatch awaiting REST convergence",
+      telemetry: deriveTelemetryAvailability({ connected: true, sourceStateStatus: "available", hasConfirmedSnapshot: false }),
+    },
+  ] as const;
+
+  const activeReplay = deriveReplayControlPresentation({
+    telemetry: activeTelemetry,
+    isReplay: true,
+    replaySessionState: "playing",
+    playbackSpeed: 5,
+    replayPositionSeconds: 42,
+    replayDurationSeconds: 120,
+    subjectId: "S14",
+    pendingAction: null,
+  });
+  checkEqual("controls residual 2: active replay preserves current subject", activeReplay.activeSubjectId, "S14");
+  checkEqual("controls residual 2: active replay preserves current speed", activeReplay.playbackSpeed, 5);
+  checkEqual("controls residual 2: active replay preserves current position", activeReplay.replayPositionSeconds, 42);
+  checkEqual("controls residual 2: active replay permits playback mutations", activeReplay.canControlPlayback, true);
+  checkEqual("controls residual 2: active playing replay permits play action", activeReplay.canPlay, true);
+  checkEqual("controls residual 2: active replay permits source change", activeReplay.canChangeSource, true);
+
+  const activeFault = deriveFaultControlPresentation({
+    telemetry: activeTelemetry,
+    isReplay: true,
+    fault: fixtureFault({ active: true, target: "ppg", fault_type: "modality_dropout", severity: 1 }),
+    pendingAction: null,
+  });
+  checkEqual("controls residual 2: active confirmed fault remains current", activeFault.faultActive, true);
+  checkEqual("controls residual 2: active confirmed replay permits fault application", activeFault.canApply, true);
+  checkEqual("controls residual 2: active confirmed fault permits clear", activeFault.canClear, true);
+  checkIncludes("controls residual 2: active confirmed fault label remains specific", activeFault.currentFaultLabel, "Simulated fault active — PPG");
+
+  for (const unavailableCase of unavailableCases) {
+    const replay = deriveReplayControlPresentation({
+      telemetry: unavailableCase.telemetry,
+      isReplay: true,
+      replaySessionState: "playing",
+      playbackSpeed: 10,
+      replayPositionSeconds: 99,
+      replayDurationSeconds: 120,
+      subjectId: "RETAINED_SUBJECT",
+      pendingAction: null,
+    });
+    checkEqual(`controls residual 2 (${unavailableCase.name}): replay is not authoritative`, replay.authoritativeCurrent, false);
+    check(`controls residual 2 (${unavailableCase.name}): unavailable messaging is explicit`, replay.unavailableMessage !== null && replay.playbackStateLabel.includes("Not currently confirmed"));
+    checkEqual(`controls residual 2 (${unavailableCase.name}): retained subject is absent from current presentation`, replay.activeSubjectId, null);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): retained speed is absent`, replay.playbackSpeed, null);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): retained position is absent`, replay.replayPositionSeconds, null);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): retained duration is absent`, replay.replayDurationSeconds, null);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): playback mutations are disabled`, replay.canControlPlayback, false);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): play is disabled`, replay.canPlay, false);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): source-changing actions are disabled`, replay.canChangeSource, false);
+
+    const fault = deriveFaultControlPresentation({
+      telemetry: unavailableCase.telemetry,
+      isReplay: true,
+      fault: fixtureFault({ active: true, target: "ppg", fault_type: "modality_dropout", severity: 1 }),
+      pendingAction: null,
+    });
+    checkEqual(`controls residual 2 (${unavailableCase.name}): stale fault is not current`, fault.faultActive, false);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): fault apply is disabled`, fault.canApply, false);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): fault clear is disabled`, fault.canClear, false);
+    checkIncludes(`controls residual 2 (${unavailableCase.name}): fault state is explicitly unconfirmed`, fault.currentFaultLabel, "not currently confirmed");
+    checkNotIncludes(`controls residual 2 (${unavailableCase.name}): no false no-fault assertion`, fault.currentFaultLabel, "No simulated fault is active");
+    checkNotIncludes(`controls residual 2 (${unavailableCase.name}): stale PPG fault detail is withheld`, fault.currentFaultLabel, "Simulated PPG");
+  }
+
+  const pendingReplay = deriveReplayControlPresentation({
+    telemetry: activeTelemetry,
+    isReplay: true,
+    replaySessionState: "paused",
+    playbackSpeed: 1,
+    replayPositionSeconds: 1,
+    replayDurationSeconds: 2,
+    subjectId: "S14",
+    pendingAction: "play",
+  });
+  checkEqual("controls residual 2: pending action disables otherwise-active playback mutations", pendingReplay.canControlPlayback, false);
+
+  const activeNoFault = deriveFaultControlPresentation({ telemetry: activeTelemetry, isReplay: true, fault: fixtureFault({ active: false }), pendingAction: null });
+  checkEqual("controls residual 2: no-fault assertion is allowed only while authoritative state is active", activeNoFault.currentFaultLabel, "No simulated fault is active.");
+}
+
+// ===========================================================================
+// Corrective package 01 — F-01 cross-route authoritative telemetry gate.
+// Structural checks complement (but do not replace) behavioral derivations.
+// ===========================================================================
+
+{
+  const liveComponents = [
+    "components/monitoring/MonitoringSourceStrip.tsx",
+    "components/monitoring/FinalSignalStack.tsx",
+    "components/monitoring/HrInferencePanel.tsx",
+    "components/monitoring/ScopeProvenanceFooter.tsx",
+  ];
+  for (const relativePath of liveComponents) {
+    const source = readFileSync(join(REPO_SRC_ROOT, relativePath), "utf8");
+    check(`live F-01: ${relativePath} consumes the shared operational view model`, source.includes("useOperationalViewModel"));
+    check(`live F-01: ${relativePath} has no direct confirmed-snapshot fallback`, !source.includes('from "@/lib/monitoring/useConfirmedSnapshot"'));
+  }
+  const sourceStrip = readFileSync(join(REPO_SRC_ROOT, "components/monitoring/MonitoringSourceStrip.tsx"), "utf8");
+  checkIncludes("live F-01: source strip renders authoritative replay-state label", sourceStrip, "view.replaySessionStateLabel");
+  checkIncludes("live F-01: source strip gates replay position on active telemetry", sourceStrip, 'view.telemetryAvailability === "active"');
+  checkIncludes("live F-01: source strip labels retained identity through semantic helper", sourceStrip, "deriveIdentityContextDisplay");
+  checkIncludes("live F-01: source strip labels retained source identity as configuration", sourceStrip, "Source context");
+
+  const hrPanel = readFileSync(join(REPO_SRC_ROOT, "components/monitoring/HrInferencePanel.tsx"), "utf8");
+  checkIncludes("live F-01: HR panel displays source-error/disconnect reason from authoritative gate", hrPanel, "telemetryAvailabilityLabel");
+  checkNotIncludes("live F-01: HR panel no longer derives availability from bare WebSocket connected state", hrPanel, "derivePredictionAvailability");
+
+  const provenanceFooter = readFileSync(join(REPO_SRC_ROOT, "components/monitoring/ScopeProvenanceFooter.tsx"), "utf8");
+  checkIncludes("live F-01: provenance source context says it is not current telemetry", provenanceFooter, "retained configuration context, not current telemetry");
+
+  const operationalModel = readFileSync(join(REPO_SRC_ROOT, "lib/monitoring/operationalViewModel.ts"), "utf8");
+  checkIncludes(
+    "live F-01: status fallback is allowed only after authoritative REST availability and without pending identity convergence",
+    operationalModel,
+    "&& sourceConvergenceKey === null",
+  );
+
+  const replayControlSource = readFileSync(join(REPO_SRC_ROOT, "components/monitoring/ReplaySessionControl.tsx"), "utf8");
+  const faultControlSource = readFileSync(join(REPO_SRC_ROOT, "components/monitoring/SimulatedFaultControl.tsx"), "utf8");
+  checkIncludes("controls residual 2: replay component is wired to tested controller derivation", replayControlSource, "deriveReplayControlPresentation");
+  checkIncludes("controls residual 2: fault component is wired to tested controller derivation", faultControlSource, "deriveFaultControlPresentation");
+
+  const sessionProviderSource = readFileSync(join(REPO_SRC_ROOT, "components/monitoring/MonitoringSessionContext.tsx"), "utf8");
+  checkIncludes("convergence residual 1: full-route REST owner watches mismatch convergence key", sessionProviderSource, "sourceConvergenceKey");
+  checkIncludes("convergence residual 1: full-route REST owner uses tested shared request coordinator", sessionProviderSource, "sourceStateRequestCoordinator");
+  checkIncludes("event ordering B: full-route owner uses adoptable physical request lifecycle", sessionProviderSource, "startOrAdoptRequest");
+  checkIncludes("event ordering B: full-route owner registers its active result callback", sessionProviderSource, "applyDataSourceStatus(result)");
+  checkIncludes("mutation ordering: full-route controls use shared mutation generations", sessionProviderSource, "startAuthoritativeMutation");
+
+  const liveFeedProviderSource = readFileSync(join(REPO_SRC_ROOT, "components/layout/LiveFeedProvider.tsx"), "utf8");
+  checkIncludes("cross-route convergence: legacy live-feed REST owner watches the shared pending key", liveFeedProviderSource, "sourceConvergenceKey");
+  checkIncludes("cross-route convergence: legacy live-feed REST owner uses tested shared request coordinator", liveFeedProviderSource, "sourceStateRequestCoordinator");
+  checkIncludes("event ordering B: legacy owner uses adoptable physical request lifecycle", liveFeedProviderSource, "startOrAdoptRequest");
+  checkIncludes("event ordering B: legacy owner registers its active store callback", liveFeedProviderSource, "setDataSourceStatus");
+  checkIncludes("mutation ordering: legacy provider binds mutations to its owner token", liveFeedProviderSource, "startAuthoritativeMutation");
+  checkNotIncludes("cross-route convergence: legacy owner no longer refetches from every observed identity change", liveFeedProviderSource, "observedSourceIdentityKey");
+
+  const dataSourceControlSource = readFileSync(join(REPO_SRC_ROOT, "components/demos/DataSourceControl.tsx"), "utf8");
+  checkIncludes("mutation ordering: DataSourceControl consumes scoped legacy mutation lifecycle", dataSourceControlSource, "useLegacyAuthoritativeMutation");
+  checkIncludes("mutation ordering: DataSourceControl writes only inside accepted mutation callback", dataSourceControlSource, "startAuthoritativeMutation(");
+  checkNotIncludes("mutation ordering: DataSourceControl no longer awaits an uncoordinated operation", dataSourceControlSource, "const result = await operation()");
+}
+
+// ===========================================================================
+// Corrective package 01 — F-02 missing confidence/HR semantics.
+// ===========================================================================
+
+{
+  const missingConfidence = deriveConfidenceDisplay(null);
+  const undefinedConfidence = deriveConfidenceDisplay(undefined);
+  const zeroConfidence = deriveConfidenceDisplay(0);
+  const presentConfidence = deriveConfidenceDisplay(82);
+  checkEqual("AI F-02: null confidence is unavailable", missingConfidence.kind, "unavailable");
+  checkEqual("AI F-02: undefined confidence is unavailable", undefinedConfidence.kind, "unavailable");
+  checkEqual("AI F-02: unavailable confidence uses offline tone", missingConfidence.level, "offline");
+  check("AI F-02: genuine numeric zero remains available", zeroConfidence.kind === "available" && zeroConfidence.value === 0);
+  check("AI F-02: present confidence retains numeric value and intended nominal level", presentConfidence.kind === "available" && presentConfidence.value === 82 && presentConfidence.level === "nominal");
+  checkEqual("AI F-02: missing synthetic HR uses offline tone", metricLevelForAvailability(null), "offline");
+  checkEqual("AI F-02: undefined synthetic HR uses offline tone", metricLevelForAvailability(undefined), "offline");
+  checkEqual("AI F-02: genuine zero HR remains a present numeric value", metricLevelForAvailability(0), "nominal");
+  checkEqual("AI F-02: present HR retains nominal behavior", metricLevelForAvailability(72), "nominal");
+
+  for (const [name, value] of [
+    ["null", null],
+    ["undefined", undefined],
+    ["NaN", Number.NaN],
+    ["positive infinity", Number.POSITIVE_INFINITY],
+    ["negative infinity", Number.NEGATIVE_INFINITY],
+  ] as const) {
+    checkEqual(`vitals residual 3: ${name} scalar is unavailable/offline`, metricLevelForAvailability(value), "offline");
+    checkEqual(`vitals residual 3: ${name} scalar is not a finite display value`, isFiniteMetricValue(value), false);
+  }
+  checkEqual("vitals residual 3: genuine finite zero scalar remains present", isFiniteMetricValue(0), true);
+  checkEqual("vitals residual 3: genuine finite zero scalar retains normal existing level", metricLevelForAvailability(0), "nominal");
+  checkEqual("vitals residual 3: valid finite scalar retains normal existing level", metricLevelForAvailability(18.5), "nominal");
+  checkEqual("vitals residual 3: complete finite blood-pressure pair is present", metricGroupLevelForAvailability([120, 80]), "nominal");
+  checkEqual("vitals residual 3: finite zero pair remains present rather than missing", metricGroupLevelForAvailability([0, 0]), "nominal");
+  checkEqual("vitals residual 3: null systolic makes combined blood pressure unavailable", metricGroupLevelForAvailability([null, 80]), "offline");
+  checkEqual("vitals residual 3: undefined diastolic makes combined blood pressure unavailable", metricGroupLevelForAvailability([120, undefined]), "offline");
+  checkEqual("vitals residual 3: non-finite systolic makes combined blood pressure unavailable", metricGroupLevelForAvailability([Number.NaN, 80]), "offline");
+  checkEqual("vitals residual 3: non-finite diastolic makes combined blood pressure unavailable", metricGroupLevelForAvailability([120, Number.POSITIVE_INFINITY]), "offline");
+  checkEqual("vitals residual 3: empty metric group is unavailable", metricGroupLevelForAvailability([]), "offline");
+
+  const confidencePanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/AIConfidencePanel.tsx"), "utf8");
+  checkNotIncludes("AI F-02: confidence panel never maps missing confidence to zero", confidencePanel, "overall_confidence ?? 0");
+  checkIncludes("AI F-02: confidence panel has explicit screen-reader unavailable text", confidencePanel, 'aria-label="Overall Confidence: Unavailable"');
+  check("AI F-02: gauge is conditional on an available numeric value", /overall\.kind === "available"[\s\S]*<RadialGauge/.test(confidencePanel));
+
+  const vitalsPanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/PrimaryVitalsPanel.tsx"), "utf8");
+  checkIncludes("AI F-02: primary vitals derives missing-value tone explicitly", vitalsPanel, "metricLevelForAvailability(heartRate)");
+  checkIncludes("AI F-02: recorded replay label remains distinct", vitalsPanel, "Recorded replay");
+  checkIncludes("AI F-02: inferred PPG+IMU label remains distinct", vitalsPanel, "PPG + IMU heart-rate estimate");
+  checkIncludes("AI F-02: unavailable label remains explicit", vitalsPanel, '"Unavailable"');
+  checkIncludes("AI F-02: synthetic panel label remains distinct", vitalsPanel, "Cardiovascular & respiratory");
+  checkIncludes("vitals residual 3: HRV tile receives explicit availability level", vitalsPanel, "level={metricLevelForAvailability(hrv)}");
+  checkIncludes("vitals residual 3: respiration tile receives explicit availability level", vitalsPanel, "level={metricLevelForAvailability(respiration)}");
+  checkIncludes("vitals residual 3: combined blood-pressure tile receives group availability level", vitalsPanel, "level={metricGroupLevelForAvailability([systolic, diastolic])}");
+}
+
+// ===========================================================================
+// Corrective package 01 — F-03 Mission Timeline Digital Twin truth boundary.
+// ===========================================================================
+
+{
+  const timelineSource = readFileSync(join(REPO_SRC_ROOT, "app/mission-timeline/page.tsx"), "utf8");
+  checkNotIncludes("timeline F-03: unsafe % Adapted label is absent", timelineSource, "% Adapted");
+  checkNotIncludes("timeline F-03: legacy overall_adaptation is never rendered", timelineSource, "overall_adaptation");
+  checkNotIncludes("timeline F-03: legacy narrative is never rendered", timelineSource, ".narrative");
+  checkNotIncludes("timeline F-03: no success/health badge is derived from a missing legacy field", timelineSource, "StatusBadge");
+  checkIncludes("timeline F-03: architecture-only boundary is persistent", timelineSource, "Architecture only");
+  checkIncludes("timeline F-03: untrained boundary is explicit", timelineSource, "untrained");
+  checkIncludes("timeline F-03: unvalidated boundary is explicit", timelineSource, "unvalidated");
+  checkIncludes("timeline F-03: not-personalized boundary is explicit", timelineSource, "not personalized");
+  checkIncludes("timeline F-03: milestones are explicitly conceptual rather than measured", timelineSource, "Conceptual marker — not a measured outcome");
+  checkIncludes("timeline F-03: valid legacy payload path suppresses quantitative fields", timelineSource, "quantitative fields are intentionally suppressed");
+  checkIncludes("timeline F-03: unavailable/error path infers no model state", timelineSource, "Conceptual scenario data unavailable; no model state is inferred.");
 }
 
 // ===========================================================================

@@ -5,7 +5,8 @@ import { ShieldCheck } from "lucide-react";
 import { LinearMeter } from "@/components/ui/LinearMeter";
 import { Panel } from "@/components/ui/Panel";
 import { RadialGauge } from "@/components/ui/RadialGauge";
-import { confidenceLevel, titleCase } from "@/lib/format";
+import { titleCase } from "@/lib/format";
+import { deriveConfidenceDisplay } from "@/lib/monitoring/insightDisplay";
 import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
 import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 
@@ -16,6 +17,7 @@ export function AIConfidencePanel() {
   const isReplay = useDatasetReplayMode();
   const { snapshot: latest, isWaitingForConfirmation } = useConfirmedSnapshot();
   const confidence = isReplay ? undefined : latest?.ai_confidence;
+  const overall = deriveConfidenceDisplay(confidence?.overall_confidence);
 
   const entries = Object.entries(confidence?.sensor_contribution ?? {}).sort((a, b) => b[1] - a[1]);
 
@@ -28,11 +30,22 @@ export function AIConfidencePanel() {
       ) : isWaitingForConfirmation ? (
         <p className="text-sm leading-relaxed text-slate-500">Waiting for a confirmed frame from the selected source.</p>
       ) : <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start sm:gap-6">
-        <RadialGauge
-          value={confidence?.overall_confidence ?? 0}
-          label="Overall Confidence"
-          level={confidenceLevel(confidence?.overall_confidence ?? 0)}
-        />
+        {overall.kind === "available" ? (
+          <RadialGauge
+            value={overall.value}
+            label="Overall Confidence"
+            level={overall.level}
+          />
+        ) : (
+          <div
+            role="status"
+            aria-label="Overall Confidence: Unavailable"
+            className="flex min-h-[132px] min-w-[132px] flex-col items-center justify-center gap-2 rounded-full border border-signal-offline/30 text-center"
+          >
+            <span className="text-sm font-semibold text-signal-offline">Unavailable</span>
+            <span className="max-w-[104px] text-[11px] text-slate-500">No confidence value reported</span>
+          </div>
+        )}
         <div className="flex w-full flex-1 flex-col gap-3">
           <p className="text-[11px] uppercase tracking-wider text-slate-500">Sensor Contribution</p>
           {entries.length === 0 ? (

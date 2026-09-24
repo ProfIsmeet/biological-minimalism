@@ -17,10 +17,10 @@
 // frame — see useConfirmedSnapshot.ts).
 //
 // INTENTIONAL EXCEPTION: components/layout/LiveFeedProvider.tsx is NOT in
-// the protected list below. It legitimately reads
-// `state.latest?.source.source_type` directly, but only to detect an
-// externally-changed source and trigger the authoritative REST re-poll — it
-// never renders that value. See its own doc comment. lib/useDataSourceMode.ts
+// the protected list below. It reads the store's non-display
+// `sourceConvergenceKey` only to plan a deduplicated authoritative REST
+// convergence request; it never renders telemetry. See its own doc comment.
+// lib/useDataSourceMode.ts
 // and lib/monitoring/useConfirmedSnapshot.ts are excluded for the same
 // reason: they are the infrastructure that *implements* the confirmed-read
 // boundary, not a consumer of it.

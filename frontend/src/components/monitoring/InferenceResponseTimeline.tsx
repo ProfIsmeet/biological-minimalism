@@ -12,9 +12,9 @@ export function InferenceResponseTimeline() {
         Inference response
       </h2>
       <p className="mt-2 text-xs leading-relaxed text-ink-muted">
-        Event history is not retained by the current frontend session. The source strip, HR inference panel, and fault
-        control above always reflect the current window; they do not reconstruct a timeline of past replay, fault, or
-        inference events.
+        Event history is not retained by the current frontend session. When authoritative source availability is active,
+        the source strip, HR inference panel, and fault control reflect the confirmed current window. Otherwise they
+        fail closed as unavailable; they do not reconstruct a timeline of past replay, fault, or inference events.
       </p>
     </section>
   );

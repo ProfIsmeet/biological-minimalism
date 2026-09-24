@@ -2,18 +2,49 @@
 
 import { useMissionStore } from "@/store/missionStore";
 import { snapshotMatchesConfirmedSource } from "@/lib/monitoring/sourceIdentity";
-import type { LiveMetricsSnapshot } from "@/lib/types";
+import type { DataSourceStatus, LiveMetricsSnapshot } from "@/lib/types";
 
 export interface ConfirmedSnapshotResult {
   /** `latest` when it matches the authoritative source; otherwise null. */
   snapshot: LiveMetricsSnapshot | null;
   /**
-   * True only when a snapshot exists AND authoritative status exists AND
-   * they disagree — i.e. a real cross-source race, not merely "no data
-   * yet". Consumers use this to show an explicit transient notice instead
-   * of silently falling back to their ordinary "unavailable" state.
+   * True when identity convergence is pending, or when a snapshot exists and
+   * disagrees with authoritative status. Consumers use this to show an
+   * explicit transient notice instead of silently falling back to their
+   * ordinary "unavailable" state.
    */
   isWaitingForConfirmation: boolean;
+}
+
+/**
+ * Pure form of the confirmed read boundary, shared by the React hook and the
+ * deterministic real-store regression harness. Pending identity convergence
+ * always wins over an otherwise matching old REST status.
+ */
+export function confirmedSnapshotForState(
+  latest: LiveMetricsSnapshot | null,
+  status: DataSourceStatus | null,
+  sourceConvergenceKey: string | null,
+): ConfirmedSnapshotResult {
+  if (sourceConvergenceKey !== null) {
+    return { snapshot: null, isWaitingForConfirmation: true };
+  }
+  const confirmed = snapshotMatchesConfirmedSource(latest, status);
+  return {
+    snapshot: confirmed ? latest : null,
+    isWaitingForConfirmation: latest !== null && status !== null && !confirmed,
+  };
+}
+
+/** Pure confirmed-history boundary used by the hook and behavioral tests. */
+export function confirmedHistoryForState(
+  history: LiveMetricsSnapshot[],
+  status: DataSourceStatus | null,
+  sourceConvergenceKey: string | null,
+): LiveMetricsSnapshot[] {
+  if (sourceConvergenceKey !== null) return [];
+  if (!status) return history;
+  return history.filter((snapshot) => snapshotMatchesConfirmedSource(snapshot, status));
 }
 
 /**
@@ -25,27 +56,20 @@ export interface ConfirmedSnapshotResult {
 export function useConfirmedSnapshot(): ConfirmedSnapshotResult {
   const latest = useMissionStore((state) => state.latest);
   const status = useMissionStore((state) => state.dataSourceStatus);
-  const confirmed = snapshotMatchesConfirmedSource(latest, status);
-  return {
-    snapshot: confirmed ? latest : null,
-    isWaitingForConfirmation: latest !== null && status !== null && !confirmed,
-  };
+  const sourceConvergenceKey = useMissionStore((state) => state.sourceConvergenceKey);
+  return confirmedSnapshotForState(latest, status, sourceConvergenceKey);
 }
 
 /**
  * Prompt-2B corrective §4.4 (additional discovered raw consumer) —
- * `missionStore.history` is built by the same unfiltered `ingest()` path as
- * `latest`, and while `setDataSourceStatus` already resets it on a
- * confirmed identity change, a single late cross-source frame can still
- * land in it during the same race window `useConfirmedSnapshot` closes for
- * `latest` (see TrendPanel.tsx, rendered on /ai-insights and
- * /mission-timeline). This filters the history array down to entries whose
- * own source identity matches the authoritative status, so a trend chart
- * can never plot a stray wrong-source data point as "current".
+ * Defense-in-depth for current-session history. The store already rejects
+ * cross-source frames, but this read boundary also returns no history while
+ * convergence is pending and filters every entry against authoritative REST
+ * status (see TrendPanel.tsx on /ai-insights and /mission-timeline).
  */
 export function useConfirmedHistory(): LiveMetricsSnapshot[] {
   const history = useMissionStore((state) => state.history);
   const status = useMissionStore((state) => state.dataSourceStatus);
-  if (!status) return history;
-  return history.filter((snapshot) => snapshotMatchesConfirmedSource(snapshot, status));
+  const sourceConvergenceKey = useMissionStore((state) => state.sourceConvergenceKey);
+  return confirmedHistoryForState(history, status, sourceConvergenceKey);
 }
