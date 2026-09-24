@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import { AppHeader } from "@/components/layout/AppHeader";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { MotionConfigProvider } from "@/components/layout/MotionConfigProvider";
 import { OperationalRuntime } from "@/components/layout/OperationalRuntime";
 import { Sidebar } from "@/components/layout/Sidebar";
 
@@ -45,26 +46,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="dark">
       <body className="flex min-h-dvh flex-col bg-canvas text-ink-primary md:flex-row">
         <script dangerouslySetInnerHTML={{ __html: REDUCE_MOTION_BOOT }} />
-        <a
-          href="#main-content"
-          className="sr-only rounded-md bg-surface-2 px-4 py-2 text-sm font-semibold text-ink-primary outline-2 outline-offset-2 outline-[#A1D2CC] focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:outline"
-        >
-          Skip to main content
-        </a>
-        <Sidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="sticky top-0 z-30">
-            <AppHeader />
-            <MobileNav />
-          </div>
-          <main
-            id="main-content"
-            tabIndex={-1}
-            className="min-w-0 flex-1 px-4 py-5 outline-none sm:px-6 sm:py-6"
+        <MotionConfigProvider>
+          <a
+            href="#main-content"
+            className="sr-only rounded-md bg-surface-2 px-4 py-2 text-sm font-semibold text-ink-primary outline-2 outline-offset-2 outline-[#A1D2CC] focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:outline"
           >
-            <OperationalRuntime>{children}</OperationalRuntime>
-          </main>
-        </div>
+            Skip to main content
+          </a>
+          <Sidebar />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="sticky top-0 z-30">
+              <AppHeader />
+              <MobileNav />
+            </div>
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="min-w-0 flex-1 px-4 py-5 outline-none sm:px-6 sm:py-6"
+            >
+              <OperationalRuntime>{children}</OperationalRuntime>
+            </main>
+          </div>
+        </MotionConfigProvider>
       </body>
     </html>
   );

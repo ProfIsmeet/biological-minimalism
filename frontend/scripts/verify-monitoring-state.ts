@@ -2710,8 +2710,19 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   // a source-inspection check that the reduced-motion gate exists and
   // forces `playing` false on match, not a full behavioral render test.
   // Live confirmation is via QA screenshot/interaction, not this script.
+  //
+  // Stage 2 A2 update: this component no longer runs its own OS-only
+  // `matchMedia("(prefers-reduced-motion: reduce)")` check — it now reads the
+  // shared `useReducedMotionPreference()` hook (lib/runtime/reduceMotion.ts),
+  // which combines that same OS query with the persisted `/settings` toggle,
+  // so this component also respects a user who only enabled the persisted
+  // setting. The OS-query string itself, plus the hook's OR-combination and
+  // live-update listeners, are asserted separately by
+  // scripts/verify-reduced-motion-unification.mjs (part of `verify:monitoring`).
+  // The guarantee this block existed for — reduced motion disables auto-
+  // rotation — is unchanged and still verified below.
   const conceptualTwinStageSource = readFileSync(join(REPO_SRC_ROOT, "components/visualization/human/ConceptualTwinStage.tsx"), "utf8");
-  check("conceptual twin stage: checks prefers-reduced-motion", conceptualTwinStageSource.includes('"(prefers-reduced-motion: reduce)"'));
+  check("conceptual twin stage: uses the shared reduced-motion source of truth", conceptualTwinStageSource.includes("useReducedMotionPreference()"));
   check("conceptual twin stage: reduced-motion forces playing to false", conceptualTwinStageSource.includes("setPlaying(false)"));
   check("conceptual twin stage: auto-rotation is gated on both playing and reducedMotion", conceptualTwinStageSource.includes("if (playing && !reducedMotion)"));
 

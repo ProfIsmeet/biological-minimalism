@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import { buildSensorAnchors } from "@/components/visualization/human/humanLayout";
 import { MODALITY_COLOR, type FinalModality } from "@/lib/architecture";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
+import { useReducedMotionPreference } from "@/lib/runtime/reduceMotion";
 import { useOperationalEventStore } from "@/store/operationalEventStore";
 
 const PhysiologyAvatar3D = dynamic(() => import("@/components/visualization/human/PhysiologyAvatar3D").then((m) => m.PhysiologyAvatar3D), {
@@ -16,18 +17,6 @@ const PhysiologyAvatar3D = dynamic(() => import("@/components/visualization/huma
 });
 
 const PRIORITY_MODALITIES: FinalModality[] = ["PPG", "IMU", "ECG"];
-
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(query.matches);
-    const listener = (event: MediaQueryListEvent) => setReduced(event.matches);
-    query.addEventListener("change", listener);
-    return () => query.removeEventListener("change", listener);
-  }, []);
-  return reduced;
-}
 
 /**
  * Integrated operational physiology surface for `/mission-overview` (master
@@ -40,7 +29,7 @@ function usePrefersReducedMotion(): boolean {
 export function OperationalPhysiologyStage({ selected: selectedProp, onSelectModality }: { selected?: FinalModality; onSelectModality?: (m: FinalModality) => void } = {}) {
   const view = useOperationalViewModel();
   const events = useOperationalEventStore((state) => state.events);
-  const reducedMotion = usePrefersReducedMotion();
+  const reducedMotion = useReducedMotionPreference();
   // Prompt 3B §16 — the selected modality may be lifted to a single shared
   // page-level state so the figure, pentagon, ribbon matrix and sensor detail
   // all highlight the same modality. When no controlled prop is supplied this

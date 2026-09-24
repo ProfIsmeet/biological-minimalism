@@ -7,6 +7,7 @@ import { Panel } from "@/components/ui/Panel";
 import { DataSourceControl } from "@/components/demos/DataSourceControl";
 import { api } from "@/lib/api";
 import {
+  REDUCE_MOTION_CHANGE_EVENT,
   REDUCE_MOTION_KEY,
   REDUCE_MOTION_OFF,
   REDUCE_MOTION_ON,
@@ -31,6 +32,12 @@ export default function SettingsPage() {
     setReduceMotion(next);
     document.documentElement.classList.toggle("reduce-motion", next);
     window.localStorage.setItem(REDUCE_MOTION_KEY, next ? REDUCE_MOTION_ON : REDUCE_MOTION_OFF);
+    // Stage 2 A2: the native `storage` event never fires in the tab that made
+    // the write, so this same-tab custom event is what lets every mounted
+    // `useReducedMotionPreference()` consumer (Framer Motion via
+    // MotionConfigProvider, WebGL rotation loops) react immediately instead
+    // of only after a reload.
+    window.dispatchEvent(new Event(REDUCE_MOTION_CHANGE_EVENT));
   }
 
   async function testConnection() {

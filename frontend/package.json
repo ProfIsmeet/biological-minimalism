@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "verify:monitoring": "node --experimental-strip-types --no-warnings scripts/run-verify-monitoring-state.mjs && node scripts/verify-monitoring-consumers.mjs && node scripts/verify-live-region-boundaries.mjs"
+    "verify:monitoring": "node --experimental-strip-types --no-warnings scripts/run-verify-monitoring-state.mjs && node scripts/verify-monitoring-consumers.mjs && node scripts/verify-live-region-boundaries.mjs && node scripts/verify-reduced-motion-unification.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

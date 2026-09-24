@@ -10,6 +10,7 @@ import { HolographicStageAtmosphere } from "@/components/visualization/human/Hol
 import { HumanScanRings } from "@/components/visualization/human/HumanScanRings";
 import { ORTHO_VIEW, computeOrthographicFit, orthoCameraPosition } from "@/components/visualization/human/humanLayout";
 import { H_FIGURE_CENTER_Y, H_FIGURE_HALF_WIDTH, H_FIGURE_TOTAL_HEIGHT } from "@/components/visualization/human/holographicGeometry";
+import { useReducedMotionPreference } from "@/lib/runtime/reduceMotion";
 
 const ROTATION_RADIANS_PER_SECOND = (Math.PI * 2) / 32;
 const REDUCED_MOTION_ANGLE = (Math.PI / 180) * 24;
@@ -78,24 +79,25 @@ function RotatingFigure({
 export function ConceptualTwinStage() {
   const angleRef = useRef(0);
   const [angleDeg, setAngleDeg] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  // Stage 2 A2: reads the shared persisted-setting-OR-OS source of truth
+  // instead of a local OS-only `matchMedia` check, so a user who only enabled
+  // the persisted `/settings` toggle (not the OS preference) also gets this
+  // WebGL rotation paused, and the effect below reacts live if the
+  // preference changes after mount (Settings toggled in another tab/route),
+  // not just once at first render.
+  const reducedMotion = useReducedMotionPreference();
   const [playing, setPlaying] = useState(true);
   const [canvasAspect, setCanvasAspect] = useState(1.4);
   const [compact, setCompact] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(query.matches);
-    if (query.matches) {
+    if (reducedMotion) {
       angleRef.current = REDUCED_MOTION_ANGLE;
       setAngleDeg((REDUCED_MOTION_ANGLE * 180) / Math.PI);
       setPlaying(false);
     }
-    const listener = (event: MediaQueryListEvent) => setReducedMotion(event.matches);
-    query.addEventListener("change", listener);
-    return () => query.removeEventListener("change", listener);
-  }, []);
+  }, [reducedMotion]);
 
   useEffect(() => {
     const el = containerRef.current;
