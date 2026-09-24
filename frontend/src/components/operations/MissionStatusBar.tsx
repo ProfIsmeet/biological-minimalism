@@ -99,8 +99,34 @@ export function MissionStatusBar() {
   if (frameAge) fields.push({ label: "Last confirmed frame", value: frameAge, tone: "muted" });
   fields.push({ label: "Session time", value: nowMs === null ? "—" : formatUtcClock(nowMs), tone: "muted" });
 
+  // A11y fix (Stage 2 A1): `role="status"` is an implicit `aria-live="polite"`
+  // region. Applying it to the WHOLE strip re-announces the entire field set
+  // every time ANY field's rendered text changes — including "Session time"
+  // and "Last confirmed frame", both of which tick every second via
+  // `useNowMs`. That means a screen reader user hears this whole block
+  // re-read once per second, forever, regardless of whether anything
+  // meaningful happened.
+  //
+  // Fix is structural, not time-based throttling: the visible strip below
+  // carries NO live-region role at all (so per-second re-renders are silent
+  // to assistive tech), and a separate, visually-hidden summary — built
+  // ONLY from the fields that represent real state transitions (session,
+  // source, connection, replay state, fault) — is the sole `aria-live`
+  // region. Because that summary's own text never includes the clock or
+  // frame-age values, it can only change (and therefore only be announced)
+  // when one of those five meaningful fields actually changes value.
+  const announceableFields = fields.filter((field) => field.label !== "Session time" && field.label !== "Last confirmed frame");
+  const liveSummary = announceableFields.map((field) => `${field.label}: ${field.value}`).join(". ");
+
   return (
-    <div role="status" className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 px-4 py-3">
+    <div className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 px-4 py-3">
+      <span className="sr-only" role="status" aria-live="polite">
+        {liveSummary}
+      </span>
+      {/* No role/aria-live here: a screen reader can still read this grid
+          on request (arrow-key/virtual-cursor navigation), it simply never
+          triggers an AUTOMATIC re-announcement on its own — that is the sole
+          job of the sr-only summary above. */}
       <div className="mission-status-fields">
         {fields.map((field) => (
           <div key={field.label} className="flex min-w-0 flex-col gap-0.5">

@@ -164,10 +164,20 @@ export function ConceptualTwinStage() {
         {reducedMotion ? <span className="text-[11px] text-ink-muted">Reduced motion — automatic rotation starts paused; manual controls remain active.</span> : null}
       </div>
 
+      {/* A11y fix (Stage 2 A1): the rotation angle updates on every animation
+          frame (`useFrame`, up to 60/s) while auto-rotating. It previously
+          lived inside this same `role="status"` element, so the whole
+          sentence — including the fixed scientific-boundary disclaimer —
+          was re-announced continuously. The disclaimer (which never changes
+          after mount) keeps the live region; the angle is static-per-render
+          text with no live role, readable on request but never a trigger
+          for automatic re-announcement. */}
       <p className="sr-only" role="status">
         Architecture-only, untrained, unvalidated holographic reference figure with an illustrative spatial scan field.
-        Current illustrative rotation approximately {((((angleDeg % 360) + 360) % 360)).toFixed(0)} degrees. This figure
-        reports no adaptation percentage, confidence value, or measured quantity.
+        This figure reports no adaptation percentage, confidence value, or measured quantity.
+      </p>
+      <p className="sr-only">
+        Current illustrative rotation approximately {((((angleDeg % 360) + 360) % 360)).toFixed(0)} degrees.
       </p>
     </div>
   );

@@ -77,8 +77,19 @@ export function MonitoringSourceStrip() {
           Waiting for a confirmed frame from the selected source.
         </p>
       ) : null}
+      {/* A11y fix (Stage 2 A1): "Replay position" updates on every telemetry
+          tick during active playback (multiple times per second). A
+          `role="status"` on this whole grid would re-announce all seven
+          fields at that rate. The sr-only summary below carries the live
+          region instead, built only from the fields that represent real
+          state transitions (everything except replay position) — its text
+          can only change, and therefore only be announced, when one of
+          those actually changes. The visible grid itself carries no live
+          role, so it stays readable on request without auto-announcing. */}
+      <span className="sr-only" role="status" aria-live="polite">
+        {fields.filter((field) => field.label !== "Replay position").map((field) => `${field.label}: ${field.value}`).join(". ")}
+      </span>
       <div
-        role="status"
         className={
           view.faultActive
             ? "grid grid-cols-2 gap-x-4 gap-y-3 rounded-[6px] border border-jury-fault/40 bg-surface-1 px-4 py-3 sm:grid-cols-3 lg:grid-cols-7"
