@@ -1,6 +1,6 @@
 # STATUS
 
-**Active milestone**: Milestone A (Stage 2 accessibility) — A1 and A2 complete, moving to A3 (mobile "More" dialog focus containment).
+**Active milestone**: Milestone A (Stage 2 accessibility) — A1, A2, A3 complete, moving to A4 (WebGL/Digital Twin failure fallback).
 
 **Completed work**:
 - Hard-stop gate verified: both required remotes present, deployment branch SHA matches exactly.
@@ -19,7 +19,17 @@
 
 **Current blockers**: none.
 
-**Exact next action**: commit the A2 changes (files listed below, staged explicitly), then start A3 — mobile "More" dialog focus containment (predictable initial focus, Tab/Shift+Tab trap, Escape dismissal, background interaction prevention, scroll lock, route-change-safe cleanup, focus restoration).
+**Exact next action**: commit the A3 changes (files listed below, staged explicitly), then start A4 — accessible, honest WebGL/Digital Twin failure fallback (unsupported WebGL, renderer init failure, context loss, render-time error, unavailable 3D implementation), via a proper error boundary, tested for all paths.
+
+**A3 summary (mobile "More" dialog focus containment)**:
+- Audit of the pre-existing `MobileNav.tsx` sheet found it had only Escape-to-close and a first-focusable-child focus-on-open — no Tab/Shift+Tab containment (focus could escape to the page behind the sheet), no scroll lock, and no background inert/aria-hidden (a screen reader's virtual cursor and Tab could still reach content behind the open sheet).
+- `DemoControlDrawer.tsx` already had a fully correct, previously-shipped implementation of exactly this (Prompt-4 §10 / Prompt-4A MEDIUM-1): portal to `document.body`, full Tab/Shift+Tab trap, Escape, scroll lock with restoration, background `inert`+`aria-hidden` with exact restoration, and focus restoration to the trigger. Per the master prompt's instruction to prefer an existing tested primitive over a new dependency, this was extracted verbatim (no behavior change) into a shared hook, `frontend/src/lib/runtime/useModalDialog.ts`.
+- Added one new capability to the shared hook beyond what either dialog had before: route-change-safe close (a `usePathname()` watcher that calls `onClose` if the route changes while still marked open — covers browser back/forward, which never goes through an in-dialog `Link`'s `onClick`).
+- `DemoControlDrawer.tsx` now calls `useModalDialog(...)` instead of carrying its own effects — verified behaviorally identical (same portal target, same panel/trigger/overlay refs).
+- `MobileNav.tsx`'s sheet is now portaled to `document.body` (required by the hook's background-inert step, which walks `document.body.children`) and calls the same shared hook — it now gets the Tab trap, scroll lock, and background inert it was missing, for free.
+- Updated the pre-existing Stage 1 "modal: ..." block of checks in `scripts/verify-monitoring-state.ts` (6 checks) to assert against the shared hook file instead of the now-refactored `DemoControlDrawer.tsx` inline code, and added one new check ("modal: drawer uses the shared useModalDialog() hook") — guarantees preserved and strengthened, not weakened; documented inline at the check site. Total check count increased from 932 to 933.
+- Added `frontend/scripts/verify-modal-dialog-primitives.mjs`, wired into `verify:monitoring`, asserting: the shared hook implements the Tab trap (both directions), Escape, scroll lock+restore, inert+aria-hidden+restore, trigger-focus-restore, and route-change-close; both `DemoControlDrawer.tsx` and `MobileNav.tsx` call the shared hook and portal to `document.body` with correct `role="dialog"`/`aria-modal="true"`; neither consumer reimplements its own inert/keydown logic.
+- Full gate re-verified: `verify:monitoring` 933/933 + all four structural checks PASSED, lint clean, `tsc --noEmit` clean, `next build` 14/14 pages, `git diff --check` clean.
 
 **A2 summary (reduced-motion unification)**:
 - Added `useReducedMotionPreference()` to `frontend/src/lib/runtime/reduceMotion.ts` — the single shared source of truth, OR-combining the persisted `/settings` localStorage toggle with the OS `prefers-reduced-motion` media query (see DECISIONS.md D3 for the precedence rule). SSR-safe (starts `false`, resolves post-mount); listens for OS change, cross-tab `storage`, and a new same-tab `REDUCE_MOTION_CHANGE_EVENT` so it propagates live without a reload.
@@ -31,7 +41,12 @@
 - Added `frontend/scripts/verify-reduced-motion-unification.mjs`, wired into `verify:monitoring`, asserting: the shared hook combines both sources and all three live-update listeners exist; Settings dispatches the same-tab event; `MotionConfigProvider` wraps `layout.tsx` and is driven by the hook; the two former OS-only offenders now use the hook and contain no local `matchMedia` call; all three `useFrame` loops still gate on `reducedMotion`.
 - Full gate re-verified after the change: `verify:monitoring` 932/932 + both new checks PASSED, lint clean, `tsc --noEmit` clean, `next build` 14/14 pages, `git diff --check` clean.
 
-**Files intentionally changed so far (cumulative, A1+A2)**:
+**Files intentionally changed so far (cumulative, A1+A2+A3)**:
+- `frontend/src/lib/runtime/useModalDialog.ts` (new — A3 shared focus/scroll/inert primitive)
+- `frontend/src/components/operations/DemoControlDrawer.tsx` (A3 — refactored to use shared hook, no behavior change)
+- `frontend/src/components/layout/MobileNav.tsx` (A3 — portaled + uses shared hook, gains Tab trap/scroll lock/inert it lacked)
+- `frontend/scripts/verify-modal-dialog-primitives.mjs` (new — A3 structural test)
+- `frontend/scripts/verify-monitoring-state.ts` (A3 — updated "modal: ..." checks to match new architecture, +1 new check, guarantees preserved)
 - `frontend/src/components/operations/MissionStatusBar.tsx` (A1 fix)
 - `frontend/src/components/monitoring/MonitoringSourceStrip.tsx` (A1 fix)
 - `frontend/src/components/visualization/human/ConceptualTwinStage.tsx` (A1 fix, A2 fix)

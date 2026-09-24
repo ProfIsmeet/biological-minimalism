@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { RotateCcw, SlidersHorizontal, X } from "lucide-react";
 
@@ -9,6 +9,7 @@ import { SimulatedFaultControl } from "@/components/monitoring/SimulatedFaultCon
 import { useMonitoringSession } from "@/components/monitoring/MonitoringSessionContext";
 import { PresenterPreflight } from "@/components/operations/PresenterPreflight";
 import { summariseDemoReset, type DemoResetResult } from "@/lib/monitoring/presenterOps";
+import { useModalDialog } from "@/lib/runtime/useModalDialog";
 import { useMissionUiStore } from "@/store/missionUiStore";
 import { useOperationalEventStore } from "@/store/operationalEventStore";
 
@@ -16,21 +17,18 @@ import { useOperationalEventStore } from "@/store/operationalEventStore";
  * Master prompt 3 §17 / Prompt-4 §10, §21, §22 / Prompt-4A MEDIUM-1, HIGH-2 —
  * demonstration controls in an accessible modal slide-over.
  *
- * MEDIUM-1 modal isolation: the overlay is rendered through a portal to
- * `document.body`, and every other direct child of `<body>` is made `inert`
- * and `aria-hidden` while the dialog is open (so background controls cannot be
- * focused programmatically or by browsing, and are dropped from the a11y tree)
- * and is restored to its exact prior state on close/unmount — so navigation or
- * unmount can never leave the page inert. Scroll is locked, Escape and backdrop
- * close, focus enters the dialog on open and returns to the trigger on close.
+ * Stage 2 A3: the modal isolation behavior (portal to `document.body`, full
+ * Tab/Shift+Tab containment, Escape, scroll lock, background `inert` +
+ * `aria-hidden` with exact restoration, focus restoration to the trigger,
+ * route-change-safe cleanup) now lives once in the shared
+ * `useModalDialog()` hook (lib/runtime/useModalDialog.ts) — reused verbatim
+ * here and by the mobile "More" sheet (MobileNav.tsx) instead of being
+ * reimplemented per dialog.
  *
  * HIGH-2 reset: `resetting` is cleared in `finally`, and the announcement is
  * derived from `summariseDemoReset`, which never claims success on an
  * unexpected failure.
  */
-
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function DemoControlDrawer() {
   const [open, setOpen] = useState(false);
@@ -45,95 +43,14 @@ export function DemoControlDrawer() {
   const [resetAnnouncement, setResetAnnouncement] = useState("");
   const [resetFailed, setResetFailed] = useState(false);
 
-  // Focus is restored to the trigger in the inert-cleanup effect below, AFTER
-  // the background `inert` is removed — focusing the trigger here would be a
-  // no-op because its ancestor is still inert at this instant.
+  // Focus is restored to the trigger by useModalDialog's inert-cleanup
+  // effect, AFTER the background `inert` is removed — focusing the trigger
+  // here would be a no-op because its ancestor is still inert at this instant.
   const close = useCallback(() => {
     setOpen(false);
   }, []);
 
-  // §10 — focus containment + Escape, attached while the dialog is open.
-  useEffect(() => {
-    if (!open) return;
-    function visibleFocusables(): HTMLElement[] {
-      const panel = panelRef.current;
-      if (!panel) return [];
-      return Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-        (element) => element.offsetParent !== null || element === document.activeElement,
-      );
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        close();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const focusables = visibleFocusables();
-      if (focusables.length === 0) {
-        event.preventDefault();
-        panelRef.current?.focus();
-        return;
-      }
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (!first || !last) return;
-      const active = document.activeElement as HTMLElement | null;
-      if (!panelRef.current?.contains(active)) {
-        event.preventDefault();
-        first.focus();
-      } else if (event.shiftKey && active === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-    document.addEventListener("keydown", onKeyDown);
-    (panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? panelRef.current)?.focus();
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, close]);
-
-  // §10 — lock document scrolling while open, restore exactly on close.
-  useEffect(() => {
-    if (!open) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [open]);
-
-  // MEDIUM-1 — make the rest of the document genuinely inert while open. Every
-  // direct child of <body> except the portaled overlay gets `inert` +
-  // `aria-hidden`, and its exact prior state is restored on cleanup (close,
-  // route change, or unmount).
-  useEffect(() => {
-    if (!open) return;
-    const overlay = overlayRef.current;
-    const trigger = triggerRef.current;
-    const restores: Array<() => void> = [];
-    for (const el of Array.from(document.body.children)) {
-      if (overlay && (el === overlay || overlay.contains(el))) continue;
-      const hadInert = el.hasAttribute("inert");
-      const prevAriaHidden = el.getAttribute("aria-hidden");
-      el.setAttribute("inert", "");
-      el.setAttribute("aria-hidden", "true");
-      restores.push(() => {
-        if (!hadInert) el.removeAttribute("inert");
-        if (prevAriaHidden === null) el.removeAttribute("aria-hidden");
-        else el.setAttribute("aria-hidden", prevAriaHidden);
-      });
-    }
-    return () => {
-      for (const restore of restores) restore();
-      // Restore focus to the trigger only after the background `inert` is
-      // cleared, so the (previously inert) trigger is focusable again. The
-      // trigger node is stable (never remounted between open/close), so the
-      // node captured at effect setup is the same one to refocus.
-      trigger?.focus();
-    };
-  }, [open]);
+  useModalDialog({ open, onClose: close, panelRef, triggerRef, overlayRef });
 
   // §22 / HIGH-2 — one-click demo reset. Backend steps run through the session
   // (which reports per-step failure); the non-backend parts (event log,

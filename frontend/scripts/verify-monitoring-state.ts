@@ -3334,17 +3334,30 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 // Prompt-4A MEDIUM-1 — modal background isolation is implemented via a portal
 // plus managed inert/aria-hidden with exact restoration (structural proof;
 // activation/cleanup is also verified live in the browser QA).
+//
+// Stage 2 A3 update: this logic no longer lives inline in
+// DemoControlDrawer.tsx — it was extracted into the shared
+// useModalDialog() hook (lib/runtime/useModalDialog.ts) so the mobile
+// "More" sheet (MobileNav.tsx) could reuse the same tested primitive
+// instead of reimplementing its own (weaker) version. DemoControlDrawer.tsx
+// now only needs to portal its overlay and call the shared hook; the
+// inert/aria-hidden/scroll-lock/focus-restoration behavior itself is
+// asserted against the hook file, and scripts/verify-modal-dialog-
+// primitives.mjs (part of `verify:monitoring`) separately proves both
+// consumers actually call it and portal to document.body.
 // ===========================================================================
 
 {
   const drawerSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/DemoControlDrawer.tsx"), "utf8");
+  const modalHookSource = readFileSync(join(REPO_SRC_ROOT, "lib/runtime/useModalDialog.ts"), "utf8");
   check("modal: overlay is portaled to document.body", drawerSource.includes("createPortal(overlay, document.body)"));
-  check("modal: background siblings are set inert while open", drawerSource.includes('setAttribute("inert"'));
-  check("modal: background siblings are set aria-hidden while open", drawerSource.includes('setAttribute("aria-hidden", "true")'));
-  check("modal: prior inert state is restored (no stale inert)", drawerSource.includes('removeAttribute("inert")'));
-  check("modal: prior aria-hidden state is restored", drawerSource.includes('removeAttribute("aria-hidden")'));
-  check("modal: focus restored to trigger after inert cleared", /for \(const restore of restores\) restore\(\);[\s\S]*trigger\?\.focus\(\)/.test(drawerSource));
-  check("modal: document scroll is locked while open", drawerSource.includes('document.body.style.overflow = "hidden"'));
+  check("modal: drawer uses the shared useModalDialog() hook", drawerSource.includes("useModalDialog({"));
+  check("modal: background siblings are set inert while open", modalHookSource.includes('setAttribute("inert"'));
+  check("modal: background siblings are set aria-hidden while open", modalHookSource.includes('setAttribute("aria-hidden", "true")'));
+  check("modal: prior inert state is restored (no stale inert)", modalHookSource.includes('removeAttribute("inert")'));
+  check("modal: prior aria-hidden state is restored", modalHookSource.includes('removeAttribute("aria-hidden")'));
+  check("modal: focus restored to trigger after inert cleared", /for \(const restore of restores\) restore\(\);[\s\S]*trigger\?\.focus\(\)/.test(modalHookSource));
+  check("modal: document scroll is locked while open", modalHookSource.includes('document.body.style.overflow = "hidden"'));
 }
 
 // ===========================================================================
