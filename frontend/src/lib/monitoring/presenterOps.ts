@@ -274,3 +274,171 @@ export function summariseDemoReset(result: DemoResetResult): string {
   }
   return "Demo reset failed unexpectedly. The current source and controls may be only partially reset.";
 }
+
+// ---------------------------------------------------------------------------
+// Stage 3B — canonical jury demo bootstrap
+// ---------------------------------------------------------------------------
+
+/**
+ * The single canonical jury-demo subject (master prompt Milestone C):
+ * recorded PPG-DaLiA replay, this specific participant, at the start,
+ * 1×, no active fault. This is real recorded human research data — never
+ * astronaut data, never presented as such (see MissionStatusBar's
+ * "Recorded human-data replay · Not live astronaut monitoring" copy, which
+ * this bootstrap's resulting state renders through unchanged).
+ */
+export const CANONICAL_JURY_SUBJECT_ID = "S14";
+
+export type CanonicalBootstrapPrerequisiteFailure = "dataset_not_configured" | "subject_list_unavailable" | "s14_not_present";
+
+export interface CanonicalBootstrapPrerequisiteInput {
+  datasetConfigured: boolean | null;
+  subjectListState: SubjectListState;
+  subjects: string[];
+}
+
+export interface CanonicalBootstrapPrerequisiteResult {
+  ok: boolean;
+  failure: CanonicalBootstrapPrerequisiteFailure | null;
+  detail: string;
+}
+
+/**
+ * Fail-closed prerequisite gate, checked BEFORE any mutating request is
+ * issued. Never infers readiness from the absence of an error — an
+ * unresolved ("loading") subject list is treated the same as an explicit
+ * failure, since neither proves S14 is actually available. HR-checkpoint
+ * readiness is deliberately not checked here: the current backend contract
+ * does not expose it (see `derivePresenterPreflight`'s honest "unknown" for
+ * the same fact) — this function never fabricates a check it cannot
+ * actually perform. A missing checkpoint would surface honestly as a
+ * failed `load-subject` step if it ever causes that request to fail.
+ */
+export function checkCanonicalBootstrapPrerequisites(input: CanonicalBootstrapPrerequisiteInput): CanonicalBootstrapPrerequisiteResult {
+  if (input.datasetConfigured !== true) {
+    return {
+      ok: false,
+      failure: "dataset_not_configured",
+      detail: "Recorded PPG-DaLiA replay dataset is not configured on this backend.",
+    };
+  }
+  if (input.subjectListState !== "available") {
+    return {
+      ok: false,
+      failure: "subject_list_unavailable",
+      detail:
+        input.subjectListState === "error"
+          ? "The replay subject list could not be loaded."
+          : input.subjectListState === "empty"
+            ? "The replay subject list is empty."
+            : "The replay subject list has not finished loading.",
+    };
+  }
+  if (!input.subjects.includes(CANONICAL_JURY_SUBJECT_ID)) {
+    return {
+      ok: false,
+      failure: "s14_not_present",
+      detail: `Subject ${CANONICAL_JURY_SUBJECT_ID} is not present in the current replay subject list.`,
+    };
+  }
+  return { ok: true, failure: null, detail: "Prerequisites satisfied." };
+}
+
+/** Ordered REST steps the bootstrap runs once prerequisites pass. */
+export type CanonicalBootstrapStep = "load-subject" | "reset" | "speed-1x" | "clear-fault";
+
+export const CANONICAL_BOOTSTRAP_STEPS: readonly CanonicalBootstrapStep[] = ["load-subject", "reset", "speed-1x", "clear-fault"];
+
+export interface CanonicalBootstrapRunners {
+  loadSubject: () => Promise<DataSourceStatus>;
+  reset: () => Promise<DataSourceStatus>;
+  setSpeed1x: () => Promise<DataSourceStatus>;
+  clearFault: () => Promise<DataSourceStatus>;
+}
+
+export interface CanonicalBootstrapRunResult {
+  ok: boolean;
+  ranSteps: CanonicalBootstrapStep[];
+  failedSteps: CanonicalBootstrapStep[];
+  lastStatus: DataSourceStatus | null;
+}
+
+/**
+ * Pure, framework-free sequencing of the four canonical-bootstrap REST steps
+ * (load S14 → reset to start → speed 1× → clear fault). Framework-free
+ * deliberately: this is the actual race-safety-critical logic (the part a
+ * behavioral test can and must exercise directly, per the master prompt's
+ * "structural guards may supplement but must not be the sole evidence where
+ * runtime behavior can be tested"), so it takes its REST calls and its
+ * "am I still the current authoritative mutation" check as injected
+ * dependencies rather than reaching into React state or the request
+ * coordinator itself.
+ *
+ * `isCurrent()` is checked before every step (not only once at the start),
+ * so a mutation superseded mid-sequence (a second bootstrap invocation, an
+ * owner transfer, or an unmount) stops issuing further requests and leaves
+ * `ranSteps`/`failedSteps` reflecting only what actually happened before
+ * supersession — the caller is expected to also gate use of the final
+ * result through the same coordinator (as `resetDemoState` does), so a
+ * stale sequence's tail can never overwrite a newer one's state.
+ *
+ * If `load-subject` itself fails, the remaining steps are skipped (they
+ * would fail anyway with no active replay to reset/speed/clear-fault on,
+ * and running them would only produce confusing extra failure entries for
+ * a single root cause).
+ */
+export async function runCanonicalJuryBootstrap(
+  runners: CanonicalBootstrapRunners,
+  isCurrent: () => boolean,
+): Promise<CanonicalBootstrapRunResult> {
+  const stepRunner: Record<CanonicalBootstrapStep, () => Promise<DataSourceStatus>> = {
+    "load-subject": runners.loadSubject,
+    reset: runners.reset,
+    "speed-1x": runners.setSpeed1x,
+    "clear-fault": runners.clearFault,
+  };
+  const ranSteps: CanonicalBootstrapStep[] = [];
+  const failedSteps: CanonicalBootstrapStep[] = [];
+  let lastStatus: DataSourceStatus | null = null;
+  for (const step of CANONICAL_BOOTSTRAP_STEPS) {
+    if (!isCurrent()) break;
+    try {
+      lastStatus = await stepRunner[step]();
+      ranSteps.push(step);
+    } catch {
+      failedSteps.push(step);
+      if (step === "load-subject") break;
+    }
+  }
+  return { ok: failedSteps.length === 0, ranSteps, failedSteps, lastStatus };
+}
+
+export interface CanonicalBootstrapResult {
+  ok: boolean;
+  blockedOnPrerequisite: CanonicalBootstrapPrerequisiteFailure | null;
+  /** The exact prerequisite-check detail string, present iff blockedOnPrerequisite is set. */
+  blockedDetail: string | null;
+  ranSteps: CanonicalBootstrapStep[];
+  failedSteps: CanonicalBootstrapStep[];
+}
+
+/**
+ * Accessible, honest summary (mirrors `summariseDemoReset`'s three-case
+ * shape). A prerequisite block is reported with the exact missing-
+ * prerequisite detail — never a generic "failed" — so the presenter knows
+ * precisely what to fix. Success is claimed ONLY when `ok === true` and
+ * `blockedOnPrerequisite` is null and no steps failed; nothing here ever
+ * calls a partial or blocked outcome "loaded".
+ */
+export function summariseCanonicalBootstrap(result: CanonicalBootstrapResult): string {
+  if (result.blockedOnPrerequisite) {
+    return `Canonical jury demo not loaded — ${result.blockedDetail ?? "a prerequisite is not satisfied"}`;
+  }
+  if (result.ok && result.failedSteps.length === 0) {
+    return `Canonical jury demo loaded — recorded replay, subject ${CANONICAL_JURY_SUBJECT_ID}, paused at start, 1×, no active fault.`;
+  }
+  if (result.failedSteps.length > 0) {
+    return `Canonical jury demo load partially failed — ${result.failedSteps.join(", ")} did not complete.`;
+  }
+  return "Canonical jury demo load failed unexpectedly. Source state may be only partially updated.";
+}

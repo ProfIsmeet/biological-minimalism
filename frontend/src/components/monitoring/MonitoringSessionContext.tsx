@@ -3,7 +3,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { api } from "@/lib/api";
-import { planDemoReset, type DemoResetResult, type DemoResetStep } from "@/lib/monitoring/presenterOps";
+import {
+  CANONICAL_JURY_SUBJECT_ID,
+  checkCanonicalBootstrapPrerequisites,
+  planDemoReset,
+  runCanonicalJuryBootstrap,
+  type CanonicalBootstrapResult,
+  type DemoResetResult,
+  type DemoResetStep,
+} from "@/lib/monitoring/presenterOps";
 import {
   classifySourceConvergenceStatus,
   sourceStateRequestCoordinator,
@@ -74,6 +82,18 @@ interface MonitoringSessionValue {
    * synthetic and never loads a subject.
    */
   resetDemoState: () => Promise<DemoResetResult>;
+  /**
+   * Stage 3B — the explicit "Load Canonical Jury Demo" bootstrap: switches to
+   * recorded PPG-DaLiA replay, subject S14 specifically, paused at the start,
+   * 1×, no active fault. Fails closed with the exact missing prerequisite
+   * (dataset not configured / subject list unavailable / S14 absent) BEFORE
+   * issuing any request — never silently falls back to synthetic. Idempotent
+   * and race-safe: reuses the same authoritative-mutation ticket lifecycle as
+   * `resetDemoState`, so a superseding call (a second invocation, a route
+   * change, an owner transfer, or unmount) makes an in-flight sequence stop
+   * issuing further requests and never overwrites newer state.
+   */
+  loadCanonicalJuryDemo: () => Promise<CanonicalBootstrapResult>;
 }
 
 const MonitoringSessionCtx = createContext<MonitoringSessionValue | null>(null);
@@ -275,6 +295,53 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
     return { ok, ranSteps, failedSteps };
   }, [status, applyDataSourceStatus]);
 
+  // Stage 3B — canonical jury demo bootstrap. The prerequisite gate runs
+  // BEFORE any mutation ticket is taken, so a missing prerequisite never
+  // touches the coordinator's generation counter at all (a genuinely
+  // no-op failure, safe to call repeatedly). Once prerequisites pass, the
+  // four-step sequence itself is delegated to the pure, independently
+  // tested `runCanonicalJuryBootstrap` — this function's only job is
+  // wiring that sequencer to the real `api` calls and the coordinator's
+  // authoritative-mutation ticket, exactly mirroring `resetDemoState`
+  // above.
+  const loadCanonicalJuryDemo = useCallback(async (): Promise<CanonicalBootstrapResult> => {
+    const prerequisite = checkCanonicalBootstrapPrerequisites({ datasetConfigured, subjectListState, subjects });
+    if (!prerequisite.ok) {
+      return { ok: false, blockedOnPrerequisite: prerequisite.failure, blockedDetail: prerequisite.detail, ranSteps: [], failedSteps: [] };
+    }
+    setPending("canonical-bootstrap");
+    setRequestError(null);
+    const mutationTicket = sourceStateRequestCoordinator.beginAuthoritativeMutation(requestOwnerRef.current);
+    if (!mutationTicket) {
+      setPending(null);
+      return { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
+    }
+    let sequenceResult: Awaited<ReturnType<typeof runCanonicalJuryBootstrap>>;
+    try {
+      sequenceResult = await runCanonicalJuryBootstrap(
+        {
+          loadSubject: () => api.loadReplaySubject(CANONICAL_JURY_SUBJECT_ID),
+          reset: api.resetReplay,
+          setSpeed1x: () => api.setReplaySpeed(1),
+          clearFault: api.clearReplayFault,
+        },
+        () => sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket),
+      );
+      if (sequenceResult.lastStatus) {
+        sourceStateRequestCoordinator.acceptAuthoritativeMutation(mutationTicket, sequenceResult.lastStatus, applyDataSourceStatus);
+      }
+    } finally {
+      if (sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) {
+        setPending(null);
+      }
+    }
+    const { ok, ranSteps, failedSteps } = sequenceResult;
+    if (!ok && sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) {
+      setRequestError(`Canonical jury demo load incomplete — ${failedSteps.join(", ")} did not complete.`);
+    }
+    return { ok, blockedOnPrerequisite: null, blockedDetail: null, ranSteps, failedSteps };
+  }, [datasetConfigured, subjectListState, subjects, applyDataSourceStatus]);
+
   const value = useMemo<MonitoringSessionValue>(
     () => ({
       status,
@@ -299,8 +366,23 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
       configureFault: (config) => run("fault-enable", () => api.configureReplayFault(config)),
       clearFault: () => run("fault-disable", api.clearReplayFault),
       resetDemoState,
+      loadCanonicalJuryDemo,
     }),
-    [status, datasetConfigured, sourceStateStatus, sourceStateError, subjects, subjectListState, subjectListError, selectedSubjectId, pending, requestError, run, resetDemoState],
+    [
+      status,
+      datasetConfigured,
+      sourceStateStatus,
+      sourceStateError,
+      subjects,
+      subjectListState,
+      subjectListError,
+      selectedSubjectId,
+      pending,
+      requestError,
+      run,
+      resetDemoState,
+      loadCanonicalJuryDemo,
+    ],
   );
 
   return <MonitoringSessionCtx.Provider value={value}>{children}</MonitoringSessionCtx.Provider>;

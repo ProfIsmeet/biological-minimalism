@@ -91,7 +91,12 @@ import {
   derivePresenterPreflight,
   planDemoReset,
   summariseDemoReset,
+  CANONICAL_JURY_SUBJECT_ID,
+  checkCanonicalBootstrapPrerequisites,
+  runCanonicalJuryBootstrap,
+  summariseCanonicalBootstrap,
   type DemoResetResult,
+  type CanonicalBootstrapResult,
 } from "../src/lib/monitoring/presenterOps";
 import {
   FINAL_ARCHITECTURE_ID,
@@ -3230,6 +3235,246 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   const partial: DemoResetResult = { ok: false, ranSteps: ["reset"], failedSteps: ["clear-fault"] };
   checkIncludes("reset summary: partial failure is reported honestly, not as success", summariseDemoReset(partial), "partially failed");
   checkIncludes("reset summary: partial failure names the failed step", summariseDemoReset(partial), "clear-fault");
+}
+
+// ===========================================================================
+// Stage 3B — canonical jury demo bootstrap: prerequisite gate, step
+// sequencing, race safety, and honest summarisation. The prerequisite gate
+// and the summary formatter are pure and checked with direct function calls
+// (not string matching). The sequencing/race-safety logic in
+// `runCanonicalJuryBootstrap` is genuinely behaviorally testable without a
+// DOM (it depends only on injected async runners and an `isCurrent()`
+// check), so it is exercised with real promise-ordering control via a local
+// `deferred()` helper, matching this file's own established convention for
+// testing `SourceStateRequestCoordinator`'s race behavior.
+// ===========================================================================
+
+{
+  function deferred<T>() {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: unknown) => void;
+    const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+      resolve = resolvePromise;
+      reject = rejectPromise;
+    });
+    return { promise, resolve, reject };
+  }
+
+  function fixtureStatus(datasetName: string): DataSourceStatus {
+    return fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: CANONICAL_JURY_SUBJECT_ID, dataset_name: datasetName });
+  }
+
+  // --- Scenario: arbitrary initial source / prerequisite gate -------------
+
+  checkEqual(
+    "canonical bootstrap prereq: dataset not configured is blocked",
+    checkCanonicalBootstrapPrerequisites({ datasetConfigured: false, subjectListState: "available", subjects: ["S14"] }).failure,
+    "dataset_not_configured",
+  );
+  checkEqual(
+    "canonical bootstrap prereq: dataset-configured unknown (null) is blocked, never inferred ready",
+    checkCanonicalBootstrapPrerequisites({ datasetConfigured: null, subjectListState: "available", subjects: ["S14"] }).failure,
+    "dataset_not_configured",
+  );
+  checkEqual(
+    "canonical bootstrap prereq: subject list still loading is blocked (missing checkpoint/dataset scenario: never inferred ready from absence of error)",
+    checkCanonicalBootstrapPrerequisites({ datasetConfigured: true, subjectListState: "loading", subjects: [] }).failure,
+    "subject_list_unavailable",
+  );
+  checkEqual(
+    "canonical bootstrap prereq: subject list error is blocked",
+    checkCanonicalBootstrapPrerequisites({ datasetConfigured: true, subjectListState: "error", subjects: [] }).failure,
+    "subject_list_unavailable",
+  );
+  checkEqual(
+    "canonical bootstrap prereq: subject list empty is blocked (missing S14 dataset scenario)",
+    checkCanonicalBootstrapPrerequisites({ datasetConfigured: true, subjectListState: "empty", subjects: [] }).failure,
+    "subject_list_unavailable",
+  );
+  checkEqual(
+    "canonical bootstrap prereq: S14 absent from an otherwise-available subject list is blocked",
+    checkCanonicalBootstrapPrerequisites({ datasetConfigured: true, subjectListState: "available", subjects: ["S3", "S8"] }).failure,
+    "s14_not_present",
+  );
+  const readyPrereq = checkCanonicalBootstrapPrerequisites({ datasetConfigured: true, subjectListState: "available", subjects: ["S3", "S14"] });
+  checkEqual("canonical bootstrap prereq: dataset configured + S14 present is ready regardless of prior arbitrary source", readyPrereq.ok, true);
+  checkEqual("canonical bootstrap prereq: ready result carries no failure code", readyPrereq.failure, null);
+
+  // --- Scenario: full success (two consecutive successful runs) -----------
+
+  async function runSuccess(datasetName: string) {
+    return runCanonicalJuryBootstrap(
+      {
+        loadSubject: async () => fixtureStatus(datasetName),
+        reset: async () => fixtureStatus(datasetName),
+        setSpeed1x: async () => fixtureStatus(datasetName),
+        clearFault: async () => fixtureStatus(datasetName),
+      },
+      () => true,
+    );
+  }
+  const firstRun = await runSuccess("PPG-DaLiA");
+  checkEqual("canonical bootstrap: first successful run completes all 4 steps in order", firstRun.ranSteps.join(","), "load-subject,reset,speed-1x,clear-fault");
+  checkEqual("canonical bootstrap: first successful run reports ok", firstRun.ok, true);
+  const secondRun = await runSuccess("PPG-DaLiA");
+  checkEqual("canonical bootstrap: two consecutive successful runs are both fully successful (idempotent)", secondRun.ok, true);
+  checkEqual("canonical bootstrap: two consecutive successful runs both complete all 4 steps", secondRun.ranSteps.length, 4);
+
+  // --- Scenario: failure at each step --------------------------------------
+
+  async function runWithFailureAt(failStep: "load-subject" | "reset" | "speed-1x" | "clear-fault") {
+    const runner = (step: string) => async () => {
+      if (step === failStep) throw new Error(`${step} failed`);
+      return fixtureStatus("PPG-DaLiA");
+    };
+    return runCanonicalJuryBootstrap(
+      {
+        loadSubject: runner("load-subject"),
+        reset: runner("reset"),
+        setSpeed1x: runner("speed-1x"),
+        clearFault: runner("clear-fault"),
+      },
+      () => true,
+    );
+  }
+  const loadFailure = await runWithFailureAt("load-subject");
+  checkEqual("canonical bootstrap: load-subject failure aborts remaining steps (nothing else can be trusted)", loadFailure.ranSteps.length, 0);
+  checkEqual("canonical bootstrap: load-subject failure is recorded", loadFailure.failedSteps.join(","), "load-subject");
+  checkEqual("canonical bootstrap: load-subject failure is not ok", loadFailure.ok, false);
+
+  const resetFailure = await runWithFailureAt("reset");
+  checkEqual("canonical bootstrap: reset-step failure still records the completed load-subject step", resetFailure.ranSteps.includes("load-subject"), true);
+  checkEqual("canonical bootstrap: reset-step failure still attempts speed-1x and clear-fault after it", resetFailure.ranSteps.includes("speed-1x") && resetFailure.ranSteps.includes("clear-fault"), true);
+  checkEqual("canonical bootstrap: reset-step failure is recorded and not silently dropped", resetFailure.failedSteps.join(","), "reset");
+
+  const speedFailure = await runWithFailureAt("speed-1x");
+  checkEqual("canonical bootstrap: speed-1x failure is recorded", speedFailure.failedSteps.join(","), "speed-1x");
+  checkEqual("canonical bootstrap: speed-1x failure still runs clear-fault after it", speedFailure.ranSteps.includes("clear-fault"), true);
+
+  const faultFailure = await runWithFailureAt("clear-fault");
+  checkEqual("canonical bootstrap: clear-fault failure is recorded as the sole failure", faultFailure.failedSteps.join(","), "clear-fault");
+  checkEqual("canonical bootstrap: clear-fault failure still ran all 3 prior steps", faultFailure.ranSteps.length, 3);
+
+  // --- Scenario: retry after failure ---------------------------------------
+
+  let loadAttempts = 0;
+  const retrySequence = runCanonicalJuryBootstrap(
+    {
+      loadSubject: async () => {
+        loadAttempts += 1;
+        if (loadAttempts === 1) throw new Error("transient failure");
+        return fixtureStatus("PPG-DaLiA");
+      },
+      reset: async () => fixtureStatus("PPG-DaLiA"),
+      setSpeed1x: async () => fixtureStatus("PPG-DaLiA"),
+      clearFault: async () => fixtureStatus("PPG-DaLiA"),
+    },
+    () => true,
+  );
+  const firstAttempt = await retrySequence;
+  checkEqual("canonical bootstrap retry: first attempt fails at load-subject", firstAttempt.ok, false);
+  const retryAttempt = await runSuccess("PPG-DaLiA");
+  checkEqual("canonical bootstrap retry: explicit retry after failure succeeds fully", retryAttempt.ok, true);
+
+  // --- Scenario: race safety — superseded mid-sequence (owner transfer /
+  // unmounted control / a second concurrent invocation all reduce to the
+  // same "isCurrent() becomes false mid-loop" shape) --------------------
+
+  const stepOrder: string[] = [];
+  let stillCurrent = true;
+  const supersededRun = runCanonicalJuryBootstrap(
+    {
+      loadSubject: async () => {
+        stepOrder.push("load-subject");
+        return fixtureStatus("PPG-DaLiA");
+      },
+      reset: async () => {
+        stepOrder.push("reset");
+        // Simulate an owner transfer / unmount / second invocation
+        // superseding this sequence right after the first step resolves,
+        // before the second step is even attempted.
+        stillCurrent = false;
+        return fixtureStatus("PPG-DaLiA");
+      },
+      setSpeed1x: async () => {
+        stepOrder.push("speed-1x");
+        return fixtureStatus("PPG-DaLiA");
+      },
+      clearFault: async () => {
+        stepOrder.push("clear-fault");
+        return fixtureStatus("PPG-DaLiA");
+      },
+    },
+    () => stillCurrent,
+  );
+  const supersededResult = await supersededRun;
+  checkEqual("canonical bootstrap race safety: superseded sequence stops issuing requests immediately", stepOrder.join(","), "load-subject,reset");
+  checkEqual("canonical bootstrap race safety: superseded sequence never reaches speed-1x/clear-fault", stepOrder.includes("speed-1x") || stepOrder.includes("clear-fault"), false);
+  checkEqual("canonical bootstrap race safety: superseded sequence records only what actually ran", supersededResult.ranSteps.join(","), "load-subject,reset");
+
+  // Two genuinely concurrent invocations sharing one `isCurrent` flag that a
+  // second call flips false for the first — proves a stale in-flight
+  // sequence's tail can never keep issuing requests after a newer
+  // invocation starts (the coordinator itself additionally guarantees the
+  // stale sequence's final status can never be *applied*; that guarantee is
+  // covered by SourceStateRequestCoordinator's own extensive tests above,
+  // since `loadCanonicalJuryDemo` gates its final `acceptAuthoritativeMutation`
+  // call through the exact same ticket mechanism `resetDemoState` uses).
+  const concurrentDeferred = deferred<DataSourceStatus>();
+  let firstStillCurrent = true;
+  const concurrentFirstOrder: string[] = [];
+  const firstInvocation = runCanonicalJuryBootstrap(
+    {
+      loadSubject: async () => {
+        concurrentFirstOrder.push("load-subject");
+        return concurrentDeferred.promise;
+      },
+      reset: async () => {
+        concurrentFirstOrder.push("reset");
+        return fixtureStatus("PPG-DaLiA");
+      },
+      setSpeed1x: async () => {
+        concurrentFirstOrder.push("speed-1x");
+        return fixtureStatus("PPG-DaLiA");
+      },
+      clearFault: async () => {
+        concurrentFirstOrder.push("clear-fault");
+        return fixtureStatus("PPG-DaLiA");
+      },
+    },
+    () => firstStillCurrent,
+  );
+  // Second invocation "wins" (as a real second beginAuthoritativeMutation
+  // call would), superseding the first before its load-subject resolves.
+  firstStillCurrent = false;
+  concurrentDeferred.resolve(fixtureStatus("PPG-DaLiA"));
+  const firstInvocationResult = await firstInvocation;
+  checkEqual("canonical bootstrap race safety: a superseded concurrent invocation never proceeds past its in-flight step", concurrentFirstOrder.join(","), "load-subject");
+  checkEqual("canonical bootstrap race safety: superseded concurrent invocation's ranSteps reflects only the one step that had already started", firstInvocationResult.ranSteps.join(","), "load-subject");
+
+  // --- Scenario: correct accessible announcements (no unsupported EEG/EOG
+  // creation is architectural — runCanonicalJuryBootstrap only ever calls the
+  // 4 replay/fault runners it is given, never touches modality data) -------
+
+  const blockedResult: CanonicalBootstrapResult = { ok: false, blockedOnPrerequisite: "s14_not_present", blockedDetail: "Subject S14 is not present in the current replay subject list.", ranSteps: [], failedSteps: [] };
+  const blockedSummary = summariseCanonicalBootstrap(blockedResult);
+  checkIncludes("canonical bootstrap summary: prerequisite block names the exact missing prerequisite", blockedSummary, "S14 is not present");
+  checkIncludes("canonical bootstrap summary: prerequisite block explicitly says not loaded", blockedSummary, "not loaded");
+  checkEqual("canonical bootstrap summary: prerequisite block never claims success", /demo loaded —/.test(blockedSummary), false);
+
+  const successResult: CanonicalBootstrapResult = { ok: true, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset", "speed-1x", "clear-fault"], failedSteps: [] };
+  const successSummary = summariseCanonicalBootstrap(successResult);
+  checkIncludes("canonical bootstrap summary: full success names the canonical subject", successSummary, CANONICAL_JURY_SUBJECT_ID);
+  checkIncludes("canonical bootstrap summary: full success mentions 1x speed", successSummary, "1×");
+
+  const partialResult: CanonicalBootstrapResult = { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset"], failedSteps: ["speed-1x"] };
+  const partialSummary = summariseCanonicalBootstrap(partialResult);
+  checkIncludes("canonical bootstrap summary: partial failure is reported honestly, not as success", partialSummary, "partially failed");
+  checkIncludes("canonical bootstrap summary: partial failure names the failed step", partialSummary, "speed-1x");
+
+  const unexpectedResult: CanonicalBootstrapResult = { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
+  const unexpectedSummary = summariseCanonicalBootstrap(unexpectedResult);
+  checkEqual("canonical bootstrap summary: unexpected failure (no named step) never says loaded/complete", /loaded —|complete/.test(unexpectedSummary), false);
 }
 
 // ===========================================================================

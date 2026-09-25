@@ -1,6 +1,6 @@
 # STATUS
 
-**Active milestone**: Stage 2 (Milestone A, A1-A5) is `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW` — accepted by the coordinator as implementation-complete, but NOT yet independently accepted as final COMPLETE until the behavioral-review debt below is closed. Milestone B (Stage 3A deployment hardening) is now complete. Next up: Milestone C (Stage 3B canonical jury bootstrap).
+**Active milestone**: Stage 2 (Milestone A, A1-A5) is `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW`. Milestone B (Stage 3A) and Milestone C (Stage 3B canonical jury bootstrap) are now both complete. Next up: Milestone D (release/jury evidence package), then the two-pass adversarial review and final report.
 
 ## Behavioral-review debt (must close before final Stage 2-3 COMPLETE verdict)
 
@@ -32,7 +32,7 @@ This debt block must stay in STATUS.md, get closed with real evidence (or explic
 
 **Current blockers**: none.
 
-**Exact next action**: commit the Milestone B changes (files listed below, staged explicitly) as the Stage 3A checkpoint commit, then move to Milestone C (Stage 3B) — implement the explicit "Load Canonical Jury Demo" bootstrap action and its 15-scenario test matrix.
+**Exact next action**: commit the Milestone C changes (files listed below, staged explicitly) as the Stage 3B checkpoint commit, then move to Milestone D — assemble the release/jury evidence package (runbook already exists from Milestone B; add known-limitations doc, manual acceptance checklist, and the final Stage 2-3 report), then the two-pass adversarial review.
 
 ## Milestone B (Stage 3A deployment hardening) — complete
 
@@ -112,5 +112,24 @@ This debt block must stay in STATUS.md, get closed with real evidence (or explic
 - `frontend/scripts/verify-reduced-motion-unification.mjs` (new — A2 structural test)
 - `frontend/package.json` (wired both new scripts into `verify:monitoring`)
 - `docs/ismet-stage2-3/STATUS.md`, `docs/ismet-stage2-3/DECISIONS.md` (this update)
+
+## Milestone C (Stage 3B canonical jury demo bootstrap) — complete
+
+- Added an explicit, separate "Load Canonical Jury Demo" action (`DemoControlDrawer.tsx`) — never overloads/renames the existing "Reset demo state" action, which deliberately preserves the current source/subject; this new action explicitly switches to recorded PPG-DaLiA replay, subject S14, paused at the start, 1×, no active fault.
+- Pure, independently-tested logic added to `lib/monitoring/presenterOps.ts`: `checkCanonicalBootstrapPrerequisites` (fail-closed gate — checked BEFORE any request is issued; blocks on dataset not configured, subject list not `available` (loading/empty/error all block, never inferred ready), or S14 absent from the list), `runCanonicalJuryBootstrap` (the actual 4-step sequencer — `load-subject → reset → speed-1x → clear-fault` — deliberately framework-free so its race-safety logic is directly behaviorally testable), `summariseCanonicalBootstrap` (3-case honest announcement, mirroring `summariseDemoReset`'s shape).
+- Wired into `MonitoringSessionContext.tsx` as `loadCanonicalJuryDemo()`, reusing the exact same `sourceStateRequestCoordinator` authoritative-mutation ticket lifecycle `resetDemoState` already uses (`beginAuthoritativeMutation` / `isAuthoritativeMutationCurrent` / `acceptAuthoritativeMutation`) — this is what makes it race-safe, idempotent, safe to call twice, and incapable of letting a stale/superseded sequence's tail overwrite newer state, for free, from generic guarantees this coordinator already had extensively tested before this milestone.
+- Confirmed by reading `backend/app/engine/data_sources.py`: `load_subject()` already resets position to 0, speed to 1.0, and state to PAUSED; `DataSourceManager.load_replay()`/`reset_replay()` already clear any active fault and reset inference/history. The bootstrap's explicit reset/speed-1x/clear-fault steps are therefore a defensive, transparent belt-and-suspenders confirmation of an already-guaranteed backend state, not strictly required by the backend contract alone — kept because relying on an unstated backend implementation detail alone would be fragile.
+- **Known, honestly-reported gap**: HR-checkpoint readiness is not exposed by the current backend API contract (the same fact `derivePresenterPreflight`'s "HR model / checkpoint readiness" item already reports as `unknown`, never fabricated as ready) — the prerequisite gate therefore cannot independently verify checkpoint availability before attempting the load. A missing checkpoint would surface honestly as a failed `load-subject` step if it ever causes that backend call to fail; this is documented inline at the prerequisite-check function.
+- Test coverage added to `scripts/verify-monitoring-state.ts` (37 new checks, 933→970), covering as many of the master prompt's 15 required scenarios as this environment allows real behavioral testing for: prerequisite gate for dataset-not-configured / subject-list-loading / subject-list-error / subject-list-empty (covers "missing S14 dataset") / S14-absent / ready; two consecutive fully successful runs (idempotency); failure at each of the 4 individual steps (load-subject failure aborts the rest; reset/speed-1x/clear-fault failures are recorded but do not block later independent steps); retry-after-failure; race safety via real promise-ordering control (`deferred()`, matching this file's own established coordinator-testing convention) for both "superseded mid-sequence" (owns owner-transfer/unmount/second-invocation, which all reduce to the same "isCurrent() becomes false mid-loop" shape) and "two genuinely concurrent invocations"; the 3-case honest-summary formatter (prerequisite-block names the exact missing prerequisite and never claims success; full success names S14 and 1×; partial failure names the failed step; unexpected failure never says "loaded"/"complete").
+- **Not independently re-tested here** (relies on guarantees proven elsewhere, documented inline in the new test block): "stale response after bootstrap" — the same `acceptAuthoritativeMutation`/ticket mechanism `resetDemoState` uses is already extensively tested generically in this same file (e.g. "mutation ordering: mutation resolving after unmount is stale"); "correct source identity/history isolation" — verified by reading the backend source (see above), not a frontend runtime test; "correct accessible announcements" in a real DOM — the `role="status" aria-live="polite"` placement mirrors the existing Reset button's pattern exactly (already proven A1-safe: a discrete, one-shot announcement, never a continuously-changing value); real DOM/screen-reader behavior itself remains part of the Section 10 behavioral-review debt above, not re-litigated per-feature.
+- Full gate re-verified: `verify:monitoring` 970/970 (up from 933) + all 5 structural checks PASSED, lint clean, `tsc --noEmit` clean, `next build` 14/14 pages, `git diff --check` clean. No backend changes were needed for this milestone (backend already provides everything required via existing endpoints).
+- No visual, scientific, or architecture changes; provenance language (recorded human data, not astronaut/live) is unchanged — the bootstrap only ever drives the existing sanctioned state transitions, never adds a new claim.
+
+**Files changed in Milestone C**:
+- `frontend/src/lib/monitoring/presenterOps.ts` (new canonical-bootstrap pure logic)
+- `frontend/src/components/monitoring/MonitoringSessionContext.tsx` (`loadCanonicalJuryDemo`)
+- `frontend/src/components/operations/DemoControlDrawer.tsx` (new "Load canonical jury demo" action + UI)
+- `frontend/scripts/verify-monitoring-state.ts` (37 new behavioral/pure-logic checks)
+- `docs/ismet-stage2-3/STATUS.md`, `docs/ismet-stage2-3/DECISIONS.md`
 
 **Note on prior session work**: a separate, unrelated small hardening pass (`PrimaryVitalsPanel.tsx`, `researchStore.ts`) from a *different* task on branch `stage5-runtime-honesty-hardening` was stashed (`git stash list` on that branch) before switching to this Stage-1 base — it is out of scope for this assignment and was not brought over.

@@ -8,7 +8,13 @@ import { ReplaySessionControl } from "@/components/monitoring/ReplaySessionContr
 import { SimulatedFaultControl } from "@/components/monitoring/SimulatedFaultControl";
 import { useMonitoringSession } from "@/components/monitoring/MonitoringSessionContext";
 import { PresenterPreflight } from "@/components/operations/PresenterPreflight";
-import { summariseDemoReset, type DemoResetResult } from "@/lib/monitoring/presenterOps";
+import {
+  CANONICAL_JURY_SUBJECT_ID,
+  summariseCanonicalBootstrap,
+  summariseDemoReset,
+  type CanonicalBootstrapResult,
+  type DemoResetResult,
+} from "@/lib/monitoring/presenterOps";
 import { useModalDialog } from "@/lib/runtime/useModalDialog";
 import { useMissionUiStore } from "@/store/missionUiStore";
 import { useOperationalEventStore } from "@/store/operationalEventStore";
@@ -42,6 +48,9 @@ export function DemoControlDrawer() {
   const [resetting, setResetting] = useState(false);
   const [resetAnnouncement, setResetAnnouncement] = useState("");
   const [resetFailed, setResetFailed] = useState(false);
+  const [bootstrapping, setBootstrapping] = useState(false);
+  const [bootstrapAnnouncement, setBootstrapAnnouncement] = useState("");
+  const [bootstrapFailed, setBootstrapFailed] = useState(false);
 
   // Focus is restored to the trigger by useModalDialog's inert-cleanup
   // effect, AFTER the background `inert` is removed — focusing the trigger
@@ -74,6 +83,30 @@ export function DemoControlDrawer() {
       setResetting(false);
     }
   }, [resetting, session, clearEventHistory, setSelectedModality]);
+
+  // Stage 3B — explicit, idempotent "Load Canonical Jury Demo" bootstrap.
+  // Deliberately a SEPARATE action from Reset above: Reset preserves the
+  // current source/subject, while this one explicitly switches to recorded
+  // replay subject S14. Never invoked implicitly by Reset or anything else.
+  // `bootstrapping` guards against a double-click starting a second
+  // sequence from this button specifically; the underlying session method
+  // is already race-safe on its own via the shared mutation-ticket
+  // lifecycle even without this guard.
+  const handleLoadCanonicalDemo = useCallback(async () => {
+    if (bootstrapping) return;
+    setBootstrapping(true);
+    setBootstrapAnnouncement("");
+    let result: CanonicalBootstrapResult;
+    try {
+      result = await session.loadCanonicalJuryDemo();
+    } catch {
+      result = { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
+    } finally {
+      setBootstrapping(false);
+    }
+    setBootstrapFailed(!result.ok);
+    setBootstrapAnnouncement(summariseCanonicalBootstrap(result));
+  }, [bootstrapping, session]);
 
   const overlay = (
     <div ref={overlayRef} className="fixed inset-0 z-50 flex justify-end">
@@ -114,6 +147,35 @@ export function DemoControlDrawer() {
         </div>
 
         <PresenterPreflight />
+
+        <div className="rounded-[8px] border border-jury-border-strong bg-surface-1 p-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-ink-primary">Load canonical jury demo</p>
+              <p className="mt-0.5 text-[11px] leading-snug text-ink-muted">
+                Switch to recorded PPG-DaLiA replay, subject {CANONICAL_JURY_SUBJECT_ID}, paused at the start, 1×, no
+                active fault. Fails closed with the exact missing prerequisite if the dataset or subject is not
+                available — never falls back to synthetic silently.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleLoadCanonicalDemo}
+              disabled={bootstrapping}
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] disabled:opacity-40"
+            >
+              <SlidersHorizontal size={13} aria-hidden="true" />
+              {bootstrapping ? "Loading…" : "Load canonical demo"}
+            </button>
+          </div>
+          <p
+            role="status"
+            aria-live="polite"
+            className={`mt-2 min-h-[1rem] text-[11px] ${bootstrapFailed ? "text-jury-fault" : "text-ink-muted"}`}
+          >
+            {bootstrapAnnouncement}
+          </p>
+        </div>
 
         <div className="rounded-[8px] border border-jury-border-strong bg-surface-1 p-3">
           <div className="flex items-center justify-between gap-3">
