@@ -269,7 +269,18 @@ export function DataSourceControl() {
           </div>
         ) : null}
         {!status?.dataset_configured && !subjects.length ? (
-          <p className="text-xs text-slate-500">Set <span className="tabular-nums-mono">BIOMIN_PPG_DALIA_PATH</span> in the backend environment to enable replay.</p>
+          // Stage 3A: the prior copy exposed the backend's internal dataset-
+          // path environment variable name and told the jury user to "set"
+          // it themselves — both an internal-setup leak and a false claim
+          // that this UI can act on it. Presenter Preflight is a read-only
+          // diagnostic; it reports readiness, it does not enable replay or
+          // change backend configuration itself. Only the operator, by
+          // configuring the backend deployment, can make the dataset
+          // available — this UI just says who owns that action.
+          <p className="text-xs text-slate-500">
+            Recorded PPG-DaLiA replay is not available on this deployment. An operator must configure the dataset on
+            the backend; use Presenter Preflight to check current readiness.
+          </p>
         ) : null}
         {error ? <p className="text-xs text-signal-critical">{error}</p> : null}
       </div>

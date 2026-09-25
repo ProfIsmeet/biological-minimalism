@@ -1,6 +1,19 @@
 # STATUS
 
-**Active milestone**: Milestone A (Stage 2 accessibility) — A1, A2, A3, A4 complete. A5 (Stage 2 verification checkpoint) passed on the same gate below. Next up: Milestone B (Stage 3A deployment hardening).
+**Active milestone**: Stage 2 (Milestone A, A1-A5) is `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW` — accepted by the coordinator as implementation-complete, but NOT yet independently accepted as final COMPLETE until the behavioral-review debt below is closed. Milestone B (Stage 3A deployment hardening) is now complete. Next up: Milestone C (Stage 3B canonical jury bootstrap).
+
+## Behavioral-review debt (must close before final Stage 2-3 COMPLETE verdict)
+
+Everything in Stage 2 (A1-A4) was verified with deterministic **structural** checks (regex/AST-free source-text assertions modeled on this repo's existing `verify-monitoring-consumers.mjs` convention) plus `tsc`/`lint`/`build`. No browser automation was available in this environment at the time A1-A4 were implemented, so the following runtime *behavior* has NOT yet been exercised and must be closed by an adversarial/behavioral review pass before Stage 2 can be marked final COMPLETE — structural guards may supplement this evidence but must not be its sole source where runtime behavior is testable:
+
+1. **Reduced motion** (`useReducedMotionPreference`, `MotionConfigProvider`) — behaviorally untested for: persisted app-setting changes propagating live; OS `prefers-reduced-motion` changes propagating live; same-tab updates via `REDUCE_MOTION_CHANGE_EVENT`; listener cleanup on unmount (no leaked listeners/timers); the effective `app setting OR OS preference` combination rule actually holding in a live DOM; Framer Motion surfaces (`DigitalTwinPanel`'s orbit/glow) and both WebGL consumers (`PhysiologyAvatar3D`, `ConceptualTwinStage`) actually stopping/freezing at runtime, not just structurally referencing the hook.
+2. **Mobile "More" dialog** (`useModalDialog`, `MobileNav`) — behaviorally untested for: initial focus landing on the right element; Tab wrap at the last focusable; Shift+Tab wrap at the first focusable; Escape dismissal; body scroll actually locked (and restored); background `inert`/interaction prevention actually blocking pointer/keyboard reach; route-change cleanup actually firing and tearing down scroll-lock/inert; focus restoration to the trigger happening only when that trigger still exists in the DOM (vs. a stale ref).
+3. **`WebglStage`** — behaviorally untested for: the supported-WebGL path rendering the real Canvas; the unsupported-WebGL path rendering the fallback with no retry control; a thrown child render exception being caught and shown via the fallback; a simulated `webglcontextlost` event triggering the fallback and `retry` remounting successfully; the accessible static fallback actually being reachable/labelled correctly; retry behavior working end-to-end; confirmation that no fallback path ever renders an invented number, confidence value, or scientific claim.
+4. **Live-region review** — behaviorally untested for: a real screen-reader-equivalent (or DOM MutationObserver-based harness) confirming that meaningful source/connection/error transitions ARE announced, while clock ticks, replay-position ticks, and the WebGL rotation angle are NOT repeatedly announced, under actual re-renders (not just the static source-text proof `verify-live-region-boundaries.mjs` provides).
+
+This debt block must stay in STATUS.md, get closed with real evidence (or explicitly reported NOT_RUN with a reason) in Section 10/11 of the final report, and is why the executive verdict for Stage 2 is `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW`, not COMPLETE, until then.
+
+**Commits to preserve (do not rewrite/squash)**: A1 `e38303d`, A2 `f9332be`, A3 `28c037c`, A4/Stage 2 checkpoint `43ceb93`.
 
 **Completed work**:
 - Hard-stop gate verified: both required remotes present, deployment branch SHA matches exactly.
@@ -19,7 +32,26 @@
 
 **Current blockers**: none.
 
-**Exact next action**: commit the A4 changes (files listed below, staged explicitly) as the Stage 2 checkpoint commit, then move to Milestone B (Stage 3A) — inspect the complete diff of `origin/claude/deployment-hardening` and port only valid changes (Docker/npm ci install, `NEXT_PUBLIC_WS_URL` config, exact-origin CORS, env examples, jury runbook, read-only env verifier, release-evidence manifest/verifier, Presenter Preflight wording correction).
+**Exact next action**: commit the Milestone B changes (files listed below, staged explicitly) as the Stage 3A checkpoint commit, then move to Milestone C (Stage 3B) — implement the explicit "Load Canonical Jury Demo" bootstrap action and its 15-scenario test matrix.
+
+## Milestone B (Stage 3A deployment hardening) — complete
+
+- Computed the actual reconciliation scope before touching anything: `origin/claude/deployment-hardening`'s entire unique contribution beyond the accepted Stage 1 lineage is exactly one commit, `ef747182353560d6355931310a08bcce5d3a949d` (confirmed via `git merge-base` + `--is-ancestor`; see DECISIONS.md D4). Reviewed and ported that commit's 17 files individually rather than merging/cherry-picking wholesale.
+- Ported as-is: `frontend/.env.local.example`, `frontend/Dockerfile` (`npm ci` + lockfile copy, `NEXT_PUBLIC_WS_URL` build arg), `frontend/src/lib/config.ts` (trimming/empty-as-unset, explicit `deriveWebSocketUrl`), `docker-compose.yml` (`BIOMIN_ALLOWED_ORIGINS`, `NEXT_PUBLIC_WS_URL`), `backend/.env.example` + `backend/app/core/config.py` (exact-origin CORS validator, fails closed on wildcard/blank/malformed), `backend/tests/test_cors_config.py`, `backend/tests/test_deployment_contract.py`, `backend/tests/test_jury_verifiers.py`, `scripts/verify_jury_environment.py`, `scripts/verify_jury_release_evidence.py`, `docs/JURY_DEPLOYMENT_RUNBOOK.md`, `docs/JURY_RELEASE_EVIDENCE_MANIFEST.md`, `docs/DATASET_REPLAY.md`, `README.md`.
+- **Fixed the master prompt's "Known C1" issue**: the source commit's replacement copy for `DataSourceControl.tsx` (which previously leaked the internal `BIOMIN_PPG_DALIA_PATH` env var name to jury users) said "...or run the presenter preflight to enable it" — false, since Presenter Preflight is read-only diagnostics only (confirmed by reading `PresenterPreflight.tsx`). Applied corrected wording instead: Preflight "checks current readiness," an operator must configure the backend; also corrected one instance of the same ambiguity in `docs/JURY_DEPLOYMENT_RUNBOOK.md` §25. Verified via repo-wide grep that no other instance of the misleading phrasing exists anywhere.
+- Deliberately did NOT port `docs/claude-reports/CLAUDE_C1_DEPLOYMENT_HARDENING_REPORT.md` — the source session's own self-report, not required deliverable content, and it would have re-introduced the exact misleading wording being corrected (its own §13 quotes the uncorrected sentence as its "after" state).
+- Verified: full backend suite `pytest` 351/351 passed (up from 348 pre-Milestone-B — 3 new test files add real coverage); both jury verifier scripts run for real against the actual repo (`verify_jury_environment.py`: 20 PASS/6 WARN/0 FAIL, all WARNs genuinely-absent tools/env vars; `verify_jury_release_evidence.py`: honestly reports `F-07 status: INCOMPLETE`, 23/24 MISSING — this checkout carries no QA screenshot tree, never fabricated as present); full frontend gate re-verified (`verify:monitoring` 933/933 + all 5 structural checks, lint, `tsc --noEmit`, `next build` 14/14, `git diff --check`) — all clean.
+- Docker/Compose validation itself: `NOT_RUN_DOCKER_UNAVAILABLE` — confirmed via `docker --version` failing (`command not found`) in this environment. Never inferred as passing from static inspection alone.
+- No visual/scientific/architecture changes made; `CORE_PLUS_CONTEXT`, BioZ-excluded-from-selected-architecture, and all other scientific truth locks are untouched by this milestone (it is purely deployment/config/docs).
+
+**Files changed in Milestone B**:
+- `frontend/.env.local.example`, `frontend/Dockerfile`, `frontend/src/lib/config.ts`, `frontend/src/components/demos/DataSourceControl.tsx` (corrected wording, not verbatim from source commit)
+- `docker-compose.yml`
+- `backend/.env.example`, `backend/app/core/config.py`
+- `backend/tests/test_cors_config.py` (new), `backend/tests/test_deployment_contract.py` (new), `backend/tests/test_jury_verifiers.py` (new)
+- `scripts/verify_jury_environment.py` (new), `scripts/verify_jury_release_evidence.py` (new)
+- `docs/JURY_DEPLOYMENT_RUNBOOK.md` (new), `docs/JURY_RELEASE_EVIDENCE_MANIFEST.md` (new), `docs/DATASET_REPLAY.md`, `README.md`
+- `docs/ismet-stage2-3/STATUS.md`, `docs/ismet-stage2-3/DECISIONS.md`
 
 **A4 summary (WebGL/Digital Twin failure fallback)**:
 - Audit found `ConceptualTwinStage.tsx` (the `/digital-twin` reference figure) had **no WebGL detection or error handling at all** — an unsupported device, a renderer init failure, a lost context, or any render-time error would leave a blank/broken panel. `PhysiologyAvatar3D.tsx` (the operational avatar) only handled the up-front "unsupported" case via a private `detectWebgl()`; it had no handling for a runtime render error or a lost context either.

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -24,6 +25,40 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
+    """Exact browser origins permitted to call the API (used by CORSMiddleware).
+
+    Override without editing this source via the ``BIOMIN_ALLOWED_ORIGINS``
+    environment variable, encoded as a JSON array of exact origins, e.g.
+    ``BIOMIN_ALLOWED_ORIGINS='["https://demo.example.org"]'``. Because
+    ``allow_credentials=True`` (see ``app/main.py``), each entry must be an
+    exact scheme://host[:port] origin — a wildcard would be both insecure and
+    rejected by the browser for credentialed requests. A malformed value
+    (not a JSON list) fails fast at startup rather than silently widening
+    access. This is the allowed *browser* origin list; it is distinct from the
+    frontend's own URL and from the backend's bind address.
+    """
+
+    @field_validator("allowed_origins")
+    @classmethod
+    def _reject_unsafe_cors_origins(cls, value: list[str]) -> list[str]:
+        """Fail closed on empty, blank, or wildcard CORS origins.
+
+        Deterministic and side-effect free: trims surrounding whitespace and
+        refuses to widen access to ``*`` (or any blank entry). Callers must
+        list explicit browser origins.
+        """
+        cleaned = [origin.strip() for origin in value]
+        if not cleaned:
+            raise ValueError("allowed_origins must list at least one exact browser origin")
+        for origin in cleaned:
+            if not origin:
+                raise ValueError("allowed_origins must not contain blank entries")
+            if origin == "*":
+                raise ValueError(
+                    "wildcard '*' is not permitted for allowed_origins; list exact "
+                    "browser origins (credentials are enabled, so origins must be explicit)"
+                )
+        return cleaned
 
     # Simulation engine
     tick_interval_seconds: float = 0.5

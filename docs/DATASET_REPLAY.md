@@ -38,6 +38,12 @@ layout and the pickle's embedded `subject` identity.
 
 ## Configure the data path
 
+> **Operator-only setup.** The `BIOMIN_*` environment variables below are
+> backend/operator configuration. The public dashboard UI never instructs an
+> end user to set them; when replay is not configured it simply reports that
+> recorded replay is unavailable. For the full clean-machine procedure see
+> [`JURY_DEPLOYMENT_RUNBOOK.md`](JURY_DEPLOYMENT_RUNBOOK.md).
+
 Download the official original per-subject distribution as described in
 `datasets/ppg-dalia/README.md`. Do not use the subject-less Zenodo `.ts`
 reformatting.

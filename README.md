@@ -306,6 +306,11 @@ of this same README.
 
 ## 15. Running the demo
 
+For a clean-machine / jury bring-up — including build-time API/WebSocket
+configuration, CORS origin setup, health/connectivity checks, and failure-mode
+behavior — follow [`docs/JURY_DEPLOYMENT_RUNBOOK.md`](docs/JURY_DEPLOYMENT_RUNBOOK.md)
+and preflight with `python scripts/verify_jury_environment.py --root .`.
+
 ```bash
 docker compose up --build
 ```
@@ -325,7 +330,7 @@ uvicorn app.main:app --reload --port 8000
 Frontend (Node 20+), in a second terminal:
 
 ```bash
-cd frontend && npm install && npm run dev
+cd frontend && npm ci && npm run dev   # npm ci is reproducible from package-lock.json
 ```
 
 Both run entirely offline once dependencies are installed. To enable real
