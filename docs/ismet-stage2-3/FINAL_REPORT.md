@@ -10,8 +10,8 @@
 - Base branch / SHA: `origin/codex/stage1-scientific-data-integrity` @ `cfd4935ee264cdeb3953c8b437c3936cd9e2f0ae`
 - Deployment-hardening branch reconciled: `origin/claude/deployment-hardening` @ `ef747182353560d6355931310a08bcce5d3a949d`
 - Working branch: `ismet/frontend-stage2-3-hardening`
-- Final SHA: `23fb3114d8ee6c8ecce71f322ef23c568dd7f0b9`
-- Commits (8, oldest first): `e38303d` (A1), `f9332be` (A2), `28c037c` (A3), `43ceb93` (A4 + Stage 2 checkpoint), `0a9fb6a` (Stage 3A), `23b96c5` (Stage 3B), `45c002b` (Milestone D), `23fb311` (Section 10 adversarial review).
+- Final SHA (this report's own commit): `a12e96ee4b5912749476971948268e314ffe03ff`
+- Commits (9, oldest first): `e38303d` (A1), `f9332be` (A2), `28c037c` (A3), `43ceb93` (A4 + Stage 2 checkpoint), `0a9fb6a` (Stage 3A), `23b96c5` (Stage 3B), `45c002b` (Milestone D), `23fb311` (Section 10 adversarial review), `a12e96e` (this final report).
 
 ## 3. Starting / ending working-tree state
 
@@ -102,10 +102,11 @@ None. No browser automation tool, no Docker installation (`docker --version` fai
 | `23b96c5` | Stage 3B: canonical jury demo bootstrap |
 | `45c002b` | Stage 3: Milestone D release/jury evidence package |
 | `23fb311` | Section 10: two-pass adversarial review, two real findings fixed |
+| `a12e96e` | Stage 2-3 final report |
 
 ## 15. Remote-push verification
 
-To be completed at push time (see Section 13 of the master prompt): push only `ismet/frontend-stage2-3-hardening` with `git push -u origin ismet/frontend-stage2-3-hardening` (correcting the branch's default upstream, which was set to the Stage 1 base branch at creation time — see `DECISIONS.md` D2), then confirm `git rev-parse HEAD` equals `git rev-parse origin/ismet/frontend-stage2-3-hardening`.
+Pushed with `git push -u origin ismet/frontend-stage2-3-hardening` (correcting the branch's default upstream, which was set to the Stage 1 base branch at creation time — see `DECISIONS.md` D2). Confirmed: `git rev-parse HEAD` = `a12e96ee4b5912749476971948268e314ffe03ff` = `git rev-parse origin/ismet/frontend-stage2-3-hardening`. Confirmed `main` was never checked out, modified, merged into, or pushed during this task (`origin/main` remains at `3efb49a02e4c824a82410793d245d3141a5942f1`, unrelated to and untouched by this branch). No force-push was used at any point; only this one new branch was pushed.
 
 ## 16. Explicit confirmation
 
