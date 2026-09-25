@@ -89,11 +89,17 @@ const violations = [];
   ];
   for (const { file, retryProp } of consumers) {
     const source = read(file);
-    if (!source.includes(`${retryProp}?`) && !source.includes(`${retryProp}:`)) {
+    if (!source.includes(`${retryProp}?:`)) {
       violations.push({ file, reason: `Fallback component does not declare an optional ${retryProp} prop` });
     }
-    if (!new RegExp(`${retryProp}\\s*\\?`).test(source)) {
-      violations.push({ file, reason: "Retry control is not conditionally rendered on the retry prop being present" });
+    // Distinct from the type-declaration check above: this specifically
+    // requires the JSX conditional-render form `{onRetry ? (` — a prior
+    // version of this check matched on the type declaration alone
+    // (`onRetry?:` also satisfies a naive `onRetry\s*\?` regex), which
+    // would stay green even if the actual conditional render were deleted
+    // and the button rendered unconditionally elsewhere in the file.
+    if (!new RegExp(`\\{${retryProp}\\s*\\?\\s*\\(`).test(source)) {
+      violations.push({ file, reason: `Retry control is not conditionally rendered via "{${retryProp} ? (" — a JSX conditional block` });
     }
   }
 }

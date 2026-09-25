@@ -64,6 +64,11 @@ export function WebglStage({ canvasProps, children, renderFallback, renderLoadin
   const handleCreated = useCallback(
     (state: RootState) => {
       canvasProps.onCreated?.(state);
+      // Each retry remounts the Canvas (fresh `key`), which calls this again
+      // for the new canvas. The previous canvas is unmounted and eligible
+      // for GC either way, but explicitly detaching its listener first keeps
+      // this defensively correct rather than relying on GC alone.
+      contextLossCleanupRef.current();
       const canvas = state.gl.domElement;
       const onContextLost = (event: Event) => {
         event.preventDefault();

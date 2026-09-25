@@ -32,7 +32,28 @@ This debt block must stay in STATUS.md, get closed with real evidence (or explic
 
 **Current blockers**: none.
 
-**Exact next action**: commit the Milestone D changes (files listed below, staged explicitly), then perform the two-pass adversarial review (Section 10: implementation-attack pass, then test-quality-attack pass), fix anything found with full re-verification, then run final Section-11 verification and write `FINAL_REPORT.md`.
+**Exact next action**: commit the adversarial-review fixes (below), then run final Section-11 verification and write `FINAL_REPORT.md`.
+
+## Two-pass adversarial review (Section 10) — complete
+
+**Review 1 (implementation attack)** — attempted to find real breaks in: Stage 1 fail-closed behavior, source identity isolation, single-flight ownership, stale-response rejection, mutation ordering, canonical bootstrap idempotency, reduced-motion propagation, modal focus containment, WebGL fallback, deployment config, CORS validation. One real (minor) finding:
+
+- `WebglStage.tsx`'s `handleCreated` overwrote `contextLossCleanupRef.current` on every remount without calling the previous cleanup first. Not an actual leak in practice (the old canvas element becomes unreachable and is GC'd along with its listener once React swaps the `key`), but defensively incorrect. Fixed: the previous cleanup is now explicitly invoked before being replaced.
+- Traced through the "two dialogs open simultaneously" concern (DemoControlDrawer's trigger lives in `MissionStatusBar`, which renders on all viewports including mobile, alongside `MobileNav`'s "More" trigger): confirmed by re-reading `useModalDialog`'s background-inert step that opening either dialog marks the entire app-shell wrapper (a single direct child of `document.body`) `inert`, which necessarily includes the other dialog's trigger button — so the two dialogs cannot physically both be open at once. No bug; documented here as a verified non-issue rather than left unexamined.
+- No breaks found in the coordinator-based mutation/staleness/ownership logic (extensively pre-tested; `loadCanonicalJuryDemo` and `resetDemoState` both reuse it verbatim, inheriting those guarantees rather than reimplementing them).
+
+**Review 2 (test-quality attack)** — attempted to find tests that pass regardless of whether the real defect they claim to guard against is present. One real finding:
+
+- `verify-webgl-fallback.mjs`'s two "retry declared" / "retry conditionally rendered" checks for `StaticAvatarFallback.tsx`/`ConceptualTwinFallback.tsx` both matched on the SAME substring (`onRetry?:` — the TypeScript optional-prop declaration also satisfies a naive `onRetry\s*\?` regex). This meant the "conditionally rendered" check would stay green even if the actual `{onRetry ? (...)` JSX block were deleted and the retry button rendered unconditionally elsewhere — exactly the class of failure it was supposed to catch. Fixed: the second check now requires the specific JSX conditional pattern `{onRetry ? (`, which only the real conditional-render block satisfies.
+- Confirmed the monitoring-state check count only ever increased across every commit in this branch (932 → 933 → 933 → 933 → 970 → 970), never decreased, and every check whose *assertion* changed (the "conceptual twin stage" reduced-motion check in A2, the six "modal: ..." checks in A3) did so because the underlying code legitimately moved to a shared primitive — each change is documented inline at the check site and in `DECISIONS.md`, and the guarantee is provably preserved (verified via a paired new/adjacent check), never just deleted for convenience.
+- Confirmed the 37 canonical-bootstrap checks added in Milestone C exercise real behavior via actual promise-ordering control (not string matching): each failure-injection test asserts on the *result* of running real (fake) async runners through the real `runCanonicalJuryBootstrap` function, and the race-safety tests use a local `deferred()` to construct genuine concurrent/superseded execution orderings — these would fail if the sequencing logic regressed.
+
+Full gate re-verified after both fixes: `verify:monitoring` 970/970 + all 5 structural checks PASSED, lint clean, `tsc --noEmit` clean, `next build` 14/14 pages, `git diff --check` clean.
+
+**Files changed in the adversarial-review pass**:
+- `frontend/src/components/visualization/human/WebglStage.tsx` (defensive cleanup-ordering fix)
+- `frontend/scripts/verify-webgl-fallback.mjs` (strengthened the retry-conditional-render check)
+- `docs/ismet-stage2-3/STATUS.md` (this update)
 
 ## Milestone D (release/jury evidence package) — complete
 
