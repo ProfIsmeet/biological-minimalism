@@ -356,10 +356,32 @@ export interface CanonicalBootstrapRunners {
   clearFault: () => Promise<DataSourceStatus>;
 }
 
+/**
+ * Explicit discriminant for how a bootstrap attempt ended. `"success"` is the
+ * ONLY outcome that means "the canonical demo is now loaded" — every other
+ * value must never be summarised as loaded/complete. Modelling this as its
+ * own field (rather than inferring success from `failedSteps.length === 0`)
+ * is what closes the corrective-review defect: a sequence that was
+ * superseded mid-run has an EMPTY `failedSteps` (nothing failed — it was
+ * simply stopped), so `failedSteps.length === 0` alone is not sufficient
+ * evidence of success.
+ */
+export type CanonicalBootstrapOutcome = "success" | "step-failure" | "superseded";
+
 export interface CanonicalBootstrapRunResult {
+  outcome: CanonicalBootstrapOutcome;
+  /** True only when outcome === "success". Kept alongside `outcome` for convenient boolean checks. */
   ok: boolean;
   ranSteps: CanonicalBootstrapStep[];
   failedSteps: CanonicalBootstrapStep[];
+  /**
+   * The last successful step's returned status — but ONLY when it is safe to
+   * apply. Deliberately forced to `null` whenever `outcome === "superseded"`,
+   * even though an individual step's REST call may have returned a real
+   * status internally: a superseded sequence must never let its result be
+   * applied by the caller, and making the field itself `null` makes that
+   * true even if a caller forgot to check `outcome` first.
+   */
   lastStatus: DataSourceStatus | null;
 }
 
@@ -374,18 +396,25 @@ export interface CanonicalBootstrapRunResult {
  * dependencies rather than reaching into React state or the request
  * coordinator itself.
  *
- * `isCurrent()` is checked before every step (not only once at the start),
- * so a mutation superseded mid-sequence (a second bootstrap invocation, an
- * owner transfer, or an unmount) stops issuing further requests and leaves
- * `ranSteps`/`failedSteps` reflecting only what actually happened before
- * supersession — the caller is expected to also gate use of the final
- * result through the same coordinator (as `resetDemoState` does), so a
- * stale sequence's tail can never overwrite a newer one's state.
+ * `isCurrent()` is checked before every step (not only once at the start)
+ * AND once more after the loop exits — the latter catches the narrow window
+ * where the final step's request resolves successfully but the sequence is
+ * superseded before this function hands control back to the caller for
+ * acceptance. Either check failing sets `outcome: "superseded"`
+ * unconditionally: superseded always means "not ok", regardless of how many
+ * steps happened to complete or whether any of them failed.
+ *
+ * Success (`outcome: "success"`) requires ALL of: not superseded, every one
+ * of the four canonical steps present in `ranSteps` (not just "no failures"
+ * — a superseded run can just as easily have zero failures with only two
+ * steps completed), and zero failed steps. This is the explicit invariant
+ * the corrective review required, checked directly rather than inferred.
  *
  * If `load-subject` itself fails, the remaining steps are skipped (they
  * would fail anyway with no active replay to reset/speed/clear-fault on,
  * and running them would only produce confusing extra failure entries for
- * a single root cause).
+ * a single root cause) — this is a `"step-failure"` outcome, not
+ * `"superseded"`.
  */
 export async function runCanonicalJuryBootstrap(
   runners: CanonicalBootstrapRunners,
@@ -400,8 +429,13 @@ export async function runCanonicalJuryBootstrap(
   const ranSteps: CanonicalBootstrapStep[] = [];
   const failedSteps: CanonicalBootstrapStep[] = [];
   let lastStatus: DataSourceStatus | null = null;
+  let superseded = false;
+
   for (const step of CANONICAL_BOOTSTRAP_STEPS) {
-    if (!isCurrent()) break;
+    if (!isCurrent()) {
+      superseded = true;
+      break;
+    }
     try {
       lastStatus = await stepRunner[step]();
       ranSteps.push(step);
@@ -410,10 +444,34 @@ export async function runCanonicalJuryBootstrap(
       if (step === "load-subject") break;
     }
   }
-  return { ok: failedSteps.length === 0, ranSteps, failedSteps, lastStatus };
+
+  // Catches supersession landing in the gap between the final step's request
+  // resolving and this function returning — the loop's own per-step guard
+  // cannot see this, since there is no further iteration to check it on.
+  if (!superseded && !isCurrent()) {
+    superseded = true;
+  }
+
+  if (superseded) {
+    return { outcome: "superseded", ok: false, ranSteps, failedSteps, lastStatus: null };
+  }
+
+  const completedAllSteps = CANONICAL_BOOTSTRAP_STEPS.every((step) => ranSteps.includes(step));
+  const success = completedAllSteps && failedSteps.length === 0;
+  return {
+    outcome: success ? "success" : "step-failure",
+    ok: success,
+    ranSteps,
+    failedSteps,
+    lastStatus,
+  };
 }
 
+export type CanonicalBootstrapResultOutcome = CanonicalBootstrapOutcome | "prerequisite-block" | "unexpected-failure";
+
 export interface CanonicalBootstrapResult {
+  outcome: CanonicalBootstrapResultOutcome;
+  /** True only when outcome === "success". */
   ok: boolean;
   blockedOnPrerequisite: CanonicalBootstrapPrerequisiteFailure | null;
   /** The exact prerequisite-check detail string, present iff blockedOnPrerequisite is set. */
@@ -424,21 +482,24 @@ export interface CanonicalBootstrapResult {
 
 /**
  * Accessible, honest summary (mirrors `summariseDemoReset`'s three-case
- * shape). A prerequisite block is reported with the exact missing-
- * prerequisite detail — never a generic "failed" — so the presenter knows
- * precisely what to fix. Success is claimed ONLY when `ok === true` and
- * `blockedOnPrerequisite` is null and no steps failed; nothing here ever
- * calls a partial or blocked outcome "loaded".
+ * shape, extended with the two additional outcomes this type now
+ * distinguishes). Dispatches on the explicit `outcome` discriminant rather
+ * than inferring success from `ok`/`failedSteps` shape — this is what
+ * prevents a superseded result (empty `failedSteps`, since nothing actually
+ * failed) from ever being summarised as loaded.
  */
 export function summariseCanonicalBootstrap(result: CanonicalBootstrapResult): string {
-  if (result.blockedOnPrerequisite) {
-    return `Canonical jury demo not loaded — ${result.blockedDetail ?? "a prerequisite is not satisfied"}`;
+  switch (result.outcome) {
+    case "prerequisite-block":
+      return `Canonical jury demo not loaded — ${result.blockedDetail ?? "a prerequisite is not satisfied"}`;
+    case "success":
+      return `Canonical jury demo loaded — recorded replay, subject ${CANONICAL_JURY_SUBJECT_ID}, paused at start, 1×, no active fault.`;
+    case "step-failure":
+      return `Canonical jury demo load partially failed — ${result.failedSteps.join(", ")} did not complete.`;
+    case "superseded":
+      return "Canonical jury demo load was superseded by a newer control action. No state was applied by this attempt.";
+    case "unexpected-failure":
+    default:
+      return "Canonical jury demo load failed unexpectedly. Source state may be only partially updated.";
   }
-  if (result.ok && result.failedSteps.length === 0) {
-    return `Canonical jury demo loaded — recorded replay, subject ${CANONICAL_JURY_SUBJECT_ID}, paused at start, 1×, no active fault.`;
-  }
-  if (result.failedSteps.length > 0) {
-    return `Canonical jury demo load partially failed — ${result.failedSteps.join(", ")} did not complete.`;
-  }
-  return "Canonical jury demo load failed unexpectedly. Source state may be only partially updated.";
 }

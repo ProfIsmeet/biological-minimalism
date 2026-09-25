@@ -307,14 +307,14 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
   const loadCanonicalJuryDemo = useCallback(async (): Promise<CanonicalBootstrapResult> => {
     const prerequisite = checkCanonicalBootstrapPrerequisites({ datasetConfigured, subjectListState, subjects });
     if (!prerequisite.ok) {
-      return { ok: false, blockedOnPrerequisite: prerequisite.failure, blockedDetail: prerequisite.detail, ranSteps: [], failedSteps: [] };
+      return { outcome: "prerequisite-block", ok: false, blockedOnPrerequisite: prerequisite.failure, blockedDetail: prerequisite.detail, ranSteps: [], failedSteps: [] };
     }
     setPending("canonical-bootstrap");
     setRequestError(null);
     const mutationTicket = sourceStateRequestCoordinator.beginAuthoritativeMutation(requestOwnerRef.current);
     if (!mutationTicket) {
       setPending(null);
-      return { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
+      return { outcome: "superseded", ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
     }
     let sequenceResult: Awaited<ReturnType<typeof runCanonicalJuryBootstrap>>;
     try {
@@ -335,11 +335,16 @@ export function MonitoringSessionProvider({ children }: { children: ReactNode })
         setPending(null);
       }
     }
-    const { ok, ranSteps, failedSteps } = sequenceResult;
-    if (!ok && sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) {
+    const { outcome, ok, ranSteps, failedSteps } = sequenceResult;
+    // Guarded by the same ticket-currency check used throughout: a
+    // superseded sequence's ticket is, by construction, never current again
+    // once superseded (generation only increases), so this can never fire
+    // for a stale/superseded attempt and can never clear or overwrite a
+    // newer owner's pending/error state.
+    if (outcome === "step-failure" && sourceStateRequestCoordinator.isAuthoritativeMutationCurrent(mutationTicket)) {
       setRequestError(`Canonical jury demo load incomplete — ${failedSteps.join(", ")} did not complete.`);
     }
-    return { ok, blockedOnPrerequisite: null, blockedDetail: null, ranSteps, failedSteps };
+    return { outcome, ok, blockedOnPrerequisite: null, blockedDetail: null, ranSteps, failedSteps };
   }, [datasetConfigured, subjectListState, subjects, applyDataSourceStatus]);
 
   const value = useMemo<MonitoringSessionValue>(

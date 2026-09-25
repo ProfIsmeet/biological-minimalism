@@ -100,7 +100,7 @@ export function DemoControlDrawer() {
     try {
       result = await session.loadCanonicalJuryDemo();
     } catch {
-      result = { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
+      result = { outcome: "unexpected-failure", ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
     } finally {
       setBootstrapping(false);
     }

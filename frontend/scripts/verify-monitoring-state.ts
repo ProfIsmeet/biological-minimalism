@@ -97,6 +97,7 @@ import {
   summariseCanonicalBootstrap,
   type DemoResetResult,
   type CanonicalBootstrapResult,
+  type CanonicalBootstrapStep,
 } from "../src/lib/monitoring/presenterOps";
 import {
   FINAL_ARCHITECTURE_ID,
@@ -3456,25 +3457,343 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   // creation is architectural — runCanonicalJuryBootstrap only ever calls the
   // 4 replay/fault runners it is given, never touches modality data) -------
 
-  const blockedResult: CanonicalBootstrapResult = { ok: false, blockedOnPrerequisite: "s14_not_present", blockedDetail: "Subject S14 is not present in the current replay subject list.", ranSteps: [], failedSteps: [] };
+  const blockedResult: CanonicalBootstrapResult = { outcome: "prerequisite-block", ok: false, blockedOnPrerequisite: "s14_not_present", blockedDetail: "Subject S14 is not present in the current replay subject list.", ranSteps: [], failedSteps: [] };
   const blockedSummary = summariseCanonicalBootstrap(blockedResult);
   checkIncludes("canonical bootstrap summary: prerequisite block names the exact missing prerequisite", blockedSummary, "S14 is not present");
   checkIncludes("canonical bootstrap summary: prerequisite block explicitly says not loaded", blockedSummary, "not loaded");
   checkEqual("canonical bootstrap summary: prerequisite block never claims success", /demo loaded —/.test(blockedSummary), false);
 
-  const successResult: CanonicalBootstrapResult = { ok: true, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset", "speed-1x", "clear-fault"], failedSteps: [] };
+  const successResult: CanonicalBootstrapResult = { outcome: "success", ok: true, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset", "speed-1x", "clear-fault"], failedSteps: [] };
   const successSummary = summariseCanonicalBootstrap(successResult);
   checkIncludes("canonical bootstrap summary: full success names the canonical subject", successSummary, CANONICAL_JURY_SUBJECT_ID);
   checkIncludes("canonical bootstrap summary: full success mentions 1x speed", successSummary, "1×");
 
-  const partialResult: CanonicalBootstrapResult = { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset"], failedSteps: ["speed-1x"] };
+  const partialResult: CanonicalBootstrapResult = { outcome: "step-failure", ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset"], failedSteps: ["speed-1x"] };
   const partialSummary = summariseCanonicalBootstrap(partialResult);
   checkIncludes("canonical bootstrap summary: partial failure is reported honestly, not as success", partialSummary, "partially failed");
   checkIncludes("canonical bootstrap summary: partial failure names the failed step", partialSummary, "speed-1x");
 
-  const unexpectedResult: CanonicalBootstrapResult = { ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
+  const unexpectedResult: CanonicalBootstrapResult = { outcome: "unexpected-failure", ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: [], failedSteps: [] };
   const unexpectedSummary = summariseCanonicalBootstrap(unexpectedResult);
   checkEqual("canonical bootstrap summary: unexpected failure (no named step) never says loaded/complete", /loaded —|complete/.test(unexpectedSummary), false);
+
+  // --- Regression coverage for the corrective review's Finding 1: a
+  // superseded result (empty failedSteps — nothing failed, it was simply
+  // stopped) must never be summarised as loaded, and must be its own
+  // distinct, honestly-worded outcome, not folded into "unexpected failure".
+  const supersededSummaryResult: CanonicalBootstrapResult = { outcome: "superseded", ok: false, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: ["load-subject", "reset"], failedSteps: [] };
+  const supersededSummary = summariseCanonicalBootstrap(supersededSummaryResult);
+  checkEqual("canonical bootstrap summary: superseded outcome is never ok", supersededSummaryResult.ok, false);
+  checkIncludes("canonical bootstrap summary: superseded outcome says superseded", supersededSummary, "superseded");
+  checkEqual("canonical bootstrap summary: superseded outcome never claims the demo loaded", /demo loaded —/.test(supersededSummary), false);
+}
+
+// ===========================================================================
+// Corrective review (post-970) — Finding 1: a bootstrap sequence superseded
+// mid-run must never report success. Reproduces the exact defect the
+// external review found (load-subject + reset complete, then superseded
+// before speed-1x — failedSteps stays empty, so the old `ok: failedSteps.
+// length === 0` logic incorrectly returned true) and proves the fix across
+// every point in the sequence supersession can land, plus that a current,
+// fully-completed sequence still succeeds and that named step failures are
+// still reported honestly. Uses real promise-order control (`deferred()`)
+// and, where indicated, the real `SourceStateRequestCoordinator` — not
+// source-string assertions.
+// ===========================================================================
+
+{
+  function deferred<T>() {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: unknown) => void;
+    const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+      resolve = resolvePromise;
+      reject = rejectPromise;
+    });
+    return { promise, resolve, reject };
+  }
+
+  function fixtureStatus(datasetName: string): DataSourceStatus {
+    return fixtureDataSourceStatus({ source_type: "dataset_replay", subject_id: CANONICAL_JURY_SUBJECT_ID, dataset_name: datasetName });
+  }
+
+  const okStep = async () => fixtureStatus("PPG-DaLiA");
+
+  // 1. Superseded before the first step even attempts to run.
+  {
+    const result = await runCanonicalJuryBootstrap(
+      { loadSubject: okStep, reset: okStep, setSpeed1x: okStep, clearFault: okStep },
+      () => false,
+    );
+    checkEqual("corrective: superseded before first step -> outcome is superseded", result.outcome, "superseded");
+    checkEqual("corrective: superseded before first step -> ok is false", result.ok, false);
+    checkEqual("corrective: superseded before first step -> no steps ran", result.ranSteps.length, 0);
+    checkEqual("corrective: superseded before first step -> lastStatus is never exposed for application", result.lastStatus, null);
+  }
+
+  // 2. Superseded WHILE load-subject is still in flight (isCurrent flips
+  // false during the awaited request itself, not merely between steps).
+  {
+    const loadSubjectDeferred = deferred<DataSourceStatus>();
+    let current = true;
+    const runPromise = runCanonicalJuryBootstrap(
+      {
+        loadSubject: () => loadSubjectDeferred.promise,
+        reset: okStep,
+        setSpeed1x: okStep,
+        clearFault: okStep,
+      },
+      () => current,
+    );
+    current = false;
+    loadSubjectDeferred.resolve(fixtureStatus("PPG-DaLiA"));
+    const result = await runPromise;
+    checkEqual("corrective: superseded while load-subject in flight -> outcome is superseded", result.outcome, "superseded");
+    checkEqual("corrective: superseded while load-subject in flight -> ok is false", result.ok, false);
+    checkEqual("corrective: superseded while load-subject in flight -> lastStatus is never exposed", result.lastStatus, null);
+  }
+
+  // 3. Superseded immediately after load-subject completes (before reset is attempted).
+  {
+    let current = true;
+    let resetAttempted = false;
+    const result = await runCanonicalJuryBootstrap(
+      {
+        loadSubject: async () => {
+          const status = await okStep();
+          current = false;
+          return status;
+        },
+        reset: async () => {
+          resetAttempted = true;
+          return okStep();
+        },
+        setSpeed1x: okStep,
+        clearFault: okStep,
+      },
+      () => current,
+    );
+    checkEqual("corrective: superseded after load-subject -> reset is never attempted", resetAttempted, false);
+    checkEqual("corrective: superseded after load-subject -> outcome is superseded", result.outcome, "superseded");
+    checkEqual("corrective: superseded after load-subject -> ok is false", result.ok, false);
+  }
+
+  // 4. Superseded after reset — this is the exact defect scenario from the
+  // corrective review's reproduction (load-subject, reset ran; speed-1x,
+  // clear-fault correctly skipped; failedSteps stays empty).
+  {
+    let current = true;
+    let speedAttempted = false;
+    const result = await runCanonicalJuryBootstrap(
+      {
+        loadSubject: okStep,
+        reset: async () => {
+          const status = await okStep();
+          current = false;
+          return status;
+        },
+        setSpeed1x: async () => {
+          speedAttempted = true;
+          return okStep();
+        },
+        clearFault: okStep,
+      },
+      () => current,
+    );
+    checkEqual("corrective: superseded after reset -> ranSteps is exactly load-subject,reset (reproduces the reported defect input)", result.ranSteps.join(","), "load-subject,reset");
+    checkEqual("corrective: superseded after reset -> failedSteps is empty (nothing failed, it was stopped)", result.failedSteps.length, 0);
+    checkEqual("corrective: superseded after reset -> speed-1x is never attempted", speedAttempted, false);
+    checkEqual("corrective: superseded after reset -> outcome is superseded, NOT success", result.outcome, "superseded");
+    checkEqual("corrective: superseded after reset -> ok is false (this is the exact bug fixed)", result.ok, false);
+    checkEqual("corrective: superseded after reset -> lastStatus is never exposed for application", result.lastStatus, null);
+  }
+
+  // 5. Superseded after speed-1x (before clear-fault is attempted).
+  {
+    let current = true;
+    let faultClearAttempted = false;
+    const result = await runCanonicalJuryBootstrap(
+      {
+        loadSubject: okStep,
+        reset: okStep,
+        setSpeed1x: async () => {
+          const status = await okStep();
+          current = false;
+          return status;
+        },
+        clearFault: async () => {
+          faultClearAttempted = true;
+          return okStep();
+        },
+      },
+      () => current,
+    );
+    checkEqual("corrective: superseded after speed-1x -> clear-fault is never attempted", faultClearAttempted, false);
+    checkEqual("corrective: superseded after speed-1x -> ranSteps is exactly the first 3 steps", result.ranSteps.join(","), "load-subject,reset,speed-1x");
+    checkEqual("corrective: superseded after speed-1x -> outcome is superseded", result.outcome, "superseded");
+    checkEqual("corrective: superseded after speed-1x -> ok is false", result.ok, false);
+  }
+
+  // 6. Superseded immediately after the FINAL request (clear-fault) resolves
+  // but before the function returns for acceptance — the narrow post-loop
+  // window the fix's second `isCurrent()` check exists specifically to catch.
+  {
+    let current = true;
+    const result = await runCanonicalJuryBootstrap(
+      {
+        loadSubject: okStep,
+        reset: okStep,
+        setSpeed1x: okStep,
+        clearFault: async () => {
+          const status = await okStep();
+          current = false; // flips false after the last step resolves, before the loop's next isCurrent() check would even run again
+          return status;
+        },
+      },
+      () => current,
+    );
+    checkEqual("corrective: superseded after final step resolves -> all 4 steps are recorded as ran", result.ranSteps.join(","), "load-subject,reset,speed-1x,clear-fault");
+    checkEqual("corrective: superseded after final step resolves -> outcome is superseded despite all steps completing", result.outcome, "superseded");
+    checkEqual("corrective: superseded after final step resolves -> ok is false", result.ok, false);
+    checkEqual("corrective: superseded after final step resolves -> lastStatus is never exposed for application", result.lastStatus, null);
+  }
+
+  // 7. Superseded result never produces a success announcement (pure summary check).
+  {
+    const supersededResult = await runCanonicalJuryBootstrap(
+      { loadSubject: okStep, reset: okStep, setSpeed1x: okStep, clearFault: okStep },
+      () => false,
+    );
+    const canonicalResult: CanonicalBootstrapResult = { outcome: supersededResult.outcome, ok: supersededResult.ok, blockedOnPrerequisite: null, blockedDetail: null, ranSteps: supersededResult.ranSteps, failedSteps: supersededResult.failedSteps };
+    const summary = summariseCanonicalBootstrap(canonicalResult);
+    checkEqual("corrective: superseded result never produces 'Canonical jury demo loaded'", summary.includes("demo loaded —"), false);
+    checkIncludes("corrective: superseded result names the actual reason", summary, "superseded");
+  }
+
+  // 8 & 9. Two genuinely concurrent invocations sharing one coordinator-style
+  // isCurrent flag: the first is superseded (non-success) and the second/
+  // current invocation still completes successfully.
+  {
+    let firstIsCurrent = true;
+    const secondIsCurrent = () => true; // the "winning" invocation is never itself superseded
+    const firstLoadDeferred = deferred<DataSourceStatus>();
+
+    const firstInvocation = runCanonicalJuryBootstrap(
+      {
+        loadSubject: () => firstLoadDeferred.promise,
+        reset: okStep,
+        setSpeed1x: okStep,
+        clearFault: okStep,
+      },
+      () => firstIsCurrent,
+    );
+
+    // The second invocation "wins": in the real coordinator this corresponds
+    // to a fresh beginAuthoritativeMutation() call bumping the generation,
+    // which is exactly what makes the first invocation's isCurrent() false.
+    firstIsCurrent = false;
+    const secondInvocation = runCanonicalJuryBootstrap(
+      { loadSubject: okStep, reset: okStep, setSpeed1x: okStep, clearFault: okStep },
+      secondIsCurrent,
+    );
+
+    firstLoadDeferred.resolve(fixtureStatus("PPG-DaLiA"));
+    const [firstResult, secondResult] = await Promise.all([firstInvocation, secondInvocation]);
+
+    checkEqual("corrective: first of two concurrent invocations is non-success", firstResult.ok, false);
+    checkEqual("corrective: first of two concurrent invocations reports superseded", firstResult.outcome, "superseded");
+    checkEqual("corrective: second/current invocation still completes successfully", secondResult.ok, true);
+    checkEqual("corrective: second/current invocation outcome is success", secondResult.outcome, "success");
+  }
+
+  // 10. Stale status from a superseded first invocation is never accepted —
+  // exercised against the REAL SourceStateRequestCoordinator, the same
+  // ticket mechanism loadCanonicalJuryDemo uses in production, not a fake
+  // isCurrent flag.
+  {
+    const coordinator = new SourceStateRequestCoordinator();
+    const owner = "canonical-bootstrap-corrective-owner";
+    coordinator.activateOwner(owner);
+
+    const firstTicket = coordinator.beginAuthoritativeMutation(owner)!;
+    const firstLoadDeferred = deferred<DataSourceStatus>();
+    const firstRun = runCanonicalJuryBootstrap(
+      { loadSubject: () => firstLoadDeferred.promise, reset: okStep, setSpeed1x: okStep, clearFault: okStep },
+      () => coordinator.isAuthoritativeMutationCurrent(firstTicket),
+    );
+
+    // A second, current invocation begins — this is the real call that
+    // supersedes the first by bumping the coordinator's generation.
+    const secondTicket = coordinator.beginAuthoritativeMutation(owner)!;
+    const appliedStatuses: (string | null | undefined)[] = [];
+    const secondRun = runCanonicalJuryBootstrap(
+      { loadSubject: okStep, reset: okStep, setSpeed1x: okStep, clearFault: okStep },
+      () => coordinator.isAuthoritativeMutationCurrent(secondTicket),
+    );
+
+    firstLoadDeferred.resolve(fixtureStatus("STALE-FIRST"));
+    const [firstResult, secondResult] = await Promise.all([firstRun, secondRun]);
+
+    checkEqual("corrective: stale first invocation is superseded", firstResult.outcome, "superseded");
+    checkEqual("corrective: stale first invocation's lastStatus is never exposed", firstResult.lastStatus, null);
+
+    // Mirror exactly what MonitoringSessionContext.loadCanonicalJuryDemo does:
+    // only call acceptAuthoritativeMutation when lastStatus is present, gated
+    // by the same ticket.
+    if (firstResult.lastStatus) {
+      const outcome = coordinator.acceptAuthoritativeMutation(firstTicket, firstResult.lastStatus, (result) => {
+        appliedStatuses.push(result.dataset_name);
+      });
+      checkEqual("corrective: even if a stale lastStatus somehow existed, the coordinator itself would still reject it as stale", outcome, "stale");
+    }
+    checkEqual("corrective: no stale status was ever applied", appliedStatuses.length, 0);
+
+    if (secondResult.lastStatus) {
+      const outcome = coordinator.acceptAuthoritativeMutation(secondTicket, secondResult.lastStatus, (result) => {
+        appliedStatuses.push(result.dataset_name);
+      });
+      checkEqual("corrective: the current second invocation's result is accepted", outcome, "accepted");
+    }
+    checkEqual("corrective: exactly one (the current) status was ever applied", appliedStatuses.length, 1);
+    checkEqual("corrective: the applied status is the second/current invocation's, never the stale first's", appliedStatuses[0], "PPG-DaLiA");
+  }
+
+  // 11. All four completed steps under a current (never-superseded) ticket
+  // still return success — the fix must not make a genuinely successful
+  // run report anything other than success.
+  {
+    const result = await runCanonicalJuryBootstrap(
+      { loadSubject: okStep, reset: okStep, setSpeed1x: okStep, clearFault: okStep },
+      () => true,
+    );
+    checkEqual("corrective: fully completed current sequence -> outcome is success", result.outcome, "success");
+    checkEqual("corrective: fully completed current sequence -> ok is true", result.ok, true);
+    checkEqual("corrective: fully completed current sequence -> all 4 steps ran", result.ranSteps.length, 4);
+  }
+
+  // 12. Each named REST-step failure (under a current, non-superseded
+  // ticket) remains an honest partial failure — "step-failure", not
+  // "superseded" and not silently "success".
+  {
+    const failingSteps: CanonicalBootstrapStep[] = ["reset", "speed-1x", "clear-fault"];
+    for (const failStep of failingSteps) {
+      const runner = (step: string) => async () => {
+        if (step === failStep) throw new Error(`${step} failed`);
+        return okStep();
+      };
+      const result = await runCanonicalJuryBootstrap(
+        {
+          loadSubject: runner("load-subject"),
+          reset: runner("reset"),
+          setSpeed1x: runner("speed-1x"),
+          clearFault: runner("clear-fault"),
+        },
+        () => true,
+      );
+      checkEqual(`corrective: named failure at ${failStep} under a current ticket -> outcome is step-failure`, result.outcome, "step-failure");
+      checkEqual(`corrective: named failure at ${failStep} under a current ticket -> ok is false`, result.ok, false);
+      checkEqual(`corrective: named failure at ${failStep} under a current ticket -> failure is named, not silently dropped`, result.failedSteps.includes(failStep), true);
+    }
+  }
 }
 
 // ===========================================================================
