@@ -32,7 +32,29 @@ This debt block must stay in STATUS.md, get closed with real evidence (or explic
 
 **Current blockers**: none.
 
-**Exact next action**: commit the adversarial-review fixes (below), then run final Section-11 verification and write `FINAL_REPORT.md`.
+**Exact next action**: none remaining for this task; Stage 2 stays `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW` pending real browser/DOM/screen-reader evidence per the behavioral-review debt list above.
+
+## Corrective review round (post-FINAL_REPORT) — complete
+
+An independent review reproduced 970/970 and found a real behavioral defect in the Stage 3B canonical bootstrap: `runCanonicalJuryBootstrap` returned `ok: true` for a sequence superseded mid-run (e.g. `load-subject`+`reset` complete, then superseded before `speed-1x`) because `failedSteps` stays empty when a sequence is stopped rather than rejected — `ok: failedSteps.length === 0` is not sufficient evidence of success. Fixed in commit `d1bc904`:
+
+- Added an explicit `CanonicalBootstrapOutcome` (`"success" | "step-failure" | "superseded"`), computed directly rather than inferred from `failedSteps` shape.
+- `isCurrent()` is now checked once more after the step loop exits, closing the window where the final request resolves successfully but the sequence is superseded before the function returns.
+- Success requires `ranSteps` to exactly contain all 4 canonical steps AND zero failures AND not superseded — the explicit invariant the review specified, not an inferred absence-of-failure.
+- A superseded result's `lastStatus` is forced to `null`, making it structurally impossible for a caller to apply it.
+- `CanonicalBootstrapResult`/`summariseCanonicalBootstrap` extended to carry/dispatch on the same `outcome`; a superseded outcome now produces "load was superseded by a newer control action", never "loaded".
+- Added 51 new regression checks (970 → 1021) covering all 12 required scenarios (supersession at every point in the sequence, the exact reported reproduction, concurrent invocations, stale-status rejection against the real `SourceStateRequestCoordinator`, a fully-completed current sequence, and each named step failure) using real promise-order control, not source-string assertions.
+- Full gate re-verified: `verify:monitoring` 1021/1021 + 5 structural checks, lint, `tsc --noEmit`, `next build` 14/14, backend pytest 351/351, both jury verifier scripts, `git diff --check` all clean.
+
+Also corrected `FINAL_REPORT.md` (Finding 2): recomputed all repository facts from git rather than reusing stale numbers (47 files / 4101 insertions / 263 deletions as of the implementation checkpoint, not the previously-stated 46/3580), removed the self-referential claim that the report file knows the SHA of the commit containing its own final version (now records only the implementation checkpoint SHA, with the actual branch tip stated in the external chat response), added the missing corrective commit to the inventory, and switched all machine-readable status lines from `TRUE/FALSE` to the required `YES/NO/PARTIAL/BLOCKED` vocabulary. Stage 2 status remains `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW` (not promoted), release evidence remains `PARTIAL`, and browser/Docker/projector remain `NO`.
+
+**Files changed in the corrective review round**:
+- `frontend/src/lib/monitoring/presenterOps.ts` (outcome discriminant, fixed invariant)
+- `frontend/src/components/monitoring/MonitoringSessionContext.tsx` (threads outcome through)
+- `frontend/src/components/operations/DemoControlDrawer.tsx` (catch-block fallback outcome)
+- `frontend/scripts/verify-monitoring-state.ts` (51 new regression checks, 970 → 1021)
+- `docs/ismet-stage2-3/FINAL_REPORT.md` (Finding 2 corrections)
+- `docs/ismet-stage2-3/STATUS.md` (this update)
 
 ## Two-pass adversarial review (Section 10) — complete
 
