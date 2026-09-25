@@ -247,3 +247,53 @@ Secrets, if any, belong only in backend/operator environment, never in
   points the user to the demo administrator. Presenter Preflight is a read-only
   diagnostic surface — it reports current readiness, it does not enable replay,
   change backend configuration, or repair a missing dataset itself.
+
+## 26. Canonical jury demo procedure
+
+Once the environment is verified (§3, §12) and the dataset/checkpoint are
+confirmed available (§4, §5, Presenter Preflight), the presenter can bring the
+session to one known, reproducible starting state in a single explicit step:
+
+1. Open the demonstration controls drawer (the control near the mission status
+   bar / mobile "More" menu).
+2. Check Presenter Preflight first — it is read-only diagnostics, not a fix
+   action. If any of "Recorded replay dataset", "Replay subject list", or
+   "S14" reads anything other than Ready, resolve that first (see §4/§14);
+   the canonical demo action below will refuse to run and say exactly which
+   prerequisite is missing rather than silently falling back to synthetic.
+3. Click **"Load canonical demo"**. This is a separate, explicit action from
+   "Reset" (which preserves whatever source/subject is already active) — it
+   specifically switches to recorded PPG-DaLiA replay, subject S14, paused at
+   the start, at 1× speed, with no active simulated fault.
+4. The status line beneath the button reports the outcome honestly: full
+   success names the subject and configuration; a blocked prerequisite names
+   exactly which one; a partial failure names exactly which step(s) did not
+   complete (other steps still applied); an unexpected failure says so
+   without claiming completion. Never trust an absence of a message as
+   success — wait for the status line.
+5. The action is safe to repeat: running it again reloads the same subject
+   from scratch and lands in the same canonical state. If it is invoked twice
+   in quick succession (or the page navigates away mid-load), only the most
+   recent invocation's result is ever applied to visible state — an
+   in-flight, superseded attempt is dropped rather than allowed to overwrite
+   what came after it.
+
+This is real recorded human research data (PPG-DaLiA, participant S14) — a
+single-participant robustness demonstration, never presented as astronaut or
+live-sensor data. See §23 for the full explicit non-claims list.
+
+## 27. Recovery when the canonical demo load fails
+
+- **Blocked on a prerequisite** (dataset not configured / subject list
+  unavailable / S14 not present): this is not a frontend bug — follow the
+  matching guidance in §4 (dataset availability), §5 (checkpoint), or restart
+  the backend and re-check Presenter Preflight before retrying.
+- **Partial failure** (one or more named steps did not complete): click
+  "Load canonical demo" again. Because the action always starts from a fresh
+  subject load, a retry does not compound the prior partial state — it
+  re-attempts the full canonical sequence from scratch.
+- **Unexpected failure** with no named step: check §21 (backend/frontend
+  logs) for the underlying error before retrying: a transient network issue
+  is safe to just retry, but a repeated identical failure likely indicates a
+  backend-side problem (e.g. a corrupted dataset file) that requires operator
+  attention, not repeated retries from the UI.

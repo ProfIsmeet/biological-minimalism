@@ -1,6 +1,6 @@
 # STATUS
 
-**Active milestone**: Stage 2 (Milestone A, A1-A5) is `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW`. Milestone B (Stage 3A) and Milestone C (Stage 3B canonical jury bootstrap) are now both complete. Next up: Milestone D (release/jury evidence package), then the two-pass adversarial review and final report.
+**Active milestone**: Stage 2 (Milestone A, A1-A5) is `IMPLEMENTATION_COMPLETE_PENDING_FINAL_BEHAVIORAL_REVIEW`. Milestones B, C, and D are now complete. Next up: the two-pass adversarial review (Section 10), then final verification and the final report.
 
 ## Behavioral-review debt (must close before final Stage 2-3 COMPLETE verdict)
 
@@ -32,7 +32,21 @@ This debt block must stay in STATUS.md, get closed with real evidence (or explic
 
 **Current blockers**: none.
 
-**Exact next action**: commit the Milestone C changes (files listed below, staged explicitly) as the Stage 3B checkpoint commit, then move to Milestone D — assemble the release/jury evidence package (runbook already exists from Milestone B; add known-limitations doc, manual acceptance checklist, and the final Stage 2-3 report), then the two-pass adversarial review.
+**Exact next action**: commit the Milestone D changes (files listed below, staged explicitly), then perform the two-pass adversarial review (Section 10: implementation-attack pass, then test-quality-attack pass), fix anything found with full re-verification, then run final Section-11 verification and write `FINAL_REPORT.md`.
+
+## Milestone D (release/jury evidence package) — complete
+
+- Extended `docs/JURY_DEPLOYMENT_RUNBOOK.md` with §26 (canonical jury demo procedure — how to use the new "Load canonical demo" button, what its status line means, why it's safe to repeat) and §27 (recovery when the canonical demo load fails — prerequisite-blocked vs. partial-failure vs. unexpected-failure, each with the correct operator action). These sections did not exist when Milestone B ported the runbook (that source commit predates Milestone C's feature).
+- Added `docs/ismet-stage2-3/KNOWN_LIMITATIONS.md` — honest, explicit list of exactly what has NOT been verified in this environment (no browser automation, no Docker, no physical projector, HR-checkpoint readiness not exposed by the backend contract, no QA evidence tree in this checkout, no Stage 4/scientific work attempted) — each cross-referenced to the specific verifier/report that already says so, never contradicting it.
+- Added `docs/ismet-stage2-3/MANUAL_ACCEPTANCE_CHECKLIST.md` — a concrete, unchecked checklist for a human operator with a real browser/projector/Docker environment to run before treating Stage 2-3 as behaviorally accepted, covering every A1-A4 surface, both deployment-hardening surfaces, and the canonical jury demo.
+- Release-evidence manifest and its read-only verifier (`docs/JURY_RELEASE_EVIDENCE_MANIFEST.md`, `scripts/verify_jury_release_evidence.py`) already exist from Milestone B and were re-confirmed still accurate — no changes needed.
+- Deliberately did not fabricate a "selected automated verification results" snapshot ahead of the adversarial review below, since that review may still change what needs fixing; the authoritative results snapshot is captured once, after the adversarial review and any resulting fixes, as part of `FINAL_REPORT.md` (Section 11 of the required format) — capturing it twice would risk the final report citing stale numbers.
+
+**Files changed in Milestone D**:
+- `docs/JURY_DEPLOYMENT_RUNBOOK.md` (new §26, §27)
+- `docs/ismet-stage2-3/KNOWN_LIMITATIONS.md` (new)
+- `docs/ismet-stage2-3/MANUAL_ACCEPTANCE_CHECKLIST.md` (new)
+- `docs/ismet-stage2-3/STATUS.md` (this update)
 
 ## Milestone B (Stage 3A deployment hardening) — complete
 
