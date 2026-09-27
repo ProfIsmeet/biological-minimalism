@@ -49,7 +49,7 @@ Legend — **A**dded, **M**odified, **D**eleted, **R**enamed.
 | `.../stage4-route-mission-overview-mobile-390x844.png` | A | Mobile first-viewport spot check | None | Evidence image | None | AUDIT.md §2 |
 | `.../stage4-route-system-brief-desktop.png` | A (deleted in commit 3, see below) | Route-cohesion reference screenshot | None | Evidence image | None | Superseded by renamed file below |
 
-## Commit 3 (this commit — see STATUS.md for its final SHA) — final docs/evidence commit
+## Commit 3 — `a44235c` — `docs(qa): record stage 4 and 5 acceptance`
 
 | Path | Change | Reason | Functional effect | Visual effect | Scientific effect | Coverage |
 |---|---|---|---|---|---|---|

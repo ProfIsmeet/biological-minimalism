@@ -23,7 +23,7 @@
 - Actual base (verified via `git rev-parse` before any edit): `98b73c168f95c91e7f5f5e8e4beef9ca79136d53` — exact match
 - Relevant ancestors verified: Stage 1 `cfd4935ee264cdeb3953c8b437c3936cd9e2f0ae`; Codex Stage 2-3 `779c265ca4f3d9f24c15994b8d301e68fc02ea3c`; Claude Stage 2-3 `98b73c168f95c91e7f5f5e8e4beef9ca79136d53`
 - Starting SHA: `98b73c168f95c91e7f5f5e8e4beef9ca79136d53`
-- Final SHA: see `STATUS.md` and `git log --oneline -1` on this branch after the final commit
+- Final SHA: `a44235cff8a3520cd6bc506fba02989d08501322`
 - Remote SHA: verified equal to final local SHA after push (see §27 / Preservation proof)
 - Starting status: clean (fresh worktree from the exact SHA)
 - Ending status: clean (verified via `git status --short` and `git diff --check` before the final commit)
@@ -310,9 +310,9 @@ See `docs/claude-stage4-5-visual-command-deck/CHANGE_LEDGER.md` — every file, 
 |---|---|---|---|---|---|
 | `6ea2d05` | `test(acceptance): reconcile stage 2 and 3 runtime evidence` | 15 files (see CHANGE_LEDGER) | Correct 2 confirmed evidence defects, add real-S14 evidence | `verify_jury_release_evidence.py` (23/1/0/0), `git diff --check` | pushed |
 | `ec655e9` | `feat(frontend): establish biological minimalism art direction` | 19 files (see CHANGE_LEDGER) | Fix 4 Stage 4 hostile-audit findings | `verify:monitoring` 1021/1021+5/5, lint, tsc, build 14/14 | pushed |
-| (final) | `docs(qa): record stage 4 and 5 acceptance` | 14 files (see CHANGE_LEDGER) | Stage 5 evidence/audit, all 8 master reports, evidence-collision documentation | full final clean-tree suite (§21/22) | pending push at time of writing — see STATUS.md |
+| `a44235c` | `docs(qa): record stage 4 and 5 acceptance` | 14 files (see CHANGE_LEDGER) | Stage 5 evidence/audit, all 8 master reports, evidence-collision documentation | full final clean-tree suite (§21/22) | pushed |
 
-Parent chain: base `98b73c1` → `6ea2d05` → `ec655e9` → final commit. No empty commits were created.
+Parent chain: base `98b73c1` → `6ea2d05` → `ec655e9` → `a44235c`. No empty commits were created.
 
 ## 21. Verification ledger
 
