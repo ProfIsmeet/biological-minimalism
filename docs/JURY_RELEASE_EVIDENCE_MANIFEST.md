@@ -85,27 +85,39 @@ publicly distributed release) · **License/privacy review**.
   the reason for rejection must ship with the provenance record, and the
   rejected asset itself must not be redistributed as an accepted asset).
 
-## Known ambiguity: two `AUDIT.md` files
+## Resolved: cross-run duplicate evidence (formerly "known ambiguity")
 
 - 2026-09-27 (`claude/stage4-5-visual-command-deck`): a second stage-specific
   evidence directory, `frontend/qa-screenshots/claude-stage4-5-visual-command-deck/`,
-  was added alongside the existing `claude-stage2-3-final-acceptance/` one, per
-  this mission's explicit requirement to create an `AUDIT.md` there documenting
-  the separate Stage 4/V1 and Stage 5/V2 hostile audits. Both directories now
-  contain a file literally named `AUDIT.md`, so `audit-main`'s existing
-  `**/AUDIT.md` glob now legitimately reports `AMBIGUOUS` (two matches) rather
-  than `PRESENT`.
-  An initial attempt to narrow the pattern to the exact Stage 2-3 path was
-  reverted: `scripts/verify_jury_release_evidence.py` is exercised by
-  `backend/tests/test_jury_verifiers.py`, which depends on the pattern
-  remaining a generic wildcard, and narrowing it broke two passing unit tests.
-  Per this mission's own rule against weakening tests to make something pass,
-  the verifier and its test suite were left unmodified. The resulting single
-  `AMBIGUOUS` line for `audit-main` when running the verifier against this
-  branch is expected, understood, and traceable to this note — not an
-  unexplained evidence-integrity gap. Both `AUDIT.md` files are genuinely
-  present, non-empty, and independently reviewable; the ambiguity is a glob
-  pattern limitation, not missing or corrupted evidence.
+  was added alongside the existing `claude-stage2-3-final-acceptance/` one,
+  giving `audit-main`'s `**/AUDIT.md` glob two matches and making it report
+  `AMBIGUOUS`. At the time, narrowing the glob to a single hardcoded path was
+  tried and reverted because it broke `backend/tests/test_jury_verifiers.py`
+  (which depends on the pattern staying a generic wildcard), so the ambiguity
+  was left in place and documented as accepted.
+- 2026-09-27 (`claude/stage4-5-real-visual-implementation`): a third evidence
+  directory (this run's own `claude-stage4-5-real-visual-implementation/`) made
+  the same glob collect three matches, plus new cross-run duplicates for
+  `state-fault`, `state-rebuilding`, and `state-recovered` — four `AMBIGUOUS`
+  entries in total. Leaving this "accepted" was explicitly rejected: an
+  evidence verifier that never reaches exit 0 is not a passing gate.
+  **Fix**: `scripts/verify_jury_release_evidence.py` now resolves matches by
+  their `frontend/qa-screenshots/<run>/` directory and, when a manifest slot's
+  matches span more than one run, treats the highest-precedence run
+  (`CANONICAL_RUN_ORDER`, newest/most-authoritative first) as canonical for
+  PRESENT/EMPTY/AMBIGUOUS purposes. Matches from every other run are not
+  discarded — they are still globbed, still hashed on request, and now
+  reported explicitly as `superseded` (visible in both the text and `--json`
+  output) so the audit trail stays intact. A genuine duplicate **within** one
+  run directory (the scenario the original unit tests fixture) is still,
+  correctly, `AMBIGUOUS` — cross-run precedence only disambiguates *across*
+  runs, never papering over a real same-directory clash. Both the glob pattern
+  and the test suite were updated together
+  (`test_evidence_verifier_resolves_cross_run_duplicates_via_precedence` in
+  `backend/tests/test_jury_verifiers.py`), and no existing test's assertions
+  were weakened or removed — all 9 pre-existing evidence-verifier assertions
+  still pass unmodified, plus the new one. `python scripts/verify_jury_release_evidence.py --root .`
+  now exits `0` from this branch.
 
 ## Scope boundaries
 

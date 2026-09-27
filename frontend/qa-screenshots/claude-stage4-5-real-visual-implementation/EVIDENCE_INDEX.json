@@ -1,0 +1,99 @@
+{
+  "run": "claude-stage4-5-real-visual-implementation",
+  "source_sha": "7afe57114ad6f7537b73f17683f7ecd733606730",
+  "backend_mode": "REAL PPG-DaLiA S14 replay, real isolated repository backend (127.0.0.1:8004), production frontend build (localhost:3004)",
+  "notes": "This evidence set supersedes the C-05/C-06/C-07 defects confirmed against frontend/qa-screenshots/claude-stage2-3-final-acceptance/evidence-index.json. The superseded files there are left unmodified for the audit trail. Every entry below was pixel-verified with the Read tool immediately after capture, before being accepted as evidence, per the corrective methodology in AUDIT.md.",
+  "entries": [
+    {
+      "file": "state-fault-real-s14-packet-loss.png",
+      "route": "/mission-overview",
+      "viewport": "1280x800",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, fault injected via POST /data-source/replay/fault (packet_loss, target=ppg, severity=0.9, seed=7272)",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "Simulated PPG fault active — heart_rate_inference.status=error, HR output withheld",
+      "classification": "real",
+      "purpose": "C-05 fix verification: the full fault description text ('PPG · packet loss · severity 0.9') must render without truncation/ellipsis in the status bar's dedicated fault alert row.",
+      "visual_review": "pass — full untruncated text 'PPG · packet loss · severity 0.9' visible in a dedicated alert row; Heart-rate inference shows Unavailable / Inference error with no numeric bpm; Affected-region summary reads 'Affected: Wrist — PPG simulated fault'.",
+      "privacy_licensing": "n/a",
+      "sha256": "3649290b680971e6fe9bc3415fec960acad1c450ccc61588b3e635ad0538d146"
+    },
+    {
+      "file": "state-rebuilding-real-s14-hr-warmup-v2.png",
+      "route": "/mission-overview",
+      "viewport": "1280x800",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, fault cleared via DELETE /data-source/replay/fault at 17:35:27 UTC; screenshot captured at 17:35:32 UTC session time (5s into the real ~8-10s warm-up window measured independently via a WebSocket timing probe, see AUDIT.md)",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "HR/inference genuinely rebuilding — heart_rate_inference.status=warming_up, waiting for a fresh 8s synchronized PPG+IMU window (backend message: 'Heart Rate AI waiting for an 8 s synchronized PPG + IMU window.')",
+      "classification": "real",
+      "purpose": "C-06 fix: the prior file at claude-stage2-3-final-acceptance/state-rebuilding-real-s14-hr-warmup.png was independently re-inspected pixel-by-pixel this run and found to actually show a numeric HR value and 'Model available' — a genuine mismatch between its evidence-index claim and its visible pixels, not merely a caption error. This replacement was captured using a corrected methodology (see AUDIT.md 'Rebuilding-state capture methodology') and was pixel-verified with the Read tool immediately after capture, before acceptance.",
+      "visual_review": "pass — Heart-rate inference panel shows 'Unavailable' / 'Model is warming up' with a partial (incomplete) progress ring, no numeric bpm anywhere in the panel; SRC/PPG/IMU confirmed=Yes, OUT=No; event rail shows 'Warm-up started 17:35:28' / 'Simulated fault cleared 17:35:28' with no 'Prediction became available' event yet.",
+      "privacy_licensing": "n/a",
+      "sha256": "62e2c35f803b03aacd5a09c22eb5f46f3902735dfd76870f302c637b798306cf"
+    },
+    {
+      "file": "state-recovered-real-s14-v2.png",
+      "route": "/mission-overview",
+      "viewport": "1280x800",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, same fault cycle as the two entries above; fresh 8s window completed at 17:35:36 UTC (event rail: 'Prediction became available'); screenshot captured at 17:35:50 UTC session time",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "confirmed full recovery — fresh AI-estimated HR, fault cleared, no stale identity",
+      "classification": "real",
+      "purpose": "C-07 fix: the recorded bpm value below is read directly off THIS screenshot's own visible pixels (96.3), not fetched separately from a different moment in time — eliminating the possibility of a metadata/pixel mismatch. Completes the same fault-cycle narrative as the fault and rebuilding entries above (same seed=7272 cycle, same session, same subject identity throughout).",
+      "visual_review": "pass — UI shows Heart-rate inference: 96.3 bpm, 'Model available', full (complete, non-fault-colored) ring; Simulated fault: None; Model identity PPGDaliaHRModelB:PPGPlusIMUHRModel unchanged from before the fault.",
+      "privacy_licensing": "n/a",
+      "sha256": "b646aec4fb027ed87e24900c1e11f0c6a04c2a28d430f1fa5466db65cc94e429"
+    },
+    {
+      "file": "mobile-390x844-first-viewport.png",
+      "route": "/mission-overview",
+      "viewport": "390x844 (device pixel ratio 3, mobile emulation)",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, nominal (no fault)",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "nominal — Model available",
+      "classification": "real",
+      "purpose": "C-03 fix verification: the mobile first viewport (above the fold, no scrolling) must show both the current HR-inference state and the affected-region/body-context summary.",
+      "visual_review": "pass — without scrolling: status bar (session/source/connection/fault/time), 'No affected region — Wrist, Chest confirmed', and 'Heart-rate inference' panel showing 79.6 bpm / 'Model available' are all visible in a single 390x844 viewport capture.",
+      "privacy_licensing": "n/a",
+      "sha256": "090c8d62c2fb0b2f00f75bdc7b18bed3df04bb6f725bf831715077ad47283bc7"
+    },
+    {
+      "file": "tablet-1024x768-first-viewport.png",
+      "route": "/mission-overview",
+      "viewport": "1024x768",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, nominal (no fault)",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "nominal — Model available",
+      "classification": "real",
+      "purpose": "C-04 fix verification: at 1024x768 the HR-inference panel must not be pushed below the fold by the physiology stage.",
+      "visual_review": "pass — without scrolling: status bar, 'No affected region — Wrist, Chest confirmed', and 'Heart-rate inference' (57.2 bpm, Model available, full SRC/PPG/IMU/OUT breakdown) are all visible in a single 1024x768 viewport capture. Achieved via `order-1`/`order-2` Tailwind utilities decoupling visual order from DOM order below the `xl` breakpoint, not by removing content.",
+      "privacy_licensing": "n/a",
+      "sha256": "2c073eda8e93f43b1ba613360d64c5e8a0b80d13eb22b74a80f4aef901ca1473"
+    },
+    {
+      "file": "desktop-1440x900-first-viewport.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, nominal (no fault)",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "nominal — Model available",
+      "classification": "real",
+      "purpose": "Regression check: confirm the `xl:order-1`/`xl:order-2` reversion used to fix C-04 has no visible effect at `xl`-and-above widths, where the physiology stage and HR column are already side by side.",
+      "visual_review": "pass — physiology stage (left) and HR/affected-region/trend column (right) render side by side as before; HR trend sparkline shows visible axes/gridline labels; no card-wall, no regression in legibility versus the inherited before-state.",
+      "privacy_licensing": "n/a",
+      "sha256": "64c09cd64032096444b221767e89bc3622220d406e8beb69d333d3e4824072dd"
+    },
+    {
+      "file": "desktop-1920x1080-first-viewport.png",
+      "route": "/mission-overview",
+      "viewport": "1920x1080",
+      "backend_mode": "REAL PPG-DaLiA S14 replay, nominal (no fault)",
+      "source_identity": "PPG-DaLiA · S14 (RECORDED REPLAY)",
+      "state": "nominal — Model available",
+      "classification": "real",
+      "purpose": "Regression check: confirm the full command-deck section (status bar, physiology stage, affected-region summary, HR core, HR trend) fits comfortably in the first viewport at 1920x1080 with the enlarged Stage 4 typography, with no clipping or overflow.",
+      "visual_review": "pass — all Section 1 content visible with generous margins; enlarged HR digits (56px clamp), 13px legend/detail text, and visible chart axes all render legibly with no overlap or clipping.",
+      "privacy_licensing": "n/a",
+      "sha256": "b609665f6caca8b53dc7a43ec302657dae3fc10ceeede340304b6db4b244962a"
+    }
+  ]
+}
