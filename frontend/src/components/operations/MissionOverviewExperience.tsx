@@ -2,10 +2,10 @@
 
 import { ChevronDown } from "lucide-react";
 
+import { AffectedRegionSummary } from "@/components/operations/AffectedRegionSummary";
 import { FaultRecoverySpine } from "@/components/operations/FaultRecoverySpine";
 import { HRInferenceCore } from "@/components/operations/HRInferenceCore";
 import { InferenceHexFlow } from "@/components/operations/InferenceHexFlow";
-import { InferenceIntegrityOrbit } from "@/components/operations/InferenceIntegrityOrbit";
 import { MissionStatusBar } from "@/components/operations/MissionStatusBar";
 import { ModalityPentagon } from "@/components/operations/ModalityPentagon";
 import { OperationalEventRail } from "@/components/operations/OperationalEventRail";
@@ -55,22 +55,26 @@ export function MissionOverviewExperience() {
             index="01"
             kicker="Command Deck"
             title="Live operational sensing status"
-            blurb="The confirmed state of the CORE_PLUS_CONTEXT sensing system right now — source identity, per-modality confirmation, and the current heart-rate inference, all from one shared telemetry gate."
+            blurb="Source identity, per-modality confirmation, and current heart-rate inference — one shared telemetry gate."
           />
         </div>
         <MissionStatusBar />
-        {/* §6 — the outer command-hero grid now splits at `xl` (>=1280px)
-            into an 8/4 column ratio, one breakpoint level ABOVE
-            OperationalPhysiologyStage's own internal `lg` (>=1024px) avatar/
-            detail split. The previous shared `lg` breakpoint on both grids
-            caused a double split in the 1024-1279px tablet band (stage,
-            detail rail, AND HR card all fighting for width at once); now the
-            tablet band gives the stage the full row so its own internal
-            split has real room, and only >=1280px introduces the secondary
-            column. */}
+        {/* Real Stage 5 implementation pass — HR + affected region + trend
+            (the "why is HR in that state, and where" answer) now render
+            BEFORE the full physiology stage on every width below `xl`
+            (mobile through the required 1024x768 tablet check), via `order`,
+            not DOM position. Previously the DOM order put the tall
+            (240-300px) avatar stage first, which is what pushed HR below the
+            fold on mobile and 1024x768 — a real layout defect, not merely a
+            reporting one. At `xl` (>=1280px, covers 1440/1920) the two
+            columns sit side by side again, so `order` has no visible effect
+            there — both are already in the first viewport simultaneously. */}
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,8fr)_minmax(300px,4fr)]">
-          <OperationalPhysiologyStage selected={selected} onSelectModality={setSelected} />
-          <div className="flex flex-col gap-4">
+          <div className="order-2 flex min-h-0 flex-col xl:order-1">
+            <OperationalPhysiologyStage selected={selected} onSelectModality={setSelected} />
+          </div>
+          <div className="order-1 flex flex-col gap-4 xl:order-2">
+            <AffectedRegionSummary />
             <HRInferenceCore />
             <RecentHrEstimateTrend />
           </div>
@@ -112,10 +116,15 @@ export function MissionOverviewExperience() {
             blurb="The categorical integrity of the signal path — not a confidence score. Both PPG and IMU must be confirmed and windowed before the model can produce a heart-rate output."
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <InferenceIntegrityOrbit />
-          <InferenceHexFlow />
-        </div>
+        {/* Real Stage 5 implementation pass (V2-01 re-evaluated, not merely
+            re-documented) — this section previously ran InferenceIntegrityOrbit
+            and InferenceHexFlow side by side, both visualizing the identical
+            Source/PPG/IMU/Output categorical chain from the same view model.
+            HexFlow is strictly more informative (6-step pipeline, explains
+            *why* window assembly blocks, not just *that* it does) and is kept
+            as the sole diagram, now full width. InferenceIntegrityOrbit.tsx is
+            left in the codebase (not deleted) but is no longer mounted here. */}
+        <InferenceHexFlow />
       </section>
 
       {/* Section 4 — Fault & Recovery. */}

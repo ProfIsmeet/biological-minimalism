@@ -118,26 +118,48 @@ export function MissionStatusBar() {
   const announceableFields = fields.filter((field) => field.label !== "Session time" && field.label !== "Last confirmed frame");
   const liveSummary = announceableFields.map((field) => `${field.label}: ${field.value}`).join(". ");
 
+  // Fault gets its own full-width, never-truncated row instead of sharing a
+  // same-size grid cell with routine identity fields (Session/Source/Session
+  // time) — a genuinely active fault is the single most operationally
+  // important fact on this page and must outrank everything else visually,
+  // not read as "one more field among six." The routine grid keeps the
+  // remaining fields; "Simulated fault" is removed from it when active.
+  const faultIsActive = view.faultActive && view.telemetryAvailability === "active";
+  const routineFields = faultIsActive ? fields.filter((field) => field.label !== "Simulated fault") : fields;
+
   return (
     <div className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 px-4 py-3">
       <span className="sr-only" role="status" aria-live="polite">
         {liveSummary}
       </span>
+
+      {faultIsActive ? (
+        <div className="flex items-start gap-3 rounded-[8px] border border-jury-fault/40 bg-jury-fault-soft px-3.5 py-3">
+          <span aria-hidden="true" className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-jury-fault" />
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-[12px] font-semibold uppercase tracking-wide text-jury-fault">Simulated fault active</span>
+            {/* Never `truncate` — this is the one piece of text this page must
+                never hide. It wraps onto a second line rather than clipping. */}
+            <span className="whitespace-normal break-words text-sm font-medium leading-snug text-ink-primary">{faultValue}</span>
+          </div>
+        </div>
+      ) : null}
+
       {/* No role/aria-live here: a screen reader can still read this grid
           on request (arrow-key/virtual-cursor navigation), it simply never
           triggers an AUTOMATIC re-announcement on its own — that is the sole
           job of the sr-only summary above. */}
       <div className="mission-status-fields">
-        {fields.map((field) => (
+        {routineFields.map((field) => (
           <div key={field.label} className="flex min-w-0 flex-col gap-0.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">{field.label}</span>
-            <span className={clsx("truncate text-xs font-semibold sm:text-sm", fieldTone(field.tone))}>{field.value}</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{field.label}</span>
+            <span className={clsx("whitespace-normal break-words text-sm font-semibold", fieldTone(field.tone))}>{field.value}</span>
           </div>
         ))}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-jury-border-subtle pt-2.5">
-        <span className="text-[11px] leading-snug text-ink-muted sm:max-w-[420px]">
+        <span className="text-xs leading-snug text-ink-muted sm:max-w-[420px]">
           {view.isReplay ? "Recorded human-data replay" : "Synthetic demonstrator"} · Not live astronaut monitoring
         </span>
         <DemoControlDrawer />
