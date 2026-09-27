@@ -4174,6 +4174,83 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 }
 
 // ===========================================================================
+// claude/stage4-5-real-visual-implementation — corrective regression guards
+// for C-01..C-07 (real Stage 4/5 implementation pass, not report-only). These
+// are structural/source-text assertions against the actual production files
+// (this harness has no DOM renderer), each tied to a specific, previously
+// confirmed defect so the exact regression cannot silently return.
+// ===========================================================================
+
+{
+  // C-05 — the real-S14 fault description was truncated with an ellipsis.
+  // Regression guard: the specific truncating class combination that caused
+  // it must never return, and the fixed wrapping approach must remain.
+  const statusBarSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionStatusBar.tsx"), "utf8");
+  checkNotIncludes("C-05 regression: fault text truncation class combo must not return", statusBarSource, "truncate text-xs");
+  checkIncludes("C-05 fix: fault/field text wraps instead of truncating", statusBarSource, "whitespace-normal break-words");
+  checkIncludes("C-05 fix: an active fault gets its own full-width alert row", statusBarSource, "faultIsActive");
+}
+
+{
+  // C-03/C-04 — mobile (390px) and 1024x768 first viewports must show both
+  // the HR-inference state and the affected-region summary without scrolling.
+  // Achieved via `order-*` decoupling visual order from DOM order below `xl`.
+  const experienceSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionOverviewExperience.tsx"), "utf8");
+  checkIncludes("C-04 fix: physiology stage is deprioritised below `xl` via order-2/xl:order-1", experienceSource, "order-2 flex min-h-0 flex-col xl:order-1");
+  checkIncludes("C-03/C-04 fix: HR/affected-region column is prioritised below `xl` via order-1/xl:order-2", experienceSource, "order-1 flex flex-col gap-4 xl:order-2");
+
+  const affectedIndex = experienceSource.indexOf("<AffectedRegionSummary");
+  const hrCoreIndex = experienceSource.indexOf("<HRInferenceCore");
+  check(
+    "C-03 fix: AffectedRegionSummary is mounted before HRInferenceCore in source order",
+    affectedIndex !== -1 && hrCoreIndex !== -1 && affectedIndex < hrCoreIndex,
+    `AffectedRegionSummary index=${affectedIndex}, HRInferenceCore index=${hrCoreIndex}`,
+  );
+}
+
+{
+  // C-06 — a screenshot filed as "rebuilding" actually showed a numeric HR
+  // value. Regression guard: `centerValue` (the only thing that renders a
+  // numeric bpm figure) must remain assignable ONLY inside the branch guarded
+  // by a genuine `view.prediction` object — which the backend never populates
+  // during `warming_up` (see backend/app/ml/replay_hr.py, prediction=None).
+  const hrCoreSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/HRInferenceCore.tsx"), "utf8");
+  checkIncludes("C-06 fix: centerValue starts null, not a fabricated default", hrCoreSource, "let centerValue: string | null = null;");
+  checkIncludes(
+    "C-06 fix: centerValue is assigned only inside the `view.prediction` branch",
+    hrCoreSource,
+    "} else if (view.prediction) {\n    centerValue = view.prediction.value.toFixed(1);",
+  );
+  checkIncludes("C-06 fix: the no-numeric-value path renders the literal word Unavailable", hrCoreSource, ">Unavailable</span>");
+}
+
+{
+  // C-01 — Stage 4 typography minimums (>=12px labels, no essential text at
+  // 9-10px) must hold across every command-deck component touched by this
+  // corrective pass, not just the ones most visibly broken.
+  const typographyGuardedFiles = [
+    "components/ui/Panel.tsx",
+    "components/operations/MissionStatusBar.tsx",
+    "components/operations/HRInferenceCore.tsx",
+    "components/operations/RecentHrEstimateTrend.tsx",
+    "components/operations/OperationalPhysiologyStage.tsx",
+    "components/operations/InferenceHexFlow.tsx",
+    "components/operations/AffectedRegionSummary.tsx",
+    "components/operations/FaultRecoverySpine.tsx",
+    "components/operations/OperationalEventRail.tsx",
+    "components/operations/OperationalProvenanceChain.tsx",
+    "components/operations/ModalityPentagon.tsx",
+    "components/operations/SignalRibbonMatrix.tsx",
+  ];
+  const subTwelvePx = /text-\[(9(\.5)?|10(\.5)?|11)px\]/;
+  for (const relPath of typographyGuardedFiles) {
+    const source = readFileSync(join(REPO_SRC_ROOT, relPath), "utf8");
+    const match = source.match(subTwelvePx);
+    check(`C-01 typography guard: ${relPath} has no arbitrary text size below 12px`, match === null, match ? `found "${match[0]}"` : undefined);
+  }
+}
+
+// ===========================================================================
 // Summary
 // ===========================================================================
 

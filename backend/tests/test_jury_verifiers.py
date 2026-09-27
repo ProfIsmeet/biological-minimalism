@@ -147,6 +147,39 @@ def test_evidence_verifier_detects_present_empty_ambiguous(tmp_path: Path) -> No
     assert evidence_verifier.main(["--root", str(tmp_path)]) == 2
 
 
+def test_evidence_verifier_resolves_cross_run_duplicates_via_precedence(tmp_path: Path) -> None:
+    # Two *different* run directories each independently ship their own
+    # AUDIT.md and state-fault screenshot — the real situation once more than
+    # one work run has ever produced evidence. This must resolve to PRESENT
+    # (not AMBIGUOUS) by picking the higher-precedence run as canonical, while
+    # still recording the other run's file as `superseded` for the audit trail.
+    older = tmp_path / "frontend" / "qa-screenshots" / "claude-stage2-3-final-acceptance"
+    newer = tmp_path / "frontend" / "qa-screenshots" / "claude-stage4-5-real-visual-implementation"
+    older.mkdir(parents=True)
+    newer.mkdir(parents=True)
+    (older / "AUDIT.md").write_text("# older audit\n", encoding="utf-8")
+    (newer / "AUDIT.md").write_text("# newer audit\n", encoding="utf-8")
+    (older / "state-fault-x.png").write_bytes(b"old")
+    (newer / "state-fault-y.png").write_bytes(b"new")
+
+    by_id = {r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path)}
+
+    assert by_id["audit-main"].status == evidence_verifier.PRESENT
+    assert by_id["audit-main"].superseded == ["frontend/qa-screenshots/claude-stage2-3-final-acceptance/AUDIT.md"]
+    assert by_id["state-fault"].status == evidence_verifier.PRESENT
+    assert by_id["state-fault"].superseded == [
+        "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-fault-x.png"
+    ]
+
+    # A genuine same-run duplicate must still be unresolvable and AMBIGUOUS —
+    # cross-run precedence must never paper over a real same-directory clash.
+    (newer / "state-nominal-a.png").write_bytes(b"a")
+    (newer / "state-nominal-b.png").write_bytes(b"b")
+    by_id2 = {r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path)}
+    assert by_id2["state-nominal"].status == evidence_verifier.AMBIGUOUS
+    assert by_id2["state-nominal"].superseded == []
+
+
 def test_evidence_verifier_hash_is_optional_and_deterministic(tmp_path: Path) -> None:
     qa = tmp_path / "frontend" / "qa-screenshots" / "x"
     qa.mkdir(parents=True)
