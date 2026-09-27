@@ -116,9 +116,46 @@ All numbers reproduced independently and match the inherited Stage 2-3 claims ex
 
 No regressions from the unmodified base. No source files changed in Phase 0.
 
+## Phase 1 — COMPLETE (commit `6ea2d05`)
+
+Real S14 acceptance ran end-to-end (backend discovery, checkpoint hash match,
+`AI_ESTIMATED` HR, real fault injection, HR-rebuilding, recovery, 3x
+idempotent reload). 2 confirmed Stage 2-3 evidence defects corrected
+(mislabeled recovery screenshot, CSS-zoom evidence); 1 suspected defect
+(WebGL rebuild substitute) investigated and cleared as already honest.
+
+## Phase 2 — Stage 4/V1 — COMPLETE (commit `ec655e9`)
+
+Hostile-audited all 8 routes. 4 material defects found and fixed: legacy
+disconnected header on 3 routes (V1-01), MetricTile text overlap (V1-02),
+distorted/clipped orbit SVG (V1-03), wrong browser tab title on 2 routes
+(V1-04). One self-caught regression during this phase (verifier path
+literals) found and fixed without weakening any test.
+
+## Phase 3 — Stage 5/V2 — COMPLETE (no source changes; verification only)
+
+Found the command-deck architecture already substantially built. Verified
+the first-viewport contract, the full required viewport matrix
+(1920x1080/1440x900/1280x800/1024x768/390x844/real-200%-zoom), and
+regression-tested the reduce-motion toggle and mobile dialog after the
+Stage 4 refactors. One finding (duplicate-looking inference summaries)
+reviewed and documented as an intentional, non-contradictory dual framing —
+not changed.
+
+## Final phase — reports, final verification, commit, push — IN PROGRESS
+
+All 8 mandated reports written. One more self-caught regression found and
+fixed during final verification (evidence-verifier `audit-main` glob
+narrowing broke 2 backend unit tests; reverted, documented instead as an
+accepted AMBIGUOUS). Final clean-tree verification suite green except for
+that one documented, understood evidence-verifier AMBIGUOUS.
+
 ## Next concrete action
 
-Phase 1: fix the 3 confirmed/suspected Stage 2-3 evidence defects (recovered-signals mislabel, CSS-zoom-200%, WebGL fallback-copy check) and attempt real S14 acceptance using the discovered anchor-worktree dataset/checkpoint (set `BIOMIN_PPG_DALIA_PATH` / `BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH` env vars pointing read-only at the anchor worktree, start isolated backend/frontend services on non-conflicting ports, run the real replay/fault/rebuild/recovery matrix). Then Stage 4, then Stage 5.
+Stage the final docs/evidence commit, run `git diff --check`, commit, push
+`claude/stage4-5-visual-command-deck` (non-force), verify local/remote SHA
+equality, stop task-created services (backend 8003, frontend 3003), and
+deliver the final chat response with the required YAML verdict block.
 
 ## Services/processes started by this task (to stop at the end)
 

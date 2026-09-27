@@ -54,7 +54,7 @@
       "visual_review": "confirms V1-03 fix; getBoundingClientRect() = 300x300"
     },
     {
-      "file": "stage4-route-system-brief-desktop.png",
+      "file": "stage4-route-final-architecture-page-desktop.png",
       "route": "/system-brief",
       "viewport": "1280x800",
       "state": "nominal — route cohesion/typography reference, no defect found",
@@ -72,6 +72,46 @@
       "trigger": "CDP viewport emulation 390x844x3",
       "sha256": "1c0ae8c5075e3b103207140d758d99021472f1ba8b45baf7a922d8b9dc82dbed",
       "visual_review": "pass — status band, source/session identity, and presenter controls all visible without scrolling"
+    },
+    {
+      "file": "stage5-viewport-1920x1080-mission-overview.png",
+      "route": "/mission-overview",
+      "viewport": "1920x1080",
+      "state": "nominal synthetic demo — viewport matrix",
+      "classification": "real",
+      "trigger": "CDP viewport emulation 1920x1080x1",
+      "sha256": "2b1b2330cf8db0231fb48e63a7169df37c1b7c357087e06be774487ced0ef57a",
+      "visual_review": "pass — no overflow, full Section 01 visible without scrolling"
+    },
+    {
+      "file": "stage5-viewport-1440x900-mission-overview.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "nominal synthetic demo — viewport matrix",
+      "classification": "real",
+      "trigger": "CDP viewport emulation 1440x900x1",
+      "sha256": "56f638c1634a4122062640e938ac246f5696d954437008c25160915406f85d24",
+      "visual_review": "pass — no overflow, full Section 01 visible without scrolling"
+    },
+    {
+      "file": "stage5-viewport-1024x768-mission-overview.png",
+      "route": "/mission-overview",
+      "viewport": "1024x768",
+      "state": "nominal synthetic demo — viewport matrix",
+      "classification": "real",
+      "trigger": "CDP viewport emulation 1024x768x1",
+      "sha256": "083ec120b352e90802ef845bd7f54b25f0eb10701f0cb9b9d83fc159beb7c26d",
+      "visual_review": "pass — no overflow, status band fully visible, HR card wraps below stage per expected xl: breakpoint"
+    },
+    {
+      "file": "stage5-inference-integrity-hexflow-orbit-reviewed.png",
+      "route": "/mission-overview",
+      "viewport": "1280x800",
+      "state": "Section 03 (Inference Integrity) — InferenceIntegrityOrbit + InferenceHexFlow side by side",
+      "classification": "real",
+      "trigger": "scroll to #sec-inference-integrity",
+      "sha256": "9bb7fd4e069cb152b4b97cce920706b956cc63c835afcbb759e3fcf8a71c2239",
+      "visual_review": "reviewed for V2-01 — see AUDIT.md section 8"
     }
   ]
 }
