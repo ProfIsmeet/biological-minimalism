@@ -1,0 +1,94 @@
+{
+  "generated_by": "ismet-stage7-digital-twin-prototype session",
+  "entries": [
+    {
+      "file": "00-before-current-digital-twin-route.png",
+      "route": "/digital-twin",
+      "branch": "origin/claude/stage4-5-visual-command-deck @ 7afe57114ad6f7537b73f17683f7ecd733606730 (unmodified)",
+      "viewport": "1568x745 (zoomed crop 943x471)",
+      "state": "live render, backend not running",
+      "interaction": "none, passive load",
+      "selected_module": null,
+      "reduced_motion": "unknown (not toggled)",
+      "webgl_state": "supported, rendering",
+      "sha256": "410d399d05f010db451af5d1ed5fde986e2844f249db809c251f2033decbae5b",
+      "visual_review_result": "Confirms CURRENT_SYSTEM_AUDIT.md F1 (weak/translucent silhouette) and F2 (feet clipped)",
+      "known_limitation": "None"
+    },
+    {
+      "file": "00-before-current-mission-overview.jpg",
+      "route": "/mission-overview",
+      "branch": "origin/claude/stage4-5-visual-command-deck @ 7afe57114ad6f7537b73f17683f7ecd733606730 (unmodified)",
+      "viewport": "1568x745",
+      "state": "live render, backend not running (fail-closed telemetry)",
+      "interaction": "none, passive load",
+      "selected_module": null,
+      "reduced_motion": "unknown (not toggled)",
+      "webgl_state": "not applicable (no 3D canvas visible in captured crop)",
+      "sha256": "b3aa38390c801a2e4678b35ced73d0d79287c0d8f0946505197eb5a91eed75db",
+      "visual_review_result": "Baseline reference for the product's own current Mission Overview presentation",
+      "known_limitation": "Backend not running is expected/intentional for this audit pass"
+    },
+    {
+      "file": "01-architecture-overview-frontal-focus-eeg-selected-scrolled.jpg",
+      "route": "/research/stage7-digital-twin-prototype",
+      "branch": "ismet/stage7-digital-twin-prototype (isolated worktree)",
+      "viewport": "1568x745",
+      "state": "3D rendering, supported WebGL",
+      "interaction": "clicked EEG modality button",
+      "selected_module": "frontal (EEG)",
+      "reduced_motion": "not toggled (default off; no autonomous animation regardless)",
+      "webgl_state": "supported, rendering",
+      "sha256": "0cac55e001c828144bd3d978c881d75df8fdd6e1fd66de7657d91c36623345e0",
+      "visual_review_result": "Opaque matte silhouette clearly legible at native scale; full head-to-feet framing, no clipping; region-focus ring correctly anchored to frontal module",
+      "known_limitation": "None"
+    },
+    {
+      "file": "02-region-focus-frontal-module-eeg-selected.jpg",
+      "route": "/research/stage7-digital-twin-prototype",
+      "branch": "ismet/stage7-digital-twin-prototype (isolated worktree)",
+      "viewport": "1568x745",
+      "state": "3D rendering, supported WebGL",
+      "interaction": "same selection as 01, unscrolled top-of-page framing",
+      "selected_module": "frontal (EEG)",
+      "reduced_motion": "not toggled",
+      "webgl_state": "supported, rendering",
+      "sha256": "8d1a0b933a4df35dd5412c40b964d8fae844b76f258ba6ea9922811a0244d30f",
+      "visual_review_result": "Watermark, disclosure text, view controls, canvas, and semantic topology list all compose correctly in one full-page view",
+      "known_limitation": "None"
+    },
+    {
+      "file": "03-webgl-context-loss-fallback-selection-preserved.jpg",
+      "route": "/research/stage7-digital-twin-prototype",
+      "branch": "ismet/stage7-digital-twin-prototype (isolated worktree)",
+      "viewport": "1568x745",
+      "state": "WebGL context lost (real WEBGL_lose_context.loseContext() call, not simulated)",
+      "interaction": "JS-triggered context loss while EEG/frontal selection was active",
+      "selected_module": "frontal (EEG)",
+      "reduced_motion": "not toggled",
+      "webgl_state": "lost",
+      "sha256": "97a0452dad98bc05fb212df78f295be317490b9eb4bfe55e62309dbba62b404f",
+      "visual_review_result": "Static 2D fallback renders all 5 sensor markers, preserves the active selection's accent-outline styling, shows the architecture-only disclaimer, and offers a working retry button",
+      "known_limitation": "None"
+    },
+    {
+      "file": "04-context-loss-retry-recovered-selection-preserved.jpg",
+      "route": "/research/stage7-digital-twin-prototype",
+      "branch": "ismet/stage7-digital-twin-prototype (isolated worktree)",
+      "viewport": "1568x745",
+      "state": "3D rendering restored after retry",
+      "interaction": "clicked \"Try 3D view again\" from the context-loss fallback",
+      "selected_module": "frontal (EEG)",
+      "reduced_motion": "not toggled",
+      "webgl_state": "supported, rendering (fresh context after remount)",
+      "sha256": "0e0f8a128875a316c239b79b02cdc5286b3a92f512f1b7efc82c4bcc5cb08ba8",
+      "visual_review_result": "3D view fully recovered with the exact same selection/region-focus state preserved",
+      "known_limitation": "None"
+    }
+  ],
+  "not_captured": [
+    { "reason": "Browser window in this remote session could not be resized (resize_window reported success but rendered viewport never changed)", "affected": ["mobile 390x844", "1024x768", "1440x900 dedicated capture", "1920x1080 dedicated capture", "real 200% browser zoom"] },
+    { "reason": "Deferred per master prompt's own explicit instruction", "affected": ["actual OS screen-reader testing"] },
+    { "reason": "Not conclusively reproducible via automated key-press simulation in this session", "affected": ["keyboard focus-ring screenshot proof (code-reviewed as present, not screenshot-proven)"] }
+  ]
+}
