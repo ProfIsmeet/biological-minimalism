@@ -235,3 +235,90 @@ Specifically searched for and did **not** find:
   already-shipped `source_error` UI state (`sourceStateStatus === "error"`),
   clearly labeled `CONTROLLED` in its filename and in this document — this
   mirrors exactly how the prior Codex audit produced the same evidence.
+
+  **SUPERSEDED by the `claude/stage4-5-visual-command-deck` independent
+  re-audit** — see section 12 below. A real PPG-DaLiA S14 dataset and
+  validated checkpoint were discovered as git-ignored assets on this host,
+  making the assumption above ("absent") stale for that later task. This
+  document is left otherwise unmodified as the historical record of what
+  was true and knowable in this session.
+
+## 12. Independent re-audit and remediation (added by `claude/stage4-5-visual-command-deck`, 2026-09-27)
+
+A later, independent task (`claude/stage4-5-visual-command-deck`, branched
+from this exact commit) re-audited this evidence package before building on
+top of it, per its own mission's Stage 2-3 remediation requirement not to
+trust inherited conclusions merely because a verifier exited zero. It found:
+
+1. **`state-recovered-signals.png` was mislabeled.** Visual inspection
+   showed the Live Signals page displaying an ACTIVE red "Source state
+   could not be loaded — Failed to fetch" error banner, "REPLAY STATE:
+   Unavailable — source error", "SIMULATED FAULT: Not currently confirmed"
+   — this was an active fault/error view, not a recovered view, despite its
+   filename, evidence-index classification ("real"), and this document's
+   §11 both describing it as recovered. Corrected: the original file is
+   preserved unmodified (for the audit trail, not the release bundle) at
+   `docs/claude-stage4-5-visual-command-deck/superseded-stage2-3-evidence/state-recovered-signals-INCORRECT-shows-active-error.png`;
+   a genuinely recovered capture now fills the canonical evidence slot
+   (`live-signals-synthetic-demo-post-restart-connected.png`, same
+   backend-restart trigger, this time showing no error banner, `CONNECTED`,
+   2 of 5 channels confirmed).
+
+2. **`mission-overview-200-zoom-accessibility.png` used
+   `document.documentElement.style.zoom = 2`**, a CSS property mutation
+   this repository's own later mission rules disallow as "real browser
+   zoom" (it does not shrink `window.innerWidth`/`clientWidth` the way
+   genuine zoom does, so an `scrollWidth === clientWidth` check can pass
+   even where real zoom would reveal overflow). The original file is
+   preserved at
+   `docs/claude-stage4-5-visual-command-deck/superseded-stage2-3-evidence/mission-overview-zoom-INCORRECT-used-css-zoom-property.png`;
+   the canonical slot is now filled by
+   `mission-overview-200-zoom-real-devicemetrics.png`, captured via a
+   genuine CDP device-metrics-override viewport halving (1280x800 CSS px
+   -> 640x400 CSS px at 4x device-scale-factor — the standard DevTools
+   mechanism for emulating real browser zoom, which does shrink
+   `window.innerWidth`).
+
+3. **`state-rebuilding-webgl-contextloss-retry.png` was investigated and
+   found NOT to be a defect** — its disclosed limitation in §11 above was
+   already honest and accurate. It has been renamed to
+   `webgl-contextloss-retry-fallback-demo.png` and kept as supplementary
+   evidence (not the canonical F-07 "rebuilding" slot) purely to avoid glob
+   ambiguity in `scripts/verify_jury_release_evidence.py` now that a
+   stronger, more literal HR-rebuilding capture exists (see next item).
+
+4. **Real PPG-DaLiA S14 dataset and checkpoint were discovered.** Contrary
+   to this session's finding that "no archive or checkpoint file was found
+   anywhere reasonable on the host," a later task found both as git-ignored
+   files inside a different, sibling worktree checkout of this same
+   repository on the same host
+   (`ml/checkpoints/model_b_ppg_plus_imu_ppg_dalia.pt`, exact byte-size and
+   SHA-256 match; `datasets/ppg-dalia/raw_uci/ppg_dalia_uci.zip`, containing
+   a real `PPG_FieldStudy/S14/S14.pkl` payload nested inside an inner
+   `data.zip`). This was not a discoverability failure in this session — a
+   worktree-isolated checkout genuinely does not inherit another checkout's
+   git-ignored files, and this session correctly avoided fabricating
+   success. It does mean Stage 3B's `BLOCKED_EXTERNAL` verdict was an
+   accurate reflection of *this session's own environment*, not of the host
+   in general. The later task used the real assets read-only via
+   `BIOMIN_PPG_DALIA_PATH` / `BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH` and
+   produced genuine real-S14 fault/rebuilding/recovery evidence
+   (`state-fault-real-s14-simulated-packet-loss.png`,
+   `state-rebuilding-real-s14-hr-warmup.png`,
+   `state-recovered-real-s14-after-condition-cleared.png`), which now also
+   fill the canonical F-07 fault/rebuilding/recovered slots as strictly
+   stronger evidence than the honest substitutes this session used.
+
+5. **This `STATUS.md`'s "Remaining tasks" section is stale** as a
+   standalone artifact: it lists "push to origin" and "stop the two test
+   services" as outstanding, but the commit that carries this exact text is
+   itself the tip of the pushed `origin/claude/stage2-3-final-acceptance`
+   ref, and neither port 3003 nor 8003 had an active listener when checked
+   independently — both actions were evidently completed after this file
+   was last edited, just never reflected back into it. `STATUS.md` is left
+   unmodified as the historical record; this note is the correction.
+
+No other claim in this document was found to be false. See
+`docs/claude-stage4-5-visual-command-deck/MASTER_HANDOFF_REPORT.md` for the
+full independent re-audit, real-S14 acceptance trace, and Stage 4/5 work
+built on top of this corrected baseline.

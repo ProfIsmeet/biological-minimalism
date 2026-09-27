@@ -66,3 +66,20 @@ None of these four items were skipped by choice within this task's control;
 each is either an explicit external environment gap (Docker, dataset) or an
 explicit owner-directed deferral (screen reader), both honestly recorded
 rather than worked around.
+
+## Correction (added by `claude/stage4-5-visual-command-deck`, 2026-09-27)
+
+Item 3 above ("An approved local PPG-DaLiA distribution and validated HR
+checkpoint are configured...") has since happened: a later, independent task
+discovered both assets as git-ignored files in a sibling worktree checkout
+on the same host and independently verified real S14 discovery, checkpoint
+hash match, `AI_ESTIMATED` HR generation, real dataset-gated fault
+injection, HR-rebuilding (`warming_up`), and recovery — all through the real
+backend/frontend, not fabricated. Stage 3B's "real S14 canonical success"
+and "hostile-state convergence with real S14" rows above are `COMPLETE` as
+of that task for the environment where those assets are present; they
+remain `BLOCKED_EXTERNAL` on any checkout lacking the (git-ignored, never
+committed) dataset/checkpoint. See
+`docs/claude-stage4-5-visual-command-deck/MASTER_HANDOFF_REPORT.md` section
+9 for the full chronological trace. Items 1 (screen reader), 2 (Docker), and
+4 (final Codex review) remain exactly as described above.

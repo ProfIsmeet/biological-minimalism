@@ -67,3 +67,21 @@ mode is fully functional, fail-closed-honest, and safe to present:
    procedure and recovery guidance once a real dataset is configured, and
    the recovery card in this evidence directory for a non-technical
    quick-reference during a live session.
+
+## Correction (added by `claude/stage4-5-visual-command-deck`, 2026-09-27)
+
+The dataset/checkpoint absence above was specific to this session's
+environment. A later, independent task found both as git-ignored assets on
+the same host (a sibling worktree checkout) and independently verified the
+real "Load Canonical Jury Demo" -> real S14 replay -> `AI_ESTIMATED` HR ->
+real simulated fault -> HR withheld -> fault cleared -> HR rebuilding ->
+recovered path end-to-end, through the real product UI. **If those same
+assets are present wherever a jury demo is actually run** (they are
+git-ignored and must be provisioned per-machine, never committed — see
+`docs/DATASET_REPLAY.md`), the real recorded-replay and real simulated-fault
+demo paths described as "NOT ready to demo" above are ready, subject to the
+same independent re-verification on the actual demo machine that this
+document already recommends for any environment change. If those assets are
+*not* present on the demo machine, every guideline above still applies
+exactly as written — this is an environment-dependent capability, not a
+statement about the product.
