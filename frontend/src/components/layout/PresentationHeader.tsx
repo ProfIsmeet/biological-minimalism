@@ -8,7 +8,7 @@ import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
 
 interface PresentationHeaderProps {
-  variant: "final" | "monitoring" | "system" | "experimental" | "reference";
+  variant: "final" | "monitoring" | "system" | "experimental" | "reference" | "insights" | "timeline" | "settings";
 }
 
 const VARIANT_LABEL: Record<PresentationHeaderProps["variant"], string> = {
@@ -17,6 +17,9 @@ const VARIANT_LABEL: Record<PresentationHeaderProps["variant"], string> = {
   system: "System Brief",
   experimental: "Experimental Research",
   reference: "Digital Twin Reference",
+  insights: "AI Insights",
+  timeline: "Mission Timeline",
+  settings: "Settings",
 };
 
 const VARIANT_ACCENT: Record<PresentationHeaderProps["variant"], string> = {
@@ -25,6 +28,9 @@ const VARIANT_ACCENT: Record<PresentationHeaderProps["variant"], string> = {
   system: "text-information",
   experimental: "text-experimental",
   reference: "text-ink-muted",
+  insights: "text-information",
+  timeline: "text-ink-muted",
+  settings: "text-ink-muted",
 };
 
 /**

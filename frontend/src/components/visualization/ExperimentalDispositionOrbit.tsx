@@ -26,7 +26,14 @@ export function ExperimentalDispositionOrbit() {
 
   return (
     <div className="flex flex-col items-center gap-4 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-6 sm:flex-row sm:items-start sm:gap-8">
-      <svg width={SIZE} height={SIZE} role="img" aria-label="Candidate sensors evaluated around the final CORE_PLUS_CONTEXT architecture reference ring, none carried into the final architecture">
+      <svg
+        width={SIZE}
+        height={SIZE}
+        viewBox={`0 0 ${SIZE} ${SIZE}`}
+        className="h-[300px] w-[300px] shrink-0"
+        role="img"
+        aria-label="Candidate sensors evaluated around the final CORE_PLUS_CONTEXT architecture reference ring, none carried into the final architecture"
+      >
         {entries.map(([key], index) => {
           const angleRad = ((index * angleStep - 90) * Math.PI) / 180;
           const x = round2(CENTER + CANDIDATE_RADIUS * Math.cos(angleRad));

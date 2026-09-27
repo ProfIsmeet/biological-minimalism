@@ -1,0 +1,77 @@
+{
+  "task": "claude-stage4-5-visual-command-deck",
+  "base_sha": "98b73c168f95c91e7f5f5e8e4beef9ca79136d53",
+  "browser": "Chrome DevTools MCP (real Chromium)",
+  "entries": [
+    {
+      "file": "stage4-before-ai-insights-legacy-shell-and-overlap.png",
+      "route": "/ai-insights",
+      "viewport": "1280x800",
+      "state": "before Stage 4 fix — legacy 'Mission Control / Earth Orbit / Mission Day' header, MetricTile text overlap on transient Unavailable state",
+      "classification": "real",
+      "trigger": "navigate to /ai-insights on initial synthetic-demo load",
+      "sha256": "aa47f0091799727d3f090862071c88542c1f8e9db6f65d18bb318708ff431275",
+      "visual_review": "confirms V1-01 and V1-02"
+    },
+    {
+      "file": "stage4-after-ai-insights-unified-shell.png",
+      "route": "/ai-insights",
+      "viewport": "1280x800",
+      "state": "after Stage 4 fix — shared PresentationHeader, 'Biological Minimalism / AI INSIGHTS', SYNTHETIC DEMO/CONNECTED",
+      "classification": "real",
+      "trigger": "navigate to /ai-insights after AppHeader/PresentationHeader fix",
+      "sha256": "283e87a208753eeee120fc07f103b4b15057712f9250f48c255c6db5d1f73527",
+      "visual_review": "confirms V1-01 fix"
+    },
+    {
+      "file": "stage4-after-ai-insights-replay-no-text-overlap.png",
+      "route": "/ai-insights",
+      "viewport": "1280x800",
+      "state": "after Stage 4 fix — real PPG-DaLiA S14 replay mode, HRV/Respiration/BP deterministically Unavailable, no text overlap",
+      "classification": "real",
+      "trigger": "load real S14 replay via REST, navigate to /ai-insights",
+      "sha256": "3e0d2c41e4d39e267bf243556eda83f363597034f00d5ea91e42e7c23fe682b7",
+      "visual_review": "confirms V1-02 fix under deterministic long-value conditions"
+    },
+    {
+      "file": "stage4-before-orbit-diagram-clipped.png",
+      "route": "/research/experimental",
+      "viewport": "1280x800",
+      "state": "before Stage 4 fix — ExperimentalDispositionOrbit SVG center label clipped, only 3 of 4 candidate nodes visible",
+      "classification": "real",
+      "trigger": "navigate to /research/experimental",
+      "sha256": "da5787e9169fb549a81c4577c07251c1f0e676ec85032466a88dfae6ee353db8",
+      "visual_review": "confirms V1-03"
+    },
+    {
+      "file": "stage4-after-orbit-diagram-fixed.png",
+      "route": "/research/experimental",
+      "viewport": "1280x800",
+      "state": "after Stage 4 fix — full 'CORE_PLUS_CONTEXT / Final architecture' label visible, all 4 candidate nodes (Thoracic/Wrist/Leg/Second-site) visible",
+      "classification": "real",
+      "trigger": "reload after viewBox/sizing fix",
+      "sha256": "dc06a0dac7b3ca11ea14afa277a632f0b2904fec39dcfa6b9018eb5b5da715da",
+      "visual_review": "confirms V1-03 fix; getBoundingClientRect() = 300x300"
+    },
+    {
+      "file": "stage4-route-system-brief-desktop.png",
+      "route": "/system-brief",
+      "viewport": "1280x800",
+      "state": "nominal — route cohesion/typography reference, no defect found",
+      "classification": "real",
+      "trigger": "navigate to /system-brief",
+      "sha256": "01b270e0bd2e4270756bed615b51758217e01393510efc4e97cf50c36bff7f71",
+      "visual_review": "pass — clean editorial typography, consistent shell"
+    },
+    {
+      "file": "stage4-route-mission-overview-mobile-390x844.png",
+      "route": "/mission-overview",
+      "viewport": "390x844",
+      "state": "mobile first-viewport spot check — nominal synthetic demo",
+      "classification": "real",
+      "trigger": "CDP viewport emulation 390x844x3",
+      "sha256": "1c0ae8c5075e3b103207140d758d99021472f1ba8b45baf7a922d8b9dc82dbed",
+      "visual_review": "pass — status band, source/session identity, and presenter controls all visible without scrolling"
+    }
+  ]
+}

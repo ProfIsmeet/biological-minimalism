@@ -54,10 +54,10 @@ const violations = [];
 // after writing localStorage, or other mounted consumers in the same tab
 // would only ever see the new preference after a reload.
 {
-  const source = read("app/settings/page.tsx");
+  const source = read("app/settings/SettingsClient.tsx");
   if (!source.includes("window.dispatchEvent(new Event(REDUCE_MOTION_CHANGE_EVENT))")) {
     violations.push({
-      file: "app/settings/page.tsx",
+      file: "app/settings/SettingsClient.tsx",
       reason: "Reduced-motion toggle does not dispatch REDUCE_MOTION_CHANGE_EVENT after writing localStorage — same-tab consumers would not update live",
     });
   }

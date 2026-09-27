@@ -3847,7 +3847,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   check("reduce-motion: boot script accepts legacy 'true'", layoutSource.includes("v==='true'"));
   check("reduce-motion: boot script removes the class when not enabled", layoutSource.includes("classList.remove('reduce-motion')"));
 
-  const settingsSource = readFileSync(join(REPO_SRC_ROOT, "app/settings/page.tsx"), "utf8");
+  const settingsSource = readFileSync(join(REPO_SRC_ROOT, "app/settings/SettingsClient.tsx"), "utf8");
   check("reduce-motion: Settings reads through the shared predicate", settingsSource.includes("reduceMotionEnabledFromStorage"));
 }
 
@@ -3885,7 +3885,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 // ===========================================================================
 
 {
-  const settingsSource = readFileSync(join(REPO_SRC_ROOT, "app/settings/page.tsx"), "utf8");
+  const settingsSource = readFileSync(join(REPO_SRC_ROOT, "app/settings/SettingsClient.tsx"), "utf8");
   checkNotIncludes("settings: no API_BASE_URL in public route", settingsSource, "API_BASE_URL");
   checkNotIncludes("settings: no WS_URL in public route", settingsSource, "WS_URL");
   checkNotIncludes("settings: no uvicorn instruction", settingsSource, "uvicorn");
@@ -4159,7 +4159,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 // ===========================================================================
 
 {
-  const timelineSource = readFileSync(join(REPO_SRC_ROOT, "app/mission-timeline/page.tsx"), "utf8");
+  const timelineSource = readFileSync(join(REPO_SRC_ROOT, "app/mission-timeline/MissionTimelineClient.tsx"), "utf8");
   checkNotIncludes("timeline F-03: unsafe % Adapted label is absent", timelineSource, "% Adapted");
   checkNotIncludes("timeline F-03: legacy overall_adaptation is never rendered", timelineSource, "overall_adaptation");
   checkNotIncludes("timeline F-03: legacy narrative is never rendered", timelineSource, ".narrative");
