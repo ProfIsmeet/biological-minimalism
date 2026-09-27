@@ -97,7 +97,6 @@ export function ConceptualTwinStage() {
     if (reducedMotion) {
       angleRef.current = REDUCED_MOTION_ANGLE;
       setAngleDeg((REDUCED_MOTION_ANGLE * 180) / Math.PI);
-      setPlaying(false);
     }
   }, [reducedMotion]);
 

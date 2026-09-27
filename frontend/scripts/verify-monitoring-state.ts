@@ -2714,7 +2714,8 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   // useFrame/useThree) and cannot be imported into this plain-Node harness
   // the same way the pure lib/monitoring/** modules are — this is therefore
   // a source-inspection check that the reduced-motion gate exists and
-  // forces `playing` false on match, not a full behavioral render test.
+  // gates playback while matched without overwriting the user's `playing`
+  // preference, not a full behavioral render test.
   // Live confirmation is via QA screenshot/interaction, not this script.
   //
   // Stage 2 A2 update: this component no longer runs its own OS-only
@@ -2729,7 +2730,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   // rotation — is unchanged and still verified below.
   const conceptualTwinStageSource = readFileSync(join(REPO_SRC_ROOT, "components/visualization/human/ConceptualTwinStage.tsx"), "utf8");
   check("conceptual twin stage: uses the shared reduced-motion source of truth", conceptualTwinStageSource.includes("useReducedMotionPreference()"));
-  check("conceptual twin stage: reduced-motion forces playing to false", conceptualTwinStageSource.includes("setPlaying(false)"));
+  check("conceptual twin stage: reduced-motion preserves the user's playing preference", !conceptualTwinStageSource.includes("setPlaying(false)"));
   check("conceptual twin stage: auto-rotation is gated on both playing and reducedMotion", conceptualTwinStageSource.includes("if (playing && !reducedMotion)"));
 
   // Prompt 3A.2 §8 / §11 — the day slider, mission-day text, backend call, and

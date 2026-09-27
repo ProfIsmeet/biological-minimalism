@@ -71,7 +71,13 @@ export function useReducedMotionPreference(): boolean {
 
     const recompute = () => {
       const persisted = reduceMotionEnabledFromStorage(window.localStorage.getItem(REDUCE_MOTION_KEY));
-      setReduced(persisted || query.matches);
+      const effective = persisted || query.matches;
+      // Keep the CSS motion boundary synchronized with the shared JS source
+      // of truth. Settings toggles this class in the writing tab, but native
+      // storage events fire only in other tabs; without this update those
+      // tabs stop JS/Framer/WebGL motion while CSS motion remains enabled.
+      document.documentElement.classList.toggle("reduce-motion", effective);
+      setReduced(effective);
     };
 
     recompute();

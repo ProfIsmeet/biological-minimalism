@@ -38,6 +38,7 @@ const violations = [];
     "matchMedia(\"(prefers-reduced-motion: reduce)\")",
     "reduceMotionEnabledFromStorage(window.localStorage.getItem(REDUCE_MOTION_KEY))",
     "persisted || query.matches",
+    "document.documentElement.classList.toggle(\"reduce-motion\", effective)",
     "query.addEventListener(\"change\"",
     "window.addEventListener(\"storage\"",
     "window.addEventListener(REDUCE_MOTION_CHANGE_EVENT",
@@ -96,6 +97,12 @@ const violations = [];
   }
   if (!read("components/visualization/human/ConceptualTwinStage.tsx").includes("useReducedMotionPreference()")) {
     violations.push({ file: "components/visualization/human/ConceptualTwinStage.tsx", reason: "Does not use the shared useReducedMotionPreference() hook" });
+  }
+  if (read("components/visualization/human/ConceptualTwinStage.tsx").includes("setPlaying(false)")) {
+    violations.push({
+      file: "components/visualization/human/ConceptualTwinStage.tsx",
+      reason: "Reduced motion overwrites the user's rotation state; it must gate playback without preventing live resume when the preference is disabled",
+    });
   }
   if (!read("components/operations/OperationalPhysiologyStage.tsx").includes("useReducedMotionPreference()")) {
     violations.push({ file: "components/operations/OperationalPhysiologyStage.tsx", reason: "Does not use the shared useReducedMotionPreference() hook" });
