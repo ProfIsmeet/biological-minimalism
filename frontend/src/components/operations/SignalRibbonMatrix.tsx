@@ -42,25 +42,25 @@ function SignalLane({ entry, sharedDomain }: { entry: OperationalModalityState; 
       <div className="hidden flex-col gap-0.5 sm:flex">
         <div className="flex items-center gap-1.5">
           <span aria-hidden="true" className="h-0.5 w-4 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-          <span className="text-[11px] font-semibold text-ink-primary">{entry.modality}</span>
+          <span className="text-xs font-semibold text-ink-primary">{entry.modality}</span>
         </div>
-        <span className="text-[10px] text-ink-muted">{entry.region}</span>
-        {entry.plot?.sampleRateHz ? <span className="font-mono text-[9.5px] text-ink-muted">{entry.plot.sampleRateHz} Hz</span> : null}
+        <span className="text-xs text-ink-muted">{entry.region}</span>
+        {entry.plot?.sampleRateHz ? <span className="font-mono text-xs text-ink-muted">{entry.plot.sampleRateHz} Hz</span> : null}
       </div>
 
       <div style={{ height: ROW_HEIGHT }} className="col-span-2 sm:col-span-1">
         {isFaulted ? (
-          <div className="flex h-full items-center justify-center rounded-[4px] border border-dashed border-jury-fault/50 bg-jury-fault-soft/40 text-[10.5px] font-semibold uppercase tracking-wide text-jury-fault">
+          <div className="flex h-full items-center justify-center rounded-[4px] border border-dashed border-jury-fault/50 bg-jury-fault-soft/40 text-xs font-semibold uppercase tracking-wide text-jury-fault">
             Simulated fault — waveform withheld
           </div>
         ) : points.length && domain ? (
           <SignalLaneChart points={points} domain={domain} sharedDomain={sharedDomain} color={color} unit={entry.plot?.unit ?? null} syncId={SYNC_ID} />
         ) : (
-          <p className="flex h-full items-center text-[11px] text-ink-muted">{entry.observation.unavailableReason ?? entry.observation.statusLabel}</p>
+          <p className="flex h-full items-center text-xs text-ink-muted">{entry.observation.unavailableReason ?? entry.observation.statusLabel}</p>
         )}
       </div>
 
-      <div className="col-start-2 row-start-1 flex flex-col justify-between py-0.5 font-mono text-[10px] text-ink-muted sm:col-start-3">
+      <div className="col-start-2 row-start-1 flex flex-col justify-between py-0.5 font-mono text-xs text-ink-muted sm:col-start-3">
         {domain && !isFaulted ? (
           <>
             <span>{domain[1].toFixed(1)}</span>
@@ -69,7 +69,7 @@ function SignalLane({ entry, sharedDomain }: { entry: OperationalModalityState; 
         ) : null}
       </div>
 
-      <div className="col-span-2 flex items-center gap-1.5 text-[10px] text-ink-muted sm:hidden">
+      <div className="col-span-2 flex items-center gap-1.5 text-xs text-ink-muted sm:hidden">
         <span aria-hidden="true" className="h-0.5 w-4 shrink-0 rounded-full" style={{ backgroundColor: color }} />
         <span className="font-semibold text-ink-primary">{entry.modality}</span>
         <span>{entry.region}</span>
@@ -82,7 +82,7 @@ function SignalLane({ entry, sharedDomain }: { entry: OperationalModalityState; 
 function ArchitectureCoverageLane({ entry }: { entry: OperationalModalityState }) {
   const color = MODALITY_COLOR[entry.modality];
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-jury-border-subtle py-2.5 text-[11px] last:border-b-0">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-jury-border-subtle py-2.5 text-xs last:border-b-0">
       <span aria-hidden="true" className="h-0.5 w-4 shrink-0 rounded-full opacity-50" style={{ backgroundColor: color }} />
       <span className="font-semibold text-ink-primary">{entry.modality}</span>
       <span className="text-ink-muted">{entry.region}</span>
@@ -127,8 +127,8 @@ export function SignalRibbonMatrix({ selected, onSelect }: { selected: FinalModa
         <h2 id="signal-scope-heading" className="text-sm font-semibold text-ink-primary">
           Synchronized signal scope
         </h2>
-        <Link href="/live-monitoring" className="flex items-center gap-1 text-[11px] font-medium text-information underline underline-offset-2">
-          Detailed workspace <ArrowUpRight size={11} aria-hidden="true" />
+        <Link href="/live-monitoring" className="flex items-center gap-1 text-xs font-medium text-information underline underline-offset-2">
+          Detailed workspace <ArrowUpRight size={12} aria-hidden="true" />
         </Link>
       </div>
 
@@ -151,13 +151,13 @@ export function SignalRibbonMatrix({ selected, onSelect }: { selected: FinalModa
       </div>
 
       {sharedDomain ? (
-        <div className="flex justify-between border-t border-jury-border-subtle pt-1.5 font-mono text-[10px] text-ink-disabled sm:pl-[120px]">
+        <div className="flex justify-between border-t border-jury-border-subtle pt-1.5 font-mono text-xs text-ink-disabled sm:pl-[120px]">
           <span>t={sharedDomain[0].toFixed(2)}s</span>
           <span>t={sharedDomain[1].toFixed(2)}s</span>
         </div>
       ) : null}
 
-      <p className="text-[10px] leading-snug text-ink-muted">
+      <p className="text-xs leading-snug text-ink-muted">
         PPG, IMU and ECG share one real time axis drawn from the confirmed source&rsquo;s own sample rate and start time. EEG and EOG carry no
         waveform channel in this demonstrator and are never synthesised.
       </p>

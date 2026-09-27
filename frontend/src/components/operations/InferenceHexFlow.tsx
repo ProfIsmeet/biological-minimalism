@@ -192,7 +192,7 @@ export function InferenceHexFlow() {
         <h2 id="hexflow-heading" className="text-sm font-semibold text-ink-primary">
           Inference &amp; fault flow
         </h2>
-        <span className="text-[10px] uppercase tracking-wide text-ink-muted">Source → HR output</span>
+        <span className="text-xs uppercase tracking-wide text-ink-muted">Source → HR output · not a confidence score</span>
       </div>
 
       <div className="w-full">
@@ -203,9 +203,9 @@ export function InferenceHexFlow() {
           hexR={DESKTOP_HEX_R}
           nodes={nodes}
           edges={edges}
-          primaryFontSize={10.5}
-          secondaryFontSize={8.5}
-          className="hidden h-auto w-full sm:block"
+          primaryFontSize={12}
+          secondaryFontSize={10}
+          className="hidden h-auto w-full max-w-[560px] mx-auto sm:block"
         />
         <HexFlowSvg
           idPrefix="hexflow-mobile"
@@ -214,22 +214,22 @@ export function InferenceHexFlow() {
           hexR={MOBILE_HEX_R}
           nodes={nodes}
           edges={edges}
-          primaryFontSize={11}
-          secondaryFontSize={9}
+          primaryFontSize={13}
+          secondaryFontSize={11}
           className="mx-auto block h-auto max-w-[280px] sm:hidden"
         />
       </div>
 
       {/* §18 — accessible node names + states without requiring the SVG. */}
-      <ul className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-ink-secondary sm:grid-cols-3">
+      <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-[13px] text-ink-secondary sm:grid-cols-3">
         {nodes.map((n) => (
           <li key={n.id} className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: NODE_STYLE[n.state].stroke }} />
+            <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: NODE_STYLE[n.state].stroke }} />
             <span className="font-semibold text-ink-primary">{n.label}:</span> {STATE_WORD[n.state]}
           </li>
         ))}
       </ul>
-      <p className="text-[10px] leading-snug text-ink-muted">
+      <p className="text-xs leading-snug text-ink-muted">
         {nodeById("window").state === "blocked"
           ? "Window assembly requires both PPG and IMU — one confirmed input alone is insufficient."
           : "PPG + IMU assemble the model input window; the model produces the HR output."}

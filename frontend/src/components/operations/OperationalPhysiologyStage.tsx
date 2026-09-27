@@ -62,25 +62,25 @@ export function OperationalPhysiologyStage({ selected: selectedProp, onSelectMod
         <h2 id="physiology-stage-heading" className="text-sm font-semibold text-ink-primary">
           Sensing system stage
         </h2>
-        <span className="text-[11px] uppercase tracking-wide text-ink-muted">CORE_PLUS_CONTEXT · 5 MODALITIES</span>
+        <span className="text-xs uppercase tracking-wide text-ink-muted">CORE_PLUS_CONTEXT · 5 MODALITIES</span>
       </div>
 
       {/* Prompt 3A.2 §5.2/§6 — the avatar column is widened (64/36) so the
           operational-avatar cell is wide enough (~395px at 1440) to host the
           side-by-side figure + module rail at a properly-sized figure, rather
           than collapsing to the narrow stacked-grid fallback. */}
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[64%_36%]">
-        <div className="min-h-[300px] overflow-hidden rounded-[8px] border border-jury-border-subtle bg-surface-2">
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[58%_42%]">
+        <div className="min-h-[240px] overflow-hidden rounded-[8px] border border-jury-border-subtle bg-surface-2">
           <PhysiologyAvatar3D mode="operational" anchors={anchors} reducedMotion={reducedMotion} onSelectModality={setSelected} />
         </div>
 
         <div className="flex min-h-0 flex-col gap-3">
-          <div className="flex flex-col gap-1 rounded-[8px] border border-jury-border-subtle bg-surface-2 p-3 text-xs">
+          <div className="flex flex-col gap-1 rounded-[8px] border border-jury-border-subtle bg-surface-2 p-3 text-sm">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="font-semibold text-ink-primary">
                 {selectedEntry.modality} <span className="font-normal text-ink-muted">— {selectedEntry.region}</span>
               </span>
-              <span className="rounded-[4px] border border-jury-border-subtle px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-secondary">
+              <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-ink-secondary">
                 {selectedEntry.stateLabel}
               </span>
             </div>
@@ -89,7 +89,7 @@ export function OperationalPhysiologyStage({ selected: selectedProp, onSelectMod
                 for every non-active state); `statusLabel` alone is used only
                 for the genuinely-active/dataset-scoped cases where no
                 gate/fault override applies. */}
-            <p className="text-ink-secondary">{selectedEntry.observation.unavailableReason ?? selectedEntry.observation.statusLabel}</p>
+            <p className="text-[13px] text-ink-secondary">{selectedEntry.observation.unavailableReason ?? selectedEntry.observation.statusLabel}</p>
           </div>
 
           {/* §7 — the Command Deck states each channel's category and current
@@ -101,16 +101,16 @@ export function OperationalPhysiologyStage({ selected: selectedProp, onSelectMod
               const sentence = entry.observation.unavailableReason ?? entry.observation.statusLabel;
               return (
                 <div key={modality} className="flex items-start gap-2 rounded-[6px] border border-jury-border-subtle bg-surface-2 px-2.5 py-1.5">
-                  <span aria-hidden="true" className="mt-1 h-0.5 w-4 shrink-0 rounded-full" style={{ backgroundColor: MODALITY_COLOR[modality] }} />
+                  <span aria-hidden="true" className="mt-1.5 h-0.5 w-4 shrink-0 rounded-full" style={{ backgroundColor: MODALITY_COLOR[modality] }} />
                   <div className="flex min-w-0 flex-col gap-0.5">
                     <div className="flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[11px] font-semibold text-ink-primary">{modality}</span>
-                      <span className="text-[10px] text-ink-muted">{entry.observation.channelName ?? "—"}</span>
+                      <span className="text-[13px] font-semibold text-ink-primary">{modality}</span>
+                      <span className="text-xs text-ink-muted">{entry.observation.channelName ?? "—"}</span>
                       {entry.plot?.sampleRateHz ? (
-                        <span className="font-mono text-[9.5px] text-ink-muted">{entry.plot.sampleRateHz} Hz</span>
+                        <span className="font-mono text-xs text-ink-muted">{entry.plot.sampleRateHz} Hz</span>
                       ) : null}
                     </div>
-                    <p className="text-[10.5px] leading-snug text-ink-secondary">{sentence}</p>
+                    <p className="text-xs leading-snug text-ink-secondary">{sentence}</p>
                   </div>
                 </div>
               );
@@ -119,7 +119,7 @@ export function OperationalPhysiologyStage({ selected: selectedProp, onSelectMod
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-jury-border-subtle pt-2 text-[11px]">
+      <div className="flex flex-wrap items-center gap-2 border-t border-jury-border-subtle pt-2 text-xs">
         <span className="shrink-0 font-semibold uppercase tracking-wide text-ink-muted">Recent</span>
         {recentEvents.length === 0 ? (
           <span className="text-ink-muted">No session events yet.</span>

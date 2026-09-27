@@ -51,7 +51,7 @@ export function OperationalProvenanceChain() {
         {steps.map((step, i) => (
           <li key={step.label} className="flex items-center gap-2 sm:flex-1">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5 rounded-[6px] border border-jury-border-subtle bg-surface-2 px-2.5 py-2 sm:mr-2">
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-ink-muted">{step.label}</span>
+              <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{step.label}</span>
               <span className="truncate text-xs font-medium text-ink-primary" title={step.value}>{step.value}</span>
             </div>
             {i < steps.length - 1 ? (

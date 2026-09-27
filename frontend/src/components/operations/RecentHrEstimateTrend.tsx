@@ -50,31 +50,53 @@ export function RecentHrEstimateTrend() {
           Recent HR estimate trend
         </h2>
         {trend?.currentValue != null ? (
-          <span className="font-mono text-xs font-semibold text-final-accent">{trend.currentValue.toFixed(1)} bpm</span>
+          <span className="font-mono text-base font-semibold text-final-accent">{trend.currentValue.toFixed(1)} bpm</span>
         ) : null}
       </div>
 
-      <div className="h-[92px] w-full">
+      <div className="h-[140px] w-full">
         {notApplicable ? (
-          <div className="flex h-full items-center justify-center text-center text-[11px] leading-snug text-ink-muted">
+          <div className="flex h-full items-center justify-center text-center text-[13px] leading-snug text-ink-muted">
             Not applicable — synthetic demo carries no HR prediction stream.
           </div>
         ) : !trend || !trend.hasData || !trend.domain ? (
-          <div className="flex h-full items-center justify-center text-center text-[11px] leading-snug text-ink-muted">
+          <div className="flex h-full items-center justify-center text-center text-[13px] leading-snug text-ink-muted">
             No HR estimate in the last {trend?.windowSeconds ?? 90}s.{view.faultActive ? " Simulated fault is withholding the output." : ""}
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={trend.points} margin={{ top: 4, right: 6, bottom: 2, left: 6 }}>
-              <YAxis domain={trend.domain} hide />
-              <XAxis dataKey="tSeconds" type="number" domain={[-trend.windowSeconds, 0]} hide />
+            <ComposedChart data={trend.points} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
+              {/* Real, visible tick labels instead of `hide` — a reviewer must
+                  be able to read the bpm range and time direction without
+                  guessing. Two ticks each (min/max, window-start/now) keep
+                  this legible without turning a 140px sparkline into a full
+                  scientific chart (that redesign is Stage 6 scope). */}
+              <YAxis
+                domain={trend.domain}
+                tickCount={2}
+                width={34}
+                tick={{ fontSize: 11, fill: "#758990" }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <XAxis
+                dataKey="tSeconds"
+                type="number"
+                domain={[-trend.windowSeconds, 0]}
+                ticks={[-trend.windowSeconds, 0]}
+                tickFormatter={(value: number) => (value === 0 ? "now" : `-${Math.round(-value)}s`)}
+                tick={{ fontSize: 11, fill: "#758990" }}
+                axisLine={false}
+                tickLine={false}
+                height={16}
+              />
               <Area
                 type="monotone"
                 dataKey="value"
                 stroke="#69B7AD"
-                strokeWidth={1.8}
+                strokeWidth={2}
                 fill="#69B7AD"
-                fillOpacity={0.08}
+                fillOpacity={0.1}
                 isAnimationActive={false}
                 connectNulls={false}
                 dot={false}
@@ -84,12 +106,13 @@ export function RecentHrEstimateTrend() {
         )}
       </div>
 
-      <p className="font-mono text-[10px] text-ink-muted">Replay HR estimate · no reference HR channel in the current runtime</p>
+      <p className="font-mono text-xs text-ink-muted">Replay HR estimate · no reference HR channel in the current runtime</p>
       {/* §3C.1 §5 — an unexplained break in the line can read as a rendering
           defect; this stays visible regardless of whether the current window
           happens to contain a gap, and stays visually subordinate (smaller,
-          dimmer) to the scope label above it. */}
-      <p className="text-[9.5px] leading-snug text-ink-disabled">Gaps indicate intervals where the HR output was unavailable or withheld.</p>
+          dimmer) to the scope label above it. Kept at/above the 12px floor
+          rather than the previous 9.5px. */}
+      <p className="text-xs leading-snug text-ink-disabled">Gaps indicate intervals where the HR output was unavailable or withheld.</p>
     </section>
   );
 }

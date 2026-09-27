@@ -70,7 +70,7 @@ export function ModalityPentagon({ selected, onSelect }: { selected: FinalModali
         <h2 id="pentagon-heading" className="text-sm font-semibold text-ink-primary">
           Sensing topology
         </h2>
-        <span className="text-[10px] uppercase tracking-wide text-ink-muted">CORE_PLUS_CONTEXT</span>
+        <span className="text-xs uppercase tracking-wide text-ink-muted">CORE_PLUS_CONTEXT</span>
       </div>
 
       <div className="relative mx-auto" style={{ width: SIZE, height: SIZE }}>
@@ -94,16 +94,16 @@ export function ModalityPentagon({ selected, onSelect }: { selected: FinalModali
             const p = pos(v.angle, RADIUS);
             return <line key={v.modality} x1={CENTER} y1={CENTER} x2={p.x} y2={p.y} stroke="#152128" strokeWidth={1} />;
           })}
-          <text x={frontalMid.x} y={frontalMid.y - 8} textAnchor="middle" fontSize={10} fontWeight={700} fill="#63BFB7" opacity={0.85}>FRONTAL</text>
-          <text x={wristMid.x} y={wristMid.y + 14} textAnchor="middle" fontSize={10} fontWeight={700} fill="#63BFB7" opacity={0.85}>WRIST</text>
-          <text x={chestMid.x} y={chestMid.y + 2} textAnchor="middle" fontSize={10} fontWeight={700} fill="#63BFB7" opacity={0.85}>CHEST</text>
+          <text x={frontalMid.x} y={frontalMid.y - 8} textAnchor="middle" fontSize={12} fontWeight={700} fill="#63BFB7" opacity={0.85}>FRONTAL</text>
+          <text x={wristMid.x} y={wristMid.y + 14} textAnchor="middle" fontSize={12} fontWeight={700} fill="#63BFB7" opacity={0.85}>WRIST</text>
+          <text x={chestMid.x} y={chestMid.y + 2} textAnchor="middle" fontSize={12} fontWeight={700} fill="#63BFB7" opacity={0.85}>CHEST</text>
         </svg>
 
         {/* Centre summary. */}
-        <div className="absolute left-1/2 top-1/2 flex h-[72px] w-[72px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-0.5 rounded-full border border-jury-border-strong bg-surface-2 text-center">
-          <span className="text-[9.5px] font-semibold uppercase tracking-wide text-ink-muted">{view.isReplay ? "Replay" : "Synthetic"}</span>
-          <span className={view.connected ? "text-[11px] font-semibold text-jury-success" : "text-[11px] font-semibold text-jury-fault"}>{view.connected ? "Connected" : "Down"}</span>
-          <span className="font-mono text-[10px] text-ink-muted">{view.confirmedModalityCount}/{view.totalModalityCount}</span>
+        <div className="absolute left-1/2 top-1/2 flex h-[76px] w-[76px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-0.5 rounded-full border border-jury-border-strong bg-surface-2 text-center">
+          <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{view.isReplay ? "Replay" : "Synthetic"}</span>
+          <span className={view.connected ? "text-xs font-semibold text-jury-success" : "text-xs font-semibold text-jury-fault"}>{view.connected ? "Connected" : "Down"}</span>
+          <span className="font-mono text-xs text-ink-muted">{view.confirmedModalityCount}/{view.totalModalityCount}</span>
         </div>
 
         {/* Vertex buttons. */}
@@ -123,8 +123,8 @@ export function ModalityPentagon({ selected, onSelect }: { selected: FinalModali
               style={{ left: p.x, top: p.y, background: isSel ? "rgba(69,214,229,0.14)" : "transparent", boxShadow: isSel ? "0 0 0 1.5px rgba(69,214,229,0.6)" : "none" }}
             >
               <span aria-hidden="true" className="flex h-4 w-4 items-center justify-center rounded-full border-2" style={{ borderColor: color, background: entry.nodeState === "confirmed" ? `${color}33` : "transparent" }} />
-              <span className="text-[11px] font-bold leading-none text-ink-primary">{v.modality}</span>
-              <span className="text-[10px] leading-none text-ink-muted">{shortState(entry.stateLabel)}</span>
+              <span className="text-xs font-bold leading-none text-ink-primary">{v.modality}</span>
+              <span className="text-xs leading-none text-ink-muted">{shortState(entry.stateLabel)}</span>
             </button>
           );
         })}
@@ -134,13 +134,13 @@ export function ModalityPentagon({ selected, onSelect }: { selected: FinalModali
           current source actually carries, instead of the old ambiguous
           "N of 5 currently confirmed" (which read as if only N of 5 belong
           to the final architecture). */}
-      <p className="text-center text-[11px] font-semibold text-ink-secondary">
+      <p className="text-center text-xs font-semibold text-ink-secondary">
         {view.isReplay
           ? `${view.confirmedModalityCount} replay-observable channel${view.confirmedModalityCount === 1 ? "" : "s"} · ${view.totalModalityCount} final modalities`
           : `${view.confirmedModalityCount} of ${view.totalModalityCount} confirmed in this synthetic session`}
       </p>
       {view.isReplay && view.confirmedModalityCount < view.totalModalityCount ? (
-        <p className="text-center text-[10px] leading-snug text-ink-muted">
+        <p className="text-center text-xs leading-snug text-ink-muted">
           EEG and EOG are retained in the final architecture; this replay carries no EEG/EOG channel.
         </p>
       ) : null}

@@ -47,8 +47,8 @@ export function FaultRecoverySpine() {
         <span
           className={
             view.faultActive
-              ? "rounded-[4px] border border-jury-fault/40 bg-jury-fault-soft px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-jury-fault"
-              : "rounded-[4px] border border-jury-border-subtle bg-surface-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted"
+              ? "rounded-[4px] border border-jury-fault/40 bg-jury-fault-soft px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-jury-fault"
+              : "rounded-[4px] border border-jury-border-subtle bg-surface-2 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-ink-muted"
           }
         >
           {view.faultActive ? "Fault active" : "Nominal"}
@@ -67,11 +67,11 @@ export function FaultRecoverySpine() {
             const style = TONE_STYLE[tone];
             const above = tone === "fault" || tone === "warmup";
             return (
-              <li key={event.id} className="flex min-w-[92px] flex-1 flex-col items-center">
+              <li key={event.id} className="flex min-w-[104px] flex-1 flex-col items-center">
                 {/* Top slot (fault/warm-up rises above the axis). */}
-                <div className="flex h-[46px] w-full flex-col items-center justify-end">
+                <div className="flex h-[52px] w-full flex-col items-center justify-end">
                   {above ? (
-                    <span className={`mb-1 max-w-[90px] text-center text-[10px] font-medium leading-tight ${style.text}`}>{event.label}</span>
+                    <span className={`mb-1 max-w-[104px] text-center text-xs font-medium leading-tight ${style.text}`}>{event.label}</span>
                   ) : null}
                 </div>
                 {/* Axis row with node + connector. */}
@@ -85,18 +85,18 @@ export function FaultRecoverySpine() {
                   />
                 </div>
                 {/* Bottom slot (recovery drops below the axis). */}
-                <div className="flex h-[46px] w-full flex-col items-start justify-start">
+                <div className="flex h-[52px] w-full flex-col items-start justify-start">
                   {!above ? (
-                    <span className={`mt-1 w-full text-center text-[10px] font-medium leading-tight ${style.text}`}>{event.label}</span>
+                    <span className={`mt-1 w-full text-center text-xs font-medium leading-tight ${style.text}`}>{event.label}</span>
                   ) : null}
-                  <span className="mt-0.5 w-full text-center font-mono text-[9px] text-ink-muted">{eventTime(event)}</span>
+                  <span className="mt-0.5 w-full text-center font-mono text-xs text-ink-muted">{eventTime(event)}</span>
                 </div>
               </li>
             );
           })}
         </ol>
       )}
-      <p className="text-[10px] leading-snug text-ink-muted">
+      <p className="text-xs leading-snug text-ink-muted">
         Built from this session&rsquo;s recorded events only — fault-class above the axis, recovery-class below.
       </p>
     </section>

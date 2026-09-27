@@ -7,9 +7,9 @@ import { MODALITY_COLOR } from "@/lib/architecture";
 import { computeHrSegments } from "@/lib/monitoring/hrSegments";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 
-const DESKTOP_SIZE = 180;
-const MOBILE_SIZE = 158;
-const STROKE = 9;
+const DESKTOP_SIZE = 200;
+const MOBILE_SIZE = 172;
+const STROKE = 10;
 const GAP_DEGREES = 6;
 
 function polarPoint(cx: number, cy: number, r: number, angleDeg: number): { x: number; y: number } {
@@ -116,11 +116,11 @@ export function HRInferenceCore() {
           Heart-rate inference
         </h2>
         {showRecovered ? (
-          <span className="rounded-[4px] border border-jury-success/40 bg-jury-success-soft px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-jury-success">
+          <span className="rounded-[4px] border border-jury-success/40 bg-jury-success-soft px-2 py-1 text-xs font-semibold uppercase tracking-wide text-jury-success">
             Recovered
           </span>
         ) : view.faultActive ? (
-          <span className="rounded-[4px] border border-jury-fault/40 bg-jury-fault-soft px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-jury-fault">
+          <span className="rounded-[4px] border border-jury-fault/40 bg-jury-fault-soft px-2 py-1 text-xs font-semibold uppercase tracking-wide text-jury-fault">
             Simulated fault
           </span>
         ) : null}
@@ -132,50 +132,49 @@ export function HRInferenceCore() {
           {segments.map((segment, index) => {
             const start = index * arcSpan + GAP_DEGREES / 2;
             const end = (index + 1) * arcSpan - GAP_DEGREES / 2;
-            const mid = (start + end) / 2;
-            const labelPoint = polarPoint(center, center, radius + STROKE / 2 + 8, mid);
             return (
-              <g key={segment.key}>
-                <path
-                  d={arcPath(center, center, radius, start, end)}
-                  fill="none"
-                  stroke={segment.faulted ? "#D46F70" : segment.on ? "#69B7AD" : "#30464F"}
-                  strokeWidth={STROKE}
-                  strokeLinecap="round"
-                  strokeDasharray={segment.faulted ? `${STROKE} ${STROKE * 0.7}` : undefined}
-                />
-                <text x={labelPoint.x} y={labelPoint.y} textAnchor="middle" dominantBaseline="middle" fontSize={8} fontWeight={700} fill={segment.faulted ? "#D46F70" : segment.on ? "#69B7AD" : "#516269"}>
-                  {segment.abbr}
-                </text>
-              </g>
+              <path
+                key={segment.key}
+                d={arcPath(center, center, radius, start, end)}
+                fill="none"
+                stroke={segment.faulted ? "#D46F70" : segment.on ? "#69B7AD" : "#30464F"}
+                strokeWidth={STROKE}
+                strokeLinecap="round"
+                strokeDasharray={segment.faulted ? `${STROKE} ${STROKE * 0.7}` : undefined}
+              />
             );
           })}
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 px-7 text-center">
+        {/* The four categorical states (SRC/PPG/IMU/OUT) used to be labeled
+            in-ring at 8px, unreadable from any real viewing distance. The
+            ring now carries color/state only; the readable 13px checklist
+            below is the sole source of truth for what each segment means —
+            removes redundant unreadable text instead of duplicating it. */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-8 text-center">
           {centerValue ? (
             <>
-              <span className="font-mono text-[clamp(30px,9vw,46px)] font-semibold leading-none tabular-nums text-ink-primary">{centerValue}</span>
-              <span className="text-[12px] text-ink-muted">bpm</span>
-              <span className="mt-0.5 max-w-[120px] text-[11px] leading-snug text-ink-secondary">{centerReason}</span>
+              <span className="font-mono text-[clamp(38px,10vw,56px)] font-semibold leading-none tabular-nums text-ink-primary">{centerValue}</span>
+              <span className="text-sm text-ink-muted">bpm</span>
+              <span className="mt-1 max-w-[140px] text-[13px] leading-snug text-ink-secondary">{centerReason}</span>
             </>
           ) : (
             <>
-              <span className="text-[20px] font-semibold leading-tight text-ink-disabled">Unavailable</span>
-              <span className="mt-0.5 line-clamp-3 max-w-[130px] text-[11px] leading-snug text-ink-muted">{centerReason}</span>
+              <span className="text-[26px] font-semibold leading-tight text-ink-disabled">Unavailable</span>
+              <span className="mt-1 line-clamp-3 max-w-[150px] text-[13px] leading-snug text-ink-secondary">{centerReason}</span>
             </>
           )}
         </div>
       </div>
 
-      <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-[10px] text-ink-secondary">
+      <ul className="grid grid-cols-1 gap-1.5 text-[13px] text-ink-secondary min-[420px]:grid-cols-2">
         {segments.map((segment) => (
           <li key={segment.key} className="flex items-center gap-1.5">
-            <span aria-hidden="true" className={clsx("h-1.5 w-1.5 rounded-full", segment.on ? "bg-final-accent" : "bg-ink-disabled")} />
-            <span className="font-semibold">{segment.abbr}</span> {segment.label}: {segment.on ? "Yes" : "No"}
+            <span aria-hidden="true" className={clsx("h-2 w-2 shrink-0 rounded-full", segment.faulted ? "bg-jury-fault" : segment.on ? "bg-final-accent" : "bg-ink-disabled")} />
+            <span className="font-semibold text-ink-primary">{segment.abbr}</span> {segment.label}: {segment.on ? "Yes" : "No"}
           </li>
         ))}
       </ul>
-      <p className="flex items-center justify-center gap-1.5 text-[10px] text-ink-muted">
+      <p className="flex items-center justify-center gap-1.5 text-xs text-ink-muted">
         <span style={{ color: MODALITY_COLOR.PPG }}>PPG</span> + <span style={{ color: MODALITY_COLOR.IMU }}>IMU</span> → <span className="font-semibold text-final-accent">HR</span>
       </p>
     </section>

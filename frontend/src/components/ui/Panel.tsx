@@ -23,8 +23,8 @@ export function Panel({ title, subtitle, icon, actions, children, className, con
         <div className="flex items-center gap-2.5">
           {icon ? <span className="text-cyan-400" aria-hidden="true">{icon}</span> : null}
           <div>
-            <HeadingTag className="text-sm font-semibold uppercase tracking-wider text-slate-200">{title}</HeadingTag>
-            {subtitle ? <p className="text-xs text-slate-500">{subtitle}</p> : null}
+            <HeadingTag className="text-[15px] font-semibold uppercase tracking-wide text-slate-100">{title}</HeadingTag>
+            {subtitle ? <p className="text-[13px] leading-snug text-slate-400">{subtitle}</p> : null}
           </div>
         </div>
         {actions ? <div className="flex items-center gap-2">{actions}</div> : null}

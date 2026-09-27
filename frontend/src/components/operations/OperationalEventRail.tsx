@@ -46,9 +46,9 @@ export function OperationalEventRail() {
           {recent.map((event) => (
             <li
               key={event.id}
-              className={clsx("flex items-center gap-2 rounded-[6px] border px-2.5 py-1.5 text-[11px]", eventTone(event.kind))}
+              className={clsx("flex items-center gap-2 rounded-[6px] border px-2.5 py-1.5 text-xs", eventTone(event.kind))}
             >
-              <span className="font-mono text-[10px] opacity-80">{formatEventTime(event)}</span>
+              <span className="font-mono text-xs opacity-80">{formatEventTime(event)}</span>
               <span className="font-medium">
                 {event.label}
                 {event.modality ? ` — ${event.modality}` : ""}
