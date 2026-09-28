@@ -30,6 +30,7 @@ const FULL_BODY_FIT = { halfWidth: H_FIGURE_HALF_WIDTH, marginFraction: 0.08, to
 
 function ViewRig({ aspect, compact, view }: { aspect: number; compact: boolean; view: DigitalTwinViewPreset }) {
   const camera = useThree((state) => state.camera) as THREE.OrthographicCamera;
+  const invalidate = useThree((state) => state.invalidate);
   useEffect(() => {
     const fit = computeOrthographicFit(aspect, compact ? 0.72 : 0.82, FULL_BODY_FIT);
     const fullBodyViewHeight = fit.top - fit.bottom;
@@ -50,7 +51,22 @@ function ViewRig({ aspect, compact, view }: { aspect: number; compact: boolean; 
     camera.up.set(0, 1, 0);
     camera.lookAt(...view.target);
     camera.updateProjectionMatrix();
-  }, [aspect, camera, compact, view]);
+    // Independent-audit correction (S7-AUDIT-02, HIGH): under this route's
+    // "demand" frameloop (active whenever motion is paused — i.e. for every
+    // non-default view, since selecting Chest/Wrist/Frontal pauses rotation),
+    // R3F only repaints on an explicit invalidate() or a JSX-prop diff it can
+    // see through its own reconciler. Mutating camera.left/right/top/bottom/
+    // position directly, as this effect does, is invisible to that
+    // reconciler, so — confirmed via runtime diagnostic: the camera object's
+    // own top/bottom/projectionMatrix WERE always being set correctly, but
+    // the canvas visibly never redrew to reflect it — Chest/Wrist focus
+    // reproducibly never actually zoomed in, staying on the last-painted
+    // full-body frame indefinitely, across a full dev-server restart, across
+    // 3s/8s waits, and independent of remount. Calling invalidate() here
+    // deterministically forces the next repaint to happen regardless of
+    // frameloop mode or reconciler-visible prop diffs.
+    invalidate();
+  }, [aspect, camera, compact, view, invalidate]);
   return null;
 }
 
@@ -245,7 +261,7 @@ export function ConceptualTwinStage() {
               <li key={module.id} className="rounded-[7px] border border-jury-border-subtle bg-surface-2 p-3">
                 <button
                   type="button"
-                  onClick={() => selectView(module.id === "chest" ? "chest" : module.id === "wrist" ? "wrist" : "front")}
+                  onClick={() => selectView(module.id === "chest" ? "chest" : module.id === "wrist" ? "wrist" : "frontal")}
                   aria-pressed={selected}
                   className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
                 >

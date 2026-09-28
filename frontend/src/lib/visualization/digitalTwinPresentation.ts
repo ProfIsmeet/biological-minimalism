@@ -1,6 +1,6 @@
 import type { FinalRegion } from "@/lib/architecture";
 
-export type DigitalTwinViewId = "default" | "front" | "back" | "chest" | "wrist";
+export type DigitalTwinViewId = "default" | "front" | "back" | "chest" | "wrist" | "frontal";
 
 export interface DigitalTwinViewPreset {
   id: DigitalTwinViewId;
@@ -63,6 +63,26 @@ export const DIGITAL_TWIN_VIEW_PRESETS: Record<DigitalTwinViewId, DigitalTwinVie
     target: [0.285, 0.93, 0],
     viewHeight: 0.58,
     activeRegion: "Wrist",
+  },
+  // Independent-audit correction (S7-AUDIT-01): the semantic architecture
+  // summary's "Frontal module" card already offered the identical
+  // Focus-region/Selected-region affordance chest and wrist expose, but no
+  // view preset ever set `activeRegion: "Frontal"` — the card was reachable
+  // and clickable but could never actually reach a "Selected region" state,
+  // and EEG/EOG (2 of 5 canonical modalities) had no dedicated close-up
+  // framing at all. Target/viewHeight follow the same convention as chest/
+  // wrist: centred on H_JOINTS.headCenter.y (1.68, holographicGeometry.ts,
+  // imported unmodified), tight enough to read the EEG/EOG landmarks without
+  // losing head/neck/shoulder context.
+  frontal: {
+    id: "frontal",
+    label: "Frontal focus",
+    description: "Frontal module with EEG and EOG landmarks in anatomical context",
+    azimuthDeg: 4,
+    elevationDeg: 4,
+    target: [0, 1.68, 0],
+    viewHeight: 0.42,
+    activeRegion: "Frontal",
   },
 };
 
