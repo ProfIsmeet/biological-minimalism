@@ -20,14 +20,14 @@ export function Panel({ title, subtitle, icon, actions, children, className, con
   return (
     <section className={clsx("mission-panel flex flex-col", className)} aria-label={title}>
       <div className="mission-panel-header">
-        <div className="flex items-center gap-2.5">
+        <div className="flex min-w-0 items-center gap-2.5">
           {icon ? <span className="text-cyan-400" aria-hidden="true">{icon}</span> : null}
-          <div>
-            <HeadingTag className="text-[15px] font-semibold uppercase tracking-wide text-slate-100">{title}</HeadingTag>
+          <div className="min-w-0">
+            <HeadingTag className="break-words text-[15px] font-semibold uppercase tracking-wide text-slate-100">{title}</HeadingTag>
             {subtitle ? <p className="text-[13px] leading-snug text-slate-400">{subtitle}</p> : null}
           </div>
         </div>
-        {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+        {actions ? <div className="ml-auto flex shrink-0 items-center gap-2">{actions}</div> : null}
       </div>
       <div className={clsx("flex-1 p-4", contentClassName)}>{children}</div>
     </section>

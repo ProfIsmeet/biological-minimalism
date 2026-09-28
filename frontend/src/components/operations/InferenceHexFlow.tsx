@@ -6,7 +6,7 @@ import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 type Positions = Record<HexNodeId, { x: number; y: number }>;
 
 // Wide horizontal flow — unchanged shape, just given more breathing room per
-// node so the enlarged §14/§20 labels (>=10px) do not crowd the hexagons.
+// node so the operational labels (>=12px) do not crowd the hexagons.
 const DESKTOP_POS: Positions = {
   source: { x: 44, y: 100 },
   ppgInput: { x: 124, y: 50 },
@@ -204,7 +204,7 @@ export function InferenceHexFlow() {
           nodes={nodes}
           edges={edges}
           primaryFontSize={12}
-          secondaryFontSize={10}
+          secondaryFontSize={12}
           className="hidden h-auto w-full max-w-[560px] mx-auto sm:block"
         />
         <HexFlowSvg
@@ -215,7 +215,7 @@ export function InferenceHexFlow() {
           nodes={nodes}
           edges={edges}
           primaryFontSize={13}
-          secondaryFontSize={11}
+          secondaryFontSize={12}
           className="mx-auto block h-auto max-w-[280px] sm:hidden"
         />
       </div>

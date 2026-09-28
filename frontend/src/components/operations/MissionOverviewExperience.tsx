@@ -19,7 +19,7 @@ import { useMissionUiStore } from "@/store/missionUiStore";
 function SectionHeader({ index, kicker, title, blurb }: { index: string; kicker: string; title: string; blurb: string }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-information">
+      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-information">
         {index} · {kicker}
       </span>
       <h2 className="text-[19px] font-semibold leading-tight tracking-[-0.02em] text-ink-primary sm:text-[22px]">{title}</h2>
@@ -59,31 +59,27 @@ export function MissionOverviewExperience() {
           />
         </div>
         <MissionStatusBar />
-        {/* Real Stage 5 implementation pass — HR + affected region + trend
-            (the "why is HR in that state, and where" answer) now render
-            BEFORE the full physiology stage on every width below `xl`
-            (mobile through the required 1024x768 tablet check), via `order`,
-            not DOM position. Previously the DOM order put the tall
-            (240-300px) avatar stage first, which is what pushed HR below the
-            fold on mobile and 1024x768 — a real layout defect, not merely a
-            reporting one. At `xl` (>=1280px, covers 1440/1920) the two
-            columns sit side by side again, so `order` has no visible effect
-            there — both are already in the first viewport simultaneously. */}
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,8fr)_minmax(300px,4fr)]">
-          <div className="order-2 flex min-h-0 flex-col xl:order-1">
+        {/* HR, affected region, and trend render before the physiology stage
+            below 1366px. At tablet widths HR and trend share a compact row;
+            the wider split returns at 1366px so both remain first-viewport
+            information instead of merely beginning at the fold. */}
+        <div className="grid grid-cols-1 gap-4 min-[1366px]:grid-cols-[minmax(0,8fr)_minmax(300px,4fr)]">
+          <div className="order-2 flex min-h-0 flex-col min-[1366px]:order-1">
             <OperationalPhysiologyStage selected={selected} onSelectModality={setSelected} />
           </div>
-          <div className="order-1 flex flex-col gap-4 xl:order-2">
+          <div className="order-1 flex flex-col gap-4 min-[1366px]:order-2">
             <AffectedRegionSummary />
-            <HRInferenceCore />
-            <RecentHrEstimateTrend />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 min-[1366px]:grid-cols-1">
+              <HRInferenceCore />
+              <RecentHrEstimateTrend />
+            </div>
           </div>
         </div>
 
         {/* Scroll cue (§5). */}
         <a
           href="#sec-signal-geometry"
-          className="mx-auto mt-2 flex flex-col items-center gap-1 rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-muted outline-none transition-colors hover:text-information focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+          className="mx-auto mt-2 flex flex-col items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted outline-none transition-colors hover:text-information focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
         >
           Scroll for signal path &amp; fault response
           <ChevronDown size={16} aria-hidden="true" className="motion-safe:animate-bounce" />

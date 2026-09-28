@@ -16,6 +16,18 @@ body {
   min-height: 100dvh;
 }
 
+/* Stage 4 operational typography floor. Historical components used many
+   arbitrary 9–11px Tailwind classes, including essential evidence labels.
+   Enforce the shared 12px floor centrally so every Panel consumer and route
+   benefits without duplicating a brittle file-by-file exception list. */
+.text-\[9px\],
+.text-\[9\.5px\],
+.text-\[10px\],
+.text-\[10\.5px\],
+.text-\[11px\] {
+  font-size: 0.75rem !important;
+}
+
 body {
   @apply bg-canvas text-ink-primary antialiased;
   background-image: radial-gradient(1200px 600px at 50% -200px, rgba(105, 183, 173, 0.055), transparent 72%);
@@ -55,7 +67,7 @@ body {
   }
 
   .mission-panel-header {
-    @apply flex items-center justify-between border-b border-white/5 px-4 py-3;
+    @apply flex items-start justify-between gap-3 border-b border-white/5 px-4 py-3;
   }
 
   .tabular-nums-mono {

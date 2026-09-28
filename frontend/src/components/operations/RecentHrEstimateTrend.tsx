@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Area, ComposedChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { deriveHrTrend } from "@/lib/monitoring/hrTrend";
+import { visibleTrendCurrentValue } from "@/lib/monitoring/hrOperationalPresentation";
 import { useConfirmedHistory } from "@/lib/monitoring/useConfirmedSnapshot";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 
@@ -42,6 +43,7 @@ export function RecentHrEstimateTrend() {
   }, [samples, nowSeconds]);
 
   const notApplicable = !view.isReplay;
+  const visibleCurrentValue = visibleTrendCurrentValue(view.predictionAvailability, trend?.currentValue ?? null);
 
   return (
     <section aria-labelledby="hr-trend-heading" className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-3">
@@ -49,12 +51,18 @@ export function RecentHrEstimateTrend() {
         <h2 id="hr-trend-heading" className="text-sm font-semibold text-ink-primary">
           Recent HR estimate trend
         </h2>
-        {trend?.currentValue != null ? (
-          <span className="font-mono text-base font-semibold text-final-accent">{trend.currentValue.toFixed(1)} bpm</span>
+        {visibleCurrentValue != null ? (
+          <span className="font-mono text-base font-semibold text-final-accent">{visibleCurrentValue.toFixed(1)} bpm</span>
         ) : null}
       </div>
 
-      <div className="h-[140px] w-full">
+      {view.isReplay && view.predictionAvailability !== "available" && trend?.hasData ? (
+        <p className="rounded-[5px] border border-jury-warning/30 bg-jury-warning-soft px-2 py-1.5 text-xs leading-snug text-jury-warning">
+          Current HR unavailable · plot retains confirmed historical estimates only
+        </p>
+      ) : null}
+
+      <div className="h-[120px] w-full 2xl:h-[140px]">
         {notApplicable ? (
           <div className="flex h-full items-center justify-center text-center text-[13px] leading-snug text-ink-muted">
             Not applicable — synthetic demo carries no HR prediction stream.
@@ -75,7 +83,7 @@ export function RecentHrEstimateTrend() {
                 domain={trend.domain}
                 tickCount={2}
                 width={34}
-                tick={{ fontSize: 11, fill: "#758990" }}
+                tick={{ fontSize: 12, fill: "#8CA0A6" }}
                 axisLine={false}
                 tickLine={false}
               />
@@ -85,7 +93,7 @@ export function RecentHrEstimateTrend() {
                 domain={[-trend.windowSeconds, 0]}
                 ticks={[-trend.windowSeconds, 0]}
                 tickFormatter={(value: number) => (value === 0 ? "now" : `-${Math.round(-value)}s`)}
-                tick={{ fontSize: 11, fill: "#758990" }}
+                tick={{ fontSize: 12, fill: "#8CA0A6" }}
                 axisLine={false}
                 tickLine={false}
                 height={16}

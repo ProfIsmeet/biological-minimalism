@@ -4,8 +4,8 @@ import { MODALITY_COLOR } from "@/lib/architecture";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 
 /**
- * Stage 5 real-implementation pass — a one-line "which body region is
- * affected right now" readout, independent of the full 3D physiology stage.
+ * A one-line "which simulated-fault region is affected right now" readout,
+ * independent of the full 3D physiology stage.
  * Exists specifically so mobile (390px) and tablet (1024px) first viewports
  * can satisfy the "affected modality/body region" contract without requiring
  * the full-height avatar render to be scrolled into view first — the avatar
@@ -55,10 +55,12 @@ export function AffectedRegionSummary() {
   const confirmedRegions = Array.from(new Set(view.modalities.filter((entry) => entry.nodeState === "confirmed").map((entry) => entry.region)));
 
   return (
-    <div className="flex items-center gap-2 rounded-[8px] border border-jury-border-subtle bg-surface-1 px-3.5 py-2.5 text-sm">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-[8px] border border-jury-border-subtle bg-surface-1 px-3.5 py-2.5 text-sm">
       <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-final-accent" />
-      <span className="font-semibold text-ink-primary">No affected region</span>
-      <span className="text-ink-secondary">— {confirmedRegions.length > 0 ? `${confirmedRegions.join(", ")} confirmed` : "no region currently confirmed"}</span>
+      <span className="font-semibold text-ink-primary">No active simulated-fault region</span>
+      <span className="text-ink-secondary">
+        — {confirmedRegions.length > 0 ? `confirmed replay inputs: ${confirmedRegions.join(", ")}` : "no replay input region currently confirmed"}
+      </span>
     </div>
   );
 }

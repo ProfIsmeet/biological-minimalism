@@ -79,6 +79,7 @@ import { BODY_SEGMENTS, HEAD_RADIUS, JOINTS, computeSegmentTransform, isFiniteVe
 import { ALL_FINAL_MODALITIES, MODALITY_ANCHOR_POSITION, REGION_ORBITS, buildSensorAnchors } from "../src/components/visualization/human/humanLayout";
 import { computeHrSegments } from "../src/lib/monitoring/hrSegments";
 import { deriveHrTrend } from "../src/lib/monitoring/hrTrend";
+import { deriveHrCorePresentation, visibleTrendCurrentValue } from "../src/lib/monitoring/hrOperationalPresentation";
 import { buildAnatomicalHuman } from "../src/components/visualization/human/anatomicalHumanGeometry";
 // Prompt-4 additions — route/runtime isolation, presenter preflight, demo
 // reset, architecture separation and claim-safety.
@@ -4196,8 +4197,9 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   // the HR-inference state and the affected-region summary without scrolling.
   // Achieved via `order-*` decoupling visual order from DOM order below `xl`.
   const experienceSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionOverviewExperience.tsx"), "utf8");
-  checkIncludes("C-04 fix: physiology stage is deprioritised below `xl` via order-2/xl:order-1", experienceSource, "order-2 flex min-h-0 flex-col xl:order-1");
-  checkIncludes("C-03/C-04 fix: HR/affected-region column is prioritised below `xl` via order-1/xl:order-2", experienceSource, "order-1 flex flex-col gap-4 xl:order-2");
+  checkIncludes("C-04 fix: physiology stage is deprioritised below desktop split", experienceSource, "order-2 flex min-h-0 flex-col min-[1366px]:order-1");
+  checkIncludes("C-03/C-04 fix: HR/affected-region column is prioritised below desktop split", experienceSource, "order-1 flex flex-col gap-4 min-[1366px]:order-2");
+  checkIncludes("C-04 fix: tablet and 1280 widths place HR and trend side by side", experienceSource, "md:grid-cols-2 min-[1366px]:grid-cols-1");
 
   const affectedIndex = experienceSource.indexOf("<AffectedRegionSummary");
   const hrCoreIndex = experienceSource.indexOf("<HRInferenceCore");
@@ -4209,18 +4211,46 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 }
 
 {
-  // C-06 — a screenshot filed as "rebuilding" actually showed a numeric HR
-  // value. Regression guard: `centerValue` (the only thing that renders a
-  // numeric bpm figure) must remain assignable ONLY inside the branch guarded
-  // by a genuine `view.prediction` object — which the backend never populates
-  // during `warming_up` (see backend/app/ml/replay_hr.py, prediction=None).
+  // C-06 — behaviorally prove the current HR and trend summary fail closed.
+  // These tests exercise the same pure derivation used by both production
+  // components, rather than merely searching their JSX for a preferred string.
+  const rebuilding = deriveHrCorePresentation({
+    telemetryAvailability: "active",
+    isReplay: true,
+    predictionValue: null,
+    inferenceStatusLabel: "Model is warming up",
+    faultActive: false,
+    requiredWindowSeconds: 8,
+  });
+  checkEqual("C-06 behavior: rebuilding has no numeric current HR", rebuilding.centerValue, null);
+  checkIncludes("C-06 behavior: rebuilding explains the fresh-window transition", rebuilding.nextStateText, "fresh 8 s synchronized PPG + IMU window");
+
+  const sourceErrorWithStalePrediction = deriveHrCorePresentation({
+    telemetryAvailability: "source_error",
+    isReplay: true,
+    predictionValue: 72.4,
+    inferenceStatusLabel: "Model available",
+    faultActive: false,
+    requiredWindowSeconds: 8,
+  });
+  checkEqual("C-06 behavior: source error suppresses even a supplied stale prediction", sourceErrorWithStalePrediction.centerValue, null);
+  checkEqual("C-06 behavior: source error wins the displayed reason", sourceErrorWithStalePrediction.centerReason, "Source error");
+
+  const recovered = deriveHrCorePresentation({
+    telemetryAvailability: "active",
+    isReplay: true,
+    predictionValue: 72.4,
+    inferenceStatusLabel: "Model available",
+    faultActive: false,
+    requiredWindowSeconds: 8,
+  });
+  checkEqual("C-06 behavior: recovered fresh prediction is rendered", recovered.centerValue, "72.4");
+  checkEqual("trend behavior: historical estimate is hidden while current output is withheld", visibleTrendCurrentValue("unavailable_no_prediction", 71.2), null);
+  checkEqual("trend behavior: historical estimate is hidden when replay output is not applicable", visibleTrendCurrentValue("not_applicable", 71.2), null);
+  checkEqual("trend behavior: available current estimate remains visible", visibleTrendCurrentValue("available", 71.2), 71.2);
+
   const hrCoreSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/HRInferenceCore.tsx"), "utf8");
-  checkIncludes("C-06 fix: centerValue starts null, not a fabricated default", hrCoreSource, "let centerValue: string | null = null;");
-  checkIncludes(
-    "C-06 fix: centerValue is assigned only inside the `view.prediction` branch",
-    hrCoreSource,
-    "} else if (view.prediction) {\n    centerValue = view.prediction.value.toFixed(1);",
-  );
+  checkIncludes("C-06 wiring: HR core consumes the behaviorally tested derivation", hrCoreSource, "deriveHrCorePresentation({");
   checkIncludes("C-06 fix: the no-numeric-value path renders the literal word Unavailable", hrCoreSource, ">Unavailable</span>");
 }
 
@@ -4241,6 +4271,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     "components/operations/OperationalProvenanceChain.tsx",
     "components/operations/ModalityPentagon.tsx",
     "components/operations/SignalRibbonMatrix.tsx",
+    "components/operations/MissionOverviewExperience.tsx",
   ];
   const subTwelvePx = /text-\[(9(\.5)?|10(\.5)?|11)px\]/;
   for (const relPath of typographyGuardedFiles) {
@@ -4248,6 +4279,16 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     const match = source.match(subTwelvePx);
     check(`C-01 typography guard: ${relPath} has no arbitrary text size below 12px`, match === null, match ? `found "${match[0]}"` : undefined);
   }
+  const globalsSource = readFileSync(join(REPO_SRC_ROOT, "app/globals.css"), "utf8");
+  for (const token of [".text-\\[9px\\]", ".text-\\[9\\.5px\\]", ".text-\\[10px\\]", ".text-\\[10\\.5px\\]", ".text-\\[11px\\]"]) {
+    checkIncludes(`C-01 shared floor: ${token} is promoted globally`, globalsSource, token);
+  }
+  checkIncludes("C-01 shared floor: promoted legacy utilities resolve to 12px", globalsSource, "font-size: 0.75rem !important");
+
+  const hexFlowSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/InferenceHexFlow.tsx"), "utf8");
+  check("C-01 SVG floor: inference secondary labels are at least 12px", !/secondaryFontSize=\{(?:9|10|11)\}/.test(hexFlowSource));
+  const trendSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/RecentHrEstimateTrend.tsx"), "utf8");
+  check("C-01 chart floor: trend ticks are at least 12px", !/fontSize:\s*(?:9|10|11)\b/.test(trendSource));
 }
 
 // ===========================================================================

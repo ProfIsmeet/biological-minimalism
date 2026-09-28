@@ -20,17 +20,24 @@ export function SettingsClient() {
   const [latencyMs, setLatencyMs] = useState<number | null>(null);
 
   useEffect(() => {
-    // HIGH-1: read through the shared predicate so Settings and the boot script
-    // agree on the accepted values.
-    const stored = reduceMotionEnabledFromStorage(window.localStorage.getItem(REDUCE_MOTION_KEY));
-    setReduceMotion(stored);
-    document.documentElement.classList.toggle("reduce-motion", stored);
+    const recomputePersistedPreference = () => {
+      setReduceMotion(reduceMotionEnabledFromStorage(window.localStorage.getItem(REDUCE_MOTION_KEY)));
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === REDUCE_MOTION_KEY || event.key === null) recomputePersistedPreference();
+    };
+    recomputePersistedPreference();
+    window.addEventListener("storage", onStorage);
+    window.addEventListener(REDUCE_MOTION_CHANGE_EVENT, recomputePersistedPreference);
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(REDUCE_MOTION_CHANGE_EVENT, recomputePersistedPreference);
+    };
   }, []);
 
   function toggleReduceMotion() {
     const next = !reduceMotion;
     setReduceMotion(next);
-    document.documentElement.classList.toggle("reduce-motion", next);
     window.localStorage.setItem(REDUCE_MOTION_KEY, next ? REDUCE_MOTION_ON : REDUCE_MOTION_OFF);
     // Stage 2 A2: the native `storage` event never fires in the tab that made
     // the write, so this same-tab custom event is what lets every mounted
@@ -100,9 +107,10 @@ export function SettingsClient() {
             <button
               type="button"
               role="switch"
+              aria-label="Reduce motion"
               aria-checked={reduceMotion}
               onClick={toggleReduceMotion}
-              className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${reduceMotion ? "bg-cyan-500" : "bg-white/10"}`}
+              className={`relative h-6 w-11 shrink-0 rounded-full transition-colors outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] ${reduceMotion ? "bg-cyan-500" : "bg-white/10"}`}
             >
               <span
                 className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${reduceMotion ? "translate-x-5" : "translate-x-0.5"}`}

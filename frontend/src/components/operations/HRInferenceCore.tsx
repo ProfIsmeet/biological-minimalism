@@ -5,10 +5,12 @@ import clsx from "clsx";
 
 import { MODALITY_COLOR } from "@/lib/architecture";
 import { computeHrSegments } from "@/lib/monitoring/hrSegments";
+import { deriveHrCorePresentation } from "@/lib/monitoring/hrOperationalPresentation";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 
-const DESKTOP_SIZE = 200;
-const MOBILE_SIZE = 172;
+const LARGE_DESKTOP_SIZE = 200;
+const COMPACT_DESKTOP_SIZE = 176;
+const MOBILE_SIZE = 148;
 const STROKE = 10;
 const GAP_DEGREES = 6;
 
@@ -25,20 +27,19 @@ function arcPath(cx: number, cy: number, r: number, startDeg: number, endDeg: nu
 }
 
 /**
- * Compact circular HR-inference readout for `/mission-overview` (master
- * prompt 3A §10). Diameter is capped to 158–180px so `Unavailable` never
- * dominates the mobile viewport; the outer ring stays a fixed four-segment
- * categorical display (SRC/PPG/IMU/OUT), never a continuous confidence arc.
+ * Compact circular HR-inference readout for `/mission-overview`. The outer
+ * ring is a fixed four-segment availability checklist (SRC/PPG/IMU/OUT),
+ * never a continuous confidence arc.
  */
 export function HRInferenceCore() {
   const view = useOperationalViewModel();
   const ppg = view.modalities.find((entry) => entry.modality === "PPG")!;
   const imu = view.modalities.find((entry) => entry.modality === "IMU")!;
 
-  const [size, setSize] = useState(DESKTOP_SIZE);
+  const [size, setSize] = useState(LARGE_DESKTOP_SIZE);
   useEffect(() => {
     function applySize() {
-      setSize(window.innerWidth < 640 ? MOBILE_SIZE : DESKTOP_SIZE);
+      setSize(window.innerWidth < 640 ? MOBILE_SIZE : window.innerWidth < 1536 ? COMPACT_DESKTOP_SIZE : LARGE_DESKTOP_SIZE);
     }
     applySize();
     window.addEventListener("resize", applySize);
@@ -92,22 +93,14 @@ export function HRInferenceCore() {
 
   const arcSpan = 360 / segments.length;
 
-  let centerValue: string | null = null;
-  let centerReason: string;
-  if (view.telemetryAvailability === "source_error") {
-    centerReason = "Source error";
-  } else if (view.telemetryAvailability === "disconnected") {
-    centerReason = "Source disconnected";
-  } else if (view.telemetryAvailability === "awaiting_confirmation") {
-    centerReason = "Awaiting confirmed frame";
-  } else if (!view.isReplay) {
-    centerReason = "Not applicable — synthetic demo";
-  } else if (view.prediction) {
-    centerValue = view.prediction.value.toFixed(1);
-    centerReason = view.inferenceStatusLabel;
-  } else {
-    centerReason = view.inferenceStatusLabel;
-  }
+  const { centerValue, centerReason, nextStateText } = deriveHrCorePresentation({
+    telemetryAvailability: view.telemetryAvailability,
+    isReplay: view.isReplay,
+    predictionValue: view.prediction?.value ?? null,
+    inferenceStatusLabel: view.inferenceStatusLabel,
+    faultActive: view.faultActive,
+    requiredWindowSeconds: view.inference?.required_window_seconds ?? null,
+  });
 
   return (
     <section aria-labelledby="hr-core-heading" className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-3">
@@ -125,6 +118,12 @@ export function HRInferenceCore() {
           </span>
         ) : null}
       </div>
+
+      <p className="text-xs leading-snug text-ink-muted">Four independent availability checks · not confidence or model certainty</p>
+
+      <p className="rounded-[6px] border border-jury-border-subtle bg-surface-2 px-2.5 py-2 text-xs leading-snug text-ink-secondary">
+        {nextStateText}
+      </p>
 
       <div className="relative mx-auto" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
