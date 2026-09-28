@@ -1,0 +1,186 @@
+{
+  "task": "ismet-stage7-independent-browser-acceptance",
+  "implementation_checkpoint_sha": "e513327a8276f1a23e08090d0b67d08369d23770",
+  "source_branch": "origin/codex/stage7-digital-twin-integration",
+  "source_sha_verified": "c01f66f43a76c953996d811f3e846f3ac7d9a09c",
+  "audit_branch": "ismet/stage7-independent-browser-acceptance",
+  "browser": "Chrome (system-installed), driven via playwright-core 1.63.0 over CDP; devDependency reverted before final commit, not present in the committed tree",
+  "canonical_selection_rule": "Every filename in this directory is unique and was captured exactly once against the implementation checkpoint SHA above; there is no competing/superseded evidence set within this directory, so every PNG listed as required in the master task is CANONICAL. Slot 09 (desktop-frontal-focus) is SUPPLEMENTAL — not one of the 17 explicitly required screenshots, added to document the S7-AUDIT-01 correction. No screenshot in this set is SUPERSEDED. If a future audit adds a new evidence set under this same directory, the fail-closed rule is: the file with the latest capture timestamp in this manifest for a given required slot is canonical, and any older file for that slot becomes SUPERSEDED; an unresolvable timestamp collision is AMBIGUOUS and blocks the slot from being treated as PRESENT until a human adjudicates it.",
+  "entries": [
+    {
+      "file": "01-desktop-initial-view-1920x1080.png",
+      "slot": "desktop-default",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Default full-body view, motion active",
+      "sha256": "67398a7aac047800a6515501a818d6f4bcf2c5e9e370382b14c174074d0b3db3",
+      "note": "Renamed from 01-desktop-default-1920x1080.png during this audit because 'default' contains the substring 'fault', which the pre-existing evidence verifier's broad glob (frontend/qa-screenshots/**/*fault*.png) matches against an unrelated Stage 4-5 manifest slot, flipping that slot AMBIGUOUS. Renaming avoided the collision without touching the verifier or any other stage's evidence; content and SHA-256 are unchanged from the original capture."
+    },
+    {
+      "file": "02-desktop-front-view.png",
+      "slot": "desktop-front",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Front full-body orientation",
+      "sha256": "25207fa94474fec72d46edabed4926cc1d5a8b43afb8609f4adce8ec7fdb00f6"
+    },
+    {
+      "file": "03-desktop-back-view.png",
+      "slot": "desktop-back",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Back full-body orientation",
+      "sha256": "a1cd53522d0936d06f9332b7ca95068d827c99be2edebf4f59da0fc565a2185e"
+    },
+    {
+      "file": "04-desktop-chest-focus.png",
+      "slot": "desktop-chest-focus",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Chest focus, post S7-AUDIT-02 fix (verified visually zoomed close-up; pre-fix this framing never actually zoomed despite correct aria-pressed state)",
+      "sha256": "b4e97346eaa4ff76a54bbd9e39dd6c9670a2de730f9a70f239bf0edfff059698"
+    },
+    {
+      "file": "05-desktop-wrist-focus.png",
+      "slot": "desktop-wrist-focus",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Wrist focus, post S7-AUDIT-02 fix",
+      "sha256": "9e3d667f7ff00b5fae5cd29a5a60c1f3ab17934680c5f3776eb8a02408c0898e"
+    },
+    {
+      "file": "06-desktop-reduced-motion.png",
+      "slot": "desktop-reduced-motion",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "App-level reduced-motion preference persisted ON via /settings toggle; 'Rotation paused' shown",
+      "sha256": "fc09e44259e0eb68f893f3b0971d93278343a565b40e838377bba52b24b8ff9b"
+    },
+    {
+      "file": "07-tablet-1024x768.png",
+      "slot": "tablet-1024",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1024x768",
+      "zoom": "100%",
+      "state": "Default view",
+      "sha256": "99b388c15d626906449a4826618f499126a59514ff7bc268543036e936008df2"
+    },
+    {
+      "file": "08-mobile-390x844.png",
+      "slot": "mobile-390",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "390x844",
+      "zoom": "100%",
+      "state": "Default view",
+      "sha256": "e5894e4bfd2bfc36e6003818ca66df118174b93ef5f5f250428035903fd15f55"
+    },
+    {
+      "file": "09-desktop-frontal-focus.png",
+      "slot": "desktop-frontal-focus-supplemental",
+      "designation": "SUPPLEMENTAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Frontal focus (EEG/EOG), post S7-AUDIT-01 fix; not one of the 17 required slots",
+      "sha256": "2e024ec7506abd2c02325c218fc9d5ff777e0c4063c584cb981597b1bc4efee8"
+    },
+    {
+      "file": "10-keyboard-focus-first-view-control.png",
+      "slot": "keyboard-focus-visible",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1280x800",
+      "zoom": "100%",
+      "state": "Visible focus ring on first control after Tab from page load",
+      "sha256": "576c540c3a78178c39cd51683c9f9ace8e50488eca935ff4383331dd0d4bf70d"
+    },
+    {
+      "file": "11-semantic-summary-chest-selected.png",
+      "slot": "semantic-non-canvas-summary",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Semantic architecture summary DOM block, Chest selected",
+      "sha256": "4758ef75aad9760f7c6de72490a198f9766a143a0963db9e2c2332d29f22f238"
+    },
+    {
+      "file": "12-webgl-unsupported-fallback.png",
+      "slot": "webgl-unsupported",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Real browser-launch-flag WebGL disablement (--disable-webgl --disable-webgl2); static SVG fallback rendered",
+      "sha256": "b3ecc479dcaabb98adb4f71499896bee5abafb75086a7f2b19f5b965593f5327"
+    },
+    {
+      "file": "13-webgl-context-lost-state.png",
+      "slot": "webgl-context-lost",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Real WEBGL_lose_context.loseContext() invoked on the live canvas",
+      "sha256": "2acba3bedea99b4b09ef6435d757e9aa3c5552ce403dc7b249570811e0221bde"
+    },
+    {
+      "file": "14-webgl-retry-restored.png",
+      "slot": "webgl-retry-success",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Post-retry, single canvas confirmed, controls functional (cycle 1 of 3)",
+      "sha256": "27e1252b541c512fdfe97341f256e557ff9fbeee69c3299f05dd92ce9b21f098",
+      "note": "Renamed from 14-webgl-retry-recovered.png during this audit because 'recovered' contains the substring 'recover', which the pre-existing evidence verifier's broad glob (frontend/qa-screenshots/**/*recover*.png) matches against an unrelated Stage 4-5 manifest slot, flipping that slot AMBIGUOUS. Content and SHA-256 are unchanged from the original capture."
+    },
+    {
+      "file": "15-navigation-entry-sidebar.png",
+      "slot": "nav-entry-discoverable",
+      "designation": "CANONICAL",
+      "route": "/digital-twin (reached via sidebar nav click)",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Sidebar 'Digital Twin' entry visible and functional",
+      "sha256": "4ae3e312c7ff067e21bdf56b737d5fd2a74ad8279f7022cd63c7d9a155a2a52b"
+    },
+    {
+      "file": "16-direct-route-refresh.png",
+      "slot": "direct-route-refresh",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "Direct URL navigation + hard refresh",
+      "sha256": "a225b99da5b158def3d80a7ddd018130340696a230eea69c5ccf63c0d4c9170c"
+    },
+    {
+      "file": "17-post-navigation-return.png",
+      "slot": "post-navigation-return",
+      "designation": "CANONICAL",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "zoom": "100%",
+      "state": "After navigating away and returning",
+      "sha256": "8df1b086e5ab67ac6a0922c72ff049e1cd68f94aa903335e3ae102278c7a84f9"
+    }
+  ],
+  "not_captured": {
+    "genuine_200_percent_zoom": "BLOCKED_EXTERNAL — see RESPONSIVE_AND_ZOOM_MATRIX.md. No forbidden substitute (CSS zoom/transform/DOM injection/device emulation) was used to fake this slot; it is intentionally absent rather than falsified."
+  }
+}
