@@ -84,3 +84,15 @@ Further phase updates are appended below so this file remains a durable recovery
 - Canonical visual review: every selected canonical PNG opened and inspected.
 - Task services: backend 8014 and restarted frontend 3014 still task-owned and running; stop after push.
 - Next action: inspect final diff, commit explicit paths, push normally, verify refs/cleanliness, stop services.
+
+## Push and Cleanup
+
+- Three logical commits created: frontend corrections, fail-closed QA policy,
+  and independent audit reports.
+- Branch pushed normally to `origin/codex/stage4-5-independent-visual-audit`;
+  no force push and no merge.
+- Task-owned frontend 3014 and backend 8014 were stopped.
+- Dataset and checkpoint remain read-only and uncommitted.
+- `main`, Claude's source branch, and Ismet's Stage 7 branch were not modified.
+- Final action: commit this durable cleanup record, push it, and verify exact
+  local/remote equality plus a clean worktree.
