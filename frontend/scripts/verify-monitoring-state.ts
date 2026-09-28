@@ -81,6 +81,12 @@ import { computeHrSegments } from "../src/lib/monitoring/hrSegments";
 import { deriveHrTrend } from "../src/lib/monitoring/hrTrend";
 import { deriveHrCorePresentation, visibleTrendCurrentValue } from "../src/lib/monitoring/hrOperationalPresentation";
 import { buildAnatomicalHuman } from "../src/components/visualization/human/anatomicalHumanGeometry";
+import {
+  DIGITAL_TWIN_VIEW_PRESETS,
+  computeDigitalTwinFrustum,
+  digitalTwinViewForKey,
+  resolveDigitalTwinView,
+} from "../src/lib/visualization/digitalTwinPresentation";
 // Prompt-4 additions — route/runtime isolation, presenter preflight, demo
 // reset, architecture separation and claim-safety.
 import {
@@ -4289,6 +4295,48 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   check("C-01 SVG floor: inference secondary labels are at least 12px", !/secondaryFontSize=\{(?:9|10|11)\}/.test(hexFlowSource));
   const trendSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/RecentHrEstimateTrend.tsx"), "utf8");
   check("C-01 chart floor: trend ticks are at least 12px", !/fontSize:\s*(?:9|10|11)\b/.test(trendSource));
+}
+
+// ---------------------------------------------------------------------------
+// Stage 7 Digital Twin presentation behavior
+// ---------------------------------------------------------------------------
+
+{
+  const fallback = resolveDigitalTwinView("not-a-view");
+  checkEqual("Stage 7: unknown view fails safely to default", fallback.id, "default");
+  checkEqual("Stage 7: default view has no affected/active region", fallback.activeRegion, null);
+
+  checkEqual("Stage 7 keyboard: Escape resets", digitalTwinViewForKey("Escape"), "default");
+  checkEqual("Stage 7 keyboard: Home resets", digitalTwinViewForKey("Home"), "default");
+  checkEqual("Stage 7 keyboard: 1 selects front", digitalTwinViewForKey("1"), "front");
+  checkEqual("Stage 7 keyboard: 2 selects back", digitalTwinViewForKey("2"), "back");
+  checkEqual("Stage 7 keyboard: 3 selects chest", digitalTwinViewForKey("3"), "chest");
+  checkEqual("Stage 7 keyboard: 4 selects wrist", digitalTwinViewForKey("4"), "wrist");
+  checkEqual("Stage 7 keyboard: unrelated key is ignored", digitalTwinViewForKey("Tab"), null);
+
+  checkEqual("Stage 7 chest focus maps only to Chest", DIGITAL_TWIN_VIEW_PRESETS.chest.activeRegion, "Chest");
+  checkEqual("Stage 7 wrist focus maps only to Wrist", DIGITAL_TWIN_VIEW_PRESETS.wrist.activeRegion, "Wrist");
+  checkEqual("Stage 7 front has no implied affected region", DIGITAL_TWIN_VIEW_PRESETS.front.activeRegion, null);
+  checkEqual("Stage 7 back has no implied affected region", DIGITAL_TWIN_VIEW_PRESETS.back.activeRegion, null);
+  checkEqual("Stage 7 posterior view uses a true 180 degree azimuth", DIGITAL_TWIN_VIEW_PRESETS.back.azimuthDeg, 180);
+
+  const chestWide = computeDigitalTwinFrustum(16 / 9, DIGITAL_TWIN_VIEW_PRESETS.chest, 2.2);
+  const chestNarrow = computeDigitalTwinFrustum(0.46, DIGITAL_TWIN_VIEW_PRESETS.chest, 2.2);
+  const invalidAspect = computeDigitalTwinFrustum(0, DIGITAL_TWIN_VIEW_PRESETS.wrist, 2.2);
+  check("Stage 7 chest focus frustum is finite", Object.values(chestWide).every(Number.isFinite));
+  check("Stage 7 narrow/mobile frustum is finite", Object.values(chestNarrow).every(Number.isFinite));
+  check("Stage 7 invalid aspect fails to finite 1:1 frustum", Object.values(invalidAspect).every(Number.isFinite));
+  checkEqual("Stage 7 chest focus keeps requested vertical extent", chestWide.top - chestWide.bottom, 0.74);
+  checkEqual("Stage 7 wrist focus is tighter than chest focus", DIGITAL_TWIN_VIEW_PRESETS.wrist.viewHeight! < DIGITAL_TWIN_VIEW_PRESETS.chest.viewHeight!, true);
+  checkEqual("Stage 7 mobile width scales with real aspect", chestNarrow.right - chestNarrow.left, 0.74 * 0.46);
+
+  const stageSource = readFileSync(join(REPO_SRC_ROOT, "components/visualization/human/ConceptualTwinStage.tsx"), "utf8");
+  checkIncludes("Stage 7 route exposes a semantic architecture summary", stageSource, "Semantic architecture summary");
+  checkIncludes("Stage 7 route exposes chest focus control", stageSource, '"chest"');
+  checkIncludes("Stage 7 route exposes wrist focus control", stageSource, '"wrist"');
+  checkIncludes("Stage 7 route keeps reduced-motion controls operable", stageSource, "every preset remains available");
+  checkNotIncludes("Stage 7 route owns no monitoring store", stageSource, "useMissionStore");
+  checkNotIncludes("Stage 7 route owns no live feed", stageSource, "useLiveFeed");
 }
 
 // ===========================================================================
