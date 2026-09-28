@@ -4330,7 +4330,35 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkEqual("Stage 7 wrist focus is tighter than chest focus", DIGITAL_TWIN_VIEW_PRESETS.wrist.viewHeight! < DIGITAL_TWIN_VIEW_PRESETS.chest.viewHeight!, true);
   checkEqual("Stage 7 mobile width scales with real aspect", chestNarrow.right - chestNarrow.left, 0.74 * 0.46);
 
+  // Independent-audit correction S7-AUDIT-01 (MEDIUM): the semantic
+  // architecture summary's "Frontal module" card offered the identical
+  // Focus-region/Selected-region affordance chest and wrist expose, but no
+  // view preset ever set activeRegion:"Frontal" before this correction — the
+  // card was reachable and clickable but could never reach a "Selected
+  // region" state, and EEG/EOG had no dedicated close-up framing at all.
+  checkEqual("Stage 7 AUDIT-01: frontal focus maps only to Frontal (was previously unreachable)", DIGITAL_TWIN_VIEW_PRESETS.frontal.activeRegion, "Frontal");
+  checkEqual("Stage 7 AUDIT-01: frontal focus has a dedicated close-up viewHeight, not full-body null", DIGITAL_TWIN_VIEW_PRESETS.frontal.viewHeight, 0.42);
+  check("Stage 7 AUDIT-01: frontal focus frustum is finite", Object.values(computeDigitalTwinFrustum(16 / 9, DIGITAL_TWIN_VIEW_PRESETS.frontal, 2.2)).every(Number.isFinite));
+
   const stageSource = readFileSync(join(REPO_SRC_ROOT, "components/visualization/human/ConceptualTwinStage.tsx"), "utf8");
+  checkIncludes("Stage 7 AUDIT-01: semantic list wires the Frontal module card to the frontal preset, not front", stageSource, 'module.id === "wrist" ? "wrist" : "frontal"');
+
+  // Independent-audit correction S7-AUDIT-02 (HIGH): ViewRig mutates
+  // camera.left/right/top/bottom/position imperatively inside a useEffect —
+  // invisible to R3F's reconciler-driven auto-invalidation under this
+  // route's "demand" frameloop (active whenever motion is paused, i.e. for
+  // every non-default view). Runtime diagnostic (real browser, see
+  // WEBGL_RUNTIME_REVIEW.md) proved the camera object's own top/bottom/
+  // projectionMatrix were always computed correctly, but the canvas
+  // reproducibly never repainted to reflect it — Chest/Wrist focus visibly
+  // stayed on the last-painted full-body frame indefinitely (confirmed
+  // across a full dev-server restart and 3s/8s waits). This structural
+  // check supplements — does not replace — that real runtime evidence, and
+  // exists purely to catch a future regression that silently removes the
+  // fix (a source-level check has no way to prove the browser actually
+  // repaints; only a real browser run can, and one already did).
+  checkIncludes("Stage 7 AUDIT-02: ViewRig calls invalidate() after mutating the camera so a repaint is guaranteed under demand frameloop", stageSource, "invalidate();");
+  checkIncludes("Stage 7 AUDIT-02: ViewRig's invalidate is the real R3F one, not a local stub", stageSource, "useThree((state) => state.invalidate)");
   checkIncludes("Stage 7 route exposes a semantic architecture summary", stageSource, "Semantic architecture summary");
   checkIncludes("Stage 7 route exposes chest focus control", stageSource, '"chest"');
   checkIncludes("Stage 7 route exposes wrist focus control", stageSource, '"wrist"');
