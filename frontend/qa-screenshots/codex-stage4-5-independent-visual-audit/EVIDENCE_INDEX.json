@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "classification": "audit-only",
+  "canonical_policy": "docs/JURY_RELEASE_EVIDENCE_POLICY.json",
+  "browser_mechanisms": [
+    "Codex in-app Chromium through CUA",
+    "Safari native Page Menu for genuine 200% zoom"
+  ],
+  "fresh_runtime_observations": {
+    "route": "/mission-overview",
+    "viewports": ["1920x1080", "1440x900", "1280x800", "1024x768", "390x844"],
+    "zoom_method": "Safari Page Menu reported 200%",
+    "sources": ["SYNTHETIC DEMO", "PPG-DaLiA S14"],
+    "identities": ["Synthetic demo session", "PPG-DaLiA · S14"],
+    "states": ["loading", "nominal", "source_error", "disconnected", "fault", "warming_up", "recovered"],
+    "trigger": "real UI source/fault controls and task-owned backend lifecycle",
+    "visual_review_result": "PASS after corrections",
+    "classification": "audit-only"
+  },
+  "canonical_screenshot_records": [
+    {"slot":"state-nominal","path":"frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-nominal-signals.png","sha256":"25635d6a6cd7f279f017d02053e9a733bdd6b115f1bfc0a95960e8e8cf11d1e3","route":"/live-monitoring","viewport":"2560x1334","zoom_method":"inherited capture","source":"SYNTHETIC DEMO","identity":"Synthetic demo session","runtime_state":"nominal","trigger":"synthetic source","visual_review_result":"PASS","classification":"canonical"},
+    {"slot":"state-fault","path":"frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-fault-real-s14-packet-loss.png","sha256":"3649290b680971e6fe9bc3415fec960acad1c450ccc61588b3e635ad0538d146","route":"/mission-overview","viewport":"1440x900","zoom_method":"100%","source":"PPG-DaLiA","identity":"S14","runtime_state":"packet-loss fault","trigger":"simulated packet loss","visual_review_result":"PASS","classification":"canonical"},
+    {"slot":"state-rebuilding","path":"frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-rebuilding-real-s14-hr-warmup-v2.png","sha256":"62e2c35f803b03aacd5a09c22eb5f46f3902735dfd76870f302c637b798306cf","route":"/mission-overview","viewport":"1440x900","zoom_method":"100%","source":"PPG-DaLiA","identity":"S14","runtime_state":"warming_up","trigger":"clear fault","visual_review_result":"PASS","classification":"canonical"},
+    {"slot":"state-recovered","path":"frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-recovered-real-s14-v2.png","sha256":"b646aec4fb027ed87e24900c1e11f0c6a04c2a28d430f1fa5466db65cc94e429","route":"/mission-overview","viewport":"1440x900","zoom_method":"100%","source":"PPG-DaLiA","identity":"S14","runtime_state":"recovered","trigger":"fresh synchronized window","visual_review_result":"PASS","classification":"canonical"},
+    {"slot":"state-disconnected","path":"frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-disconnected-signals.png","sha256":"ec6b5fb869b0c6f52a08c4284ae4968cc05ba1500357b103f3c07f8a877f58ee","route":"/live-monitoring","viewport":"2560x1334","zoom_method":"inherited capture","source":"UNAVAILABLE","identity":"hidden","runtime_state":"disconnected","trigger":"source unavailable","visual_review_result":"PASS","classification":"canonical"},
+    {"slot":"mobile-mission-overview","path":"frontend/qa-screenshots/claude-stage2-3-final-acceptance/mobile-mission-overview-390x844.png","sha256":"c86a8ea9b403e43f7296119a3d50057b59f29723f5ce623ce78b975485c9efee","route":"/mission-overview","viewport":"390x844","zoom_method":"100%","source":"SYNTHETIC DEMO","identity":"Synthetic demo session","runtime_state":"nominal","trigger":"mobile viewport","visual_review_result":"PASS","classification":"canonical"},
+    {"slot":"zoom-200","path":"frontend/qa-screenshots/claude-stage2-3-final-acceptance/mission-overview-200-zoom-real-devicemetrics.png","sha256":"86109984e8041d6c1489e12d0edd9b437881a640ed22c0922d8dd2476d05a4b9","route":"/mission-overview","viewport":"effective 200%","zoom_method":"device metrics; independently reproduced with Safari Page Menu","source":"PPG-DaLiA","identity":"S14","runtime_state":"nominal","trigger":"200% zoom","visual_review_result":"PASS","classification":"canonical"}
+  ]
+}
