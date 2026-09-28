@@ -1,195 +1,278 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Pause, Play, RotateCcw, RotateCw } from "lucide-react";
+import { ArrowDownToLine, CirclePause, CirclePlay, RotateCcw } from "lucide-react";
 import type * as THREE from "three";
 
+import { ArchitectureSensorContacts } from "@/components/visualization/human/ArchitectureSensorContacts";
 import { ConceptualTwinFallback } from "@/components/visualization/human/ConceptualTwinFallback";
 import { HolographicHumanFigure } from "@/components/visualization/human/HolographicHumanFigure";
 import { HolographicStageAtmosphere } from "@/components/visualization/human/HolographicStageAtmosphere";
 import { HumanScanRings } from "@/components/visualization/human/HumanScanRings";
 import { WebglStage } from "@/components/visualization/human/WebglStage";
-import { ORTHO_VIEW, computeOrthographicFit, orthoCameraPosition } from "@/components/visualization/human/humanLayout";
-import { H_FIGURE_CENTER_Y, H_FIGURE_HALF_WIDTH, H_FIGURE_TOTAL_HEIGHT } from "@/components/visualization/human/holographicGeometry";
+import { computeOrthographicFit, ORTHO_VIEW, orthoCameraPosition } from "@/components/visualization/human/humanLayout";
+import { H_FIGURE_HALF_WIDTH, H_FIGURE_TOTAL_HEIGHT } from "@/components/visualization/human/holographicGeometry";
+import { FINAL_MODULES, FINAL_SENSOR_INVENTORY, MODALITY_COLOR, type FinalRegion } from "@/lib/architecture";
 import { useReducedMotionPreference } from "@/lib/runtime/reduceMotion";
+import {
+  DIGITAL_TWIN_VIEW_PRESETS,
+  computeDigitalTwinFrustum,
+  digitalTwinViewForKey,
+  resolveDigitalTwinView,
+  type DigitalTwinViewId,
+  type DigitalTwinViewPreset,
+} from "@/lib/visualization/digitalTwinPresentation";
 
-const ROTATION_RADIANS_PER_SECOND = (Math.PI * 2) / 32;
-const REDUCED_MOTION_ANGLE = (Math.PI / 180) * 24;
+const ROTATION_RADIANS_PER_SECOND = (Math.PI * 2) / 36;
 const COMPACT_BREAKPOINT_PX = 480;
-const DESKTOP_HEIGHT_FRACTION = 0.8;
-const COMPACT_HEIGHT_FRACTION = 0.72;
-const HOLO_TARGET: [number, number, number] = [0, H_FIGURE_CENTER_Y, 0];
-const TWIN_FIT = { halfWidth: H_FIGURE_HALF_WIDTH, marginFraction: 0.08, totalHeight: H_FIGURE_TOTAL_HEIGHT };
+const FULL_BODY_FIT = { halfWidth: H_FIGURE_HALF_WIDTH, marginFraction: 0.08, totalHeight: H_FIGURE_TOTAL_HEIGHT };
 
-/** Prompt 3B §6/§14 — deterministic orthographic fit, guaranteeing full head-to-feet framing at every rotation angle. */
-function OrthoFitRig({ aspect, heightFraction }: { aspect: number; heightFraction: number }) {
+function ViewRig({ aspect, compact, view }: { aspect: number; compact: boolean; view: DigitalTwinViewPreset }) {
   const camera = useThree((state) => state.camera) as THREE.OrthographicCamera;
   useEffect(() => {
-    const fit = computeOrthographicFit(aspect, heightFraction, TWIN_FIT);
-    camera.left = fit.left;
-    camera.right = fit.right;
-    camera.top = fit.top;
-    camera.bottom = fit.bottom;
+    const fit = computeOrthographicFit(aspect, compact ? 0.72 : 0.82, FULL_BODY_FIT);
+    const fullBodyViewHeight = fit.top - fit.bottom;
+    const frustum = computeDigitalTwinFrustum(aspect, view, fullBodyViewHeight);
+    camera.left = frustum.left;
+    camera.right = frustum.right;
+    camera.top = frustum.top;
+    camera.bottom = frustum.bottom;
     camera.zoom = 1;
-    const [x, y, z] = orthoCameraPosition();
-    camera.position.set(x, y, z);
+    const [x, y, z] = orthoCameraPosition({
+      azimuthDeg: view.azimuthDeg,
+      elevationDeg: view.elevationDeg,
+      distance: ORTHO_VIEW.distance,
+    });
+    camera.position.set(x + view.target[0], y - 0.895 + view.target[1], z + view.target[2]);
     camera.near = 0.1;
     camera.far = ORTHO_VIEW.distance + 12;
     camera.up.set(0, 1, 0);
-    camera.lookAt(...HOLO_TARGET);
+    camera.lookAt(...view.target);
     camera.updateProjectionMatrix();
-  }, [camera, aspect, heightFraction]);
+  }, [aspect, camera, compact, view]);
   return null;
 }
 
-function RotatingFigure({
+function AnatomicalFigure({
   playing,
   reducedMotion,
   angleRef,
-  onAngleChange,
+  activeRegion,
 }: {
   playing: boolean;
   reducedMotion: boolean;
   angleRef: React.MutableRefObject<number>;
-  onAngleChange: (deg: number) => void;
+  activeRegion: FinalRegion | null;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const sinceRef = useRef(0);
   useFrame((_, delta) => {
-    if (playing && !reducedMotion) angleRef.current += ROTATION_RADIANS_PER_SECOND * delta;
+    if (playing && !reducedMotion) angleRef.current += ROTATION_RADIANS_PER_SECOND * Math.min(delta, 0.05);
     if (groupRef.current) groupRef.current.rotation.y = angleRef.current;
-    sinceRef.current += delta;
-    if (sinceRef.current > 0.5) {
-      sinceRef.current = 0;
-      onAngleChange((angleRef.current * 180) / Math.PI);
-    }
   });
   return (
     <group ref={groupRef}>
       <HolographicHumanFigure />
+      <ArchitectureSensorContacts activeRegion={activeRegion} />
     </group>
   );
 }
 
+const VIEW_ORDER: DigitalTwinViewId[] = ["default", "front", "back", "chest", "wrist"];
+
+function viewButtonLabel(view: DigitalTwinViewId): string {
+  return DIGITAL_TWIN_VIEW_PRESETS[view].label;
+}
+
 /**
- * Prompt 3B §14 — Digital Twin holographic reference figure. Uses the same
- * holographic human system as the operational stage but with NO sensor state,
- * NO data-bearing colour, and NO text on the body. The scan rings are stated
- * to be a decorative/spatial scaffold. Slow rotation, reduced-motion→paused.
+ * Production Stage 7 architecture viewer. It is deliberately a static-system
+ * reference: no operational transport, store, endpoint, or model output is consumed.
  */
 export function ConceptualTwinStage() {
   const angleRef = useRef(0);
-  const [angleDeg, setAngleDeg] = useState(0);
-  // Stage 2 A2: reads the shared persisted-setting-OR-OS source of truth
-  // instead of a local OS-only `matchMedia` check, so a user who only enabled
-  // the persisted `/settings` toggle (not the OS preference) also gets this
-  // WebGL rotation paused, and the effect below reacts live if the
-  // preference changes after mount (Settings toggled in another tab/route),
-  // not just once at first render.
   const reducedMotion = useReducedMotionPreference();
   const [playing, setPlaying] = useState(true);
+  const [viewId, setViewId] = useState<DigitalTwinViewId>("default");
   const [canvasAspect, setCanvasAspect] = useState(1.4);
   const [compact, setCompact] = useState(false);
+  const [pageVisible, setPageVisible] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const view = resolveDigitalTwinView(viewId);
+  const motionActive = playing && viewId === "default" && pageVisible;
 
   useEffect(() => {
-    if (reducedMotion) {
-      angleRef.current = REDUCED_MOTION_ANGLE;
-      setAngleDeg((REDUCED_MOTION_ANGLE * 180) / Math.PI);
-    }
-  }, [reducedMotion]);
+    const updateVisibility = () => setPageVisible(document.visibilityState === "visible");
+    updateVisibility();
+    document.addEventListener("visibilitychange", updateVisibility);
+    return () => document.removeEventListener("visibilitychange", updateVisibility);
+  }, []);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const element = containerRef.current;
+    if (!element) return;
     const apply = (width: number, height: number) => {
-      if (width > 0 && height > 0) {
-        setCanvasAspect(width / height);
-        setCompact(width < COMPACT_BREAKPOINT_PX);
-      }
+      if (width <= 0 || height <= 0) return;
+      setCanvasAspect(width / height);
+      setCompact(width < COMPACT_BREAKPOINT_PX);
     };
-    const rect = el.getBoundingClientRect();
-    apply(rect.width, rect.height);
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
+    const bounds = element.getBoundingClientRect();
+    apply(bounds.width, bounds.height);
+    const observer = new ResizeObserver(([entry]) => {
       if (entry) apply(entry.contentRect.width, entry.contentRect.height);
     });
-    observer.observe(el);
+    observer.observe(element);
     return () => observer.disconnect();
   }, []);
 
-  function rotateBy(radians: number) {
-    angleRef.current += radians;
-    setAngleDeg((angleRef.current * 180) / Math.PI);
+  const activeModule = useMemo(
+    () => FINAL_MODULES.find((module) => module.id === view.activeRegion?.toLowerCase()) ?? null,
+    [view.activeRegion],
+  );
+
+  function selectView(next: DigitalTwinViewId) {
+    angleRef.current = 0;
+    setViewId(next);
+  }
+
+  function resetView() {
+    angleRef.current = 0;
+    setViewId("default");
+  }
+
+  function onStageKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    const next = digitalTwinViewForKey(event.key);
+    if (next) {
+      event.preventDefault();
+      if (next === "default") resetView();
+      else selectView(next);
+      return;
+    }
+    if (event.key === " " || event.key.toLowerCase() === "p") {
+      event.preventDefault();
+      setPlaying((current) => !current);
+    }
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* Stage 2 A4 — previously this Canvas had no WebGL detection or error
-          handling at all: an unsupported device, a renderer init failure, a
-          lost context, or a render-time error would leave a blank/broken
-          panel. WebglStage now covers all four paths with the same shared
-          mechanism PhysiologyAvatar3D.tsx uses. */}
-      <div ref={containerRef} className="relative h-[380px] w-full overflow-hidden rounded-[10px] border border-jury-border-subtle sm:h-[540px]" style={{ background: "#061A26" }}>
+    <section aria-labelledby="digital-twin-viewer-heading" className="flex min-w-0 flex-col gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 id="digital-twin-viewer-heading" className="text-base font-semibold text-ink-primary">Anatomical architecture viewer</h2>
+          <p className="mt-1 text-sm text-ink-secondary">{view.description}. Landmarks show placement, not current sensor state.</p>
+        </div>
+        <span className="rounded-full border border-information/35 bg-information/10 px-3 py-1 text-xs font-semibold text-information">
+          {view.label}
+        </span>
+      </div>
+
+      <div
+        ref={containerRef}
+        tabIndex={0}
+        onKeyDown={onStageKeyDown}
+        aria-label="Interactive Digital Twin architecture viewer. Keys 1 through 4 select front, back, chest, and wrist views. Home or Escape resets. Space pauses or resumes rotation."
+        className="relative h-[430px] w-full overflow-hidden rounded-[12px] border border-jury-border-strong bg-[#061A26] outline-none focus-visible:ring-2 focus-visible:ring-[#A1D2CC] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:h-[600px]"
+      >
         <WebglStage
           canvasProps={{
-            dpr: [1, 2],
+            dpr: [1, 1.75],
             orthographic: true,
             camera: { manual: true, position: orthoCameraPosition(), near: 0.1, far: ORTHO_VIEW.distance + 12 },
-            gl: { antialias: true, alpha: false },
+            gl: { antialias: true, alpha: false, powerPreference: "high-performance" },
+            frameloop: motionActive && !reducedMotion ? "always" : "demand",
           }}
-          renderFallback={(retry) => <ConceptualTwinFallback onRetry={retry ?? undefined} />}
+          renderLoading={() => <div className="flex h-full items-center justify-center text-sm text-ink-secondary">Checking 3D capability…</div>}
+          renderFallback={(retry) => <ConceptualTwinFallback onRetry={retry ?? undefined} view={view} activeRegion={view.activeRegion} />}
         >
-          <OrthoFitRig aspect={canvasAspect} heightFraction={compact ? COMPACT_HEIGHT_FRACTION : DESKTOP_HEIGHT_FRACTION} />
+          <ViewRig aspect={canvasAspect} compact={compact} view={view} />
           <HolographicStageAtmosphere />
-          <HumanScanRings reducedMotion={reducedMotion} />
-          <RotatingFigure playing={playing} reducedMotion={reducedMotion} angleRef={angleRef} onAngleChange={setAngleDeg} />
+          <HumanScanRings reducedMotion={reducedMotion || !motionActive} />
+          <AnatomicalFigure playing={motionActive} reducedMotion={reducedMotion} angleRef={angleRef} activeRegion={view.activeRegion} />
         </WebglStage>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-5" aria-label="Digital Twin view presets">
+        {VIEW_ORDER.map((presetId) => (
+          <button
+            key={presetId}
+            type="button"
+            onClick={() => (presetId === "default" ? resetView() : selectView(presetId))}
+            aria-pressed={viewId === presetId}
+            className="min-h-11 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] aria-pressed:border-final-accent/70 aria-pressed:bg-final-accent/10 aria-pressed:text-ink-primary"
+          >
+            {viewButtonLabel(presetId)}
+          </button>
+        ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
-          onClick={() => setPlaying((value) => !value)}
+          onClick={() => setPlaying((current) => !current)}
           disabled={reducedMotion}
-          className="flex h-9 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] disabled:opacity-40"
+          className="flex min-h-11 items-center gap-2 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] disabled:cursor-not-allowed disabled:opacity-45"
         >
-          {playing && !reducedMotion ? <Pause size={13} aria-hidden="true" /> : <Play size={13} aria-hidden="true" />}
-          {playing && !reducedMotion ? "Pause rotation" : "Resume rotation"}
+          {motionActive && !reducedMotion ? <CirclePause size={16} aria-hidden="true" /> : <CirclePlay size={16} aria-hidden="true" />}
+          {reducedMotion ? "Rotation paused" : playing ? "Pause rotation" : "Resume rotation"}
         </button>
         <button
           type="button"
-          onClick={() => rotateBy(-Math.PI / 8)}
-          className="flex h-9 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+          onClick={resetView}
+          className="flex min-h-11 items-center gap-2 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
         >
-          <RotateCcw size={13} aria-hidden="true" /> Rotate left
+          <RotateCcw size={16} aria-hidden="true" /> Reset view
         </button>
-        <button
-          type="button"
-          onClick={() => rotateBy(Math.PI / 8)}
-          className="flex h-9 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
-        >
-          Rotate right <RotateCw size={13} aria-hidden="true" />
-        </button>
-        {reducedMotion ? <span className="text-[11px] text-ink-muted">Reduced motion — automatic rotation starts paused; manual controls remain active.</span> : null}
+        <span className="flex items-center gap-1.5 text-xs text-ink-muted">
+          <ArrowDownToLine size={14} aria-hidden="true" /> Focus viewer, then use 1–4 · Home/Esc · Space
+        </span>
       </div>
 
-      {/* A11y fix (Stage 2 A1): the rotation angle updates on every animation
-          frame (`useFrame`, up to 60/s) while auto-rotating. It previously
-          lived inside this same `role="status"` element, so the whole
-          sentence — including the fixed scientific-boundary disclaimer —
-          was re-announced continuously. The disclaimer (which never changes
-          after mount) keeps the live region; the angle is static-per-render
-          text with no live role, readable on request but never a trigger
-          for automatic re-announcement. */}
+      {reducedMotion ? (
+        <p className="rounded-[6px] border border-jury-border-subtle bg-surface-2 px-3 py-2 text-sm text-ink-secondary">
+          Reduced motion is active. Automatic rotation and scan movement are paused; every preset remains available.
+        </p>
+      ) : null}
+
+      <div className="border-t border-jury-border-subtle pt-4" aria-live="polite">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Semantic architecture summary</p>
+        <p className="mt-1 text-sm text-ink-primary">
+          Active view: <strong>{view.label}</strong>. {activeModule ? `${activeModule.label}: ${activeModule.modalities}.` : "No region focus is active."}
+        </p>
+        <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {FINAL_MODULES.map((module) => {
+            const region = (module.id === "frontal" ? "Frontal" : module.id === "chest" ? "Chest" : "Wrist") as FinalRegion;
+            const selected = view.activeRegion === region;
+            return (
+              <li key={module.id} className="rounded-[7px] border border-jury-border-subtle bg-surface-2 p-3">
+                <button
+                  type="button"
+                  onClick={() => selectView(module.id === "chest" ? "chest" : module.id === "wrist" ? "wrist" : "front")}
+                  aria-pressed={selected}
+                  className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+                >
+                  <span className="text-sm font-semibold text-ink-primary">{module.label}</span>
+                  <span className="mt-1 block text-xs text-ink-secondary">{module.modalities}</span>
+                  <span className="mt-1 block text-xs leading-relaxed text-ink-muted">{module.description}</span>
+                  <span className="mt-2 block text-xs font-medium text-information">{selected ? "Selected region" : "Focus region"}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2" aria-label="Sensor landmark legend">
+          {FINAL_SENSOR_INVENTORY.map((sensor) => (
+            <li key={sensor.modality} className="flex items-center gap-2 text-xs text-ink-secondary">
+              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: MODALITY_COLOR[sensor.modality] }} aria-hidden="true" />
+              <strong className="text-ink-primary">{sensor.modality}</strong> · {sensor.region} · {sensor.description}
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <p className="sr-only" role="status">
-        Architecture-only, untrained, unvalidated holographic reference figure with an illustrative spatial scan field.
-        This figure reports no adaptation percentage, confidence value, or measured quantity.
+        Architecture-only, untrained, unvalidated anatomical reference. The canvas reports no adaptation percentage,
+        confidence value, diagnosis, or current physiological measurement.
       </p>
-      <p className="sr-only">
-        Current illustrative rotation approximately {((((angleDeg % 360) + 360) % 360)).toFixed(0)} degrees.
-      </p>
-    </div>
+      <p className="sr-only">Current illustrative rotation approximately follows the selected view preset.</p>
+    </section>
   );
 }
