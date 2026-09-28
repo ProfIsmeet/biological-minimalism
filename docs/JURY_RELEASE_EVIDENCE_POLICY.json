@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "description": "Per-slot fail-closed canonical evidence policy. Paths and digests change only after visual adjudication.",
+  "entries": {
+    "audit-main": {
+      "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/AUDIT.md",
+      "sha256": "78838536e492ec6dd04c5cda93255a56865707effa9dfdd7ee7a01764676c0c7",
+      "visually_reviewed": true,
+      "superseded": [
+        "frontend/qa-screenshots/claude-stage2-3-final-acceptance/AUDIT.md",
+        "frontend/qa-screenshots/claude-stage4-5-visual-command-deck/AUDIT.md"
+      ],
+      "audit_only": [
+        "frontend/qa-screenshots/codex-stage4-5-independent-visual-audit/AUDIT.md"
+      ]
+    },
+    "audit-matrix": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/FIVE_STAGE_COMPLETENESS_MATRIX.md",
+      "sha256": "127ee0dc4f0a9d9a49247765fba8bd2b9667ff2488ab2ba63c5f22d0d2f5e979",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "audit-recommendation": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/JURY_DEMO_RECOMMENDATION.md",
+      "sha256": "2327db45c686d26a9a47f60149b452c3560319d6adf325ed30c4efbc7c18c6e0",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "prompt-3bc-human-visual": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/prompt-3bc-human-visual/DOSSIER.md",
+      "sha256": "33d8fa678acffcede5b1810d937a08806323c87da57c4ecc3eefd84b8e69e76b",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "prompt-4-a11y-hardening": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/prompt-4-a11y-hardening/DOSSIER.md",
+      "sha256": "b3ae21baea222846c4c7775a452c6cbe9b7d6b7197d0ee9fae700257ad6f6215",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "prompt-5-hostile-dossier": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/prompt-5-hostile-dossier/DOSSIER.md",
+      "sha256": "69df8ea19533c1df7a4decd2ebb26472a681bd4854598b4b00838273e26e669d",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "presenter-script": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/presenter-script.md",
+      "sha256": "e122252f4573f35e0f77dac8521314ae49b42316fa0798e0059015aac8f5534e",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "recovery-card": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/recovery-card.md",
+      "sha256": "efa40e16d3be0874d95a4aed0167d970b60def5d4ad3f7e11df2b9a13bc7eb69",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "state-nominal": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-nominal-signals.png",
+      "sha256": "25635d6a6cd7f279f017d02053e9a733bdd6b115f1bfc0a95960e8e8cf11d1e3",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "state-fault": {
+      "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-fault-real-s14-packet-loss.png",
+      "sha256": "3649290b680971e6fe9bc3415fec960acad1c450ccc61588b3e635ad0538d146",
+      "visually_reviewed": true,
+      "superseded": [
+        "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-fault-real-s14-simulated-packet-loss.png"
+      ],
+      "audit_only": []
+    },
+    "state-rebuilding": {
+      "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-rebuilding-real-s14-hr-warmup-v2.png",
+      "sha256": "62e2c35f803b03aacd5a09c22eb5f46f3902735dfd76870f302c637b798306cf",
+      "visually_reviewed": true,
+      "superseded": [
+        "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-rebuilding-real-s14-hr-warmup.png"
+      ],
+      "audit_only": []
+    },
+    "state-recovered": {
+      "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-recovered-real-s14-v2.png",
+      "sha256": "b646aec4fb027ed87e24900c1e11f0c6a04c2a28d430f1fa5466db65cc94e429",
+      "visually_reviewed": true,
+      "superseded": [
+        "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-recovered-real-s14-after-condition-cleared.png"
+      ],
+      "audit_only": []
+    },
+    "state-disconnected": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-disconnected-signals.png",
+      "sha256": "ec6b5fb869b0c6f52a08c4284ae4968cc05ba1500357b103f3c07f8a877f58ee",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "mobile-mission-overview": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/mobile-mission-overview-390x844.png",
+      "sha256": "c86a8ea9b403e43f7296119a3d50057b59f29723f5ce623ce78b975485c9efee",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "live-monitoring": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/route-live-monitoring-desktop.png",
+      "sha256": "c39625f2b85fdb99fa1ba34262f2eca59683948f2e874db44dc29f19338685af",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "system-brief": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/route-system-brief-desktop.png",
+      "sha256": "62ce61b486a63f0aae87c3a49e01a0b329cb6bcffadc60a6de6af8714683711c",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "experimental": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/route-experimental-research-desktop.png",
+      "sha256": "25c924670c159f344cd392d519a14db805b68fb057d696c49eb37d160fb29701",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "digital-twin": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/route-digital-twin-desktop.png",
+      "sha256": "0da27c33cf19e2903326228cf15449971375b26976bceb164cba275911928b7a",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "presenter-preflight": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/route-presenter-preflight-expanded.png",
+      "sha256": "e3674671ed33aa38a10adc2788f8ab4035eacf7c4567fab275013a898300ca7d",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "zoom-200": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/mission-overview-200-zoom-real-devicemetrics.png",
+      "sha256": "86109984e8041d6c1489e12d0edd9b437881a640ed22c0922d8dd2476d05a4b9",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "human-front": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/human-front-holographic-figure.png",
+      "sha256": "56072adf46cef88bc565443d4b9beafc7e39e001885f8024bc1fbe762bce2ed5",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "human-side": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/human-side-holographic-figure.png",
+      "sha256": "48a6db4682cde708c0ceb029dd43ff112a201cec75b942b05089f0e8e987ccb7",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "human-three-quarter": {
+      "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/human-three-quarter-holographic-figure.png",
+      "sha256": "1d1a30b246f78458f32e037d27d039369059e836fa939a97e4d0a9fbd2887d95",
+      "visually_reviewed": true,
+      "superseded": [],
+      "audit_only": []
+    },
+    "rejected-cesiumman": {
+      "canonical": null,
+      "sha256": null,
+      "visually_reviewed": false,
+      "superseded": [],
+      "audit_only": []
+    }
+  }
+}

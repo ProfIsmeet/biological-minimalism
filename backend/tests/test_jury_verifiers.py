@@ -121,6 +121,32 @@ def test_env_verifier_never_prints_secret_values(tmp_path: Path, monkeypatch: py
 
 # --- release-evidence verifier -----------------------------------------------
 
+
+def _sha(data: bytes) -> str:
+    import hashlib
+    return hashlib.sha256(data).hexdigest()
+
+
+def _write_policy(root: Path, entries: dict) -> Path:
+    import json
+    policy = root / "policy.json"
+    policy.write_text(json.dumps({"version": 1, "entries": entries}), encoding="utf-8")
+    return policy
+
+
+def _rule(canonical: str | None, data: bytes | None = None, *,
+          superseded: list[str] | None = None,
+          audit_only: list[str] | None = None,
+          reviewed: bool = True) -> dict:
+    return {
+        "canonical": canonical,
+        "sha256": _sha(data) if data is not None else None,
+        "visually_reviewed": reviewed,
+        "superseded": superseded or [],
+        "audit_only": audit_only or [],
+    }
+
+
 def test_evidence_verifier_incomplete_on_empty_root(tmp_path: Path) -> None:
     resolutions = evidence_verifier.verify(tmp_path)
     assert all(r.status == evidence_verifier.MISSING for r in resolutions)
@@ -128,66 +154,157 @@ def test_evidence_verifier_incomplete_on_empty_root(tmp_path: Path) -> None:
     assert evidence_verifier.main(["--root", str(tmp_path)]) == 2
 
 
-def test_evidence_verifier_detects_present_empty_ambiguous(tmp_path: Path) -> None:
+def test_evidence_verifier_detects_present_empty_and_unknown_collision(tmp_path: Path) -> None:
     qa = tmp_path / "frontend" / "qa-screenshots" / "codex-independent-final-frontend-audit"
     qa.mkdir(parents=True)
-    # PRESENT: single non-empty AUDIT.md
-    (qa / "AUDIT.md").write_text("# audit\n", encoding="utf-8")
-    # EMPTY: zero-byte matrix
+    audit = b"# audit\n"
+    (qa / "AUDIT.md").write_bytes(audit)
     (qa / "FIVE_STAGE_COMPLETENESS_MATRIX.md").write_text("", encoding="utf-8")
-    # AMBIGUOUS: two nominal screenshots
     (qa / "a_nominal.png").write_bytes(b"x")
     (qa / "b_nominal.png").write_bytes(b"y")
-
-    by_id = {r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path)}
+    policy = _write_policy(tmp_path, {
+        "audit-main": _rule(
+            "frontend/qa-screenshots/codex-independent-final-frontend-audit/AUDIT.md", audit
+        ),
+        "audit-matrix": _rule(
+            "frontend/qa-screenshots/codex-independent-final-frontend-audit/FIVE_STAGE_COMPLETENESS_MATRIX.md",
+            b"",
+        ),
+        "state-nominal": _rule(
+            "frontend/qa-screenshots/codex-independent-final-frontend-audit/a_nominal.png", b"x"
+        ),
+    })
+    by_id = {
+        r.entry.entry_id: r
+        for r in evidence_verifier.verify(tmp_path, policy_path=policy)
+    }
     assert by_id["audit-main"].status == evidence_verifier.PRESENT
     assert by_id["audit-matrix"].status == evidence_verifier.EMPTY
     assert by_id["state-nominal"].status == evidence_verifier.AMBIGUOUS
-    # Overall still incomplete (many required artifacts remain MISSING).
-    assert evidence_verifier.main(["--root", str(tmp_path)]) == 2
+    assert by_id["state-nominal"].unregistered == [
+        "frontend/qa-screenshots/codex-independent-final-frontend-audit/b_nominal.png"
+    ]
 
 
-def test_evidence_verifier_resolves_cross_run_duplicates_via_precedence(tmp_path: Path) -> None:
-    # Two *different* run directories each independently ship their own
-    # AUDIT.md and state-fault screenshot — the real situation once more than
-    # one work run has ever produced evidence. This must resolve to PRESENT
-    # (not AMBIGUOUS) by picking the higher-precedence run as canonical, while
-    # still recording the other run's file as `superseded` for the audit trail.
+def test_evidence_verifier_uses_per_entry_policy_and_traces_superseded(tmp_path: Path) -> None:
     older = tmp_path / "frontend" / "qa-screenshots" / "claude-stage2-3-final-acceptance"
     newer = tmp_path / "frontend" / "qa-screenshots" / "claude-stage4-5-real-visual-implementation"
     older.mkdir(parents=True)
     newer.mkdir(parents=True)
-    (older / "AUDIT.md").write_text("# older audit\n", encoding="utf-8")
-    (newer / "AUDIT.md").write_text("# newer audit\n", encoding="utf-8")
+    old_audit, new_audit = b"# older audit\n", b"# newer audit\n"
+    (older / "AUDIT.md").write_bytes(old_audit)
+    (newer / "AUDIT.md").write_bytes(new_audit)
     (older / "state-fault-x.png").write_bytes(b"old")
     (newer / "state-fault-y.png").write_bytes(b"new")
-
-    by_id = {r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path)}
+    policy = _write_policy(tmp_path, {
+        "audit-main": _rule(
+            "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/AUDIT.md",
+            new_audit,
+            superseded=["frontend/qa-screenshots/claude-stage2-3-final-acceptance/AUDIT.md"],
+        ),
+        # Deliberately choose the older run for this different slot. There is no
+        # global-run coupling.
+        "state-fault": _rule(
+            "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-fault-x.png",
+            b"old",
+            superseded=["frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-fault-y.png"],
+        ),
+    })
+    by_id = {
+        r.entry.entry_id: r
+        for r in evidence_verifier.verify(tmp_path, policy_path=policy)
+    }
 
     assert by_id["audit-main"].status == evidence_verifier.PRESENT
+    assert by_id["audit-main"].canonical.endswith("claude-stage4-5-real-visual-implementation/AUDIT.md")
     assert by_id["audit-main"].superseded == ["frontend/qa-screenshots/claude-stage2-3-final-acceptance/AUDIT.md"]
     assert by_id["state-fault"].status == evidence_verifier.PRESENT
     assert by_id["state-fault"].superseded == [
-        "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-fault-x.png"
+        "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-fault-y.png"
     ]
 
-    # A genuine same-run duplicate must still be unresolvable and AMBIGUOUS —
-    # cross-run precedence must never paper over a real same-directory clash.
-    (newer / "state-nominal-a.png").write_bytes(b"a")
-    (newer / "state-nominal-b.png").write_bytes(b"b")
-    by_id2 = {r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path)}
-    assert by_id2["state-nominal"].status == evidence_verifier.AMBIGUOUS
-    assert by_id2["state-nominal"].superseded == []
+
+def test_unknown_future_run_fails_closed_until_registered(tmp_path: Path) -> None:
+    accepted = tmp_path / "frontend" / "qa-screenshots" / "accepted"
+    future = tmp_path / "frontend" / "qa-screenshots" / "future-run"
+    accepted.mkdir(parents=True)
+    future.mkdir(parents=True)
+    (accepted / "AUDIT.md").write_bytes(b"accepted")
+    (future / "AUDIT.md").write_bytes(b"future")
+    policy = _write_policy(tmp_path, {
+        "audit-main": _rule("frontend/qa-screenshots/accepted/AUDIT.md", b"accepted")
+    })
+    result = {
+        r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path, policy_path=policy)
+    }["audit-main"]
+    assert result.status == evidence_verifier.AMBIGUOUS
+    assert result.unregistered == ["frontend/qa-screenshots/future-run/AUDIT.md"]
 
 
-def test_evidence_verifier_hash_is_optional_and_deterministic(tmp_path: Path) -> None:
+def test_independent_audit_can_be_explicitly_audit_only(tmp_path: Path) -> None:
+    accepted = tmp_path / "frontend" / "qa-screenshots" / "accepted"
+    independent = tmp_path / "frontend" / "qa-screenshots" / "codex-independent"
+    accepted.mkdir(parents=True)
+    independent.mkdir(parents=True)
+    (accepted / "AUDIT.md").write_bytes(b"accepted")
+    (independent / "AUDIT.md").write_bytes(b"review")
+    audit_only = "frontend/qa-screenshots/codex-independent/AUDIT.md"
+    policy = _write_policy(tmp_path, {
+        "audit-main": _rule(
+            "frontend/qa-screenshots/accepted/AUDIT.md", b"accepted",
+            audit_only=[audit_only],
+        )
+    })
+    result = {
+        r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path, policy_path=policy)
+    }["audit-main"]
+    assert result.status == evidence_verifier.PRESENT
+    assert result.canonical == "frontend/qa-screenshots/accepted/AUDIT.md"
+    assert result.audit_only == [audit_only]
+
+
+def test_hash_drift_and_unreviewed_canonical_fail_closed(tmp_path: Path) -> None:
+    qa = tmp_path / "frontend" / "qa-screenshots" / "accepted"
+    qa.mkdir(parents=True)
+    (qa / "AUDIT.md").write_bytes(b"actual")
+    canonical = "frontend/qa-screenshots/accepted/AUDIT.md"
+    drift = _write_policy(tmp_path, {"audit-main": _rule(canonical, b"different")})
+    result = {
+        r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path, policy_path=drift)
+    }["audit-main"]
+    assert result.status == evidence_verifier.AMBIGUOUS
+    assert "canonical SHA-256 does not match policy" in result.issues
+
+    unreviewed = _write_policy(
+        tmp_path, {"audit-main": _rule(canonical, b"actual", reviewed=False)}
+    )
+    result2 = {
+        r.entry.entry_id: r for r in evidence_verifier.verify(tmp_path, policy_path=unreviewed)
+    }["audit-main"]
+    assert result2.status == evidence_verifier.AMBIGUOUS
+    assert "canonical artifact lacks explicit visual-review approval" in result2.issues
+
+
+def test_evidence_verifier_hash_output_is_optional_but_validation_is_always_on(tmp_path: Path) -> None:
     qa = tmp_path / "frontend" / "qa-screenshots" / "x"
     qa.mkdir(parents=True)
-    (qa / "AUDIT.md").write_text("stable-content", encoding="utf-8")
-    first = {r.entry.entry_id: r.sha256 for r in evidence_verifier.verify(tmp_path, want_hash=True)}
-    second = {r.entry.entry_id: r.sha256 for r in evidence_verifier.verify(tmp_path, want_hash=True)}
+    data = b"stable-content"
+    (qa / "AUDIT.md").write_bytes(data)
+    policy = _write_policy(tmp_path, {
+        "audit-main": _rule("frontend/qa-screenshots/x/AUDIT.md", data)
+    })
+    first = {
+        r.entry.entry_id: r.sha256
+        for r in evidence_verifier.verify(tmp_path, want_hash=True, policy_path=policy)
+    }
+    second = {
+        r.entry.entry_id: r.sha256
+        for r in evidence_verifier.verify(tmp_path, want_hash=True, policy_path=policy)
+    }
     assert first["audit-main"] is not None
-    assert first == second  # deterministic
-    # Without --hash there is no digest.
-    no_hash = {r.entry.entry_id: r.sha256 for r in evidence_verifier.verify(tmp_path, want_hash=False)}
+    assert first == second
+    no_hash = {
+        r.entry.entry_id: r.sha256
+        for r in evidence_verifier.verify(tmp_path, want_hash=False, policy_path=policy)
+    }
     assert no_hash["audit-main"] is None
