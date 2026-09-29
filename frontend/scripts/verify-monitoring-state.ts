@@ -80,7 +80,11 @@ import { ALL_FINAL_MODALITIES, MODALITY_ANCHOR_POSITION, REGION_ORBITS, buildSen
 import { computeHrSegments } from "../src/lib/monitoring/hrSegments";
 import { deriveHrTrend } from "../src/lib/monitoring/hrTrend";
 import { deriveHrCorePresentation, visibleTrendCurrentValue } from "../src/lib/monitoring/hrOperationalPresentation";
-import { buildAnatomicalHuman } from "../src/components/visualization/human/anatomicalHumanGeometry";
+import {
+  anatomicalImplicitField,
+  buildAnatomicalHuman,
+  buildLegacyAnatomicalHuman,
+} from "../src/components/visualization/human/anatomicalHumanGeometry";
 import {
   DIGITAL_TWIN_VIEW_PRESETS,
   computeDigitalTwinFrustum,
@@ -3016,6 +3020,123 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     indices.every((i) => Number.isInteger(i) && i >= 0 && i < vertexCount),
   );
   check("anatomical human: has a non-trivial vertex count (torso+head+4 limbs actually lofted)", vertexCount > 500);
+
+  const normalLengths = Array.from({ length: vertexCount }, (_, i) => Math.hypot(normals[i * 3]!, normals[i * 3 + 1]!, normals[i * 3 + 2]!));
+  check("anatomical refinement: every vertex normal is non-zero and unit length", normalLengths.every((length) => length > 0.999 && length < 1.001));
+
+  let minimumTriangleArea = Number.POSITIVE_INFINITY;
+  const edgeIncidence = new Map<string, number>();
+  const referencedVertices = new Set<number>();
+  const parents = Array.from({ length: vertexCount }, (_, i) => i);
+  const findRoot = (value: number): number => {
+    let root = value;
+    while (parents[root] !== root) root = parents[root]!;
+    while (parents[value] !== value) {
+      const next = parents[value]!;
+      parents[value] = root;
+      value = next;
+    }
+    return root;
+  };
+  const join = (a: number, b: number) => {
+    const rootA = findRoot(a);
+    const rootB = findRoot(b);
+    if (rootA !== rootB) parents[rootB] = rootA;
+  };
+  for (let i = 0; i < indices.length; i += 3) {
+    const triangle = [indices[i]!, indices[i + 1]!, indices[i + 2]!];
+    const a = triangle[0]! * 3;
+    const b = triangle[1]! * 3;
+    const c = triangle[2]! * 3;
+    const ab = [positions[b]! - positions[a]!, positions[b + 1]! - positions[a + 1]!, positions[b + 2]! - positions[a + 2]!] as const;
+    const ac = [positions[c]! - positions[a]!, positions[c + 1]! - positions[a + 1]!, positions[c + 2]! - positions[a + 2]!] as const;
+    const crossX = ab[1] * ac[2] - ab[2] * ac[1];
+    const crossY = ab[2] * ac[0] - ab[0] * ac[2];
+    const crossZ = ab[0] * ac[1] - ab[1] * ac[0];
+    minimumTriangleArea = Math.min(minimumTriangleArea, Math.hypot(crossX, crossY, crossZ) / 2);
+    for (let edge = 0; edge < 3; edge++) {
+      const start = triangle[edge]!;
+      const end = triangle[(edge + 1) % 3]!;
+      const key = start < end ? `${start},${end}` : `${end},${start}`;
+      edgeIncidence.set(key, (edgeIncidence.get(key) ?? 0) + 1);
+      referencedVertices.add(start);
+      referencedVertices.add(end);
+      join(start, end);
+    }
+  }
+  check("anatomical refinement: no triangle falls below the 1e-7 world-unit area degeneracy floor", minimumTriangleArea > 1e-7, `minimum area ${minimumTriangleArea}`);
+  check("anatomical refinement: every mesh edge has exactly two incident faces (no root boundaries or non-manifold edges)", [...edgeIncidence.values()].every((count) => count === 2));
+  check("anatomical refinement: every generated vertex is referenced", referencedVertices.size === vertexCount);
+  check("anatomical refinement: torso, shoulders, hips, and limbs form one connected indexed component", new Set([...referencedVertices].map(findRoot)).size === 1);
+
+  const positionKey = (x: number, y: number, z: number) => `${Math.round(x * 1e4)},${Math.round(y * 1e4)},${Math.round(z * 1e4)}`;
+  const vertexByPosition = new Map<string, number>();
+  for (let i = 0; i < vertexCount; i++) vertexByPosition.set(positionKey(positions[i * 3]!, positions[i * 3 + 1]!, positions[i * 3 + 2]!), i);
+  let mirroredPositions = true;
+  let mirroredNormals = true;
+  for (let i = 0; i < vertexCount; i++) {
+    const mirror = vertexByPosition.get(positionKey(-positions[i * 3]!, positions[i * 3 + 1]!, positions[i * 3 + 2]!));
+    if (mirror === undefined) {
+      mirroredPositions = false;
+      continue;
+    }
+    const normalDelta = Math.hypot(
+      normals[i * 3]! + normals[mirror * 3]!,
+      normals[i * 3 + 1]! - normals[mirror * 3 + 1]!,
+      normals[i * 3 + 2]! - normals[mirror * 3 + 2]!,
+    );
+    if (normalDelta > 1e-4) mirroredNormals = false;
+  }
+  check("anatomical refinement: every shoulder/arm and hip/thigh surface vertex has a left-right mirror within 0.1 mm", mirroredPositions);
+  check("anatomical refinement: mirrored surface normals agree within 1e-4", mirroredNormals);
+
+  const xs = positions.filter((_, index) => index % 3 === 0);
+  const ys = positions.filter((_, index) => index % 3 === 1);
+  const zs = positions.filter((_, index) => index % 3 === 2);
+  check("anatomical refinement: full figure remains inside the established horizontal camera envelope", Math.max(...xs.map(Math.abs)) < 0.36);
+  check("anatomical refinement: crown remains at the established 1.79 m scale", Math.max(...ys) < 1.795);
+  check("anatomical refinement: feet retain ground alignment within the 10 mm sampling tolerance", Math.min(...ys) >= -0.01 && Math.min(...ys) <= 0.005);
+  check("anatomical refinement: front/back depth remains inside the existing camera presets", Math.min(...zs) > -0.17 && Math.max(...zs) < 0.22);
+
+  const legacyVertexCount = buildLegacyAnatomicalHuman().body.positions.length / 3;
+  check("anatomical refinement: measured vertex growth stays below the justified 10x one-time geometry budget", vertexCount / legacyVertexCount < 10);
+  check("anatomical refinement: absolute vertex count stays below 12,000", vertexCount < 12_000);
+
+  // Field probes exercise the actual branch geometry rather than source text.
+  // Positive means intentional exterior/negative space; negative means body.
+  const field = (x: number, y: number, z = 0) => anatomicalImplicitField({ x, y, z });
+  for (const side of [-1, 1] as const) {
+    check(`anatomical refinement: ${side < 0 ? "left" : "right"} clavicle-to-deltoid path is continuous`, [
+      [side * 0.08, 1.42], [side * 0.145, 1.39], [side * 0.18, 1.37], [side * 0.21, 1.34],
+    ].every(([x, y]) => field(x!, y!) < -0.03));
+    check(`anatomical refinement: ${side < 0 ? "left" : "right"} hip-to-thigh outer path is continuous`, [
+      [side * 0.11, 0.98], [side * 0.13, 0.93], [side * 0.13, 0.88], [side * 0.13, 0.84], [side * 0.12, 0.8], [side * 0.11, 0.76],
+    ].every(([x, y]) => field(x!, y!) < 0));
+    check(`anatomical refinement: ${side < 0 ? "left" : "right"} arm root stays clear of the upper neck volume`, field(side * 0.12, 1.52) > 0.04);
+  }
+  check("anatomical refinement: rib-cage/upper-arm negative space remains open", field(0.18, 1.2) > 0.025 && field(-0.18, 1.2) > 0.025);
+  check("anatomical refinement: both upper arms remain present beside that negative space", field(0.255, 1.2) < -0.02 && field(-0.255, 1.2) < -0.02);
+  check("anatomical refinement: natural crotch separation remains open below the pelvic branch", field(0, 0.74) > 0.02 && field(0, 0.8) > 0.005);
+  check("anatomical refinement: thighs remain separate but present bilaterally", field(0.095, 0.74) < -0.05 && field(-0.095, 0.74) < -0.05);
+
+  const edgeNormalDots = (predicate: (a: number, b: number) => boolean): number[] => {
+    const dots: number[] = [];
+    const visited = new Set<string>();
+    for (let i = 0; i < indices.length; i += 3) for (let edge = 0; edge < 3; edge++) {
+      const a = indices[i + edge]!;
+      const b = indices[i + ((edge + 1) % 3)]!;
+      const key = a < b ? `${a},${b}` : `${b},${a}`;
+      if (visited.has(key)) continue;
+      visited.add(key);
+      if (!predicate(a, b)) continue;
+      dots.push(normals[a * 3]! * normals[b * 3]! + normals[a * 3 + 1]! * normals[b * 3 + 1]! + normals[a * 3 + 2]! * normals[b * 3 + 2]!);
+    }
+    return dots.sort((a, b) => a - b);
+  };
+  const shoulderDots = edgeNormalDots((a, b) => Math.abs(positions[a * 3]!) > 0.11 && Math.abs(positions[b * 3]!) > 0.11 && positions[a * 3 + 1]! > 1.3 && positions[b * 3 + 1]! > 1.3 && positions[a * 3 + 1]! < 1.48 && positions[b * 3 + 1]! < 1.48);
+  const pelvisDots = edgeNormalDots((a, b) => Math.abs(positions[a * 3]!) > 0.025 && Math.abs(positions[b * 3]!) > 0.025 && positions[a * 3 + 1]! > 0.77 && positions[b * 3 + 1]! > 0.77 && positions[a * 3 + 1]! < 1 && positions[b * 3 + 1]! < 1);
+  check("anatomical refinement: at least 95% of shoulder-transition adjacent normals differ by under 20 degrees", shoulderDots[Math.floor(shoulderDots.length * 0.05)]! > 0.939);
+  check("anatomical refinement: at least 95% of concave pelvis-transition adjacent normals differ by under 39 degrees", pelvisDots[Math.floor(pelvisDots.length * 0.05)]! > 0.77);
 }
 
 // ===========================================================================
