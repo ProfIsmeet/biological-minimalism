@@ -1,0 +1,17 @@
+# Evidence text artifacts under frontend/qa-screenshots/ are hash-verified
+# by scripts/verify_jury_release_evidence.py against exact SHA-256 values
+# frozen in docs/JURY_RELEASE_EVIDENCE_POLICY.json. Those hashes were
+# computed against LF line endings. Without this file, a checkout on a
+# machine with core.autocrlf=true (the common Windows default) silently
+# converts these text files to CRLF, changing their bytes (never their
+# content) and causing the verifier to report a false AMBIGUOUS/hash-
+# mismatch for every affected file — root-caused during the Stage 6 fresh-
+# session audit (docs/ismet-stage6-final-audit-closure/EVIDENCE_VERIFIER_ROOT_CAUSE.md).
+# Forcing LF here makes every checkout of this evidence produce the exact
+# bytes the policy expects, on any OS.
+frontend/qa-screenshots/**/*.md text eol=lf
+frontend/qa-screenshots/**/*.json text eol=lf
+
+# PNG evidence is already binary-safe by Git's own detection; declared
+# explicitly for clarity, not because it was affected by this bug.
+frontend/qa-screenshots/**/*.png binary
