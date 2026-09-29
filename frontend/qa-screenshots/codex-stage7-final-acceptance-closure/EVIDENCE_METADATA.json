@@ -2,6 +2,7 @@
   "schema_version": 1,
   "evidence_classification": "canonical-native-browser-acceptance",
   "source_checkpoint": "a17315178573d5289b5053348ac5ec7646a71456",
+  "acceptance_checkpoint": "a84ed8a589d1d9f899787ca3683f2d6c3ff108ae",
   "route_under_test": "http://localhost:3420/digital-twin",
   "browser": {
     "name": "Safari",
