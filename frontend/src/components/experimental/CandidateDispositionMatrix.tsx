@@ -4,6 +4,7 @@ import { Archive } from "lucide-react";
 
 import { DataStateError } from "@/components/ui/DataStateError";
 import { CANDIDATE_DISPOSITION_DISPLAY } from "@/lib/architecture";
+import { NEGATIVE_MIXED_EVIDENCE } from "@/data/stage6/evidenceBurdenMatrix";
 import type { FinalWearableArchitecture } from "@/lib/types";
 import { useResearchStore } from "@/store/researchStore";
 
@@ -76,12 +77,14 @@ export function CandidateDispositionMatrix() {
         <>
           {/* Desktop table */}
           <div className="hidden overflow-x-auto sm:block">
-            <table className="w-full min-w-[960px] text-left text-sm">
+            <table className="w-full min-w-[1180px] text-left text-sm">
               <thead className="border-b border-jury-border-subtle text-[11px] uppercase tracking-wide text-ink-muted">
                 <tr>
                   <th className="px-3 py-2 font-semibold">Candidate / experiment</th>
                   <th className="px-3 py-2 font-semibold">Body region</th>
                   <th className="px-3 py-2 font-semibold">Candidate description</th>
+                  <th className="px-3 py-2 font-semibold">Numeric result &amp; direction</th>
+                  <th className="px-3 py-2 font-semibold">Population scope</th>
                   <th className="px-3 py-2 font-semibold">Evidence status</th>
                   <th className="px-3 py-2 font-semibold">Final disposition</th>
                   <th className="px-3 py-2 font-semibold">Provenance</th>
@@ -91,6 +94,7 @@ export function CandidateDispositionMatrix() {
                 {entries.map(([key, entry]) => {
                   const display = CANDIDATE_DISPOSITION_DISPLAY[key];
                   const provenance = provenanceFor(key);
+                  const evidence = NEGATIVE_MIXED_EVIDENCE[key];
                   return (
                     <tr key={key}>
                       <td className="px-3 py-3 align-top font-medium text-ink-primary">
@@ -100,6 +104,10 @@ export function CandidateDispositionMatrix() {
                       <td className="px-3 py-3 align-top text-ink-secondary">
                         {display?.evaluationRole ?? "Candidate sensing modality"}
                       </td>
+                      <td className="max-w-[240px] px-3 py-3 align-top font-mono text-[11px] tabular-nums text-ink-secondary">
+                        {evidence?.numericSupport ?? "Not measured"}
+                      </td>
+                      <td className="px-3 py-3 align-top text-[11px] text-ink-secondary">{evidence?.populationScope ?? "Not applicable"}</td>
                       <td className="max-w-[280px] px-3 py-3 align-top text-ink-secondary">{entry.reason}</td>
                       <td className="px-3 py-3 align-top">
                         <span className="inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-[11px] font-semibold text-experimental">
@@ -121,11 +129,14 @@ export function CandidateDispositionMatrix() {
             {entries.map(([key, entry]) => {
               const display = CANDIDATE_DISPOSITION_DISPLAY[key];
               const provenance = provenanceFor(key);
+              const evidence = NEGATIVE_MIXED_EVIDENCE[key];
               return (
                 <li key={key} className="rounded-md border border-jury-border-subtle bg-surface-2 p-3">
                   <p className="font-medium text-ink-primary">{display?.label ?? key.replace(/_/g, " ")}</p>
                   <p className="mt-1 text-xs text-ink-muted">{display?.region ?? "Not specified"}</p>
                   <p className="mt-1 text-xs text-ink-secondary">{display?.evaluationRole ?? "Candidate sensing modality"}</p>
+                  <p className="mt-2 font-mono text-[11px] tabular-nums text-ink-secondary">{evidence?.numericSupport ?? "Not measured"}</p>
+                  <p className="mt-1 text-[11px] text-ink-muted">Population: {evidence?.populationScope ?? "Not applicable"}</p>
                   <p className="mt-2 text-xs text-ink-secondary">{entry.reason}</p>
                   <span className="mt-2 inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-[11px] font-semibold text-experimental">
                     {dispositionFor(entry)}

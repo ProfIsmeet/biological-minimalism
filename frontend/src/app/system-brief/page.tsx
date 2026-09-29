@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ConditionalSelectionRadial } from "@/components/systembrief/ConditionalSelectionRadial";
+import { ArchitectureDeltaMatrix } from "@/components/systembrief/ArchitectureDeltaMatrix";
 import { EvidenceDecisionFlow } from "@/components/jury/EvidenceDecisionFlow";
 import { EvidenceScope } from "@/components/jury/EvidenceScope";
 import { ExperimentalBoundary } from "@/components/jury/ExperimentalBoundary";
@@ -30,7 +30,7 @@ export default function SystemBriefPage() {
       <JuryHero />
       <FinalArchitectureMap />
       <MinimalCoreComparison />
-      <ConditionalSelectionRadial />
+      <ArchitectureDeltaMatrix />
       <EvidenceDecisionFlow />
       <EvidenceScope />
       <FinalSensorLedger />
