@@ -47,12 +47,11 @@ export const holoShellMaterial = new THREE.MeshStandardMaterial({
  * wireframe with `THREE.EdgesGeometry`, which unconditionally draws every
  * open-boundary edge (any edge shared by only one triangle) regardless of
  * its crease-angle threshold. The limb roots were open boundaries at the
- * time (capStart: false), so EdgesGeometry drew a full bright ring exactly
- * around each one — the actual mechanism behind the "shoulder hook" and
- * "mechanical pelvic belt" defects, not a symptom of the geometry itself.
- * Reverting to a faint RAW wireframe (every triangle edge, uniform low
- * opacity, no special emphasis on any one edge) both fixes that and, now
- * that the limb roots are capped again, has no open boundary to highlight.
+ * time (capStart: false), so EdgesGeometry drew a full bright ring around
+ * each one. Reverting to a faint RAW wireframe removed that special boundary
+ * emphasis. The Stage 7 anatomical refinement subsequently removed the root
+ * boundaries and cap fans altogether: the lattice now follows one welded,
+ * closed body surface through both shoulder and hip branches.
  */
 export const holoLatticeMaterial = new THREE.MeshBasicMaterial({
   color: new THREE.Color(HOLO.cyan),

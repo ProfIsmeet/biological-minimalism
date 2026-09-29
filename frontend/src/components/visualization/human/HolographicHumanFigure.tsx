@@ -8,17 +8,13 @@ import { holoLatticeMaterial, holoRimMaterial, holoShellMaterial } from "@/compo
 
 /**
  * Prompt 3C/3C.1/3C.2 §8 — the anatomical holographic human. Replaces the 3B
- * figure that was assembled from ~18 separate `cylinderGeometry` segments
- * (visible pipe seams at every joint) with an ORIGINAL merged multi-part
- * procedural mesh built from elliptical cross-section rings
- * (anatomicalHumanGeometry.ts): the torso is one lofted volume, each limb is
- * one lofted tube whose shoulder/elbow/hip/knee bends are blended by
- * parallel-transport frames rather than butted-together tubes, and the head
- * is a separate lofted skull. All six parts are concatenated into one draw
- * buffer by `mergeMeshArrays()` for a single draw call per layer — this is a
- * merged multi-part display mesh, not a single watertight or boolean-unioned
- * surface (§3C.1 §3.1); the parts overlap in space at the joints rather than
- * sharing welded vertices.
+ * figure that was assembled from ~18 separate `cylinderGeometry` segments,
+ * then six independently lofted/capped parts. The current procedural mesh is
+ * one welded surface-net body generated from a smooth implicit field
+ * (anatomicalHumanGeometry.ts). The torso/arm and pelvis/thigh branches now
+ * share indexed vertices, with no limb-root cap fans or internal joint faces;
+ * the shell, lattice, and rim still share one immutable BufferGeometry and one
+ * draw call per layer.
  *
  * §3C.2 §3.6 — volume-first three-layer system (replaces 3C.1's edge-only
  * treatment, which read as a black hollow torso with bright hook/belt

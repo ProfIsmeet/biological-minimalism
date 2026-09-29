@@ -3,18 +3,17 @@
  *
  * The 3A/3B figure was assembled from separate tapered `cylinderGeometry`
  * segments: the torso read as three stacked pipes and every joint showed a
- * seam. This module replaces that with an ORIGINAL merged multi-part
- * procedural anatomical display mesh: the torso itself is one lofted volume
- * (§8.1, a single ordered run of elliptical cross-section rings), each limb is
- * one lofted tube that bends smoothly via parallel-transport frames (§8.3),
- * and the head is an elongated low-poly skull rather than a perfect sphere
- * (§8.2) — but the torso, head, and four limbs are six independently-lofted
- * parts concatenated into one draw buffer by `mergeMeshArrays()`, not a single
- * watertight or boolean-unioned surface. A shared draw call is not the same
- * claim as topological continuity; §3C.1 removed the limb-root end caps that
- * used to sit embedded inside the torso volume (visible through the
- * translucent shell as bright internal discs) precisely because those parts
- * are genuinely separate volumes overlapping in space, not welded together.
+ * seam. Stage 3C replaced that with six independently lofted parts, but its
+ * torso, head, arms, and legs were still only concatenated into one draw
+ * buffer. The capped limb roots overlapped the torso without sharing vertices,
+ * so the transparent shell exposed bright internal discs, intersecting
+ * lattice lines, and unrelated normal fields at the shoulders and hips.
+ *
+ * The Stage 7 anatomical refinement keeps the deterministic procedural source
+ * but samples one smooth implicit body field into a welded indexed surface.
+ * Surface-net vertices are shared by the torso/arm and pelvis/thigh branches;
+ * there are no limb-root caps or internal joint faces. The original loft
+ * helpers remain below for regression measurement of the inherited topology.
  *
  * Pure geometry only — NO `three` import, no DOM, no React — so
  * scripts/verify-monitoring-state.ts can exercise it in plain node and assert
@@ -393,21 +392,331 @@ function leg(side: -1 | 1): MeshArrays {
 }
 
 export interface AnatomicalHuman {
-  /** merged body volume (torso + neck + head + limbs) as one indexed mesh */
+  /** one welded implicit outer surface (head + torso + four limbs) */
   body: MeshArrays;
 }
 
 /**
- * Build the six-part anatomical human (torso, head, two arms, two legs) and
- * concatenate them into one merged indexed mesh, so the shell and the edge-line
- * overlay share a single geometry (one upload, one draw per layer). This is a
- * merged multi-part display mesh, not a single continuous or watertight
- * surface — see the file header. Memoise the result at the call site — this
- * is deterministic.
+ * The accepted Stage 7 source concatenated six independently closed lofts.
+ * That kept the draw count low, but left cap fans and two unrelated normal
+ * fields inside every shoulder and hip. Transparency made those construction
+ * surfaces visible. The refinement surface below uses a smooth implicit union
+ * and deterministic surface nets: one vertex is created per active grid cell
+ * and shared by every adjacent quad, so the four limb roots are genuine
+ * branches in one indexed outer surface rather than capped tubes hidden inside
+ * another mesh.
+ *
+ * The intentionally modest 15 mm sampling pitch keeps the procedural figure
+ * faceted/low-poly while resolving the wrist, crotch, and deltoid silhouettes.
+ * It is built once by HolographicHumanFigure's existing useMemo and uploaded
+ * once for the shell/lattice/rim layers; no per-frame work is introduced.
  */
-export function buildAnatomicalHuman(): AnatomicalHuman {
+export function buildLegacyAnatomicalHuman(): AnatomicalHuman {
   const parts = [torso(), head(), arm(-1), arm(1), leg(-1), leg(1)];
   return { body: mergeMeshArrays(parts) };
+}
+
+interface ImplicitPoint {
+  x: number;
+  y: number;
+  z: number;
+}
+
+interface EllipsoidPrimitive {
+  center: Vec3;
+  radii: Vec3;
+}
+
+interface CapsulePrimitive {
+  from: Vec3;
+  to: Vec3;
+  radiusFrom: number;
+  radiusTo: number;
+  /** Depth multiplier; values below one flatten palms and feet. */
+  depthScale?: number;
+}
+
+const IMPLICIT_MIN: Vec3 = [-0.36, -0.02, -0.17];
+const IMPLICIT_MAX: Vec3 = [0.36, 1.82, 0.22];
+const IMPLICIT_GRID = [49, 123, 27] as const;
+const IMPLICIT_BLEND = 0.012;
+
+const CORE_TORSO_SECTIONS: TorsoSection[] = [
+  { y: 0.91, z: -0.012, rx: 0.12, rz: 0.105 },
+  { y: 0.97, z: -0.008, rx: 0.142, rz: 0.112 },
+  { y: 1.05, z: -0.004, rx: 0.116, rz: 0.09 },
+  { y: 1.15, z: 0.0, rx: 0.124, rz: 0.094 },
+  { y: 1.25, z: 0.007, rx: 0.141, rz: 0.103 },
+  { y: 1.34, z: 0.012, rx: 0.155, rz: 0.11 },
+  { y: 1.375, z: 0.01, rx: 0.146, rz: 0.105 },
+];
+
+const ARM_NODES: LimbNode[] = [
+  { point: [0.176, 1.39, 0.0], radius: 0.058 },
+  { point: [0.207, 1.35, 0.002], radius: 0.052 },
+  { point: [0.235, 1.3, 0.006], radius: 0.044 },
+  { point: [0.264, 1.165, 0.012], radius: 0.036 },
+  { point: [0.29, 1.01, 0.026], radius: 0.032 },
+  { point: [0.305, 0.905, 0.042], radius: 0.026 },
+];
+
+const LEG_NODES: LimbNode[] = [
+  { point: [0.095, 0.865, -0.006], radius: 0.073 },
+  { point: [0.099, 0.79, 0.002], radius: 0.078 },
+  { point: [0.104, 0.61, 0.01], radius: 0.066 },
+  { point: [0.105, 0.475, 0.014], radius: 0.049 },
+  { point: [0.106, 0.36, 0.006], radius: 0.052 },
+  { point: [0.103, 0.23, -0.002], radius: 0.036 },
+  { point: [0.1, 0.085, -0.01], radius: 0.032 },
+];
+
+function smoothMin(a: number, b: number, blend = IMPLICIT_BLEND): number {
+  const h = Math.max(blend - Math.abs(a - b), 0) / blend;
+  return Math.min(a, b) - (h * h * blend) / 4;
+}
+
+/** Stable approximate signed distance for an axis-aligned ellipsoid. */
+function ellipsoidDistance(point: ImplicitPoint, primitive: EllipsoidPrimitive): number {
+  const dx = (point.x - primitive.center[0]) / primitive.radii[0];
+  const dy = (point.y - primitive.center[1]) / primitive.radii[1];
+  const dz = (point.z - primitive.center[2]) / primitive.radii[2];
+  return (Math.hypot(dx, dy, dz) - 1) * Math.min(...primitive.radii);
+}
+
+/** Variable-radius capsule; the optional depth scale preserves flattened extremities. */
+function capsuleDistance(point: ImplicitPoint, primitive: CapsulePrimitive): number {
+  const depthScale = primitive.depthScale ?? 1;
+  const px = point.x;
+  const py = point.y;
+  const pz = point.z / depthScale;
+  const ax = primitive.from[0];
+  const ay = primitive.from[1];
+  const az = primitive.from[2] / depthScale;
+  const bx = primitive.to[0];
+  const by = primitive.to[1];
+  const bz = primitive.to[2] / depthScale;
+  const abx = bx - ax;
+  const aby = by - ay;
+  const abz = bz - az;
+  const lengthSquared = abx * abx + aby * aby + abz * abz;
+  const t = lengthSquared > 1e-12
+    ? Math.max(0, Math.min(1, ((px - ax) * abx + (py - ay) * aby + (pz - az) * abz) / lengthSquared))
+    : 0;
+  const radius = primitive.radiusFrom + (primitive.radiusTo - primitive.radiusFrom) * t;
+  return Math.hypot(px - (ax + abx * t), py - (ay + aby * t), pz - (az + abz * t)) - radius;
+}
+
+function loftProfileDistance(point: ImplicitPoint, sections: TorsoSection[]): number {
+  const first = sections[0]!;
+  const last = sections[sections.length - 1]!;
+  const clampedY = Math.max(first.y, Math.min(last.y, point.y));
+  let lower = first;
+  let upper = last;
+  for (let i = 0; i < sections.length - 1; i++) {
+    if (clampedY >= sections[i]!.y && clampedY <= sections[i + 1]!.y) {
+      lower = sections[i]!;
+      upper = sections[i + 1]!;
+      break;
+    }
+  }
+  const span = Math.max(upper.y - lower.y, 1e-9);
+  const t = (clampedY - lower.y) / span;
+  const z = lower.z + (upper.z - lower.z) * t;
+  const rx = lower.rx + (upper.rx - lower.rx) * t;
+  const rz = lower.rz + (upper.rz - lower.rz) * t;
+  const radial = (Math.hypot(point.x / rx, (point.z - z) / rz) - 1) * Math.min(rx, rz);
+  const vertical = Math.max(first.y - point.y, point.y - last.y);
+  const outsideRadial = Math.max(radial, 0);
+  const outsideVertical = Math.max(vertical, 0);
+  return Math.hypot(outsideRadial, outsideVertical) + Math.min(Math.max(radial, vertical), 0);
+}
+
+function mirrorX(point: Vec3, side: -1 | 1): Vec3 {
+  return [point[0] * side, point[1], point[2]];
+}
+
+function unionCapsuleChain(distance: number, point: ImplicitPoint, nodes: LimbNode[], side: -1 | 1, depthScale = 1): number {
+  let result = distance;
+  for (let i = 0; i < nodes.length - 1; i++) {
+    result = smoothMin(result, capsuleDistance(point, {
+      from: mirrorX(nodes[i]!.point, side),
+      to: mirrorX(nodes[i + 1]!.point, side),
+      radiusFrom: nodes[i]!.radius,
+      radiusTo: nodes[i + 1]!.radius,
+      depthScale,
+    }));
+  }
+  return result;
+}
+
+function sideBodyDistance(point: ImplicitPoint, side: -1 | 1): number {
+  let distance = Number.POSITIVE_INFINITY;
+  distance = smoothMin(distance, capsuleDistance(point, {
+    from: [0, 1.43, 0.004],
+    to: [side * 0.145, 1.39, 0.002],
+    radiusFrom: 0.062,
+    radiusTo: 0.066,
+    depthScale: 1.18,
+  }));
+  distance = smoothMin(distance, ellipsoidDistance(point, {
+    center: [side * 0.164, 1.365, 0.003],
+    radii: [0.074, 0.089, 0.091],
+  }));
+  distance = unionCapsuleChain(distance, point, ARM_NODES, side);
+  distance = smoothMin(distance, ellipsoidDistance(point, {
+    center: [side * 0.055, 0.895, -0.014],
+    radii: [0.088, 0.105, 0.116],
+  }));
+  distance = unionCapsuleChain(distance, point, LEG_NODES, side);
+  distance = smoothMin(distance, capsuleDistance(point, {
+    from: [side * 0.305, 0.9, 0.045],
+    to: [side * 0.31, 0.825, 0.058],
+    radiusFrom: 0.027,
+    radiusTo: 0.038,
+    depthScale: 0.5,
+  }));
+  distance = smoothMin(distance, ellipsoidDistance(point, {
+    center: [side * 0.31, 0.796, 0.062],
+    radii: [0.027, 0.038, 0.018],
+  }));
+  distance = smoothMin(distance, capsuleDistance(point, {
+    from: [side * 0.1, 0.088, -0.014],
+    to: [side * 0.1, 0.046, 0.09],
+    radiusFrom: 0.038,
+    radiusTo: 0.052,
+    depthScale: 0.68,
+  }));
+  return smoothMin(distance, ellipsoidDistance(point, {
+    center: [side * 0.1, 0.038, 0.138],
+    radii: [0.045, 0.028, 0.07],
+  }));
+}
+
+/** Negative inside, positive outside. Every primitive is mirrored explicitly. */
+export function anatomicalImplicitField(point: ImplicitPoint): number {
+  let distance = loftProfileDistance(point, CORE_TORSO_SECTIONS);
+
+  // Neck and head remain neutral, stylised, and slightly deeper toward the face.
+  distance = smoothMin(distance, capsuleDistance(point, { from: [0, 1.37, 0.004], to: [0, 1.585, 0.006], radiusFrom: 0.06, radiusTo: 0.048, depthScale: 0.94 }));
+  for (const primitive of [
+    { center: [0, 1.615, 0.012], radii: [0.063, 0.074, 0.073] },
+    { center: [0, 1.685, 0.004], radii: [0.082, 0.1, 0.09] },
+    { center: [0, 1.75, -0.002], radii: [0.055, 0.042, 0.06] },
+  ] satisfies EllipsoidPrimitive[]) distance = smoothMin(distance, ellipsoidDistance(point, primitive));
+
+  // Evaluate mirrored sides independently before combining them. Besides
+  // documenting the bilateral model, this prevents floating-point ordering
+  // from introducing tiny left/right differences in the sampled surface.
+  return smoothMin(distance, smoothMin(sideBodyDistance(point, -1), sideBodyDistance(point, 1)));
+}
+
+const CUBE_CORNERS = [
+  [0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0],
+  [0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1],
+] as const;
+const CUBE_EDGES = [
+  [0, 1], [1, 2], [2, 3], [3, 0],
+  [4, 5], [5, 6], [6, 7], [7, 4],
+  [0, 4], [1, 5], [2, 6], [3, 7],
+] as const;
+
+function buildImplicitSurface(): MeshArrays {
+  const [nx, ny, nz] = IMPLICIT_GRID;
+  const dx = (IMPLICIT_MAX[0] - IMPLICIT_MIN[0]) / (nx - 1);
+  const dy = (IMPLICIT_MAX[1] - IMPLICIT_MIN[1]) / (ny - 1);
+  const dz = (IMPLICIT_MAX[2] - IMPLICIT_MIN[2]) / (nz - 1);
+  const pointIndex = (x: number, y: number, z: number) => x + nx * (y + ny * z);
+  const cellIndex = (x: number, y: number, z: number) => x + (nx - 1) * (y + (ny - 1) * z);
+  const samples = new Float32Array(nx * ny * nz);
+
+  for (let z = 0; z < nz; z++) for (let y = 0; y < ny; y++) for (let x = 0; x < nx; x++) {
+    samples[pointIndex(x, y, z)] = anatomicalImplicitField({
+      x: IMPLICIT_MIN[0] + x * dx,
+      y: IMPLICIT_MIN[1] + y * dy,
+      z: IMPLICIT_MIN[2] + z * dz,
+    });
+  }
+
+  const positions: number[] = [];
+  const cellVertices = new Int32Array((nx - 1) * (ny - 1) * (nz - 1));
+  cellVertices.fill(-1);
+  for (let z = 0; z < nz - 1; z++) for (let y = 0; y < ny - 1; y++) for (let x = 0; x < nx - 1; x++) {
+    const values = CUBE_CORNERS.map(([cx, cy, cz]) => samples[pointIndex(x + cx, y + cy, z + cz)]!);
+    if (values.every((value) => value <= 0) || values.every((value) => value > 0)) continue;
+    let px = 0;
+    let py = 0;
+    let pz = 0;
+    let intersections = 0;
+    for (const [a, b] of CUBE_EDGES) {
+      const va = values[a]!;
+      const vb = values[b]!;
+      if ((va <= 0) === (vb <= 0)) continue;
+      const t = va / (va - vb);
+      const ca = CUBE_CORNERS[a]!;
+      const cb = CUBE_CORNERS[b]!;
+      px += IMPLICIT_MIN[0] + (x + ca[0] + (cb[0] - ca[0]) * t) * dx;
+      py += IMPLICIT_MIN[1] + (y + ca[1] + (cb[1] - ca[1]) * t) * dy;
+      pz += IMPLICIT_MIN[2] + (z + ca[2] + (cb[2] - ca[2]) * t) * dz;
+      intersections += 1;
+    }
+    const vertex = positions.length / 3;
+    positions.push(px / intersections, py / intersections, pz / intersections);
+    cellVertices[cellIndex(x, y, z)] = vertex;
+  }
+
+  const indices: number[] = [];
+  const pushQuad = (a: number, b: number, c: number, d: number, forward: boolean) => {
+    if (a < 0 || b < 0 || c < 0 || d < 0 || new Set([a, b, c, d]).size < 4) return;
+    if (forward) indices.push(a, b, c, a, c, d);
+    else indices.push(a, d, c, a, c, b);
+  };
+
+  // One quad around every sign-changing grid edge. Adjacent quads share the
+  // active-cell vertex indices above, which is the welded topology guarantee.
+  for (let z = 1; z < nz - 1; z++) for (let y = 1; y < ny - 1; y++) for (let x = 0; x < nx - 1; x++) {
+    const start = samples[pointIndex(x, y, z)]!;
+    const end = samples[pointIndex(x + 1, y, z)]!;
+    if ((start <= 0) !== (end <= 0)) pushQuad(
+      cellVertices[cellIndex(x, y - 1, z - 1)]!, cellVertices[cellIndex(x, y, z - 1)]!,
+      cellVertices[cellIndex(x, y, z)]!, cellVertices[cellIndex(x, y - 1, z)]!, start <= 0,
+    );
+  }
+  for (let z = 1; z < nz - 1; z++) for (let y = 0; y < ny - 1; y++) for (let x = 1; x < nx - 1; x++) {
+    const start = samples[pointIndex(x, y, z)]!;
+    const end = samples[pointIndex(x, y + 1, z)]!;
+    if ((start <= 0) !== (end <= 0)) pushQuad(
+      cellVertices[cellIndex(x - 1, y, z - 1)]!, cellVertices[cellIndex(x - 1, y, z)]!,
+      cellVertices[cellIndex(x, y, z)]!, cellVertices[cellIndex(x, y, z - 1)]!, start <= 0,
+    );
+  }
+  for (let z = 0; z < nz - 1; z++) for (let y = 1; y < ny - 1; y++) for (let x = 1; x < nx - 1; x++) {
+    const start = samples[pointIndex(x, y, z)]!;
+    const end = samples[pointIndex(x, y, z + 1)]!;
+    if ((start <= 0) !== (end <= 0)) pushQuad(
+      cellVertices[cellIndex(x - 1, y - 1, z)]!, cellVertices[cellIndex(x, y - 1, z)]!,
+      cellVertices[cellIndex(x, y, z)]!, cellVertices[cellIndex(x - 1, y, z)]!, start <= 0,
+    );
+  }
+
+  const posArr = new Float32Array(positions);
+  const idxArr = new Uint32Array(indices);
+  const normals = new Float32Array(posArr.length);
+  const epsilon = 0.0015;
+  for (let i = 0; i < posArr.length; i += 3) {
+    const point = { x: posArr[i]!, y: posArr[i + 1]!, z: posArr[i + 2]! };
+    const gx = anatomicalImplicitField({ ...point, x: point.x + epsilon }) - anatomicalImplicitField({ ...point, x: point.x - epsilon });
+    const gy = anatomicalImplicitField({ ...point, y: point.y + epsilon }) - anatomicalImplicitField({ ...point, y: point.y - epsilon });
+    const gz = anatomicalImplicitField({ ...point, z: point.z + epsilon }) - anatomicalImplicitField({ ...point, z: point.z - epsilon });
+    const length = Math.hypot(gx, gy, gz);
+    normals[i] = gx / length;
+    normals[i + 1] = gy / length;
+    normals[i + 2] = gz / length;
+  }
+  return { positions: posArr, normals, indices: idxArr };
+}
+
+export function buildAnatomicalHuman(): AnatomicalHuman {
+  return { body: buildImplicitSurface() };
 }
 
 /** Vertical bounds of the rendered figure (for orthographic framing). */
