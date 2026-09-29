@@ -4610,6 +4610,110 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 }
 
 // ===========================================================================
+// Stage 6 fresh-session audit corrections (S6A-FIND-01..05)
+// ===========================================================================
+{
+  // --- S6A-FIND-05: recovery is derived from real HR data, not the fragile
+  // upstream prediction_recovered event classification (which, confirmed
+  // via a real populated-replay run, essentially never fires for the
+  // normal clear -> re-warm -> recover sequence because faultActive flips
+  // false before the model produces its next real value). -----------------
+  const baseEvent = (over: Partial<import("../src/lib/monitoring/operationalEvents").OperationalEvent>) => ({
+    id: `evt-${Math.random()}`,
+    kind: "fault_applied" as const,
+    label: "x",
+    modality: "PPG" as const,
+    simulated: true,
+    sourceLabel: "test",
+    sourceTimestampSeconds: null,
+    clientMs: 0,
+    ...over,
+  });
+
+  const closedIntervalWithRecovery = deriveFaultRecoveryTimeline(
+    [baseEvent({ id: "a", kind: "fault_applied", sourceTimestampSeconds: 10 }), baseEvent({ id: "b", kind: "fault_cleared", sourceTimestampSeconds: 20 })],
+    [
+      { timestampSeconds: 5, heartRateBpm: 70 },
+      { timestampSeconds: 10, heartRateBpm: null },
+      { timestampSeconds: 15, heartRateBpm: null },
+      { timestampSeconds: 20, heartRateBpm: null },
+      { timestampSeconds: 25, heartRateBpm: null },
+      { timestampSeconds: 30, heartRateBpm: 68 },
+      { timestampSeconds: 35, heartRateBpm: 69 },
+    ],
+    35,
+  );
+  checkEqual("S6A-FIND-05: recovery marker is the first real HR sample strictly after the interval's clear time", closedIntervalWithRecovery.recoveryMarkers[0]?.timeSeconds, 30);
+  checkEqual("S6A-FIND-05: recovery marker carries the real HR value at that point, not a placeholder", closedIntervalWithRecovery.recoveryMarkers[0]?.heartRateBpm, 68);
+  checkEqual("S6A-FIND-05: exactly one recovery marker for one closed interval", closedIntervalWithRecovery.recoveryMarkers.length, 1);
+
+  const noRecoveryYet = deriveFaultRecoveryTimeline(
+    [baseEvent({ id: "c", kind: "fault_applied", sourceTimestampSeconds: 10 }), baseEvent({ id: "d", kind: "fault_cleared", sourceTimestampSeconds: 20 })],
+    [
+      { timestampSeconds: 10, heartRateBpm: null },
+      { timestampSeconds: 25, heartRateBpm: null },
+    ],
+    25,
+  );
+  checkEqual("S6A-FIND-05: no recovery marker is fabricated when no real HR sample has appeared yet after clear", noRecoveryYet.recoveryMarkers.length, 0);
+
+  const bothModalitiesSameClear = deriveFaultRecoveryTimeline(
+    [
+      baseEvent({ id: "e", kind: "fault_applied", modality: "PPG", sourceTimestampSeconds: 10 }),
+      baseEvent({ id: "f", kind: "fault_applied", modality: "IMU", sourceTimestampSeconds: 10 }),
+      baseEvent({ id: "g", kind: "fault_cleared", modality: "PPG", sourceTimestampSeconds: 20 }),
+      baseEvent({ id: "h", kind: "fault_cleared", modality: "IMU", sourceTimestampSeconds: 20 }),
+    ],
+    [
+      { timestampSeconds: 10, heartRateBpm: null },
+      { timestampSeconds: 25, heartRateBpm: 71 },
+    ],
+    25,
+  );
+  checkEqual(
+    "S6A-FIND-05: simultaneous multi-modality recovery at the identical real HR sample produces exactly one deduplicated marker, not one per interval",
+    bothModalitiesSameClear.recoveryMarkers.length,
+    1,
+  );
+
+  const ongoingFaultNoRecovery = deriveFaultRecoveryTimeline([baseEvent({ id: "i", kind: "fault_applied", sourceTimestampSeconds: 10 })], [{ timestampSeconds: 30, heartRateBpm: 70 }], 30);
+  checkEqual("S6A-FIND-05: an ongoing (never-cleared) fault produces no recovery marker", ongoingFaultNoRecovery.recoveryMarkers.length, 0);
+
+  // --- S6A-FIND-04: prediction_available (plain initial warm-up, never a
+  // fault) must never be classified as "recovery" — only prediction_recovered
+  // is. Confirmed via a real run where a spurious pre-fault "Recovery"
+  // marker appeared before this fix. --------------------------------------
+  const initialWarmupOnly = deriveFaultRecoveryTimeline([baseEvent({ id: "j", kind: "prediction_available", modality: null, simulated: false, sourceTimestampSeconds: 3 })], [], 3);
+  checkEqual("S6A-FIND-04: a plain prediction_available event (no fault ever occurred) is not classified as a fault-timeline event at all", initialWarmupOnly.events.length, 0);
+
+  // --- S6A-FIND-01: OperationalEventLogWatcher feeds real replay position,
+  // never the wall-clock confirmation timestamp, as an event's
+  // sourceTimestampSeconds. Verified by source inspection, since the live
+  // hook itself requires a mounted React tree — this supplements the real
+  // browser evidence in docs/ismet-stage6-final-audit-closure/POPULATED_TIMELINE_ACCEPTANCE.md,
+  // it does not replace it. --------------------------------------------
+  const watcherSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/OperationalEventLogWatcher.tsx"), "utf8");
+  checkIncludes("S6A-FIND-01: the event watcher feeds the real replay position as the event timestamp", watcherSource, "sourceTimestampSeconds: view.replayPositionSeconds");
+  checkNotIncludes("S6A-FIND-01: the event watcher no longer feeds the wall-clock confirmation timestamp as if it were replay time", watcherSource, "sourceTimestampSeconds: view.confirmedTimestampSeconds");
+
+  const timelineSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/FaultRecoveryTimeline.tsx"), "utf8");
+  checkIncludes("S6A-FIND-01: the timeline's HR samples use the real replay position field", timelineSource, "s.source.replay_position_seconds");
+
+  const coverageSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/CoverageFreshnessMatrix.tsx"), "utf8");
+  checkIncludes("S6A-FIND-01: the coverage matrix's 'as of' footer uses the real replay position field", coverageSource, "view.replayPositionSeconds");
+  checkNotIncludes("S6A-FIND-01: the coverage matrix's 'as of' footer no longer uses the wall-clock confirmation timestamp", coverageSource, "view.confirmedTimestampSeconds !== null");
+
+  // --- S6A-FIND-02: ChartFrame uses a definite height (h-[Npx]), never a
+  // min-height, so a Recharts ResponsiveContainer's height:100% can resolve
+  // against it. Confirmed via a real browser DOM inspection during a
+  // populated-replay run that a min-height-only parent produced a 0x0
+  // <div class="recharts-responsive-container"> with no <svg> child. ------
+  const chartFrameSource = readFileSync(join(REPO_SRC_ROOT, "components/visualization/shared/ChartFrame.tsx"), "utf8");
+  checkIncludes("S6A-FIND-02: ChartFrame's chart body uses a definite height class", chartFrameSource, "heightClassName");
+  checkNotIncludes("S6A-FIND-02: ChartFrame no longer uses a min-height-only chart body (breaks Recharts height:100% resolution)", chartFrameSource, "minHeightClassName");
+}
+
+// ===========================================================================
 // Summary
 // ===========================================================================
 
