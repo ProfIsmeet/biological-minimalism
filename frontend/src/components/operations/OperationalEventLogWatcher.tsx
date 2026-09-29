@@ -31,9 +31,19 @@ export function OperationalEventLogWatcher() {
       sourceStateStatus: view.sourceStateStatus,
     };
 
+    // Stage 6 fresh-session audit correction (S6A-FIND-01, CRITICAL):
+    // `view.confirmedTimestampSeconds` is backed by missionStore's
+    // `lastConfirmedTimestampSeconds`, which is set from the snapshot's own
+    // `timestamp` field — a server wall-clock value (confirmed via a real
+    // populated-replay run: it read ~1.79e9, a 2026 Unix-epoch second count,
+    // not a small "seconds into an 8958s replay" value). `sourceTimestampSeconds`
+    // is consumed by FaultRecoveryTimeline as if it were real replay time; it
+    // must be the genuine replay position instead, from
+    // `view.replayPositionSeconds` (backed by `source.replay_position_seconds`,
+    // confirmed via the same run to read ~24.5s / ~44.7s as expected).
     const events = deriveEventsFromTransition(previousSignature.current, signature, {
       sourceLabel: view.sourceLabel,
-      sourceTimestampSeconds: view.confirmedTimestampSeconds,
+      sourceTimestampSeconds: view.replayPositionSeconds,
       clientMs: Date.now(),
     });
     previousSignature.current = signature;
@@ -49,7 +59,7 @@ export function OperationalEventLogWatcher() {
     view.faultedModalities,
     view.sourceStateStatus,
     view.sourceLabel,
-    view.confirmedTimestampSeconds,
+    view.replayPositionSeconds,
     appendEvents,
   ]);
 

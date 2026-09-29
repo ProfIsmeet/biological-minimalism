@@ -12,6 +12,23 @@ import type { ReactNode } from "react";
  * accessibility scaffolding only; the actual marks are rendered by the
  * caller (Recharts or raw SVG), consistent with "prefer existing primitives,
  * do not build a bigger framework than the project needs".
+ *
+ * Stage 6 fresh-session audit correction (S6A-FIND-02, CRITICAL): the chart
+ * body originally used `min-h-[Npx]` (min-height, auto height). A Recharts
+ * `<ResponsiveContainer>` sets `height: 100%` on itself, and CSS percentage
+ * heights do not resolve against an `auto`-height parent — only against a
+ * *definite* height — so every Recharts chart mounted here silently
+ * rendered at 0×0 (an empty `<div class="recharts-responsive-container">`
+ * with no `<svg>` child at all, confirmed via direct DOM inspection during a
+ * real populated fault/recovery timeline run) whenever the parent wasn't
+ * independently given a definite height by its own layout context (a plain
+ * flex-column section, as `FaultRecoveryTimeline` sits in). It happened to
+ * *look* fine for `SensitivitySmallMultiples` only because that component's
+ * `ChartFrame`s sit inside a CSS Grid, and grid-item stretch (the grid
+ * default) establishes a definite height per spec, coincidentally masking
+ * the same underlying bug. Now `h-[Npx]` (an explicit, definite height),
+ * matching the pattern the pre-existing `RecentHrEstimateTrend.tsx` already
+ * used correctly.
  */
 export function ChartFrame({
   id,
@@ -21,7 +38,7 @@ export function ChartFrame({
   summary,
   children,
   footer,
-  minHeightClassName = "min-h-[220px]",
+  heightClassName = "h-[220px]",
 }: {
   id: string;
   title: string;
@@ -31,7 +48,7 @@ export function ChartFrame({
   summary: string;
   children: ReactNode;
   footer?: ReactNode;
-  minHeightClassName?: string;
+  heightClassName?: string;
 }) {
   const headingId = `${id}-heading`;
   const summaryId = `${id}-summary`;
@@ -51,7 +68,7 @@ export function ChartFrame({
       <p id={summaryId} className="text-sm leading-relaxed text-ink-secondary">
         {summary}
       </p>
-      <div className={`w-full ${minHeightClassName}`}>{children}</div>
+      <div className={`w-full ${heightClassName}`}>{children}</div>
       {footer}
     </section>
   );

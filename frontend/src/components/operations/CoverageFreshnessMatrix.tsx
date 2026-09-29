@@ -21,7 +21,7 @@ import { useOperationalViewModel, type OperationalModalityState } from "@/lib/mo
  * categorical backend state (confirmed / warm-up / fault / unavailable /
  * disconnected / awaiting-confirmation / source-error), not an invented age
  * bar. The one authoritative session-level "as of" time
- * (view.confirmedTimestampSeconds) is shown once, not fabricated per row.
+ * (view.replayPositionSeconds) is shown once, not fabricated per row.
  */
 function tone(state: OperationalModalityState["nodeState"]): "nominal" | "warning" | "fault" | "muted" {
   if (state === "confirmed") return "nominal";
@@ -120,7 +120,13 @@ export function CoverageFreshnessMatrix({
       ) : null}
 
       <p className="text-xs leading-snug text-ink-muted">
-        As of {view.confirmedTimestampSeconds !== null ? `replay t=${view.confirmedTimestampSeconds.toFixed(1)}s` : "no confirmed frame yet"} ·
+        {/* Fresh-session audit correction (S6A-FIND-01, CRITICAL, same root
+            cause as FaultRecoveryTimeline): this line used
+            view.confirmedTimestampSeconds (a wall-clock epoch value) and
+            mislabeled it "replay t=" — confirmed via a real populated-replay
+            run showing "replay t=1790704719.9s". view.replayPositionSeconds
+            is the genuine in-session replay-position field. */}
+        As of {view.replayPositionSeconds !== null ? `replay t=${view.replayPositionSeconds.toFixed(1)}s` : "no confirmed frame yet"} ·
         this runtime does not expose a per-channel last-confirmed age, so state is shown categorically rather than as an invented freshness bar.
       </p>
     </section>

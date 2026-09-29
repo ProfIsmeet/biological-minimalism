@@ -19,12 +19,20 @@ import type { OperationalEvent, OperationalEventKind } from "@/lib/monitoring/op
 
 export type FaultTimelineEventClass = "fault_onset" | "fault_clear" | "recovery" | "other";
 
+// Fresh-session audit correction (S6A-FIND-04, MEDIUM): `prediction_available`
+// (operationalEvents.ts) fires on the session's plain initial warm-up
+// completion — it is NOT a fault recovery (deriveEventsFromTransition emits
+// `prediction_recovered` instead, specifically and only when
+// `previous.faultActive` was true). The original mapping conflated both
+// into "recovery", so a session's very first HR value appeared as a
+// "Recovery" marker on the timeline even when no fault had ever occurred —
+// confirmed via a real populated-replay run showing a "Recovery" marker
+// positioned before any fault-onset event. Only `prediction_recovered` is
+// a genuine post-fault recovery.
 const EVENT_CLASS: Partial<Record<OperationalEventKind, FaultTimelineEventClass>> = {
   fault_applied: "fault_onset",
   fault_cleared: "fault_clear",
   prediction_recovered: "recovery",
-  prediction_unavailable: "fault_onset",
-  prediction_available: "recovery",
 };
 
 export interface FaultTimelineEvent {
@@ -54,12 +62,21 @@ export interface HrPoint {
   heartRateBpm: number | null;
 }
 
+export interface RecoveryMarker {
+  id: string;
+  /** The interval this recovery follows. */
+  intervalId: string;
+  timeSeconds: number;
+  heartRateBpm: number;
+}
+
 export interface FaultRecoveryTimelineResult {
   axisAvailable: boolean;
   events: FaultTimelineEvent[];
   intervals: FaultInterval[];
   hrPoints: HrPoint[];
   domainSeconds: [number, number] | null;
+  recoveryMarkers: RecoveryMarker[];
 }
 
 function classify(event: OperationalEvent): FaultTimelineEventClass {
@@ -141,5 +158,35 @@ export function deriveFaultRecoveryTimeline(
     if (times.length > 0) domainSeconds = [Math.min(...times), Math.max(...times)];
   }
 
-  return { axisAvailable, events, intervals, hrPoints, domainSeconds };
+  // Fresh-session audit correction (S6A-FIND-05, MEDIUM): recovery derived
+  // from the pre-existing `prediction_recovered` event kind essentially
+  // never fires for the normal clear -> re-warm -> recover sequence, because
+  // `deriveEventsFromTransition` (lib/monitoring/operationalEvents.ts,
+  // unmodified, pre-existing shared infrastructure) classifies a
+  // predictionAvailability transition using the *instantaneous* faultActive
+  // flag at the moment availability returns — but faultActive already flips
+  // false the instant the fault is cleared, well before the model's
+  // real re-warm-up window elapses and a new HR value actually appears
+  // (confirmed via a real populated-replay run: HR genuinely recovered ~9s
+  // after a real fault-clear call, yet zero `prediction_recovered` events
+  // were ever observed across a 30s post-clear window). Recovery is instead
+  // derived directly from the trusted `hrPoints` data itself: the first
+  // real (non-null) HR sample strictly after a CLOSED interval's clear time
+  // is the genuine recovery point — grounded in the same real replay-time
+  // axis, no reliance on the fragile upstream event classification.
+  const recoveryMarkers: RecoveryMarker[] = [];
+  const seenRecoveryTimes = new Set<number>();
+  for (const interval of intervals) {
+    if (interval.ongoing || interval.clearSeconds === null) continue;
+    const nextReal = hrPoints.find((p) => p.timeSeconds > interval.clearSeconds! && p.heartRateBpm !== null);
+    // Multiple modalities faulted/cleared together (e.g. a "both" fault)
+    // share the identical next real HR point — dedupe so simultaneous
+    // recoveries render as one marker, not one per modality.
+    if (nextReal && nextReal.heartRateBpm !== null && !seenRecoveryTimes.has(nextReal.timeSeconds)) {
+      seenRecoveryTimes.add(nextReal.timeSeconds);
+      recoveryMarkers.push({ id: `recovery-${interval.id}`, intervalId: interval.id, timeSeconds: nextReal.timeSeconds, heartRateBpm: nextReal.heartRateBpm });
+    }
+  }
+
+  return { axisAvailable, events, intervals, hrPoints, domainSeconds, recoveryMarkers };
 }
