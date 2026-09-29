@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "evidence_classification": "canonical-native-browser-acceptance",
+  "source_checkpoint": "a17315178573d5289b5053348ac5ec7646a71456",
+  "route_under_test": "http://localhost:3420/digital-twin",
+  "browser": {
+    "name": "Safari",
+    "version": "26.5.2",
+    "capture_mode": "visible native desktop browser"
+  },
+  "operating_system": {
+    "name": "macOS",
+    "version": "26.5.2",
+    "build": "25F84"
+  },
+  "physical_capture": {
+    "width_px": 2880,
+    "height_px": 1800
+  },
+  "measured_browser_states": {
+    "100_percent": {
+      "inner_width_css_px": 1440,
+      "inner_height_css_px": 714,
+      "outer_width_css_px": 1440,
+      "outer_height_css_px": 804,
+      "document_scroll_width_css_px": 1440,
+      "document_scroll_height_css_px": 1402,
+      "device_pixel_ratio": 2,
+      "canvas_count": 1
+    },
+    "200_percent": {
+      "inner_width_css_px": 720,
+      "inner_height_css_px": 357,
+      "outer_width_css_px": 1440,
+      "outer_height_css_px": 804,
+      "document_scroll_width_css_px": 720,
+      "document_scroll_height_css_px": 2255,
+      "device_pixel_ratio": 4,
+      "canvas_count": 1
+    }
+  },
+  "captures": [
+    {
+      "file": "zoom100-reference-page.png",
+      "captured_at": "2026-09-29T17:01:05+0300",
+      "zoom_percent": 100,
+      "route": "/digital-twin",
+      "sha256": "6d054366c98c27a5fbf0e2177af07e91b869d28a4687bb08e94ddc1500e59fa1",
+      "description": "Full-page 100% reference showing the complete desktop information architecture and full-body viewer context."
+    },
+    {
+      "file": "zoom100-restored-proof.png",
+      "captured_at": "2026-09-29T17:20:28+0300",
+      "zoom_percent": 100,
+      "route": "/digital-twin",
+      "sha256": "fcafd810074e89ed0a45de5f219509d4f56b6ba9aa7696409dab532022aaf58f",
+      "description": "Post-test restoration capture after Safari Actual Size reset; desktop proportions and full-body viewer match the 100% reference state."
+    },
+    {
+      "file": "zoom200-back-view.png",
+      "captured_at": "2026-09-29T17:16:56+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "b00436eddcb8a38941f86c822251e1d29464408e838e0fe15664f5001a619253",
+      "description": "Back preset selected at 200%; posterior model and semantic Active view: Back confirmation remain available without horizontal overflow."
+    },
+    {
+      "file": "zoom200-chest-focus.png",
+      "captured_at": "2026-09-29T17:17:11+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "ee2ded349606b4d75bc140b90aaa870fbedcc02a84e99b6b1cf46ff93fe97545",
+      "description": "Chest focus selected at 200%; enlarged continuous torso surface and ECG semantic state are visible."
+    },
+    {
+      "file": "zoom200-front-view.png",
+      "captured_at": "2026-09-29T17:16:01+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "0ccf19e79d8aba6144d2e9a45f0f12d170c79db0b275bb321ccd4ca5e590a84f",
+      "description": "Front preset selected at 200%; control state and semantic Active view: Front confirmation are visible."
+    },
+    {
+      "file": "zoom200-frontal-focus.png",
+      "captured_at": "2026-09-29T17:17:47+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "de41d0409ad92a8d1e3b688c37fd2a1bd3680c634cc4dff5fd7e7da09a455b76",
+      "description": "Frontal semantic control selected at 200%; neck-to-shoulder surface detail and EEG + EOG summary are visible."
+    },
+    {
+      "file": "zoom200-keyboard-focus.png",
+      "captured_at": "2026-09-29T17:18:07+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "c076fd55eecee27bce41f264d8a8c2e3fcc38ffa201143e6af0183d78ff16d4c",
+      "description": "Keyboard traversal state at 200% with the Front control emphasized and the semantic summary immediately below it."
+    },
+    {
+      "file": "zoom200-native-browser-proof.png",
+      "captured_at": "2026-09-29T17:13:48+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "c187540165656257f887cc63f31d560dbce4b6b52ec9583fa8aa4b4732ca7e20",
+      "description": "Visible native Safari chrome and 200%-measured responsive page state; the 720 CSS-pixel viewport is represented across the 1440-point window."
+    },
+    {
+      "file": "zoom200-navigation.png",
+      "captured_at": "2026-09-29T17:19:08+0300",
+      "zoom_percent": 200,
+      "route": "/mission-overview",
+      "sha256": "95e82cad8d89c5e998888426b6f3e6a73b4b847d36c279ab1cd81a56c231723f",
+      "description": "Product navigation at 200% reaches Mission Overview and retains responsive navigation, status, and content layout."
+    },
+    {
+      "file": "zoom200-page-overview.png",
+      "captured_at": "2026-09-29T17:15:11+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "bda5092968d712d6ade418dca4778346a2ba76953ceb26f1317a1710d42d4a94",
+      "description": "Top-level Digital Twin page at 200% showing readable title, boundary language, responsive sidebar, and viewer entry without horizontal clipping."
+    },
+    {
+      "file": "zoom200-semantic-summary.png",
+      "captured_at": "2026-09-29T17:18:33+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "8181a8bb203e658a0baa1bbc55876799181c33e088008cf16ce9664d0e22f79b",
+      "description": "Chest focus semantic summary at 200% showing selected region, ECG mapping, and peer module controls."
+    },
+    {
+      "file": "zoom200-wrist-focus.png",
+      "captured_at": "2026-09-29T17:17:28+0300",
+      "zoom_percent": 200,
+      "route": "/digital-twin",
+      "sha256": "73c2f7269c9db4cfa84373a163a7ee56cec3f6b756fb50f5718b33233665aec3",
+      "description": "Wrist focus selected at 200%; enlarged wrist surface and PPG + IMU semantic state are visible."
+    }
+  ],
+  "notes": [
+    "All PNGs were captured from the same visible native Safari window, not from a headless or emulated viewport.",
+    "The task-created browser tab was closed after capture; the pre-existing browser tabs were left untouched.",
+    "Safari was reset to Actual Size after the 200% matrix."
+  ]
+}
