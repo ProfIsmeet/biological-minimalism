@@ -3,13 +3,12 @@
 import { ChevronDown } from "lucide-react";
 
 import { AffectedRegionSummary } from "@/components/operations/AffectedRegionSummary";
-import { FaultRecoverySpine } from "@/components/operations/FaultRecoverySpine";
+import { CoverageFreshnessMatrix } from "@/components/operations/CoverageFreshnessMatrix";
+import { FaultRecoveryTimeline } from "@/components/operations/FaultRecoveryTimeline";
 import { HRInferenceCore } from "@/components/operations/HRInferenceCore";
-import { InferenceHexFlow } from "@/components/operations/InferenceHexFlow";
 import { MissionStatusBar } from "@/components/operations/MissionStatusBar";
-import { ModalityPentagon } from "@/components/operations/ModalityPentagon";
-import { OperationalEventRail } from "@/components/operations/OperationalEventRail";
 import { OperationalPhysiologyStage } from "@/components/operations/OperationalPhysiologyStage";
+import { PipelineStateStrip } from "@/components/operations/PipelineStateStrip";
 import { OperationalProvenanceChain } from "@/components/operations/OperationalProvenanceChain";
 import { RecentHrEstimateTrend } from "@/components/operations/RecentHrEstimateTrend";
 import { SignalRibbonMatrix } from "@/components/operations/SignalRibbonMatrix";
@@ -96,9 +95,9 @@ export function MissionOverviewExperience() {
             blurb="The final five-modality architecture is shown alongside the channels observable in the current source. EEG and EOG remain part of the final architecture but are never synthesised when the replay does not carry them."
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
           <SignalRibbonMatrix selected={selected} onSelect={setSelected} />
-          <ModalityPentagon selected={selected} onSelect={setSelected} />
+          <CoverageFreshnessMatrix selected={selected} onSelect={setSelected} compact />
         </div>
       </section>
 
@@ -112,15 +111,14 @@ export function MissionOverviewExperience() {
             blurb="The categorical integrity of the signal path — not a confidence score. Both PPG and IMU must be confirmed and windowed before the model can produce a heart-rate output."
           />
         </div>
-        {/* Real Stage 5 implementation pass (V2-01 re-evaluated, not merely
-            re-documented) — this section previously ran InferenceIntegrityOrbit
-            and InferenceHexFlow side by side, both visualizing the identical
-            Source/PPG/IMU/Output categorical chain from the same view model.
-            HexFlow is strictly more informative (6-step pipeline, explains
-            *why* window assembly blocks, not just *that* it does) and is kept
-            as the sole diagram, now full width. InferenceIntegrityOrbit.tsx is
-            left in the codebase (not deleted) but is no longer mounted here. */}
-        <InferenceHexFlow />
+        {/* Stage 6 (master prompt §18) — this section previously ran
+            InferenceIntegrityOrbit and InferenceHexFlow side by side, then
+            HexFlow alone (Stage 5). Both are left in the codebase, unmounted
+            (not deleted) — see docs/ismet-stage6-scientific-visualization-redesign/FINDING_LEDGER.md.
+            PipelineStateStrip renders the identical Source→PPG/IMU→Window→
+            Model→Output categorical chain as a direct linear strip instead of
+            hexagonal geometry, reusing the same deriveHexFlow logic. */}
+        <PipelineStateStrip />
       </section>
 
       {/* Section 4 — Fault & Recovery. */}
@@ -130,11 +128,10 @@ export function MissionOverviewExperience() {
             index="04"
             kicker="Fault & Recovery"
             title="What happens when an input degrades"
-            blurb="Simulated faults localise to their input, suppress the affected waveform, and hold back the heart-rate output until recovery — traced here from this session's own recorded events."
+            blurb="Simulated faults localise to their input, suppress the affected waveform, and hold back the heart-rate output until recovery — traced here from this session's own recorded events against real replay time."
           />
         </div>
-        <FaultRecoverySpine />
-        <OperationalEventRail />
+        <FaultRecoveryTimeline />
       </section>
 
       {/* Section 5 — Operational Boundary. */}

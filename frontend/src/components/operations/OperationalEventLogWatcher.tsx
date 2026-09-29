@@ -9,7 +9,7 @@ import { useOperationalEventStore } from "@/store/operationalEventStore";
 /**
  * Mounted exactly once (root layout, master prompt 3 §16) so the session
  * event log is observed from a single place regardless of which
- * page/component is currently rendering OperationalEventRail. Renders
+ * page/component is currently rendering FaultRecoveryTimeline. Renders
  * nothing — it only watches `useOperationalViewModel()` for genuine state
  * transitions and appends the resulting events to the shared store.
  */
