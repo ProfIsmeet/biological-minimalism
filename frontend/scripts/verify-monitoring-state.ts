@@ -69,6 +69,10 @@ import {
   formatFaultTypeLabel,
 } from "../src/lib/monitoring/formatMonitoringValue";
 import { computeDynamicDomain, downsampleExtremaPreserving } from "../src/lib/monitoring/waveformDisplay";
+import { classifyValue, formatMetric, directionalityLabel, uncertaintyLabel } from "../src/lib/visualization/dataToMark";
+import { deriveFaultRecoveryTimeline } from "../src/lib/monitoring/faultRecoveryTimeline";
+import type { OperationalEvent } from "../src/lib/monitoring/operationalEvents";
+import { seriesMeanSd, PPG_DALIA_CAPACITY_CONTROL, PTT_SUBJECT_HETEROGENEITY, SLEEP_EDF_PRIMARY_ABC } from "../src/data/stage6/sensitivitySmallMultiples";
 import { deriveModalityNodeState, nodeStateLabel } from "../src/lib/monitoring/modalityNodeState";
 import { deriveIntegrityRings } from "../src/lib/monitoring/integrityRings";
 import { deriveHexFlow } from "../src/lib/monitoring/inferenceHexFlow";
@@ -4486,6 +4490,123 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkIncludes("Stage 7 route keeps reduced-motion controls operable", stageSource, "every preset remains available");
   checkNotIncludes("Stage 7 route owns no monitoring store", stageSource, "useMissionStore");
   checkNotIncludes("Stage 7 route owns no live feed", stageSource, "useLiveFeed");
+}
+
+// ===========================================================================
+// Stage 6 — Scientific Visualization Redesign
+// ===========================================================================
+{
+  // --- classifyValue / formatMetric: missing != 0, non-finite != 0 --------
+  checkEqual("Stage 6 dataToMark: undefined classifies as missing", classifyValue(undefined), "missing");
+  checkEqual("Stage 6 dataToMark: null classifies as missing", classifyValue(null), "missing");
+  checkEqual("Stage 6 dataToMark: NaN classifies as non_finite", classifyValue(Number.NaN), "non_finite");
+  checkEqual("Stage 6 dataToMark: +Infinity classifies as non_finite", classifyValue(Number.POSITIVE_INFINITY), "non_finite");
+  checkEqual("Stage 6 dataToMark: -Infinity classifies as non_finite", classifyValue(Number.NEGATIVE_INFINITY), "non_finite");
+  checkEqual("Stage 6 dataToMark: a real 0 classifies as finite, not missing", classifyValue(0), "finite");
+  checkEqual("Stage 6 dataToMark: a negative delta classifies as finite", classifyValue(-3.2), "finite");
+  checkEqual("Stage 6 dataToMark: missing value never formats as the text '0'", formatMetric(undefined).text === "0", false);
+  checkEqual("Stage 6 dataToMark: missing value formats with a missing-specific message by default", formatMetric(undefined).text, "Not measured");
+  checkEqual("Stage 6 dataToMark: missing value has no plottable number", formatMetric(undefined).plottable, null);
+  checkEqual("Stage 6 dataToMark: non-finite value has no plottable number", formatMetric(Number.NaN).plottable, null);
+  checkEqual("Stage 6 dataToMark: a real finite 0 stays plottable as 0, not treated as missing", formatMetric(0).plottable, 0);
+  checkEqual("Stage 6 dataToMark: a real finite 0 formats its actual digits, not a missing placeholder", formatMetric(0, { digits: 1 }).text, "0.0");
+  checkEqual("Stage 6 dataToMark: a positive value formats with its unit", formatMetric(72.4, { unit: "bpm", digits: 1 }).text, "72.4 bpm");
+  checkEqual("Stage 6 dataToMark: a negative delta preserves its sign", formatMetric(-1.462, { digits: 3 }).text, "-1.462");
+
+  // --- directionality / uncertainty vocabulary -----------------------------
+  checkEqual("Stage 6 dataToMark: lower_is_better has an explicit label", directionalityLabel("lower_is_better"), "Lower is better");
+  checkEqual("Stage 6 dataToMark: higher_is_better has an explicit label", directionalityLabel("higher_is_better"), "Higher is better");
+  checkIncludes("Stage 6 dataToMark: seed SD is explicitly labeled as not a population CI", uncertaintyLabel("seed_sd"), "not a population confidence interval");
+  checkIncludes(
+    "Stage 6 dataToMark: subject bootstrap is explicitly labeled as descriptive, not population-proof",
+    uncertaintyLabel("subject_bootstrap"),
+    "Descriptive",
+  );
+
+  // --- seriesMeanSd: real sample statistics, never a population CI --------
+  const abcStats = seriesMeanSd(SLEEP_EDF_PRIMARY_ABC.series[0]!.values);
+  check("Stage 6 sensitivity data: Sleep-EDF A-series has n=5 seeds", abcStats.n === 5, `got n=${abcStats.n}`);
+  check("Stage 6 sensitivity data: Sleep-EDF A-series mean macro-F1 is a plausible finite value", Number.isFinite(abcStats.mean) && abcStats.mean > 0 && abcStats.mean < 1);
+  const singleValueStats = seriesMeanSd({ only: 5 });
+  checkEqual("Stage 6 sensitivity data: a single-sample series has SD 0 (no fabricated spread)", singleValueStats.sd, 0);
+  checkEqual("Stage 6 sensitivity data: PPG-DaLiA capacity control has n=5 seeds per series", seriesMeanSd(PPG_DALIA_CAPACITY_CONTROL.series[1]!.values).n, 5);
+  checkEqual("Stage 6 sensitivity data: PTT subject heterogeneity keeps the sign-flip visible (aggregate direction differs with/without s2)", PTT_SUBJECT_HETEROGENEITY.aggregateWithS2.direction === PTT_SUBJECT_HETEROGENEITY.aggregateWithoutS2.direction, false);
+  check("Stage 6 sensitivity data: PTT s2 exclusion is explicitly flagged as a sign flip", PTT_SUBJECT_HETEROGENEITY.signFlipsWhenS2Excluded === true);
+
+  // --- deriveFaultRecoveryTimeline: real replay-time axis, never fabricated ---
+  const makeEvent = (over: Partial<OperationalEvent>): OperationalEvent => ({
+    id: `evt-${Math.random()}`,
+    kind: "fault_applied" as const,
+    label: "Simulated fault applied",
+    modality: "PPG",
+    simulated: true,
+    sourceLabel: "test",
+    sourceTimestampSeconds: null,
+    clientMs: 0,
+    ...over,
+  });
+
+  const withRealTimestamps = deriveFaultRecoveryTimeline(
+    [
+      makeEvent({ id: "a", kind: "fault_applied", sourceTimestampSeconds: 10, clientMs: 1000 }),
+      makeEvent({ id: "b", kind: "fault_cleared", sourceTimestampSeconds: 22, clientMs: 5000 }),
+    ],
+    [
+      { timestampSeconds: 5, heartRateBpm: 70 },
+      { timestampSeconds: 10, heartRateBpm: null },
+      { timestampSeconds: 22, heartRateBpm: 71 },
+    ],
+    22,
+  );
+  check("Stage 6 fault timeline: real sourceTimestampSeconds on every event enables a genuine time axis", withRealTimestamps.axisAvailable === true);
+  checkEqual("Stage 6 fault timeline: one closed interval is paired from onset->clear", withRealTimestamps.intervals.length, 1);
+  checkEqual("Stage 6 fault timeline: the paired interval's onset comes from the real event timestamp, not equal spacing", withRealTimestamps.intervals[0]!.onsetSeconds, 10);
+  checkEqual("Stage 6 fault timeline: the paired interval's clear comes from the real event timestamp", withRealTimestamps.intervals[0]!.clearSeconds, 22);
+  checkEqual("Stage 6 fault timeline: a closed interval is never marked ongoing", withRealTimestamps.intervals[0]!.ongoing, false);
+  checkEqual("Stage 6 fault timeline: the interval preserves the simulated flag from the source event", withRealTimestamps.intervals[0]!.simulated, true);
+  checkEqual("Stage 6 fault timeline: a missing HR sample stays null, never coerced to 0", withRealTimestamps.hrPoints.find((p) => p.timeSeconds === 10)?.heartRateBpm, null);
+
+  const missingTimestamp = deriveFaultRecoveryTimeline(
+    [makeEvent({ id: "c", kind: "fault_applied", sourceTimestampSeconds: null }), makeEvent({ id: "d", kind: "fault_cleared", sourceTimestampSeconds: null })],
+    [],
+    null,
+  );
+  check(
+    "Stage 6 fault timeline: axisAvailable is false when a relevant event lacks a real timestamp — never falls back to fabricated even spacing",
+    missingTimestamp.axisAvailable === false,
+  );
+  checkEqual("Stage 6 fault timeline: no interval is drawn when the axis is unavailable (no fabricated positions)", missingTimestamp.intervals.length, 0);
+
+  const ongoing = deriveFaultRecoveryTimeline([makeEvent({ id: "e", kind: "fault_applied", sourceTimestampSeconds: 5 })], [], 40);
+  check("Stage 6 fault timeline: a fault never cleared stays marked ongoing", ongoing.intervals[0]?.ongoing === true);
+  checkEqual("Stage 6 fault timeline: an ongoing fault's clearSeconds is null, never an invented recovery time", ongoing.intervals[0]?.clearSeconds, null);
+  checkEqual("Stage 6 fault timeline: an ongoing fault's onset is the real event timestamp", ongoing.intervals[0]?.onsetSeconds, 5);
+
+  const noEvents = deriveFaultRecoveryTimeline([], [], 10);
+  checkEqual("Stage 6 fault timeline: no events produces no intervals (never fabricates a timeline from nothing)", noEvents.intervals.length, 0);
+  checkEqual("Stage 6 fault timeline: no events leaves axisAvailable false rather than trivially true", noEvents.axisAvailable, false);
+
+  // --- Source guards: decorative geometry demoted, replacements mounted ----
+  const missionOverviewSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionOverviewExperience.tsx"), "utf8");
+  checkNotIncludes("Stage 6: Mission Overview no longer mounts the modality pentagon", missionOverviewSource, "<ModalityPentagon");
+  checkNotIncludes("Stage 6: Mission Overview no longer mounts the hexagonal inference flow", missionOverviewSource, "<InferenceHexFlow");
+  checkNotIncludes("Stage 6: Mission Overview no longer mounts the fault/recovery spine", missionOverviewSource, "<FaultRecoverySpine");
+  checkNotIncludes("Stage 6: Mission Overview no longer mounts the separate event rail", missionOverviewSource, "<OperationalEventRail");
+  checkIncludes("Stage 6: Mission Overview mounts the coverage/freshness matrix", missionOverviewSource, "<CoverageFreshnessMatrix");
+  checkIncludes("Stage 6: Mission Overview mounts the linear pipeline state strip", missionOverviewSource, "<PipelineStateStrip");
+  checkIncludes("Stage 6: Mission Overview mounts the real time-axis fault/recovery timeline", missionOverviewSource, "<FaultRecoveryTimeline");
+
+  const systemBriefSource = readFileSync(join(REPO_SRC_ROOT, "app/system-brief/page.tsx"), "utf8");
+  checkNotIncludes("Stage 6: System Brief no longer mounts the decorative conditional-selection radial", systemBriefSource, "<ConditionalSelectionRadial");
+  checkIncludes("Stage 6: System Brief mounts the architecture delta matrix", systemBriefSource, "<ArchitectureDeltaMatrix");
+
+  const experimentalPageSource = readFileSync(join(REPO_SRC_ROOT, "app/research/experimental/page.tsx"), "utf8");
+  checkNotIncludes("Stage 6: Experimental Research no longer mounts the decorative disposition orbit", experimentalPageSource, "<ExperimentalDispositionOrbit");
+  checkIncludes("Stage 6: Experimental Research mounts the sensitivity small multiples", experimentalPageSource, "<SensitivitySmallMultiples");
+
+  const candidateMatrixSource = readFileSync(join(REPO_SRC_ROOT, "components/experimental/CandidateDispositionMatrix.tsx"), "utf8");
+  checkIncludes("Stage 6: candidate disposition matrix exposes a numeric-result column, not disposition text alone", candidateMatrixSource, "Numeric result");
+  checkIncludes("Stage 6: candidate disposition matrix exposes population scope per candidate", candidateMatrixSource, "Population scope");
 }
 
 // ===========================================================================
