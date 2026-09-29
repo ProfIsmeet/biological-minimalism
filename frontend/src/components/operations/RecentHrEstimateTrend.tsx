@@ -62,7 +62,11 @@ export function RecentHrEstimateTrend() {
         </p>
       ) : null}
 
-      <div className="h-[120px] w-full 2xl:h-[140px]">
+      {/* Stage 6 (master prompt §14) — enlarged from the prior 120-140px
+          sparkline-scale container so the axes/gap legibility this chart
+          already computed correctly (see hrTrend.ts) is actually readable as
+          a primary quantitative plot, not compressed decoration. */}
+      <div className="h-[220px] w-full sm:h-[240px] 2xl:h-[260px]">
         {notApplicable ? (
           <div className="flex h-full items-center justify-center text-center text-[13px] leading-snug text-ink-muted">
             Not applicable — synthetic demo carries no HR prediction stream.
@@ -81,11 +85,12 @@ export function RecentHrEstimateTrend() {
                   scientific chart (that redesign is Stage 6 scope). */}
               <YAxis
                 domain={trend.domain}
-                tickCount={2}
-                width={34}
+                tickCount={4}
+                width={40}
                 tick={{ fontSize: 12, fill: "#8CA0A6" }}
                 axisLine={false}
                 tickLine={false}
+                label={{ value: "bpm", angle: -90, position: "insideLeft", fontSize: 12, fill: "#8CA0A6" }}
               />
               <XAxis
                 dataKey="tSeconds"
