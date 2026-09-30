@@ -11,7 +11,7 @@ function LaneTooltip({ active, payload, unit }: { active?: boolean; payload?: { 
   if (!active || !payload?.length) return null;
   const point = payload[0]!.payload;
   return (
-    <div className="rounded-[4px] border border-jury-border-strong bg-surface-2 px-2 py-1 font-mono text-[10px] leading-relaxed text-ink-primary shadow-sm">
+    <div className="rounded-[4px] border border-jury-border-strong bg-surface-2 px-2 py-1 font-mono text-xs leading-relaxed text-ink-primary shadow-sm">
       <div>t = {point.t.toFixed(3)}s</div>
       <div>{point.value.toFixed(3)}{unit ? ` ${unit}` : ""}</div>
     </div>

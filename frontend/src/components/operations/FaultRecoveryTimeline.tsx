@@ -80,7 +80,7 @@ export function FaultRecoveryTimeline() {
                     />
                     <span className="font-medium text-ink-primary">{e.label}</span>
                     {e.modality ? <span className="text-ink-muted">· {e.modality}</span> : null}
-                    {e.simulated ? <span className="text-[10px] uppercase tracking-wide text-ink-disabled">SIMULATED</span> : null}
+                    {e.simulated ? <span className="text-xs font-semibold uppercase tracking-wide text-jury-warning">SIMULATED</span> : null}
                   </li>
                 ))}
               </ol>

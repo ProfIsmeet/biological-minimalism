@@ -47,7 +47,7 @@ export function SensorConstellation({ compact = false }: SensorConstellationProp
           Sensor constellation
         </h2>
         {!compact ? (
-          <Link href="/live-monitoring" className="text-[11px] font-medium text-information underline underline-offset-2">
+          <Link href="/live-monitoring" className="text-xs font-medium text-information underline underline-offset-2">
             Live signals
           </Link>
         ) : null}
@@ -78,10 +78,15 @@ export function SensorConstellation({ compact = false }: SensorConstellationProp
           className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-0.5 rounded-full border border-jury-border-strong bg-surface-2 text-center"
           style={{ left: center, top: center, width: compact ? 56 : 68, height: compact ? 56 : 68 }}
         >
-          <span className="text-[9px] font-semibold uppercase tracking-wide text-ink-muted">{view.isReplay ? "Replay" : "Synthetic"}</span>
-          <span className={clsx("text-[10px] font-semibold", view.connected ? "text-jury-success" : "text-jury-fault")}>
-            {view.connected ? "Connected" : "Down"}
-          </span>
+          {/* Stage 8 §9.1 — this hub held two 9px/10px all-caps labels, which
+              is the least legible text on the route and below the essential
+              floor. A 56px circle cannot fit both at 12px, and §9.1 forbids
+              shrinking text to fit, so the hub keeps only the source kind (in
+              sentence case, which is narrower than all-caps at the same size)
+              and the connection state moves to the caption below, where it has
+              the full panel width. The circle's size and position are
+              unchanged, so the orbit geometry is untouched. */}
+          <span className="text-xs font-semibold text-ink-secondary">{view.isReplay ? "Replay" : "Synthetic"}</span>
         </div>
 
         {ORBIT_ORDER.map(({ modality, angleDeg }) => {
@@ -99,7 +104,7 @@ export function SensorConstellation({ compact = false }: SensorConstellationProp
                 className="flex items-center justify-center rounded-full border-2"
                 style={{ width: nodeSize, height: nodeSize, borderColor: color, backgroundColor: entry.nodeState === "confirmed" ? `${color}33` : "transparent" }}
               />
-              <span className="text-[9px] font-semibold uppercase tracking-wide text-ink-muted">{modality}</span>
+              <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{modality}</span>
             </>
           );
           return compact ? (
@@ -115,6 +120,13 @@ export function SensorConstellation({ compact = false }: SensorConstellationProp
       </div>
 
       <p className="text-center text-xs text-ink-secondary">
+        {/* The connection state relocated from the hub. It names itself in
+            words as well as colour (§18), so it does not depend on the
+            green/red difference being perceivable. */}
+        <span className={clsx("font-semibold", view.connected ? "text-jury-success" : "text-jury-fault")}>
+          {view.connected ? "Source connected" : "Source not connected"}
+        </span>
+        {" · "}
         {view.confirmedModalityCount} of {view.totalModalityCount} channels confirmed
         {view.faultActive ? ` · ${view.faultedModalities.length} simulated fault${view.faultedModalities.length === 1 ? "" : "s"}` : ""}
       </p>

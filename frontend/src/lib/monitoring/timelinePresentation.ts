@@ -52,6 +52,15 @@ const ORIGIN_BY_KIND: Record<OperationalEventKind, EventOrigin> = {
   source_error: "transport",
 };
 
+/**
+ * Every event kind, as a runtime value. `OperationalEventKind` is a bare union
+ * with no companion array, so an exhaustiveness test had nothing to iterate.
+ * Deriving the list from `ORIGIN_BY_KIND` — whose `Record` type the compiler
+ * already forces to be exhaustive — means a kind added to the union cannot be
+ * left without an origin, and cannot slip past the §22 guard either.
+ */
+export const OPERATIONAL_EVENT_KINDS = Object.keys(ORIGIN_BY_KIND) as OperationalEventKind[];
+
 export function eventOrigin(kind: OperationalEventKind): EventOrigin {
   return ORIGIN_BY_KIND[kind];
 }

@@ -155,7 +155,7 @@ export function ArchitectureCoverageRadar() {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[260px] text-left text-[12px]">
           <caption className="sr-only">Exact binary coverage and observation reason per modality</caption>
-          <thead className="border-b border-jury-border-subtle text-[11px] uppercase tracking-wide text-ink-muted">
+          <thead className="border-b border-jury-border-subtle text-xs uppercase tracking-wide text-ink-muted">
             <tr>
               <th scope="col" className="py-1.5 pr-2 font-semibold">Modality</th>
               <th scope="col" className="py-1.5 pr-2 font-semibold">Arch.</th>

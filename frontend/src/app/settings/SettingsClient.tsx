@@ -132,7 +132,7 @@ export function SettingsClient() {
         </Panel>
       </div>
 
-      {/* Stage 8 §15 — the operational DataSourceControl (synthetic/replay
+      {/* Stage 8 §15 — the operational data-source control (synthetic/replay
           source switching plus subject selection) was removed from Settings.
           It duplicated the Demo controls drawer that the operational routes
           already own, and it was the ONLY reason this preferences page

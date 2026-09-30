@@ -60,7 +60,7 @@ export function ChartFrame({
           {unit ? <span className="ml-2 text-xs font-normal uppercase tracking-wide text-ink-muted">({unit})</span> : null}
         </h2>
         {evidenceClassLabel ? (
-          <span className="rounded-[4px] border border-jury-border-subtle bg-surface-2 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+          <span className="rounded-[4px] border border-jury-border-subtle bg-surface-2 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             {evidenceClassLabel}
           </span>
         ) : null}
@@ -90,7 +90,7 @@ export function SemanticTable({
     <div className={`overflow-x-auto ${className ?? ""}`}>
       <table className="w-full min-w-[480px] text-left text-sm">
         <caption className="sr-only">{caption}</caption>
-        <thead className="border-b border-jury-border-subtle text-[11px] uppercase tracking-wide text-ink-muted">
+        <thead className="border-b border-jury-border-subtle text-xs uppercase tracking-wide text-ink-muted">
           <tr>
             {columns.map((col) => (
               <th key={col} scope="col" className="px-3 py-2 font-semibold">
@@ -125,7 +125,7 @@ export function StatusPill({ label, tone }: { label: string; tone: "nominal" | "
     info: "border-information/40 bg-information-soft text-information",
   } as const;
   return (
-    <span className={`inline-flex items-center rounded-[4px] border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${toneClass[tone]}`}>
+    <span className={`inline-flex items-center rounded-[4px] border px-2 py-0.5 text-xs font-semibold uppercase tracking-wide ${toneClass[tone]}`}>
       {label}
     </span>
   );

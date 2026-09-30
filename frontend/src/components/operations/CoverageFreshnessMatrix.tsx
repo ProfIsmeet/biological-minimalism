@@ -74,7 +74,7 @@ export function CoverageFreshnessMatrix({
               />
               <span className="flex min-w-[60px] flex-col">
                 <span className="text-sm font-semibold text-ink-primary">{entry.modality}</span>
-                <span className="text-[11px] text-ink-muted">{entry.region}</span>
+                <span className="text-xs text-ink-muted">{entry.region}</span>
               </span>
               <span className="flex-1 text-xs text-ink-secondary">{coverageText(entry, view.isReplay)}</span>
               <StatusPill label={entry.stateLabel} tone={tone(entry.nodeState)} />

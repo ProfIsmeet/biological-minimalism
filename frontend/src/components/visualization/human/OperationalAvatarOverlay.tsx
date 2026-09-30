@@ -92,16 +92,16 @@ function SensorButton({ anchor, onSelect }: { anchor: SensorAnchorModel; onSelec
     >
       <span className="flex items-center gap-1.5">
         <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: dimmed ? "#516269" : anchor.color }} />
-        <span className="text-[11px] font-bold leading-none tracking-wide" style={{ color: dimmed ? "#9DB0B6" : "#F2F6F7" }}>
+        <span className="text-xs font-bold leading-none tracking-wide" style={{ color: dimmed ? "#9DB0B6" : "#F2F6F7" }}>
           {anchor.modality}
         </span>
         {anchor.state === "fault" ? (
-          <span aria-hidden="true" className="rounded-[3px] bg-jury-fault/25 px-1 text-[8px] font-bold leading-tight text-jury-fault">
+          <span aria-hidden="true" className="rounded-[3px] bg-jury-fault/25 px-1 text-xs font-bold leading-tight text-jury-fault">
             SIM
           </span>
         ) : null}
       </span>
-      <span className="mt-0.5 text-[9px] leading-none text-ink-muted">{shortStateWord(anchor.stateLabel)}</span>
+      <span className="mt-0.5 text-xs leading-none text-ink-muted">{shortStateWord(anchor.stateLabel)}</span>
     </button>
   );
 }
@@ -124,7 +124,7 @@ function ModuleGroup({
     .filter((a): a is SensorAnchorModel => Boolean(a));
   return (
     <div className={clsx("flex flex-col gap-1.5", className)} style={style}>
-      <span className="text-[10px] font-bold uppercase leading-none tracking-[0.08em] text-ink-secondary">{def.label}</span>
+      <span className="text-xs font-bold uppercase leading-none tracking-[0.08em] text-ink-secondary">{def.label}</span>
       <div className="flex flex-wrap gap-2">
         {groupAnchors.map((anchor) => (
           <SensorButton key={anchor.modality} anchor={anchor} onSelect={onSelect} />

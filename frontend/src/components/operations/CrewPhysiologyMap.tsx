@@ -116,7 +116,7 @@ export function CrewPhysiologyMap() {
         <h2 id="crew-physiology-heading" className="text-sm font-semibold text-ink-primary">
           Sensing system map
         </h2>
-        <span className="text-[11px] uppercase tracking-wide text-ink-muted">CORE_PLUS_CONTEXT · 5 modalities</span>
+        <span className="text-xs uppercase tracking-wide text-ink-muted">CORE_PLUS_CONTEXT · 5 modalities</span>
       </div>
 
       <div className="relative mx-auto aspect-[3/4] w-full max-w-[360px]">
@@ -160,7 +160,7 @@ export function CrewPhysiologyMap() {
               </span>
               <span
                 className={clsx(
-                  "rounded-[3px] px-1 text-[9px] font-semibold uppercase tracking-wide",
+                  "rounded-[3px] px-1 text-xs font-semibold uppercase tracking-wide",
                   isSelected ? "bg-surface-3 text-ink-primary" : "text-ink-muted",
                 )}
               >
@@ -183,7 +183,7 @@ export function CrewPhysiologyMap() {
           </span>
           <span
             className={clsx(
-              "rounded-[4px] border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+              "rounded-[4px] border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide",
               selectedEntry.nodeState === "confirmed" && "border-jury-success/40 bg-jury-success-soft text-jury-success",
               selectedEntry.nodeState === "warmup" && "border-jury-warning/40 bg-jury-warning-soft text-jury-warning",
               selectedEntry.nodeState === "fault" && "border-jury-fault/40 bg-jury-fault-soft text-jury-fault",
@@ -195,7 +195,7 @@ export function CrewPhysiologyMap() {
           </span>
         </div>
         <p className="text-ink-secondary">{selectedEntry.observation.statusLabel}</p>
-        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-ink-muted sm:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-ink-muted sm:grid-cols-4">
           <div>
             <dt className="uppercase tracking-wide">Source</dt>
             <dd className="text-ink-secondary">{view.sourceLabel}</dd>
@@ -215,7 +215,7 @@ export function CrewPhysiologyMap() {
         </dl>
         <Link
           href="/live-monitoring"
-          className="mt-1 flex w-fit items-center gap-1 text-[11px] font-medium text-information underline underline-offset-2"
+          className="mt-1 flex w-fit items-center gap-1 text-xs font-medium text-information underline underline-offset-2"
         >
           Open detailed waveform <ArrowUpRight size={11} aria-hidden="true" />
         </Link>

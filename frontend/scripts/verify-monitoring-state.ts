@@ -18,8 +18,8 @@
  * recharts cannot be loaded under plain Node type-stripping.
  */
 
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { deriveTransportState, deriveReplaySessionState, replaySessionStateLabel, resolveAuthoritativePlaybackState } from "../src/lib/monitoring/runtimeState";
@@ -34,6 +34,13 @@ import {
   snapshotMatchesConfirmedSource,
 } from "../src/lib/monitoring/sourceIdentity";
 import { deriveIdentityContextDisplay } from "../src/lib/monitoring/liveMonitoringPresentation";
+import {
+  EVENT_ORIGIN_LABEL,
+  OPERATIONAL_EVENT_KINDS,
+  eventOrigin,
+  toTimelineRow,
+  usesMixedTimeBases,
+} from "../src/lib/monitoring/timelinePresentation";
 import {
   deriveConfidenceDisplay,
   isFiniteMetricValue,
@@ -4954,6 +4961,263 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkNotIncludes("MO orbit: no ring sweep is computed from data", orbitSource2, "sweep * ");
   checkIncludes("MO orbit: the centre states plainly that it is not model confidence", orbitSource2, "Not model confidence");
   checkNotIncludes("MO orbit: the removed unreadable in-ring micro-labels do not return", orbitSource2, "fontSize={10}");
+}
+
+// ===========================================================================
+// Stage 8 §22 — cross-route product cohesion guards.
+//
+// Every check in this block is TREE-WIDE by design. The defects Stage 8
+// corrected were not single-component mistakes: they were the same mistake
+// repeated across routes written at different stages. A per-file assertion
+// would let the next route reintroduce them, so these walk the whole of
+// `src` and assert the property of the product rather than of one file.
+//
+// Nothing here weakens or replaces an earlier check; the earlier, more
+// specific assertions above remain the authority for their own routes.
+// ===========================================================================
+
+/** Every .ts/.tsx file under `src`, as [repo-relative path, contents]. */
+function allSourceFiles(): Array<[string, string]> {
+  const out: Array<[string, string]> = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+      } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx")) {
+        out.push([relative(REPO_SRC_ROOT, full).replace(/\\/g, "/"), readFileSync(full, "utf8")]);
+      }
+    }
+  };
+  walk(REPO_SRC_ROOT);
+  return out;
+}
+
+{
+  const sources = allSourceFiles();
+  check("stage8: the source walk actually found the app tree", sources.length > 100);
+
+  /**
+   * Files containing a line that matches, reported by path so a failure names
+   * the offender rather than only its count.
+   *
+   * Line-scoped rather than whole-file, because the forbidden thing is an
+   * AFFIRMATIVE claim. This product is required to state, in plain user-facing
+   * copy, that it has no adaptation score, no ground-truth HR channel, and no
+   * validated personalization — so a substring search over the whole file
+   * would flag the very disclaimers §7 demands. `negationAware` therefore
+   * ignores any line that also carries a negation marker, which is what
+   * distinguishes "No adaptation score" (required) from "Adaptation score:
+   * 84%" (forbidden). Guards for code identifiers, where a disclaimer cannot
+   * legitimately appear, leave it off.
+   */
+  const NEGATION = /\bno\b|\bnot\b|\bnever\b|\bwithout\b|\bnone\b|\blacks?\b|\babsent\b|\bcannot\b|\bunavailable\b/i;
+  const offenders = (pattern: RegExp, { negationAware = false } = {}) =>
+    sources
+      .filter(([, body]) => {
+        const lines = body.split("\n");
+        return lines.some((line, i) => {
+          if (!pattern.test(line)) return false;
+          if (!negationAware) return true;
+          // The negation is checked over the matching line plus its immediate
+          // neighbours, because both wrapped comments and wrapped JSX copy
+          // routinely split "There is no reference/ground-truth HR channel"
+          // across a line break, leaving the term and its negation on
+          // different lines. The window is deliberately only +/-1: wider
+          // would start excusing genuine violations that merely sit near
+          // some unrelated "not".
+          const window = [lines[i - 1] ?? "", line, lines[i + 1] ?? ""].join(" ");
+          return !NEGATION.test(window);
+        });
+      })
+      .map(([path]) => path);
+
+  // --- §7.4 — no route may reintroduce adaptation scoring -----------------
+  //
+  // DigitalTwinPanel.tsx was deleted in Stage 8: it was unmounted, but it
+  // rendered `overall_adaptation.toFixed(0)` as a large "% Overall
+  // Adaptation" readout plus per-system percentage scores. Dead or not, it
+  // was one import statement away from reintroducing the exact claim §7.4
+  // forbids — that the Digital Twin has been adapted, personalized, or
+  // scored — so its presence was itself the scientific-integrity risk.
+  // These guards make the removal permanent rather than incidental.
+  check(
+    "stage8 §7.4: the deleted adaptation-score panel has not returned",
+    !existsSync(join(REPO_SRC_ROOT, "components/panels/DigitalTwinPanel.tsx")),
+  );
+  const adaptationScorers = offenders(/overall_adaptation\s*[.)]|overall_adaptation\s*\}/);
+  checkEqual(
+    `stage8 §7.4: no file renders an overall adaptation score (${adaptationScorers.join(", ") || "none"})`,
+    adaptationScorers.length,
+    0,
+  );
+  const percentAdapted = offenders(/%\s*Adapted|Overall Adaptation|Adaptation Score|adaptationScore/i, { negationAware: true });
+  checkEqual(
+    `stage8 §7.4: no route presents "% Adapted" or an adaptation score (${percentAdapted.join(", ") || "none"})`,
+    percentAdapted.length,
+    0,
+  );
+
+  // The forbidden Digital Twin claims, as literal user-facing phrasings.
+  // `ARCHITECTURE_ONLY_UNTRAINED_UNVALIDATED` is the state the product is
+  // allowed to assert, and the phrases below are the ones it must not.
+  const twinOverclaims = offenders(
+    /clinically validated|spaceflight validated|flight[- ]validated|has been personalized|is personalized to|trained on this (?:person|participant|subject)/i,
+    { negationAware: true },
+  );
+  checkEqual(
+    `stage8 §7.4: no file claims the twin is personalized, trained on the person, or clinically/spaceflight validated (${twinOverclaims.join(", ") || "none"})`,
+    twinOverclaims.length,
+    0,
+  );
+
+  // --- §7.2 — HR provenance and the missing/zero distinction --------------
+  //
+  // HR is AI-estimated from PPG+IMU and has no reference ground-truth
+  // channel, so a missing estimate must read as unavailable. "0 bpm" is the
+  // specific wrong rendering: it states a measured bradycardic value where
+  // the product in fact has no value at all.
+  const zeroBpm = offenders(/0\s*bpm/i, { negationAware: true });
+  checkEqual(
+    `stage8 §7.2: no file can render "0 bpm" for a missing estimate (${zeroBpm.join(", ") || "none"})`,
+    zeroBpm.length,
+    0,
+  );
+  const groundTruthHr = offenders(/ground[- ]truth (?:hr|heart)|reference heart rate/i, { negationAware: true });
+  checkEqual(
+    `stage8 §7.2: no file claims a reference ground-truth HR channel exists (${groundTruthHr.join(", ") || "none"})`,
+    groundTruthHr.length,
+    0,
+  );
+
+  // --- §7.1 — architecture truth -----------------------------------------
+  //
+  // EOG is the ONLY modality CORE_PLUS_CONTEXT adds beyond MINIMAL_CORE.
+  // IMU is already in MINIMAL_CORE, so describing it as newly added would
+  // misstate the entire marginal-value argument the submission rests on.
+  const imuAsNew = offenders(/(?:adds?|added|new|additional)\s+IMU|IMU\s+(?:is|was)\s+added/i, { negationAware: true });
+  checkEqual(
+    `stage8 §7.1: no file describes IMU as newly added by the final architecture (${imuAsNew.join(", ") || "none"})`,
+    imuAsNew.length,
+    0,
+  );
+  const uniqueOptimum = offenders(/unique(?:ly)? optimal|optimal architecture|mathematically optimal/i, { negationAware: true });
+  checkEqual(
+    `stage8 §7.1: CORE_PLUS_CONTEXT is never presented as a unique optimum (${uniqueOptimum.join(", ") || "none"})`,
+    uniqueOptimum.length,
+    0,
+  );
+
+  // --- §15 — no private paths or infrastructure detail in any route -------
+  //
+  // Previously asserted for /settings alone. The exposure risk is not
+  // route-specific, so it is now a property of every file that renders UI.
+  // Anchored to a real path shape. An earlier, looser pattern matched the
+  // word run "PageDown/Space/Home/End" inside a keyboard-handling comment,
+  // which is why the alternatives now require a path-separator context and a
+  // lowercase account-name segment.
+  const privatePaths = offenders(/[A-Za-z]:[\\/](?:Users|home)[\\/]|(?:^|[\s"'`(])\/(?:home|Users)\/[a-z][a-z0-9._-]*\//);
+  checkEqual(
+    `stage8 §15: no source file embeds a private absolute filesystem path (${privatePaths.join(", ") || "none"})`,
+    privatePaths.length,
+    0,
+  );
+
+  // --- §9.1 — typography floor, as a tree-wide property ------------------
+  //
+  // Arbitrary Tailwind sizes below 12px. The floor exists because essential
+  // text at 10-11px is not readable on a projected presentation surface,
+  // and §9.1 forbids resolving overflow by shrinking text — so the absence
+  // of these classes is the durable proof, not a screenshot.
+  const subTwelve = offenders(/text-\[(?:[0-9]|10|11)(?:\.\d+)?px\]/);
+  checkEqual(
+    `stage8 §9.1: no file sets text below 12px (${subTwelve.join(", ") || "none"})`,
+    subTwelve.length,
+    0,
+  );
+
+  // --- legacy palette retirement -----------------------------------------
+  //
+  // `slate-*` and `space-*` expressed the same visual roles as the semantic
+  // tokens, so a token change could not be trusted to propagate. Asserting
+  // their absence is what keeps the design system single-sourced.
+  const legacyPalette = offenders(/\b(?:bg|text|border|from|to|via|ring|divide|fill|stroke|shadow|outline|decoration|placeholder|accent|caret)-(?:slate|space)-\d/);
+  checkEqual(
+    `stage8: no file uses the retired slate-*/space-* palettes (${legacyPalette.join(", ") || "none"})`,
+    legacyPalette.length,
+    0,
+  );
+
+  // --- §14 — timeline origin and time-basis integrity --------------------
+  //
+  // Behavioral, not structural: the mapping itself is asserted, because a
+  // simulated operator action silently reclassified as source-reported
+  // would be a scientific misstatement that still renders perfectly.
+  checkEqual("stage8 §14: an injected fault is a simulated control action", eventOrigin("fault_applied"), "simulated_control");
+  checkEqual("stage8 §14: clearing a fault is also a simulated control action", eventOrigin("fault_cleared"), "simulated_control");
+  checkEqual("stage8 §14: replay load is source-reported, not operator-simulated", eventOrigin("replay_loaded"), "source_reported");
+  checkEqual("stage8 §14: a source change is source-reported", eventOrigin("source_changed"), "source_reported");
+  checkEqual("stage8 §14: losing a prediction is an inference transition", eventOrigin("prediction_unavailable"), "inference");
+  checkEqual("stage8 §14: regaining a prediction is an inference transition", eventOrigin("prediction_recovered"), "inference");
+  checkEqual("stage8 §14: warm-up is an inference transition", eventOrigin("warmup_started"), "inference");
+  checkEqual("stage8 §14: a disconnect is a transport fact, not a physiological one", eventOrigin("disconnected"), "transport");
+  checkEqual("stage8 §14: a source error is a transport fact", eventOrigin("source_error"), "transport");
+  check(
+    "stage8 §14: every operational event kind has an origin (no undefined badge)",
+    OPERATIONAL_EVENT_KINDS.every((kind) => EVENT_ORIGIN_LABEL[eventOrigin(kind)] !== undefined),
+  );
+
+  const baseEvent = {
+    id: "e1",
+    kind: "fault_applied" as const,
+    label: "IMU fault applied",
+    modality: "IMU" as const,
+    simulated: true,
+    sourceLabel: "PPG-DaLiA S14",
+    clientMs: 10_000,
+  };
+  const replayRow = toTimelineRow({ ...baseEvent, sourceTimestampSeconds: 42.25 }, 5_000);
+  checkEqual("stage8 §14: a replay-positioned event is reported on the replay clock", replayRow.basis, "replay_seconds");
+  checkIncludes("stage8 §14: the replay time text names its own clock", replayRow.timeText, "replay");
+  checkIncludes("stage8 §14: the replay time text is the source position, not the wall clock", replayRow.timeText, "42.3");
+
+  const sessionRow = toTimelineRow({ ...baseEvent, id: "e2", sourceTimestampSeconds: null }, 5_000);
+  checkEqual("stage8 §14: an event with no replay position falls back to the session clock", sessionRow.basis, "session_clock");
+  checkIncludes("stage8 §14: the fallback time text names its own clock", sessionRow.timeText, "session");
+  checkIncludes("stage8 §14: the fallback is an offset from session start, never a fabricated position", sessionRow.timeText, "5.0");
+  checkNotIncludes("stage8 §14: the fallback never claims to be replay time", sessionRow.timeText, "replay");
+
+  // A non-finite source timestamp is missing data, not a position of NaN.
+  const nanRow = toTimelineRow({ ...baseEvent, id: "e3", sourceTimestampSeconds: Number.NaN }, 5_000);
+  checkEqual("stage8 §14: a non-finite source timestamp is treated as missing", nanRow.basis, "session_clock");
+  checkNotIncludes("stage8 §14: a non-finite timestamp never renders as NaN", nanRow.timeText, "NaN");
+
+  checkEqual("stage8 §14: mixed clocks are detected so the caption can explain both", usesMixedTimeBases([replayRow, sessionRow]), true);
+  checkEqual("stage8 §14: a single clock is not reported as mixed", usesMixedTimeBases([replayRow]), false);
+  checkEqual("stage8 §14: an empty chronology is not reported as mixed", usesMixedTimeBases([]), false);
+
+  // --- §20 — /mission-timeline reads events without owning monitoring ----
+  const timelineClient = readFileSync(join(REPO_SRC_ROOT, "app/mission-timeline/MissionTimelineClient.tsx"), "utf8");
+  checkIncludes("stage8 §20: the timeline reads the shared event store", timelineClient, "useOperationalEventStore");
+  checkNotIncludes("stage8 §20: the timeline mounts no monitoring session provider", timelineClient, "MonitoringSessionProvider");
+  checkNotIncludes("stage8 §20: the timeline starts no event-log watcher", timelineClient, "OperationalEventLogWatcher");
+  checkNotIncludes("stage8 §20: the timeline opens no live feed of its own", timelineClient, "LiveFeedProvider");
+  checkIncludes("stage8 §14: the timeline separates conceptual markers from session data", timelineClient, "Not session data");
+  checkNotIncludes("stage8 §14: the synthetic-only circadian trend is gone from the timeline", timelineClient, "TrendPanel");
+
+  // --- §13 — /ai-insights labels synthetic output as synthetic -----------
+  const insightsClient = readFileSync(join(REPO_SRC_ROOT, "app/ai-insights/AIInsightsClient.tsx"), "utf8");
+  checkIncludes("stage8 §13: the insights route branches on the confirmed source", insightsClient, "useDatasetReplayMode");
+  const confidencePanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/AIConfidencePanel.tsx"), "utf8");
+  checkIncludes("stage8 §13: the confidence panel names synthetic contribution as synthetic", confidencePanel, "Synthetic sensor contribution");
+  const explanationPanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/ExplanationPanel.tsx"), "utf8");
+  checkIncludes("stage8 §17: the SHAP refresh control is disabled when no explanation exists", explanationPanel, "disabled={loading || isReplay}");
+
+  // --- §15 — Settings holds no duplicate operational control -------------
+  const settingsClient = readFileSync(join(REPO_SRC_ROOT, "app/settings/SettingsClient.tsx"), "utf8");
+  checkNotIncludes("stage8 §15: Settings no longer duplicates the source-switching control", settingsClient, "DataSourceControl");
+  checkNotIncludes("stage8 §15: Settings selects no replay subject", settingsClient, "SubjectSelect");
+  checkIncludes("stage8 §15: Settings points to where the operational controls live", settingsClient, "Demo controls drawer");
 }
 
 // ===========================================================================

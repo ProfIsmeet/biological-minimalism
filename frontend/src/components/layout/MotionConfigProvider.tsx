@@ -10,8 +10,8 @@ import { useReducedMotionPreference } from "@/lib/runtime/reduceMotion";
  * `transition` properties, so the global `prefers-reduced-motion`/
  * `html.reduce-motion` override in globals.css (which only zeroes CSS
  * animation/transition durations) never touches them. Left alone, every
- * Framer Motion surface (DigitalTwinPanel's orbiting rings and pulsing glow,
- * RadialGauge/LinearMeter springs, ExplanationPanel bar animations) keeps
+ * Framer Motion surface (RadialGauge/LinearMeter springs, ExplanationPanel
+ * bar animations, the mission-canvas transitions) keeps
  * animating at full speed regardless of either reduced-motion source.
  *
  * `<MotionConfig reducedMotion="always">` makes every Framer Motion animation

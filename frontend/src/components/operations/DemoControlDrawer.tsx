@@ -127,7 +127,7 @@ export function DemoControlDrawer() {
       >
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-experimental">Demonstration controls</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-experimental">Demonstration controls</p>
             <h2 id="demo-control-drawer-heading" className="mt-1 text-lg font-semibold text-ink-primary">
               Source, replay &amp; fault
             </h2>
@@ -152,7 +152,7 @@ export function DemoControlDrawer() {
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-xs font-semibold text-ink-primary">Load canonical jury demo</p>
-              <p className="mt-0.5 text-[11px] leading-snug text-ink-muted">
+              <p className="mt-0.5 text-xs leading-snug text-ink-muted">
                 Switch to recorded PPG-DaLiA replay, subject {CANONICAL_JURY_SUBJECT_ID}, paused at the start, 1×, no
                 active fault. Fails closed with the exact missing prerequisite if the dataset or subject is not
                 available — never falls back to synthetic silently.
@@ -171,7 +171,7 @@ export function DemoControlDrawer() {
           <p
             role="status"
             aria-live="polite"
-            className={`mt-2 min-h-[1rem] text-[11px] ${bootstrapFailed ? "text-jury-fault" : "text-ink-muted"}`}
+            className={`mt-2 min-h-[1rem] text-xs ${bootstrapFailed ? "text-jury-fault" : "text-ink-muted"}`}
           >
             {bootstrapAnnouncement}
           </p>
@@ -181,7 +181,7 @@ export function DemoControlDrawer() {
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-xs font-semibold text-ink-primary">Reset demo state</p>
-              <p className="mt-0.5 text-[11px] leading-snug text-ink-muted">
+              <p className="mt-0.5 text-xs leading-snug text-ink-muted">
                 Return replay to its start at 1×, clear any active fault and the session event log, and reset the
                 selected modality to PPG. Keeps the current source and subject.
               </p>
@@ -199,7 +199,7 @@ export function DemoControlDrawer() {
           <p
             role="status"
             aria-live="polite"
-            className={`mt-2 min-h-[1rem] text-[11px] ${resetFailed ? "text-jury-fault" : "text-ink-muted"}`}
+            className={`mt-2 min-h-[1rem] text-xs ${resetFailed ? "text-jury-fault" : "text-ink-muted"}`}
           >
             {resetAnnouncement}
           </p>

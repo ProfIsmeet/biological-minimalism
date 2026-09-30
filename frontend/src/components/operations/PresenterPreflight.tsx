@@ -32,9 +32,9 @@ function PreflightRow({ fact }: { fact: PreflightFact }) {
     <li className="flex items-start justify-between gap-3 py-1.5">
       <div className="min-w-0">
         <p className="text-xs font-medium text-ink-primary">{fact.label}</p>
-        <p className="text-[11px] leading-snug text-ink-muted">{fact.detail}</p>
+        <p className="text-xs leading-snug text-ink-muted">{fact.detail}</p>
       </div>
-      <span className={`flex shrink-0 items-center gap-1 text-[11px] font-semibold ${meta.className}`}>
+      <span className={`flex shrink-0 items-center gap-1 text-xs font-semibold ${meta.className}`}>
         <Icon size={12} aria-hidden="true" />
         {meta.word}
       </span>
@@ -80,8 +80,8 @@ export function PresenterPreflight() {
         className="flex w-full items-center justify-between gap-2 rounded-[8px] px-3 py-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
       >
         <span className="flex items-center gap-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-experimental">Presenter preflight</span>
-          <span className="text-[11px] text-ink-muted">
+          <span className="text-xs font-semibold uppercase tracking-[0.1em] text-experimental">Presenter preflight</span>
+          <span className="text-xs text-ink-muted">
             {notReadyCount === 0 ? "no blocking items" : `${notReadyCount} item(s) need attention`}
           </span>
         </span>
@@ -98,7 +98,7 @@ export function PresenterPreflight() {
               <PreflightRow key={fact.id} fact={fact} />
             ))}
           </ul>
-          <p className="mt-2 text-[10px] leading-snug text-ink-muted">
+          <p className="mt-2 text-xs leading-snug text-ink-muted">
             Preflight reflects the current backend contract. Items it cannot authoritatively verify are shown as
             Unknown, never assumed Ready.
           </p>
