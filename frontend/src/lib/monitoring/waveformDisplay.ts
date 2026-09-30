@@ -11,6 +11,27 @@ export interface DownsampledPoint {
   value: number;
 }
 
+/**
+ * Mission Overview §11.1 — DISPLAY-ONLY adaptive precision for a signal
+ * lane's min/max value gutter. Does not touch `computeDynamicDomain`'s
+ * returned numbers in any way; it only chooses how many decimals to render.
+ *
+ * Fixes a real legibility defect caught in browser evidence: the wrist IMU
+ * lane spans roughly 0.96–1.04 g, and a fixed 1-decimal format rendered BOTH
+ * bounds as "1.0", which reads as a flat, unvarying signal even though the
+ * plotted trace visibly moves. Decimals are widened until the two bounds are
+ * actually distinguishable (capped at 4, after which the range is genuinely
+ * negligible and equal bounds are the honest answer).
+ */
+export function laneBoundDecimals(domain: [number, number]): number {
+  const [min, max] = domain;
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return 1;
+  for (let decimals = 1; decimals <= 4; decimals += 1) {
+    if (min.toFixed(decimals) !== max.toFixed(decimals)) return decimals;
+  }
+  return 4;
+}
+
 export interface DownsampleResult {
   points: DownsampledPoint[];
   downsampled: boolean;
