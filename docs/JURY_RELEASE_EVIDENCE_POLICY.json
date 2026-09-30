@@ -68,7 +68,15 @@
       "sha256": "25635d6a6cd7f279f017d02053e9a733bdd6b115f1bfc0a95960e8e8cf11d1e3",
       "visually_reviewed": true,
       "superseded": [],
-      "audit_only": []
+      "audit_only": [
+        "frontend/qa-screenshots/ismet-mission-overview-scientific-visual-recomposition/01-desktop-1440-first-viewport-nominal.png",
+        "frontend/qa-screenshots/ismet-mission-overview-scientific-visual-recomposition/02-desktop-1440-full-page-nominal.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/01-1440-nominal-first-viewport.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/02-1440-nominal-full-page.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/03-ring-nominal.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/04-radar-nominal.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/05-hr-trend-nominal.png"
+      ]
     },
     "state-fault": {
       "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-fault-real-s14-packet-loss.png",
@@ -77,7 +85,14 @@
       "superseded": [
         "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-fault-real-s14-simulated-packet-loss.png"
       ],
-      "audit_only": []
+      "audit_only": [
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/08-fault-recovery-timeline.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/18-ppg-fault-first-viewport.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/19-ring-fault.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/20-radar-ppg-fault.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/21-hr-fault-gap.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/26-mobile-fault-state.png"
+      ]
     },
     "state-rebuilding": {
       "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-rebuilding-real-s14-hr-warmup-v2.png",
@@ -86,7 +101,10 @@
       "superseded": [
         "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-rebuilding-real-s14-hr-warmup.png"
       ],
-      "audit_only": []
+      "audit_only": [
+        "frontend/qa-screenshots/ismet-mission-overview-scientific-visual-recomposition/10-desktop-rebuilding-window.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/23-ring-rebuilding.png"
+      ]
     },
     "state-recovered": {
       "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/state-recovered-real-s14-v2.png",
@@ -95,7 +113,11 @@
       "superseded": [
         "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-recovered-real-s14-after-condition-cleared.png"
       ],
-      "audit_only": []
+      "audit_only": [
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/08-fault-recovery-timeline.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/24-ring-recovered.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/25-hr-recovered.png"
+      ]
     },
     "state-disconnected": {
       "canonical": "frontend/qa-screenshots/claude-stage2-3-final-acceptance/state-disconnected-signals.png",

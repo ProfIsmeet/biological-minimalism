@@ -1,0 +1,491 @@
+{
+  "schemaVersion": 1,
+  "title": "Mission Overview independent visual audit evidence",
+  "sourceCommit": "af731181d6138771fb186b57d78c394790efae07",
+  "mergeBase": "96a5db37323ba72385698cf78080686d303c936c",
+  "auditBranch": "codex/mission-overview-independent-visual-audit",
+  "canonicalReleaseEvidenceChanged": false,
+  "datasetAndCheckpointHandling": "Existing operator-local artifacts were read through environment configuration and were not copied or committed.",
+  "evidence": [
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/01-1440-nominal-first-viewport.png",
+      "sha256": "73efd6d64c38b6d6e25d153ff8449c91079836ecb7b35e05687ff7a429132a32",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "viewport": "1440x900",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Command deck, confirmed source, orbit, and HR trend are simultaneously legible.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/02-1440-nominal-full-page.png",
+      "sha256": "bd65cbdadb7bba3f9ab541aeb64025765836e2a9f3dfd33d939fb43920e2f6d0",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 4152
+      },
+      "viewport": "1440x900 full-page",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Full mission-overview hierarchy and all scientific sections render without horizontal overflow.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/03-ring-nominal.png",
+      "sha256": "6c964e91118e72d7fded947391505bdcc4673df1f0864564fd39ff58c445d69c",
+      "pixelDimensions": {
+        "width": 283,
+        "height": 676
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Four fixed-sweep categorical rings show confirmed source, PPG, IMU, and HR output.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/04-radar-nominal.png",
+      "sha256": "ce4e9d20151dc5ad2244ca62786d69087636556b616a38839e919fc1a157ed60",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 779
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Static architecture membership is distinct from current-source channel provision.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/05-hr-trend-nominal.png",
+      "sha256": "d06110e5ad3081fbdb229f4e40460e311467f80c5078af5a5a6a61d3dbb62514",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 676
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Recent model-derived HR is plotted on the replay-time axis with limitations visible.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/06-signal-ribbons-desktop.png",
+      "sha256": "81d4c093bf83d4e10b1ee71f6c4a1f3e93f040a331cb28e0b25fcb2d415b08d5",
+      "pixelDimensions": {
+        "width": 779,
+        "height": 519
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "PPG, IMU, and ECG share a real replay time axis; absent EEG/EOG are not synthesized.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/07-pipeline-available.png",
+      "sha256": "660c93d369557fefa8b7fae3594fc2dae50d09e0b99a9fd07cd0eb542c1fcf5f",
+      "pixelDimensions": {
+        "width": 1176,
+        "height": 171
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Source-to-output categorical pipeline is available with both required inputs confirmed.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/08-fault-recovery-timeline.png",
+      "sha256": "b51604fc30f993be3e9181b877d44c8cfadc37d20235c824944af22068d80f07",
+      "pixelDimensions": {
+        "width": 1176,
+        "height": 635
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "recovered",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "A real interface session records fault-clear, a 9.4-second withheld interval, and a new confirmed HR recovery.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/09-desktop-1366x768.png",
+      "sha256": "29d25a3b89196748026de11aa92529ae80ea282f7a2cc327bdb75e70f5712101",
+      "pixelDimensions": {
+        "width": 1366,
+        "height": 768
+      },
+      "viewport": "1366x768",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Desktop first viewport preserves hierarchy without overlap or horizontal overflow.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/10-desktop-1280x800.png",
+      "sha256": "990f2ad7610c78133445a0797530032b71cb12def448eb8b8899e2aef9108249",
+      "pixelDimensions": {
+        "width": 1280,
+        "height": 800
+      },
+      "viewport": "1280x800",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Compact desktop layout preserves orbit and HR readability without overlap.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/11-tablet-1024x768.png",
+      "sha256": "0bdc616951f0cd6383c6c768e9ded8bbd9d8472a05778816c9785c9adf585d50",
+      "pixelDimensions": {
+        "width": 1024,
+        "height": 768
+      },
+      "viewport": "1024x768",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Tablet layout stacks analytical panels to avoid compressed or overlapping plots.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/12-tablet-768x1024.png",
+      "sha256": "d62dd496f5333db1a41ddd0d252d5e36db1729582f08f85ee8bcf762733a4228",
+      "pixelDimensions": {
+        "width": 768,
+        "height": 1024
+      },
+      "viewport": "768x1024",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Narrow tablet layout preserves intended reading order and legibility.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/13-mobile-390x844-first-viewport.png",
+      "sha256": "45312aad73dfe4471b8c1ad5acea8843edc21034cf8521a7fe2ae2f95657ace1",
+      "pixelDimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "viewport": "390x844",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mobile first viewport preserves source truth and begins the analytical hierarchy.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/14-mobile-ring.png",
+      "sha256": "0dcd6772ed2cdbce9f3a2db982675d01aa6d0d1c76af66a2c217627677e8effe",
+      "pixelDimensions": {
+        "width": 358,
+        "height": 625
+      },
+      "viewport": "390x844 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mobile categorical orbit remains readable with fixed geometry.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/15-mobile-radar.png",
+      "sha256": "f8710cb1e3663420d3d541de339c79e44b4637f4a54fafd0281259727bebe802",
+      "pixelDimensions": {
+        "width": 358,
+        "height": 739
+      },
+      "viewport": "390x844 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mobile radar and exact binary coverage table remain readable.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/16-mobile-hr-trend.png",
+      "sha256": "a2c683b74308aebcaeb567b78d60107fce223e84961a6939acd6418100ad3a8a",
+      "pixelDimensions": {
+        "width": 358,
+        "height": 409
+      },
+      "viewport": "390x844 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mobile HR trend retains axis labels, units, and limitations.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/17-signal-ribbons-mobile.png",
+      "sha256": "6a93a367e9a336a47ffc4470ad7c631c86f2991c2da8d3b402bc293ad732f334",
+      "pixelDimensions": {
+        "width": 358,
+        "height": 829
+      },
+      "viewport": "390x844 component",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mobile synchronized ribbons distinguish real channels from absent modalities.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/18-ppg-fault-first-viewport.png",
+      "sha256": "d944bdb9180610c6f30b6618272102ac5abb9f3cb94241bd6dd789d9e02ceafb",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "viewport": "1440x900",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Simulated PPG fault is prominent and model output is unavailable rather than fabricated.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/19-ring-fault.png",
+      "sha256": "08ee1fbd910b1be667cf10e490db70a621c3fc99389a896a6ab52c7a095d4a52",
+      "pixelDimensions": {
+        "width": 283,
+        "height": 682
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Orbit shows PPG simulated fault and unavailable HR output without implying a score.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/20-radar-ppg-fault.png",
+      "sha256": "b6ef79335c968f27a8efcaf2bf29035bf1bdba8244602a22f914f6f28d81f7bd",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 779
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Radar preserves source-provision truth while the table identifies current PPG samples as withheld.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/21-hr-fault-gap.png",
+      "sha256": "29bf3fdb308a146952da7b0315e36790a6f0f4a664cf49c19d38c1768ff82e6c",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 682
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "HR output is explicitly withheld during the simulated fault, never represented as zero.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/22-pipeline-blocked.png",
+      "sha256": "da223f6ff9b4532aac2900327c9552192752c7f76ead8d691db8196fc9b36471",
+      "pixelDimensions": {
+        "width": 1176,
+        "height": 170
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Pipeline marks PPG fault, blocked window assembly, and unavailable model/output.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/23-ring-rebuilding.png",
+      "sha256": "62f7a6e27b792cf808278b451a5811ab8756b7c53375db949405d8dc1447b6d6",
+      "pixelDimensions": {
+        "width": 283,
+        "height": 682
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "rebuilding",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "HR ring uses a distinct dashed rebuilding state during model warm-up.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/24-ring-recovered.png",
+      "sha256": "f10c6cf142d744b4643ac008cc9d0b73950ede1e33aaf47e0d85de6fa62d3f8d",
+      "pixelDimensions": {
+        "width": 283,
+        "height": 682
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "recovered",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Orbit explicitly labels recovered source and HR output after fault clear.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/25-hr-recovered.png",
+      "sha256": "2fe9df690a4e18ffe2fc60d5905e48a46f11c0a85ca8d34fd31578786a57f54e",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 682
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "recovered",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Confirmed HR output resumes after the withheld interval.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/26-mobile-fault-state.png",
+      "sha256": "9995d924d7cb22dcd5596b2da68bd92c4407839bf01c188671fc67884b9a0aac",
+      "pixelDimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "viewport": "390x844",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mobile fault state preserves prominent categorical fault truth and input/output availability.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/27-keyboard-focus.png",
+      "sha256": "05fe8aef98daf4b94cffa54d7d197df1ae8083bcb5401f7c6fb64a5bb961176c",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "viewport": "1440x900",
+      "route": "/mission-overview",
+      "state": "nominal keyboard",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Visible keyboard focus indication is present on primary navigation.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/28-reduced-motion.png",
+      "sha256": "088d160cc83d41bd76ff7b08fa1fa76f729987a0f6389795b7bd18f888930ef8",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "viewport": "1440x900",
+      "route": "/mission-overview",
+      "state": "nominal reduced-motion",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Mission overview remains complete and legible under reduced-motion preference.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/29-mobile-full-page.png",
+      "sha256": "e89ffb8c9d401513422c95386b371bb6dd347feaddf6c7ac3c70b5be6622f025",
+      "pixelDimensions": {
+        "width": 390,
+        "height": 7636
+      },
+      "viewport": "390x844 full-page",
+      "route": "/mission-overview",
+      "state": "nominal",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Complete mobile page preserves section order and contains no horizontal overflow.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/30-radar-awaiting-source.png",
+      "sha256": "ba59ae29a8e23f782f590298a5f877a3220d4c296dd3a15309db97d7c85e12e7",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 819
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "awaiting confirmation",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Source-provision polygon is withheld and every exact-table value states awaiting confirmed source.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/31-neutral-startup.png",
+      "sha256": "34efe24f54d2f601c190480e14c389908b664ef9d62c562c5f1b6dfe52df1bdc",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "viewport": "1440x900",
+      "route": "/mission-overview",
+      "state": "initial establishment",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Ordinary frontend-before-backend startup uses neutral establishing-source language rather than a false source error.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/32-radar-source-error.png",
+      "sha256": "56299f559a9991daa9a1bac9742ac30018c4fc404c37815148f401d2c7a93277",
+      "pixelDimensions": {
+        "width": 382,
+        "height": 819
+      },
+      "viewport": "1440x900 component",
+      "route": "/mission-overview",
+      "state": "source error",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "A failed authoritative source request withholds the entire source-provision polygon and gives the exact reason.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
+    }
+  ]
+}
