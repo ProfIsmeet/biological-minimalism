@@ -16,16 +16,50 @@ body {
   min-height: 100dvh;
 }
 
-/* Stage 4 operational typography floor. Historical components used many
-   arbitrary 9–11px Tailwind classes, including essential evidence labels.
-   Enforce the shared 12px floor centrally so every Panel consumer and route
-   benefits without duplicating a brittle file-by-file exception list. */
-.text-\[9px\],
-.text-\[9\.5px\],
-.text-\[10px\],
-.text-\[10\.5px\],
-.text-\[11px\] {
-  font-size: 0.75rem !important;
+/* Stage 8 §9.1 — the Stage 4 typography-floor override was REMOVED here.
+   It force-mapped `.text-[9px]`…`.text-[11px]` to 12px with `!important`,
+   which did hold the floor at runtime but made the source lie: a component
+   said 9px and rendered 12px, and no reviewer reading the JSX could tell
+   which was true. It also silently swallowed every new sub-12px class, so
+   the problem kept growing invisibly, and `!important` meant a component
+   that legitimately needed a different size could not get one.
+
+   Every one of those classes is now gone from `src` — each call site states
+   its real size — and the floor is enforced where it can fail loudly
+   instead: the Stage 8 §22 guard in scripts/verify-monitoring-state.ts walks
+   the whole tree and names any file that reintroduces one. A build-time
+   failure beats a silent override. */
+
+/* Stage 8 §18 — ONE focus indicator for the whole product.
+   Focus styling was previously declared ad hoc: a few controls set
+   `focus-visible:ring-final-accent`, one set an `outline-[#A1D2CC]`, and
+   roughly forty interactive elements across the routes set nothing and fell
+   back to the user agent's default ring, which on this dark canvas is both
+   low-contrast and visually unrelated to the rest of the system. Keyboard
+   users therefore got a different — sometimes barely visible — indicator
+   depending on which stage the control they reached was written in.
+
+   Declaring it once on `:focus-visible` gives every interactive element the
+   same high-contrast accent ring without editing each component, and
+   `:focus-visible` rather than `:focus` means a mouse press leaves no ring
+   behind. Components may still opt into a stronger treatment; this is the
+   floor, not a ceiling.
+
+   The colour is not a new one: #A1D2CC is the value ~20 controls had already
+   settled on as a hard-coded hex. Stage 8 promotes it to the `focus-ring`
+   token and reuses it here, so adopting a global rule does not introduce a
+   second focus colour competing with the existing convention.
+
+   Emitted inside `@layer base` deliberately, so Tailwind utilities still
+   win: `outline-none` on the programmatically focused modal containers
+   (the main landmark, the mobile sheet, the demo drawer) keeps suppressing
+   the ring, and any component opting into a stronger treatment keeps it.
+   Declared outside the layer, this rule would override both. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid theme("colors.focus-ring");
+    outline-offset: 2px;
+  }
 }
 
 body {

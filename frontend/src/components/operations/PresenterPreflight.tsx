@@ -77,7 +77,7 @@ export function PresenterPreflight() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-controls="presenter-preflight-body"
-        className="flex w-full items-center justify-between gap-2 rounded-[8px] px-3 py-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+        className="flex w-full items-center justify-between gap-2 rounded-[8px] px-3 py-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
       >
         <span className="flex items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-[0.1em] text-experimental">Presenter preflight</span>

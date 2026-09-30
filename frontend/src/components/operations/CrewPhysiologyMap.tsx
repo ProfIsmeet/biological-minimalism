@@ -150,7 +150,7 @@ export function CrewPhysiologyMap() {
               onClick={() => setSelected(entry.modality)}
               aria-pressed={isSelected}
               className={clsx(
-                "group absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 rounded-full p-1 outline-none transition-transform duration-200 focus-visible:ring-2 focus-visible:ring-final-accent",
+                "group absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 rounded-full p-1 outline-none transition-transform duration-200 focus-visible:ring-2 focus-visible:ring-focus-ring",
                 isSelected && "scale-110",
               )}
               style={{ left: `${position.left}%`, top: `${position.top}%` }}

@@ -151,7 +151,7 @@ export function SignalRibbonMatrix({ selected, onSelect }: { selected: FinalModa
             onClick={() => onSelect(entry.modality)}
             aria-pressed={selected === entry.modality}
             aria-label={`${entry.modality} — ${entry.region} — ${entry.stateLabel}`}
-            className={`block w-full text-left outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#A1D2CC] ${selected === entry.modality ? "bg-[rgba(69,214,229,0.05)]" : ""}`}
+            className={`block w-full text-left outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-focus-ring ${selected === entry.modality ? "bg-[rgba(69,214,229,0.05)]" : ""}`}
           >
             <SignalLane entry={entry} sharedDomain={sharedDomain} />
           </button>

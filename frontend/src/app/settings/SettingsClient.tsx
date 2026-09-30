@@ -116,7 +116,7 @@ export function SettingsClient() {
               aria-label="Reduce motion"
               aria-checked={reduceMotion}
               onClick={toggleReduceMotion}
-              className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+              className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
             >
               <span
                 aria-hidden="true"

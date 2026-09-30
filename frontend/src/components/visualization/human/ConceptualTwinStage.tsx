@@ -186,7 +186,7 @@ export function ConceptualTwinStage() {
         tabIndex={0}
         onKeyDown={onStageKeyDown}
         aria-label="Interactive Digital Twin architecture viewer. Keys 1 through 4 select front, back, chest, and wrist views. Home or Escape resets. Space pauses or resumes rotation."
-        className="relative h-[430px] w-full overflow-hidden rounded-[12px] border border-jury-border-strong bg-[#061A26] outline-none focus-visible:ring-2 focus-visible:ring-[#A1D2CC] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:h-[600px]"
+        className="relative h-[430px] w-full overflow-hidden rounded-[12px] border border-jury-border-strong bg-[#061A26] outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas sm:h-[600px]"
       >
         <WebglStage
           canvasProps={{
@@ -213,7 +213,7 @@ export function ConceptualTwinStage() {
             type="button"
             onClick={() => (presetId === "default" ? resetView() : selectView(presetId))}
             aria-pressed={viewId === presetId}
-            className="min-h-11 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] aria-pressed:border-final-accent/70 aria-pressed:bg-final-accent/10 aria-pressed:text-ink-primary"
+            className="min-h-11 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary transition-colors hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring aria-pressed:border-final-accent/70 aria-pressed:bg-final-accent/10 aria-pressed:text-ink-primary"
           >
             {viewButtonLabel(presetId)}
           </button>
@@ -225,7 +225,7 @@ export function ConceptualTwinStage() {
           type="button"
           onClick={() => setPlaying((current) => !current)}
           disabled={reducedMotion}
-          className="flex min-h-11 items-center gap-2 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] disabled:cursor-not-allowed disabled:opacity-45"
+          className="flex min-h-11 items-center gap-2 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-45"
         >
           {motionActive && !reducedMotion ? <CirclePause size={16} aria-hidden="true" /> : <CirclePlay size={16} aria-hidden="true" />}
           {reducedMotion ? "Rotation paused" : playing ? "Pause rotation" : "Resume rotation"}
@@ -233,7 +233,7 @@ export function ConceptualTwinStage() {
         <button
           type="button"
           onClick={resetView}
-          className="flex min-h-11 items-center gap-2 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+          className="flex min-h-11 items-center gap-2 rounded-[7px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           <RotateCcw size={16} aria-hidden="true" /> Reset view
         </button>
@@ -263,7 +263,7 @@ export function ConceptualTwinStage() {
                   type="button"
                   onClick={() => selectView(module.id === "chest" ? "chest" : module.id === "wrist" ? "wrist" : "frontal")}
                   aria-pressed={selected}
-                  className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+                  className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
                 >
                   <span className="text-sm font-semibold text-ink-primary">{module.label}</span>
                   <span className="mt-1 block text-xs text-ink-secondary">{module.modalities}</span>

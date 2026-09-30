@@ -57,6 +57,13 @@ const config: Config = {
           hover: "#7FC5BC",
           soft: "rgba(105, 183, 173, 0.12)",
         },
+        /* Stage 8 §18 — the keyboard focus ring. This exact value was already
+           hard-coded as `outline-[#A1D2CC]` at roughly twenty call sites, so
+           naming it here changes nothing visually; it just means the product
+           has one focus colour with one definition instead of twenty copies
+           of a hex nobody could grep for by intent. The global
+           `:focus-visible` rule in globals.css reads it via theme(). */
+        "focus-ring": "#A1D2CC",
         information: {
           DEFAULT: "#79A7D3",
           soft: "rgba(121, 167, 211, 0.12)",

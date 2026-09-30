@@ -4470,11 +4470,29 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     const match = source.match(subTwelvePx);
     check(`C-01 typography guard: ${relPath} has no arbitrary text size below 12px`, match === null, match ? `found "${match[0]}"` : undefined);
   }
+  // Stage 8 §9.1 — these six checks previously asserted that globals.css
+  // force-promoted .text-[9px]….text-[11px] to 12px with `!important`. That
+  // mechanism was removed, so asserting its presence would now be asserting
+  // the wrong thing — but the INVARIANT it protected is unchanged, and is
+  // reasserted here in a strictly stronger form. The override held the floor
+  // at runtime while letting the source claim 9px, so a reviewer reading the
+  // JSX could not tell what would actually render, and any newly added
+  // sub-12px class was swallowed silently. The floor is now held in the
+  // source itself: each class must be absent everywhere, and the tree-wide
+  // §22 guard names any file that reintroduces one. Same six assertions, same
+  // section, checking the real property instead of its workaround.
   const globalsSource = readFileSync(join(REPO_SRC_ROOT, "app/globals.css"), "utf8");
-  for (const token of [".text-\\[9px\\]", ".text-\\[9\\.5px\\]", ".text-\\[10px\\]", ".text-\\[10\\.5px\\]", ".text-\\[11px\\]"]) {
-    checkIncludes(`C-01 shared floor: ${token} is promoted globally`, globalsSource, token);
+  for (const size of ["9px", "9.5px", "10px", "10.5px", "11px"]) {
+    const reintroduced = allSourceFiles()
+      .filter(([, body]) => body.includes(`text-[${size}]`))
+      .map(([path]) => path);
+    checkEqual(
+      `C-01 shared floor: no file sets text-[${size}] (${reintroduced.join(", ") || "none"})`,
+      reintroduced.length,
+      0,
+    );
   }
-  checkIncludes("C-01 shared floor: promoted legacy utilities resolve to 12px", globalsSource, "font-size: 0.75rem !important");
+  checkNotIncludes("C-01 shared floor: the !important promotion workaround is gone", globalsSource, "font-size: 0.75rem !important");
 
   const hexFlowSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/InferenceHexFlow.tsx"), "utf8");
   check("C-01 SVG floor: inference secondary labels are at least 12px", !/secondaryFontSize=\{(?:9|10|11)\}/.test(hexFlowSource));
@@ -5212,6 +5230,36 @@ function allSourceFiles(): Array<[string, string]> {
   checkIncludes("stage8 §13: the confidence panel names synthetic contribution as synthetic", confidencePanel, "Synthetic sensor contribution");
   const explanationPanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/ExplanationPanel.tsx"), "utf8");
   checkIncludes("stage8 §17: the SHAP refresh control is disabled when no explanation exists", explanationPanel, "disabled={loading || isReplay}");
+
+  // --- §18 — one focus indicator, one focus colour ------------------------
+  //
+  // Focus styling was declared ad hoc: ~20 controls hard-coded
+  // outline-[#A1D2CC], four used ring-final-accent, and ~40 more set nothing
+  // and inherited the user agent's default ring, which on this dark canvas is
+  // low-contrast and unrelated to the rest of the system. A keyboard user's
+  // indicator therefore depended on which stage the control they reached was
+  // written in. These assert the global rule exists, that the colour has
+  // exactly one definition, and that no call site re-hard-codes it.
+  const globalsCss = readFileSync(join(REPO_SRC_ROOT, "app/globals.css"), "utf8");
+  check(
+    "stage8 §18: a global :focus-visible rule exists",
+    /:focus-visible\s*\{[^}]*outline:/.test(globalsCss),
+  );
+  checkIncludes("stage8 §18: the global focus ring reads the shared token", globalsCss, 'theme("colors.focus-ring")');
+  check(
+    "stage8 §18: the global rule sits in @layer base so utilities can still override it",
+    globalsCss.indexOf("@layer base") < globalsCss.indexOf(":focus-visible {"),
+  );
+  const tailwindConfig = readFileSync(join(REPO_SRC_ROOT, "../tailwind.config.ts"), "utf8");
+  checkIncludes("stage8 §18: focus-ring is a named token", tailwindConfig, '"focus-ring": "#A1D2CC"');
+  // The old typography override is gone, and its replacement is the §22 guard.
+  checkNotIncludes("stage8 §9.1: the !important sub-12px override is gone from globals.css", globalsCss, "font-size: 0.75rem !important");
+  const rehardcodedFocus = offenders(/(?:outline|ring)-\[#A1D2CC\]/);
+  checkEqual(
+    `stage8 §18: no call site re-hard-codes the focus colour (${rehardcodedFocus.join(", ") || "none"})`,
+    rehardcodedFocus.length,
+    0,
+  );
 
   // --- §16/§17 — one page-header treatment for the standard routes -------
   //

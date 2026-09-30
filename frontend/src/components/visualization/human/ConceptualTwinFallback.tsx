@@ -58,7 +58,7 @@ export function ConceptualTwinFallback({
           <button
             type="button"
             onClick={onRetry}
-            className="mt-4 min-h-11 rounded-[6px] border border-jury-border-strong px-4 py-2 text-sm font-medium text-ink-primary hover:bg-surface-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+            className="mt-4 min-h-11 rounded-[6px] border border-jury-border-strong px-4 py-2 text-sm font-medium text-ink-primary hover:bg-surface-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
           >
             Retry 3D view
           </button>

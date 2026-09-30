@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MotionConfigProvider>
           <a
             href="#main-content"
-            className="sr-only rounded-md bg-surface-2 px-4 py-2 text-sm font-semibold text-ink-primary outline-2 outline-offset-2 outline-[#A1D2CC] focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:outline"
+            className="sr-only rounded-md bg-surface-2 px-4 py-2 text-sm font-semibold text-ink-primary outline-2 outline-offset-2 outline-focus-ring focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:outline"
           >
             Skip to main content
           </a>

@@ -83,7 +83,7 @@ function SensorButton({ anchor, onSelect }: { anchor: SensorAnchorModel; onSelec
       aria-pressed={anchor.selected}
       aria-label={`${anchor.modality} — ${anchor.region} — ${anchor.stateLabel}`}
       title={`${anchor.modality} — ${anchor.stateLabel}`}
-      className="pointer-events-auto flex min-h-[28px] flex-col items-start justify-center rounded-[7px] px-2 py-1 text-left outline-none transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+      className="pointer-events-auto flex min-h-[28px] flex-col items-start justify-center rounded-[7px] px-2 py-1 text-left outline-none transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
       style={{
         border: `1.5px ${isDashed(anchor.state) ? "dashed" : "solid"} ${bColor}`,
         background: anchor.selected ? "rgba(105,183,173,0.16)" : "rgba(8,16,19,0.72)",

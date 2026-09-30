@@ -58,7 +58,7 @@ export function StaticAvatarFallback({
             aria-label={`${anchor.modality} — ${anchor.region} — ${anchor.stateLabel}`}
             title={`${anchor.modality} — ${anchor.stateLabel}`}
             className={clsx(
-              "absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide outline-none focus-visible:ring-2 focus-visible:ring-final-accent",
+              "absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide outline-none focus-visible:ring-2 focus-visible:ring-focus-ring",
               anchor.selected ? "bg-final-accent-soft" : "bg-surface-1/80",
             )}
             style={{ left: `${position.left}%`, top: `${position.top}%`, borderColor: anchor.color, color: anchor.state === "disconnected" ? "#758990" : "#f2f6f7" }}

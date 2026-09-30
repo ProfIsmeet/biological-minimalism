@@ -88,7 +88,7 @@ export function MissionOverviewExperience() {
         {/* Scroll cue (§5). */}
         <a
           href="#sec-signal-geometry"
-          className="mx-auto mt-2 flex flex-col items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted outline-none transition-colors hover:text-information focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+          className="mx-auto mt-2 flex flex-col items-center gap-1 rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted outline-none transition-colors hover:text-information focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           Scroll for signal path &amp; fault response
           <ChevronDown size={16} aria-hidden="true" className="motion-safe:animate-bounce" />

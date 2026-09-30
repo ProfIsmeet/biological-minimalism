@@ -95,7 +95,7 @@ export function SensorConstellation({ compact = false }: SensorConstellationProp
           const y = round2(center + orbitRadius * Math.sin(rad));
           const entry = view.modalities.find((item) => item.modality === modality)!;
           const color = nodeColor(entry.nodeState, MODALITY_COLOR[modality]);
-          const nodeClassName = "absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 outline-none focus-visible:ring-2 focus-visible:ring-final-accent";
+          const nodeClassName = "absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 outline-none focus-visible:ring-2 focus-visible:ring-focus-ring";
           const nodeTitle = `${modality} — ${entry.stateLabel}${compact ? " — jump to plot" : ""}`;
           const nodeContent = (
             <>

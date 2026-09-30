@@ -140,7 +140,7 @@ export function DemoControlDrawer() {
             type="button"
             onClick={close}
             aria-label="Close demonstration controls"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-jury-border-strong text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] border border-jury-border-strong text-ink-secondary hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
           >
             <X size={15} aria-hidden="true" />
           </button>
@@ -162,7 +162,7 @@ export function DemoControlDrawer() {
               type="button"
               onClick={handleLoadCanonicalDemo}
               disabled={bootstrapping}
-              className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] disabled:opacity-40"
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:opacity-40"
             >
               <SlidersHorizontal size={13} aria-hidden="true" />
               {bootstrapping ? "Loading…" : "Load canonical demo"}
@@ -190,7 +190,7 @@ export function DemoControlDrawer() {
               type="button"
               onClick={handleReset}
               disabled={resetting}
-              className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] disabled:opacity-40"
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:opacity-40"
             >
               <RotateCcw size={13} aria-hidden="true" />
               {resetting ? "Resetting…" : "Reset"}
@@ -220,7 +220,7 @@ export function DemoControlDrawer() {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls="demo-control-drawer"
-        className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+        className="flex h-9 shrink-0 items-center gap-1.5 rounded-[6px] border border-jury-border-strong px-3 text-xs font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
       >
         <SlidersHorizontal size={13} aria-hidden="true" />
         Demo controls

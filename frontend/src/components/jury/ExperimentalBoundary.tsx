@@ -16,7 +16,7 @@ export function ExperimentalBoundary() {
       <p className="max-w-2xl text-sm leading-relaxed text-ink-secondary">{BIOZ_EXCLUSION_STATEMENT}</p>
       <Link
         href="/research/experimental"
-        className="mt-1 flex h-[42px] w-fit items-center justify-center rounded-[7px] border border-experimental/50 px-4 text-sm font-semibold text-experimental transition-colors duration-150 hover:bg-experimental/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+        className="mt-1 flex h-[42px] w-fit items-center justify-center rounded-[7px] border border-experimental/50 px-4 text-sm font-semibold text-experimental transition-colors duration-150 hover:bg-experimental/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
       >
         Open experimental research
       </Link>

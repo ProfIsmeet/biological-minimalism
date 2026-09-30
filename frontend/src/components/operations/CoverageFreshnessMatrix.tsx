@@ -87,7 +87,7 @@ export function CoverageFreshnessMatrix({
                   type="button"
                   onClick={() => onSelect(entry.modality)}
                   aria-pressed={isSel}
-                  className={`flex w-full items-center gap-2 rounded-[6px] border px-2 py-2 text-left outline-none transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] ${
+                  className={`flex w-full items-center gap-2 rounded-[6px] border px-2 py-2 text-left outline-none transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring ${
                     isSel ? "border-final-accent/60 bg-final-accent-soft" : "border-jury-border-subtle bg-surface-2"
                   }`}
                 >

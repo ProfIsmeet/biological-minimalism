@@ -119,7 +119,7 @@ export function ModalityPentagon({ selected, onSelect }: { selected: FinalModali
               onClick={() => onSelect(v.modality)}
               aria-pressed={isSel}
               aria-label={`${v.modality} — ${entry.region} — ${entry.stateLabel}`}
-              className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 rounded-[6px] px-1 py-0.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+              className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5 rounded-[6px] px-1 py-0.5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
               style={{ left: p.x, top: p.y, background: isSel ? "rgba(69,214,229,0.14)" : "transparent", boxShadow: isSel ? "0 0 0 1.5px rgba(69,214,229,0.6)" : "none" }}
             >
               <span aria-hidden="true" className="flex h-4 w-4 items-center justify-center rounded-full border-2" style={{ borderColor: color, background: entry.nodeState === "confirmed" ? `${color}33` : "transparent" }} />
