@@ -65,43 +65,48 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
       subtitle={subtitle}
       icon={<Sparkles size={16} />}
       actions={
+        // Stage 8 §17 — the refresh control was enabled during replay but
+        // `load()` early-returns there, so pressing it did nothing with no
+        // explanation. It is now genuinely disabled for that source and
+        // says why, via both the accessible name and the title.
         <button
           type="button"
           onClick={load}
-          disabled={loading}
-          aria-label="Refresh explanation"
-          className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-white/5 hover:text-slate-200 disabled:opacity-50"
+          disabled={loading || isReplay}
+          aria-label={isReplay ? "Refresh explanation — unavailable for the current source" : "Refresh explanation"}
+          title={isReplay ? "No SHAP explanation exists for the replay heart-rate model" : undefined}
+          className="flex h-11 w-11 items-center justify-center rounded-md text-ink-muted transition-colors hover:bg-white/5 hover:text-ink-primary disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+          <RefreshCw size={14} aria-hidden="true" className={loading ? "animate-spin" : ""} />
         </button>
       }
     >
       {isReplay ? (
-        <p className="text-sm text-slate-500">Unavailable in replay mode — SHAP explanations are not validated for the integrated heart-rate model.</p>
+        <p className="text-sm text-ink-muted">Unavailable in replay mode — SHAP explanations are not validated for the integrated heart-rate model.</p>
       ) : error ? (
         <p className="text-sm text-signal-critical">{error}</p>
       ) : !explanation ? (
-        <p className="text-sm text-slate-500">Computing SHAP attribution…</p>
+        <p className="text-sm text-ink-muted">Computing SHAP attribution…</p>
       ) : (
         <div className="flex flex-col gap-4">
           <motion.p
             key={explanation.summary_text}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg border border-cyan-400/15 bg-cyan-500/5 px-3.5 py-3 text-sm leading-relaxed text-slate-200"
+            className="rounded-lg border border-cyan-400/15 bg-cyan-500/5 px-3.5 py-3 text-sm leading-relaxed text-ink-primary"
           >
             {explanation.summary_text}
           </motion.p>
 
           <div className="flex flex-col gap-2.5">
-            <p className="text-[11px] uppercase tracking-wider text-slate-500">SHAP Feature Contributions</p>
+            <p className="text-xs uppercase tracking-wider text-ink-muted">SHAP Feature Contributions</p>
             {explanation.contributions.map((contribution) => {
               const color = DIRECTION_COLOR[contribution.direction];
               const widthPct = (Math.abs(contribution.shap_value) / maxAbs) * 50;
               const isPositive = contribution.shap_value >= 0;
               return (
                 <div key={contribution.feature} className="flex items-center gap-3 text-xs">
-                  <span className="w-36 shrink-0 truncate text-slate-400">{contribution.feature}</span>
+                  <span className="w-36 shrink-0 truncate text-ink-secondary">{contribution.feature}</span>
                   <div className="relative h-3 flex-1">
                     <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/10" />
                     <motion.div
@@ -112,7 +117,7 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
                       transition={{ type: "spring", stiffness: 90, damping: 20 }}
                     />
                   </div>
-                  <span className="tabular-nums-mono w-14 shrink-0 text-right text-slate-500">
+                  <span className="tabular-nums-mono w-14 shrink-0 text-right text-ink-muted">
                     {contribution.shap_value >= 0 ? "+" : ""}
                     {contribution.shap_value.toFixed(1)}
                   </span>
@@ -121,7 +126,7 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
             })}
           </div>
 
-          <div className="flex items-center justify-between border-t border-white/5 pt-3 text-[11px] text-slate-500">
+          <div className="flex items-center justify-between border-t border-white/5 pt-3 text-xs text-ink-muted">
             <span>Baseline (expected value): {explanation.base_value.toFixed(1)}</span>
             <span>Current: {explanation.predicted_value.toFixed(1)}</span>
           </div>

@@ -1,43 +1,16 @@
 import type { Metadata } from "next";
-import { Gauge } from "lucide-react";
 
-import { AIConfidencePanel } from "@/components/panels/AIConfidencePanel";
-import { ExplanationPanel } from "@/components/panels/ExplanationPanel";
-import { PrimaryVitalsPanel } from "@/components/panels/PrimaryVitalsPanel";
-import { TrendPanel } from "@/components/panels/TrendPanel";
+import { AIInsightsClient } from "@/app/ai-insights/AIInsightsClient";
 
 export const metadata: Metadata = {
   title: "AI Insights — Biological Minimalism",
+  description: "What AI-derived information is, and is not, available for the currently selected source.",
 };
 
+// Stage 8 §13 — the route body is source-aware, so the page shell stays a
+// server component (keeping the metadata export) and delegates to a client
+// component that reads the confirmed source mode. Same split the Mission
+// Timeline route already uses.
 export default function AIInsightsPage() {
-  return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-lg font-semibold text-slate-100">AI Insights</h1>
-        <p className="text-sm text-slate-500">
-          Source-labelled AI output. Replay heart rate comes only from the PPG + IMU heart-rate estimate, evaluated on PPG-DaLiA.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <PrimaryVitalsPanel />
-        <AIConfidencePanel />
-        <TrendPanel
-          title="Confidence History"
-          subtitle="Overall AI confidence over time"
-          icon={<Gauge size={16} />}
-          color="#4fd8e8"
-          unit="%"
-          domain={[0, 100]}
-          metric="ai_confidence"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <ExplanationPanel target="ai_confidence" title="Why this confidence score?" subtitle="SHAP over sensor signal quality" />
-        <ExplanationPanel target="fatigue_risk" title="Why this fatigue estimate?" subtitle="SHAP over HRV, EEG & mission stress" />
-      </div>
-    </div>
-  );
+  return <AIInsightsClient />;
 }
