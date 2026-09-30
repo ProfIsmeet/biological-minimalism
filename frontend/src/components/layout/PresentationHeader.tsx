@@ -46,6 +46,14 @@ const STATIC_SCOPE_BADGE: Partial<Record<PresentationHeaderProps["variant"], { p
   reference: { primary: "CONCEPTUAL REFERENCE", secondary: "UNTRAINED · UNVALIDATED" },
   system: { primary: "FINAL ARCHITECTURE" },
   experimental: { primary: "RESEARCH EVIDENCE" },
+  // Stage 8 §8.2 — "connection status only on routes where it is
+  // meaningful". /settings presents application preferences; a live
+  // CONNECTED/CONNECTING badge there described transport state the user
+  // cannot act on from that page and implied Settings was an operational
+  // surface. /mission-timeline and /ai-insights keep the live badge because
+  // both genuinely read the confirmed snapshot and their content changes
+  // with source state.
+  settings: { primary: "APPLICATION PREFERENCES" },
 };
 
 // Master-prompt 3 §6.3 — minimal presentation header shared by all five
@@ -68,18 +76,18 @@ export function PresentationHeader({ variant }: PresentationHeaderProps) {
       <div className="flex items-center gap-3">
         <p className="text-sm font-semibold text-ink-primary">Biological Minimalism</p>
         <span className="hidden text-jury-border-strong sm:inline">/</span>
-        <span className={clsx("hidden text-[11px] font-semibold uppercase tracking-[0.1em] sm:inline", accent)}>
+        <span className={clsx("hidden text-xs font-semibold uppercase tracking-[0.1em] sm:inline", accent)}>
           {VARIANT_LABEL[variant]}
         </span>
       </div>
 
       {staticScope ? (
         <div className="flex items-center gap-2">
-          <span className="rounded-[4px] border border-jury-warning/30 bg-jury-warning-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-jury-warning">
+          <span className="rounded-[4px] border border-jury-warning/30 bg-jury-warning-soft px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-jury-warning">
             {staticScope.primary}
           </span>
           {staticScope.secondary ? (
-            <span className="hidden text-[10px] uppercase tracking-wider text-ink-muted sm:inline">{staticScope.secondary}</span>
+            <span className="hidden text-xs uppercase tracking-wider text-ink-muted sm:inline">{staticScope.secondary}</span>
           ) : null}
         </div>
       ) : (
@@ -87,7 +95,7 @@ export function PresentationHeader({ variant }: PresentationHeaderProps) {
           <span className="hidden text-xs uppercase tracking-wider text-ink-muted sm:inline">{sourceLabel}</span>
           <span
             className={clsx(
-              "flex items-center gap-1.5 rounded-[4px] border px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide",
+              "flex items-center gap-1.5 rounded-[4px] border px-2.5 py-1 text-xs font-medium uppercase tracking-wide",
               connectionStatus === "open"
                 ? "border-jury-success/30 bg-jury-success-soft text-jury-success"
                 : "border-jury-warning/30 bg-jury-warning-soft text-jury-warning",

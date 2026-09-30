@@ -60,7 +60,7 @@ export function MobileNav() {
               href={item.href}
               aria-current={isActive ? "page" : undefined}
               className={clsx(
-                "flex min-h-11 flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[10px] font-medium",
+                "flex min-h-11 flex-1 flex-col items-center justify-center gap-1 py-1.5 text-xs font-medium",
                 isActive ? "text-final-accent" : "text-ink-muted",
               )}
             >
@@ -76,7 +76,7 @@ export function MobileNav() {
           aria-haspopup="dialog"
           aria-expanded={open}
           aria-controls="mobile-more-sheet"
-          className={clsx("flex min-h-11 flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[10px] font-medium", open ? "text-final-accent" : "text-ink-muted")}
+          className={clsx("flex min-h-11 flex-1 flex-col items-center justify-center gap-1 py-1.5 text-xs font-medium", open ? "text-final-accent" : "text-ink-muted")}
         >
           <MoreHorizontal size={16} aria-hidden="true" />
           More
@@ -111,7 +111,9 @@ export function MobileNav() {
                 </div>
                 {moreGroups.map((group) => (
                   <div key={group.id}>
-                    <p className="px-1 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-disabled">{group.label}</p>
+                    {/* §8.1 — matches the desktop sidebar: group labels use
+                        ink-muted, not ink-disabled (which fails AA here). */}
+                    <p className="px-1 pb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">{group.label}</p>
                     <div className="flex flex-col gap-1">
                       {group.items.map((item) => {
                         const Icon = item.icon;

@@ -32,18 +32,23 @@ export function Sidebar() {
 
   return (
     <aside className="hidden w-[216px] shrink-0 flex-col border-r border-jury-border-subtle bg-jury-sidebar md:flex md:sticky md:top-0 md:h-dvh md:self-start">
-      <div className="flex max-h-[72px] items-center gap-2.5 px-5 py-5">
+      <div className="flex items-center gap-2.5 px-5 py-5">
         <Radio size={18} strokeWidth={1.75} className="shrink-0 text-final-accent" aria-hidden="true" />
-        <div>
-          <p className="text-sm font-semibold leading-tight text-ink-primary">Biological Minimalism</p>
-          <p className="text-[11px] uppercase tracking-wider text-ink-muted">Mission systems demonstrator</p>
+        <div className="min-w-0">
+          <p className="text-[15px] font-semibold leading-tight text-ink-primary">Biological Minimalism</p>
+          {/* Stage 8 §8.1 — subtitle raised 11px -> 12px and de-tracked; the
+              previous wide uppercase tracking made an already-small label
+              harder to read rather than easier. */}
+          <p className="mt-0.5 text-xs leading-snug tracking-normal text-ink-secondary">Mission systems demonstrator</p>
         </div>
       </div>
 
       <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-3 py-2" aria-label="Primary">
         {NAV_GROUPS.map((group) => (
           <div key={group.id}>
-            <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-ink-disabled">{group.label}</p>
+            {/* §8.1 — group labels raised 10px -> 12px and lifted from
+                ink-disabled (fails AA on this surface) to ink-muted. */}
+            <p className="px-3 pb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">{group.label}</p>
             <div className="flex flex-col gap-1">
               {group.items.map((item) => {
                 const isActive = pathname?.startsWith(item.href);
@@ -54,13 +59,20 @@ export function Sidebar() {
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={clsx(
-                      "group relative flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors duration-150",
+                      // §8.1/§18 — h-11 (44px) meets the accessible hit-size
+                      // requirement; the previous h-10 was 40px. Active state
+                      // is carried by weight + background + marker bar +
+                      // aria-current, never by colour alone.
+                      "group relative flex h-11 items-center gap-3 rounded-md px-3 text-sm transition-colors duration-150",
                       isActive
-                        ? clsx("bg-surface-2 text-ink-primary before:absolute before:-left-3 before:top-1 before:bottom-1 before:w-0.5 before:rounded-full", ACCENT_MARKER[group.accent])
-                        : "text-ink-muted hover:bg-surface-1 hover:text-ink-secondary",
+                        ? clsx(
+                            "bg-surface-2 font-semibold text-ink-primary before:absolute before:-left-3 before:top-1.5 before:bottom-1.5 before:w-[3px] before:rounded-full",
+                            ACCENT_MARKER[group.accent],
+                          )
+                        : "font-medium text-ink-secondary hover:bg-surface-1 hover:text-ink-primary",
                     )}
                   >
-                    <Icon size={17} strokeWidth={2} className={isActive ? ACCENT_ICON[group.accent] : "text-ink-muted group-hover:text-ink-secondary"} />
+                    <Icon size={17} strokeWidth={2} aria-hidden="true" className={isActive ? ACCENT_ICON[group.accent] : "text-ink-muted group-hover:text-ink-secondary"} />
                     {item.label}
                   </Link>
                 );
@@ -70,7 +82,8 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-jury-border-subtle px-4 py-4 text-[11px] text-ink-muted">
+      {/* §8.1 — footer raised 11px -> 12px with real line-height. */}
+      <div className="border-t border-jury-border-subtle px-4 py-4 text-xs leading-relaxed text-ink-muted">
         <p>IAC 2026 · Interactive Presentation</p>
         <p>Mission systems demonstrator — {isReplay ? "recorded-data replay" : "synthetic demo data"}</p>
       </div>
