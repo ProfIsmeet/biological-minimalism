@@ -3,9 +3,10 @@
 import { ChevronDown } from "lucide-react";
 
 import { AffectedRegionSummary } from "@/components/operations/AffectedRegionSummary";
-import { CoverageFreshnessMatrix } from "@/components/operations/CoverageFreshnessMatrix";
+import { ArchitectureCoverageRadar } from "@/components/operations/ArchitectureCoverageRadar";
 import { FaultRecoveryTimeline } from "@/components/operations/FaultRecoveryTimeline";
 import { HRInferenceCore } from "@/components/operations/HRInferenceCore";
+import { InferenceIntegrityOrbit } from "@/components/operations/InferenceIntegrityOrbit";
 import { MissionStatusBar } from "@/components/operations/MissionStatusBar";
 import { OperationalPhysiologyStage } from "@/components/operations/OperationalPhysiologyStage";
 import { PipelineStateStrip } from "@/components/operations/PipelineStateStrip";
@@ -58,22 +59,30 @@ export function MissionOverviewExperience() {
           />
         </div>
         <MissionStatusBar />
-        {/* HR, affected region, and trend render before the physiology stage
-            below 1366px. At tablet widths HR and trend share a compact row;
-            the wider split returns at 1366px so both remain first-viewport
-            information instead of merely beginning at the fold. */}
-        <div className="grid grid-cols-1 gap-4 min-[1366px]:grid-cols-[minmax(0,8fr)_minmax(300px,4fr)]">
-          <div className="order-2 flex min-h-0 flex-col min-[1366px]:order-1">
+        <AffectedRegionSummary />
+        {/* Mission Overview §8.2/§8.3/§8.4 — a 12-column analytical hero.
+            Desktop (>=1366px): human stage 1–5, concentric orbit 6–8, HR
+            trend 9–12, all three visually aligned at one height so the human
+            model no longer consumes nearly all visual attention while the
+            graphs stay tiny.
+            Tablet (768–1365px): orbit (4) + HR trend (8) on row 1, human
+            stage full width on row 2 — the analytical pair reaches the first
+            viewport before the stage.
+            Mobile: single column in the §8.4 order (orbit, trend, stage). */}
+        <div className="grid grid-cols-1 gap-4 min-[768px]:grid-cols-12">
+          <div className="min-[768px]:col-span-4 min-[1366px]:order-2 min-[1366px]:col-span-3">
+            <InferenceIntegrityOrbit />
+          </div>
+          <div className="min-[768px]:col-span-8 min-[1366px]:order-3 min-[1366px]:col-span-4">
+            <RecentHrEstimateTrend />
+          </div>
+          <div className="min-h-0 min-[768px]:col-span-12 min-[1366px]:order-1 min-[1366px]:col-span-5">
             <OperationalPhysiologyStage selected={selected} onSelectModality={setSelected} />
           </div>
-          <div className="order-1 flex flex-col gap-4 min-[1366px]:order-2">
-            <AffectedRegionSummary />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 min-[1366px]:grid-cols-1">
-              <HRInferenceCore />
-              <RecentHrEstimateTrend />
-            </div>
-          </div>
         </div>
+        {/* HRInferenceCore keeps the detailed four-availability-check
+            breakdown that the orbit centre deliberately does not duplicate. */}
+        <HRInferenceCore />
 
         {/* Scroll cue (§5). */}
         <a
@@ -95,9 +104,16 @@ export function MissionOverviewExperience() {
             blurb="The final five-modality architecture is shown alongside the channels observable in the current source. EEG and EOG remain part of the final architecture but are never synthesised when the replay does not carry them."
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_360px]">
-          <SignalRibbonMatrix selected={selected} onSelect={setSelected} />
-          <CoverageFreshnessMatrix selected={selected} onSelect={setSelected} compact />
+        {/* §11 — 12-column split: signal ribbons (8) beside the binary
+            architecture-coverage radar (4). At tablet/mobile the ribbons
+            stack first, the radar second. */}
+        <div className="grid grid-cols-1 gap-4 min-[1024px]:grid-cols-12">
+          <div className="min-[1024px]:col-span-8">
+            <SignalRibbonMatrix selected={selected} onSelect={setSelected} />
+          </div>
+          <div className="min-[1024px]:col-span-4">
+            <ArchitectureCoverageRadar />
+          </div>
         </div>
       </section>
 

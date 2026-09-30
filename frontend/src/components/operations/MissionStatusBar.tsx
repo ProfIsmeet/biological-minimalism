@@ -5,6 +5,7 @@ import clsx from "clsx";
 
 import { DemoControlDrawer } from "@/components/operations/DemoControlDrawer";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
+import { deriveOperationalPhase, PHASE_PRESENTATION } from "@/lib/visualization/operationalVisualTokens";
 
 /**
  * Starts `null` (matching server render) and is set to a real timestamp only
@@ -26,18 +27,10 @@ function formatUtcClock(ms: number): string {
   return `${new Date(ms).toISOString().slice(11, 19)} UTC`;
 }
 
-function formatFrameAge(confirmedTimestampSeconds: number | null, nowMs: number): string | null {
-  if (confirmedTimestampSeconds === null || !Number.isFinite(confirmedTimestampSeconds)) return null;
-  const ageSeconds = nowMs / 1000 - confirmedTimestampSeconds;
-  if (!Number.isFinite(ageSeconds) || ageSeconds < 0) return null;
-  if (ageSeconds < 1) return "< 1s ago";
-  if (ageSeconds < 60) return `${ageSeconds.toFixed(0)}s ago`;
-  return `${(ageSeconds / 60).toFixed(1)} min ago`;
-}
-
-function fieldTone(kind: "primary" | "fault" | "muted" | "success"): string {
+function fieldTone(kind: "primary" | "fault" | "muted" | "success" | "warning"): string {
   if (kind === "fault") return "text-jury-fault";
   if (kind === "success") return "text-jury-success";
+  if (kind === "warning") return "text-jury-warning";
   if (kind === "muted") return "text-ink-secondary";
   return "text-ink-primary";
 }
@@ -45,7 +38,7 @@ function fieldTone(kind: "primary" | "fault" | "muted" | "success"): string {
 interface Field {
   label: string;
   value: string;
-  tone: "primary" | "fault" | "muted" | "success";
+  tone: "primary" | "fault" | "muted" | "success" | "warning";
 }
 
 /**
@@ -57,7 +50,20 @@ interface Field {
 export function MissionStatusBar() {
   const view = useOperationalViewModel();
   const nowMs = useNowMs(1000);
-  const frameAge = nowMs === null ? null : formatFrameAge(view.confirmedTimestampSeconds, nowMs);
+  // Mission Overview §8.1/§19 — one stable categorical phase word replaces
+  // both the per-second confirmed-frame age ticker (removed: it changed
+  // every second purely to prove liveness, and its appear/disappear cycle
+  // was visually distracting) and the raw CONNECTING/UNAVAILABLE labels that
+  // previously rendered fault-red during ordinary startup.
+  // `view.confirmedTimestampSeconds` itself is deliberately NOT deleted — it
+  // remains the authoritative freshness input for guards, history isolation
+  // and tests; only this visible presentation of it is gone. A structural
+  // guard asserts the removed field label never reappears in this file.
+  const phase = deriveOperationalPhase({
+    connectionLabel: view.connectionLabel,
+    telemetryAvailability: view.telemetryAvailability,
+  });
+  const phasePresentation = PHASE_PRESENTATION[phase];
 
   // Prompt 3A.1 §4.3/§4.4 — session identity must never leak through while
   // telemetry is flatly disconnected or the REST source-state channel is
@@ -89,33 +95,42 @@ export function MissionStatusBar() {
   // field that is genuinely not applicable (replay state while synthetic,
   // frame age before any frame is confirmed) is omitted entirely rather
   // than shown as a long placeholder sentence.
+  // §8.1 — during the ordinary startup window the source is not "UNAVAILABLE
+  // (fault red)", it is simply not established yet. Only a genuine
+  // authoritative failure (`source_error`) or a real drop earns fault red.
+  const sourceIsGenuinelyFailed = phase === "source_error" || phase === "disconnected";
   const fields: Field[] = [
     { label: "Session", value: sessionIdentity, tone: "primary" },
-    { label: "Source", value: view.sourceLabel, tone: view.sourceLabel === "UNAVAILABLE" ? "fault" : "primary" },
-    { label: "Connection", value: view.connectionLabel, tone: view.connected ? "success" : "fault" },
+    {
+      label: "Source",
+      value: sourceIsGenuinelyFailed ? view.sourceLabel : phase === "connected" ? view.sourceLabel : phasePresentation.label,
+      tone: sourceIsGenuinelyFailed ? "fault" : phase === "connected" ? "primary" : "warning",
+    },
+    { label: "Status", value: phasePresentation.label, tone: phasePresentation.tone === "nominal" ? "success" : phasePresentation.tone === "fault" ? "fault" : "warning" },
   ];
-  if (view.isReplay) fields.push({ label: "Replay state", value: view.replaySessionStateLabel, tone: view.telemetryAvailability === "active" ? "muted" : "fault" });
+  if (view.isReplay) fields.push({ label: "Replay state", value: view.replaySessionStateLabel, tone: view.telemetryAvailability === "active" ? "muted" : "warning" });
   fields.push({ label: "Simulated fault", value: faultValue, tone: view.faultActive && view.telemetryAvailability === "active" ? "fault" : "muted" });
-  if (frameAge) fields.push({ label: "Last confirmed frame", value: frameAge, tone: "muted" });
   fields.push({ label: "Session time", value: nowMs === null ? "—" : formatUtcClock(nowMs), tone: "muted" });
 
   // A11y fix (Stage 2 A1): `role="status"` is an implicit `aria-live="polite"`
   // region. Applying it to the WHOLE strip re-announces the entire field set
-  // every time ANY field's rendered text changes — including "Session time"
-  // and "Last confirmed frame", both of which tick every second via
-  // `useNowMs`. That means a screen reader user hears this whole block
-  // re-read once per second, forever, regardless of whether anything
-  // meaningful happened.
+  // every time ANY field's rendered text changes — which historically
+  // included both the session clock and a per-second confirmed-frame age
+  // ticker. That means a screen reader user hears this whole block re-read
+  // once per second, forever, regardless of whether anything meaningful
+  // happened.
   //
   // Fix is structural, not time-based throttling: the visible strip below
   // carries NO live-region role at all (so per-second re-renders are silent
   // to assistive tech), and a separate, visually-hidden summary — built
   // ONLY from the fields that represent real state transitions (session,
-  // source, connection, replay state, fault) — is the sole `aria-live`
-  // region. Because that summary's own text never includes the clock or
-  // frame-age values, it can only change (and therefore only be announced)
-  // when one of those five meaningful fields actually changes value.
-  const announceableFields = fields.filter((field) => field.label !== "Session time" && field.label !== "Last confirmed frame");
+  // source, status, replay state, fault) — is the sole `aria-live` region.
+  // Because that summary's own text never includes the clock, it can only
+  // change (and therefore only be announced) when one of those meaningful
+  // fields actually changes value. The frame-age field was removed outright
+  // in the Mission Overview recomposition (§19), so the clock is now the
+  // only per-second value needing exclusion.
+  const announceableFields = fields.filter((field) => field.label !== "Session time");
   const liveSummary = announceableFields.map((field) => `${field.label}: ${field.value}`).join(". ");
 
   // Fault gets its own full-width, never-truncated row instead of sharing a

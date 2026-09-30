@@ -5,11 +5,14 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 import { SignalLaneChart, type SignalLanePoint } from "@/components/operations/SignalLaneChart";
-import { computeDynamicDomain, downsampleExtremaPreserving } from "@/lib/monitoring/waveformDisplay";
+import { computeDynamicDomain, downsampleExtremaPreserving, laneBoundDecimals } from "@/lib/monitoring/waveformDisplay";
+import { SIGNAL_LANE_STYLE } from "@/lib/visualization/operationalVisualTokens";
 import { MODALITY_COLOR, type FinalModality } from "@/lib/architecture";
 import { useOperationalViewModel, type OperationalModalityState } from "@/lib/monitoring/operationalViewModel";
 
-const ROW_HEIGHT = 46;
+// Mission Overview §11.1 — materially enlarged from 46px so a real waveform
+// shape is interpretable, not merely present.
+const ROW_HEIGHT = 88;
 const DISPLAY_POINT_BUDGET = 300;
 const SYNC_ID = "signal-scope";
 
@@ -54,7 +57,15 @@ function SignalLane({ entry, sharedDomain }: { entry: OperationalModalityState; 
             Simulated fault — waveform withheld
           </div>
         ) : points.length && domain ? (
-          <SignalLaneChart points={points} domain={domain} sharedDomain={sharedDomain} color={color} unit={entry.plot?.unit ?? null} syncId={SYNC_ID} />
+          <SignalLaneChart
+            points={points}
+            domain={domain}
+            sharedDomain={sharedDomain}
+            color={color}
+            unit={entry.plot?.unit ?? null}
+            syncId={SYNC_ID}
+            strokeWidth={SIGNAL_LANE_STYLE[entry.modality as keyof typeof SIGNAL_LANE_STYLE]?.strokeWidth ?? 2}
+          />
         ) : (
           <p className="flex h-full items-center text-xs text-ink-muted">{entry.observation.unavailableReason ?? entry.observation.statusLabel}</p>
         )}
@@ -63,8 +74,8 @@ function SignalLane({ entry, sharedDomain }: { entry: OperationalModalityState; 
       <div className="col-start-2 row-start-1 flex flex-col justify-between py-0.5 font-mono text-xs text-ink-muted sm:col-start-3">
         {domain && !isFaulted ? (
           <>
-            <span>{domain[1].toFixed(1)}</span>
-            <span>{domain[0].toFixed(1)}</span>
+            <span>{domain[1].toFixed(laneBoundDecimals(domain))}</span>
+            <span>{domain[0].toFixed(laneBoundDecimals(domain))}</span>
           </>
         ) : null}
       </div>

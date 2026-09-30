@@ -61,7 +61,7 @@ export function FaultRecoveryTimeline() {
       title="Fault &amp; recovery timeline"
       unit="replay seconds · HR bpm"
       summary="Real recorded fault-onset, fault-clear, and recovery events from this interface session, plotted against confirmed HR output over replay time. Gaps in the HR line are intervals where output was withheld, not zero."
-      heightClassName="h-[280px]"
+      heightClassName="h-[340px] min-[1366px]:h-[380px]"
       footer={
         <>
           {!hasAnyEvent ? (

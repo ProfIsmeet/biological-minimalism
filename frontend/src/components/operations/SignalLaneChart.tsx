@@ -32,6 +32,7 @@ export function SignalLaneChart({
   color,
   unit,
   syncId,
+  strokeWidth = 2,
 }: {
   points: SignalLanePoint[];
   domain: [number, number];
@@ -39,15 +40,20 @@ export function SignalLaneChart({
   color: string;
   unit: string | null;
   syncId: string;
+  /** Mission Overview §11.1 — per-modality stroke weight from the shared token map. */
+  strokeWidth?: number;
 }) {
   return (
     <ResponsiveContainer>
-      <ComposedChart syncId={syncId} syncMethod="value" data={points} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+      <ComposedChart syncId={syncId} syncMethod="value" data={points} margin={{ top: 4, right: 2, bottom: 4, left: 2 }}>
         <YAxis domain={domain} hide />
         <XAxis dataKey="t" type="number" domain={sharedDomain ?? ["dataMin", "dataMax"]} hide allowDataOverflow />
-        <ReferenceLine y={domain[0] + (domain[1] - domain[0]) / 2} stroke="rgba(242,246,247,0.05)" strokeWidth={1} />
+        <ReferenceLine y={domain[0] + (domain[1] - domain[0]) / 2} stroke="rgba(242,246,247,0.06)" strokeWidth={1} />
+        {/* Tooltip is enhancement only — unit, value range, sample rate and
+            time range are ALL also permanently visible in the lane gutter and
+            caption, so no fact here is hover-only (§17). */}
         <Tooltip content={<LaneTooltip unit={unit} />} cursor={{ stroke: "rgba(242,246,247,0.14)" }} isAnimationActive={false} />
-        <Area type="linear" dataKey="value" stroke={color} strokeWidth={1.5} fill={color} fillOpacity={0.05} isAnimationActive={false} dot={false} />
+        <Area type="linear" dataKey="value" stroke={color} strokeWidth={strokeWidth} fill={color} fillOpacity={0.07} isAnimationActive={false} dot={false} />
       </ComposedChart>
     </ResponsiveContainer>
   );

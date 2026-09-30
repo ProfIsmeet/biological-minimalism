@@ -62,12 +62,12 @@ export function PipelineStateStrip() {
     const n = nodeById(id);
     const isOpen = expanded === id;
     return (
-      <div className="flex flex-1 flex-col items-stretch gap-1 min-w-[110px]">
+      <div className="flex flex-1 flex-col items-stretch gap-1 min-w-[128px]">
         <button
           type="button"
           onClick={() => setExpanded(isOpen ? null : id)}
           aria-expanded={isOpen}
-          className="flex flex-col items-center gap-1 rounded-[8px] border border-jury-border-subtle bg-surface-2 px-3 py-2 text-center outline-none transition-colors hover:border-final-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
+          className="flex min-h-[58px] flex-col items-center justify-center gap-1.5 rounded-[8px] border border-jury-border-subtle bg-surface-2 px-3 py-3 text-center min-[768px]:min-h-[68px] outline-none transition-colors hover:border-final-accent/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
         >
           <span className="text-[13px] font-semibold text-ink-primary">{n.label}</span>
           <StatusPill label={n.state === "fault" ? "Simulated fault" : n.state} tone={STATE_TONE[n.state]} />
