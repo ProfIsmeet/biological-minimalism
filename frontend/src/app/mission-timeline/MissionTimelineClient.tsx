@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarClock, Clock } from "lucide-react";
 
+import { RouteHeader } from "@/components/layout/RouteHeader";
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import { toTimelineRow, usesMixedTimeBases, type EventOrigin } from "@/lib/monitoring/timelinePresentation";
@@ -77,13 +78,17 @@ export function MissionTimelineClient() {
 
   return (
     <div className="flex flex-col gap-7">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink-primary sm:text-[28px]">Mission Timeline</h1>
-        <p className="max-w-3xl text-sm leading-relaxed text-ink-secondary">
-          Chronological record of this interface session&rsquo;s operational events, followed by the conceptual architecture
-          checkpoints. Every event states its origin and the clock its timestamp is measured on.
-        </p>
-      </header>
+      <RouteHeader
+        eyebrow="Session record / conceptual checkpoints"
+        eyebrowTone="information"
+        title="Mission Timeline"
+        lede={
+          <>
+            Chronological record of this interface session&rsquo;s operational events, followed by the conceptual
+            architecture checkpoints. Every event states its origin and the clock its timestamp is measured on.
+          </>
+        }
+      />
 
       {/* ---------------- Section 1: real session chronology ---------------- */}
       <section aria-labelledby="timeline-session" className="flex flex-col gap-3">

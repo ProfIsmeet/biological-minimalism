@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, Info, Settings as SettingsIcon, XCircle } from "lucide-react";
 
+import { RouteHeader } from "@/components/layout/RouteHeader";
 import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import {
@@ -60,13 +61,11 @@ export function SettingsClient() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink-primary sm:text-[28px]">Settings</h1>
-        <p className="max-w-3xl text-sm leading-relaxed text-ink-secondary">
-          Application preferences and a user-safe service reachability check. Operational replay and fault controls live with
-          the operational routes, in the Demo controls drawer on Mission Overview.
-        </p>
-      </header>
+      <RouteHeader
+        eyebrow="Application preferences"
+        title="Settings"
+        lede="Application preferences and a user-safe service reachability check. Operational replay and fault controls live with the operational routes, in the Demo controls drawer on Mission Overview."
+      />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* HIGH-3: no raw REST/WS URLs, no env vars, and no shell start

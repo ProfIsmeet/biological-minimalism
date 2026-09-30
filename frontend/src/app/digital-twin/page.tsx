@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 
+import { RouteHeader } from "@/components/layout/RouteHeader";
 import { DIGITAL_TWIN_SCOPE_LABEL, FINAL_MODULES } from "@/lib/architecture";
 
 const ConceptualTwinStage = dynamic(() => import("@/components/visualization/human/ConceptualTwinStage").then((m) => m.ConceptualTwinStage), {
@@ -26,19 +27,17 @@ const COMPUTATION_BOUNDARY: { label: string; value: string }[] = [
 export default function DigitalTwinPage() {
   return (
     <div className="mx-auto flex min-w-0 max-w-[1320px] flex-col gap-6 overflow-x-hidden px-0 py-2">
-      <header className="max-w-3xl">
-        <span className="text-xs font-semibold uppercase tracking-[0.1em] text-information">System reference / Stage 7</span>
-        <h1 className="mt-2 text-[28px] font-semibold leading-tight tracking-[-0.025em] text-ink-primary sm:text-[34px]">
-          Biological Digital Twin architecture
-        </h1>
-        <p className="mt-2 text-base leading-relaxed text-ink-secondary">
-          Inspect how the accepted wrist, chest, and frontal sensing modules map onto a future physiological-model
-          scaffold. This view explains system topology; it does not display a person-specific twin or live physiology.
-        </p>
-        <span className="mt-3 inline-block rounded-[5px] border border-jury-warning/40 bg-jury-warning-soft px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-jury-warning">
-          ARCHITECTURE ONLY · UNTRAINED · UNVALIDATED
-        </span>
-      </header>
+      <RouteHeader
+        eyebrow="System reference / Stage 7"
+        eyebrowTone="information"
+        title="Biological Digital Twin architecture"
+        lede="Inspect how the accepted wrist, chest, and frontal sensing modules map onto a future physiological-model scaffold. This view explains system topology; it does not display a person-specific twin or live physiology."
+        badge={
+          <span className="inline-block rounded-[5px] border border-jury-warning/40 bg-jury-warning-soft px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-jury-warning">
+            ARCHITECTURE ONLY · UNTRAINED · UNVALIDATED
+          </span>
+        }
+      />
 
       <div className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-12">
         <div className="min-w-0 rounded-[12px] border border-jury-border-subtle bg-surface-1 p-4 sm:p-5 xl:col-span-9">

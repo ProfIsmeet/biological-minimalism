@@ -5213,6 +5213,36 @@ function allSourceFiles(): Array<[string, string]> {
   const explanationPanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/ExplanationPanel.tsx"), "utf8");
   checkIncludes("stage8 §17: the SHAP refresh control is disabled when no explanation exists", explanationPanel, "disabled={loading || isReplay}");
 
+  // --- §16/§17 — one page-header treatment for the standard routes -------
+  //
+  // Five routes previously rendered a page header five slightly different
+  // ways, two of them at 34px, which is outside the §9.1 24-30px band. The
+  // shared RouteHeader now owns the treatment, so the scale cannot drift
+  // again route by route. The two display heroes are deliberately excluded
+  // (see the comment in RouteHeader.tsx) because they are presentation
+  // openings, not workspace page headers.
+  const routeHeaderSource = readFileSync(join(REPO_SRC_ROOT, "components/layout/RouteHeader.tsx"), "utf8");
+  checkIncludes("stage8 §9.1: the shared route title sits inside the 24-30px band", routeHeaderSource, 'className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink-primary sm:text-[28px]"');
+  const STANDARD_ROUTE_HEADERS = [
+    "app/live-monitoring/page.tsx",
+    "app/digital-twin/page.tsx",
+    "app/ai-insights/AIInsightsClient.tsx",
+    "app/mission-timeline/MissionTimelineClient.tsx",
+    "app/settings/SettingsClient.tsx",
+  ];
+  for (const relativePath of STANDARD_ROUTE_HEADERS) {
+    const source = readFileSync(join(REPO_SRC_ROOT, relativePath), "utf8");
+    checkIncludes(`stage8 §16: ${relativePath} uses the shared RouteHeader`, source, "<RouteHeader");
+    checkNotIncludes(`stage8 §16: ${relativePath} declares no page title of its own`, source, "<h1");
+  }
+  // No route may reintroduce an out-of-band title, via any breakpoint.
+  const oversizedTitles = offenders(/<h1[^>]*text-(?:3xl|4xl|5xl|6xl|\[(?:3[1-9]|[4-9]\d|\d{3,})px\])/);
+  checkEqual(
+    `stage8 §9.1: no standard route title exceeds the 30px ceiling (${oversizedTitles.filter((p) => !p.includes("JuryHero") && !p.includes("ExperimentalHero")).join(", ") || "none"})`,
+    oversizedTitles.filter((p) => !p.includes("JuryHero") && !p.includes("ExperimentalHero")).length,
+    0,
+  );
+
   // --- §15 — Settings holds no duplicate operational control -------------
   const settingsClient = readFileSync(join(REPO_SRC_ROOT, "app/settings/SettingsClient.tsx"), "utf8");
   checkNotIncludes("stage8 §15: Settings no longer duplicates the source-switching control", settingsClient, "DataSourceControl");
