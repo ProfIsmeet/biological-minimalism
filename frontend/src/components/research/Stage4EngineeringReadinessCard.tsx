@@ -23,12 +23,12 @@ const EVIDENCE_CLASS: Record<Stage4EvidenceClass, string> = {
   DATASHEET_CALCULATED: "border-emerald-400/20 bg-emerald-400/[0.06] text-emerald-400/90",
   ENGINEERING_ASSUMPTION: "border-amber-400/25 bg-amber-400/[0.08] text-amber-300",
   ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE: "border-amber-400/20 bg-amber-400/[0.06] text-amber-200",
-  ASSUMED_USE_SCHEDULE: "border-slate-500/20 bg-slate-500/[0.06] text-slate-400",
+  ASSUMED_USE_SCHEDULE: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
 };
 
 function EvidencePill({ evidenceClass }: { evidenceClass: Stage4EvidenceClass }) {
   return (
-    <span className={clsx("rounded-full border px-2 py-0.5 text-[10px] font-semibold", EVIDENCE_CLASS[evidenceClass])}>
+    <span className={clsx("rounded-full border px-2 py-0.5 text-xs font-semibold", EVIDENCE_CLASS[evidenceClass])}>
       {EVIDENCE_LABEL[evidenceClass]}
     </span>
   );
@@ -37,9 +37,9 @@ function EvidencePill({ evidenceClass }: { evidenceClass: Stage4EvidenceClass })
 function QuantityRow({ label, quantity }: { label: string; quantity: Stage4EvidenceQuantity }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
-      <span className="text-[11px] text-slate-400">{label}</span>
+      <span className="text-xs text-ink-secondary">{label}</span>
       <div className="flex items-center gap-2">
-        <span className="font-mono text-[12px] text-slate-200">
+        <span className="font-mono text-[12px] text-ink-primary">
           {quantity.status === "AVAILABLE" ? quantity.display : "Unavailable"}
         </span>
         <EvidencePill evidenceClass={quantity.evidence_class} />
@@ -57,10 +57,10 @@ export function Stage4EngineeringReadinessCard({ readiness }: { readiness: Stage
       icon={<Cpu size={16} />}
       contentClassName="space-y-3"
     >
-      <p className="text-[11px] leading-relaxed text-slate-500">{readiness.statement}</p>
+      <p className="text-xs leading-relaxed text-ink-muted">{readiness.statement}</p>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
           System average power — {system_average_power.status}
         </p>
         <QuantityRow label="Load-side (base topology)" quantity={system_average_power.base_topology_load_side_mw} />
@@ -68,7 +68,7 @@ export function Stage4EngineeringReadinessCard({ readiness }: { readiness: Stage
       </div>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
           System mass — {system_mass.status} ({system_mass.tier_achieved})
         </p>
         <QuantityRow label="Base topology (excl. leg module)" quantity={system_mass.system_mass_base_topology_excl_leg_g} />
@@ -76,24 +76,24 @@ export function Stage4EngineeringReadinessCard({ readiness }: { readiness: Stage
       </div>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Data rate</p>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">Data rate</p>
         <QuantityRow label="Raw total (base topology)" quantity={system_data_rate.system_raw_total_bps} />
         <QuantityRow label="Transmitted (protocol-overhead adjusted)" quantity={system_data_rate.system_transmitted_bps} />
-        <p className="mt-1 text-[10px] text-slate-600">Processed/internal rate: {system_data_rate.processed_data_rate_status}</p>
+        <p className="mt-1 text-xs text-ink-muted">Processed/internal rate: {system_data_rate.processed_data_rate_status}</p>
       </div>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
           BOM — {bom.not_a_final_bom ? "not a final BOM" : "final"}
         </p>
-        <ul className="space-y-1 text-[11px] leading-relaxed text-slate-500">
+        <ul className="space-y-1 text-xs leading-relaxed text-ink-muted">
           {bom.still_missing.map((item) => (
             <li key={item}>• {item}</li>
           ))}
         </ul>
       </div>
 
-      <p className="text-[10px] text-slate-600">
+      <p className="text-xs text-ink-muted">
         pre-closure input snapshot — final_architecture: {readiness.final_architecture_status} · formal_pareto: {readiness.formal_pareto_status}
       </p>
     </Panel>

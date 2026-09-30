@@ -47,7 +47,7 @@ export function SimulatedFaultControl() {
       <section aria-labelledby="fault-control-heading" className="rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
         <div className="flex items-center justify-between gap-2">
           <h2 id="fault-control-heading" className="text-sm font-semibold text-ink-primary">Simulated fault injection</h2>
-          <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">
+          <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             Recorded replay only
           </span>
         </div>
@@ -63,7 +63,7 @@ export function SimulatedFaultControl() {
     <section aria-labelledby="fault-control-heading" className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="fault-control-heading" className="text-sm font-semibold text-ink-primary">Simulated fault injection</h2>
-        <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">
+        <span className="rounded-[4px] border border-jury-border-subtle px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">
           Recorded replay only
         </span>
       </div>
@@ -155,7 +155,7 @@ export function SimulatedFaultControl() {
       <p className={control.faultActive ? "text-xs font-medium text-jury-fault" : "text-xs text-ink-muted"}>
         {control.currentFaultLabel}
       </p>
-      <p className="text-[11px] leading-relaxed text-ink-muted">
+      <p className="text-xs leading-relaxed text-ink-muted">
         Applies a simulated interface fault condition. It does not represent a physical sensor failure.
       </p>
 

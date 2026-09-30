@@ -27,8 +27,8 @@ export function LinearMeter({ label, value, max = 100, level = "nominal", valueL
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-slate-400">{label}</span>
-        <span className="tabular-nums-mono font-medium text-slate-200">{valueLabel ?? `${clamped.toFixed(0)}`}</span>
+        <span className="text-ink-secondary">{label}</span>
+        <span className="tabular-nums-mono font-medium text-ink-primary">{valueLabel ?? `${clamped.toFixed(0)}`}</span>
       </div>
       <div
         className="h-1.5 w-full overflow-hidden rounded-full bg-white/5"

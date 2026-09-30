@@ -27,7 +27,7 @@ export function StatusBadge({ level, label, pulse = false, className }: StatusBa
   return (
     <span
       className={clsx(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium uppercase tracking-wide",
         STYLES[level],
         className,
       )}

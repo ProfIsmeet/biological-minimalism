@@ -78,11 +78,11 @@ export function DigitalTwinPanel({ state, size = 280 }: DigitalTwinPanelProps) {
             animate={{ boxShadow: ["0 0 8px 2px rgba(79,216,232,0.6)", "0 0 20px 8px rgba(79,216,232,0.35)", "0 0 8px 2px rgba(79,216,232,0.6)"] }}
             transition={{ duration: 2.4, repeat: Infinity }}
           />
-          <span className="tabular-nums-mono mt-2 text-3xl font-bold text-slate-100">
+          <span className="tabular-nums-mono mt-2 text-3xl font-bold text-ink-primary">
             {state ? state.overall_adaptation.toFixed(0) : "—"}
-            <span className="text-base text-slate-500">%</span>
+            <span className="text-base text-ink-muted">%</span>
           </span>
-          <span className="text-[11px] uppercase tracking-wider text-slate-500">Overall Adaptation</span>
+          <span className="text-xs uppercase tracking-wider text-ink-muted">Overall Adaptation</span>
         </div>
       </div>
 
@@ -93,8 +93,8 @@ export function DigitalTwinPanel({ state, size = 280 }: DigitalTwinPanelProps) {
             <div key={system.system} className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.02] px-2.5 py-2">
               <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: RING_COLOR[level] }} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[11px] text-slate-400">{system.system}</p>
-                <p className="tabular-nums-mono text-sm font-semibold text-slate-100">{system.current_score.toFixed(0)}%</p>
+                <p className="truncate text-xs text-ink-secondary">{system.system}</p>
+                <p className="tabular-nums-mono text-sm font-semibold text-ink-primary">{system.current_score.toFixed(0)}%</p>
               </div>
             </div>
           );

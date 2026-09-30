@@ -64,16 +64,16 @@ export function CandidateSelectionRationale() {
               </h3>
               <ol className="mt-3 flex flex-col gap-3 border-l border-jury-border-strong pl-4 text-sm">
                 <li>
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">1. Observed evidence</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">1. Observed evidence</p>
                   <p className="mt-0.5 leading-relaxed text-ink-secondary">{entry.reason}</p>
                 </li>
                 <li>
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">2. Boundary / what this does not mean</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">2. Boundary / what this does not mean</p>
                   <p className="mt-0.5 leading-relaxed text-ink-secondary">{entry.prohibited_claim}</p>
                 </li>
                 <li>
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">3. Final disposition</p>
-                  <span className="mt-0.5 inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-[11px] font-semibold text-experimental">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">3. Final disposition</p>
+                  <span className="mt-0.5 inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-xs font-semibold text-experimental">
                     {entry.excluded_from_final_architecture ? "Not selected for CORE_PLUS_CONTEXT" : "Disposition pending"}
                   </span>
                 </li>

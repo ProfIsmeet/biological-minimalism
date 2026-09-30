@@ -7,7 +7,7 @@ export function ExperimentalHero() {
     <header className="flex flex-col gap-4 border-b border-jury-border-subtle pb-8">
       <div className="flex items-center gap-2 text-experimental">
         <FlaskConical size={16} strokeWidth={2.25} aria-hidden="true" />
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
+        <span className="text-xs font-semibold uppercase tracking-[0.1em]">
           Biological Minimalism / Research Archive
         </span>
       </div>
@@ -19,7 +19,7 @@ export function ExperimentalHero() {
         not carried into—the final CORE_PLUS_CONTEXT architecture.
       </p>
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-md border border-experimental/40 bg-experimental-soft px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-experimental">
+        <span className="rounded-md border border-experimental/40 bg-experimental-soft px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-experimental">
           Research evidence — not final system
         </span>
       </div>

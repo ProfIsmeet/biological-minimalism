@@ -92,16 +92,16 @@ export function ReplaySessionControl() {
             <AlertTriangle size={15} className="mt-0.5 shrink-0 text-jury-fault" aria-hidden="true" />
             <div>
               <p className="text-xs font-semibold text-ink-primary">Replay subjects unavailable</p>
-              <p className="mt-0.5 text-[11px] leading-relaxed text-ink-secondary">
+              <p className="mt-0.5 text-xs leading-relaxed text-ink-secondary">
                 The subject list could not be loaded from the replay source.
               </p>
-              <p className="mt-1 text-[11px] text-ink-muted">{subjectListError}</p>
+              <p className="mt-1 text-xs text-ink-muted">{subjectListError}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={retrySubjectList}
-            className="flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-[11px] font-medium text-ink-secondary hover:bg-surface-2"
+            className="flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-2"
           >
             <RefreshCw size={12} aria-hidden="true" /> Retry
           </button>
@@ -109,7 +109,7 @@ export function ReplaySessionControl() {
       ) : (
         // Row 1 — subject selection and load.
         <div className="flex flex-col gap-1.5">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">
+          <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">
             Replay subject configuration{control.authoritativeCurrent ? "" : " — retained selection, not current telemetry"}
           </p>
           <div className="flex flex-col gap-2 sm:flex-row">
@@ -149,7 +149,7 @@ export function ReplaySessionControl() {
       )}
 
       {selectedSubjectId && subjectLabel(selectedSubjectId).note ? (
-        <p className="text-[11px] leading-relaxed text-jury-warning">{subjectLabel(selectedSubjectId).note}</p>
+        <p className="text-xs leading-relaxed text-jury-warning">{subjectLabel(selectedSubjectId).note}</p>
       ) : null}
 
       {/* Row 2 — playback controls. */}
@@ -181,14 +181,14 @@ export function ReplaySessionControl() {
         >
           Reset
         </button>
-        <span className="rounded-[4px] border border-jury-border-subtle px-2 py-1 text-[11px] text-ink-muted">
+        <span className="rounded-[4px] border border-jury-border-subtle px-2 py-1 text-xs text-ink-muted">
           {control.playbackStateLabel}
         </span>
       </div>
 
       {/* Row 3 — playback speed and position. */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[10px] uppercase tracking-wider text-ink-muted">Speed</span>
+        <span className="text-xs uppercase tracking-wider text-ink-muted">Speed</span>
         {SPEEDS.map((value) => (
           <button
             key={value}

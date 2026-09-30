@@ -22,7 +22,7 @@ export function AdditionalResearchArchive() {
           <h2 id="archive-heading" className="inline text-base font-semibold text-ink-primary">
             Additional Research Archive
           </h2>
-          <span className="ml-auto text-[11px] font-normal text-ink-muted">
+          <span className="ml-auto text-xs font-normal text-ink-muted">
             Full Stage 3/4 audit panels, experiment browser, and operational-cost catalog
           </span>
         </summary>

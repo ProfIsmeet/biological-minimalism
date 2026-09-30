@@ -26,7 +26,7 @@ function AblationRow({ entry }: { entry: Stage3EvidenceEntry }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-ink-primary">{titleCase(entry.family_id)}</h3>
         {entry.classification ? (
-          <span className="rounded-[4px] border border-jury-border-strong px-2 py-0.5 text-[11px] font-semibold text-ink-secondary">
+          <span className="rounded-[4px] border border-jury-border-strong px-2 py-0.5 text-xs font-semibold text-ink-secondary">
             {entry.classification}
           </span>
         ) : null}
@@ -44,7 +44,7 @@ function AblationRow({ entry }: { entry: Stage3EvidenceEntry }) {
         <p className="mt-1 text-[12px] leading-relaxed text-jury-warning">Mixed/heterogeneous: {entry.heterogeneity_note}</p>
       ) : null}
       {entry.limitation ? <p className="mt-1 text-[12px] leading-relaxed text-ink-muted">{entry.limitation}</p> : null}
-      <p className="mt-2 font-mono text-[10px] text-ink-disabled">{entry.artifact_path}</p>
+      <p className="mt-2 font-mono text-xs text-ink-disabled">{entry.artifact_path}</p>
     </div>
   );
 }

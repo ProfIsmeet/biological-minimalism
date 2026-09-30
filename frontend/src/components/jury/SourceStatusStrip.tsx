@@ -40,7 +40,7 @@ export function SourceStatusStrip() {
       role="status"
     >
       <div className="flex flex-col gap-0.5">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-muted">Data source</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Data source</span>
         <span
           className={
             dataSourceLabel === "UNAVAILABLE"
@@ -52,11 +52,11 @@ export function SourceStatusStrip() {
         </span>
       </div>
       <div className="flex flex-col gap-0.5">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-muted">Session</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Session</span>
         <span className="text-sm text-ink-secondary">{sessionLabel}</span>
       </div>
       <div className="flex flex-col gap-0.5">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-muted">Claim scope</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Claim scope</span>
         <span className="text-sm font-semibold text-ink-primary">Demonstration interface</span>
       </div>
       <p className="text-xs leading-relaxed text-ink-muted sm:ml-auto sm:max-w-xs">{DASHBOARD_VS_RESULTS_STATEMENT}</p>

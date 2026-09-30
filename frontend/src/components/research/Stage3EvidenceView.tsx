@@ -20,8 +20,8 @@ function formatEffect(value: number | null, unit: string | null): string | null 
 function NPill({ label, value }: { label: string; value: number | null }) {
   if (value === null) return null;
   return (
-    <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[10px] text-slate-400">
-      {label}: <span className="font-mono text-slate-200">{value}</span>
+    <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-xs text-ink-secondary">
+      {label}: <span className="font-mono text-ink-primary">{value}</span>
     </span>
   );
 }
@@ -32,13 +32,13 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
   return (
     <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="font-mono text-[11px] text-slate-300">{entry.family_id}</span>
+        <span className="font-mono text-xs text-ink-secondary">{entry.family_id}</span>
         {entry.classification ? (
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-2 py-0.5 text-[10px] font-semibold text-cyan-300">
+          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-2 py-0.5 text-xs font-semibold text-cyan-300">
             {entry.classification}
           </span>
         ) : (
-          <span className="rounded-full border border-slate-500/20 bg-slate-500/[0.06] px-2 py-0.5 text-[10px] text-slate-500">
+          <span className="rounded-full border border-jury-border-subtle bg-ink-muted/[0.06] px-2 py-0.5 text-xs text-ink-muted">
             classification: unknown
           </span>
         )}
@@ -52,28 +52,28 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
       </div>
 
       {entry.primary_comparison_label ? (
-        <div className="mt-2 border-t border-white/5 pt-2 text-[11px]">
-          <p className="text-slate-500">{entry.primary_comparison_label}</p>
-          <p className="font-mono text-[13px] text-slate-100">{primary ?? "unavailable"}</p>
+        <div className="mt-2 border-t border-white/5 pt-2 text-xs">
+          <p className="text-ink-muted">{entry.primary_comparison_label}</p>
+          <p className="font-mono text-[13px] text-ink-primary">{primary ?? "unavailable"}</p>
         </div>
       ) : null}
 
       {entry.secondary_comparison_label ? (
-        <div className="mt-1 text-[11px]">
-          <p className="text-slate-500">{entry.secondary_comparison_label}</p>
-          <p className="font-mono text-[13px] text-slate-100">{secondary ?? "unavailable"}</p>
+        <div className="mt-1 text-xs">
+          <p className="text-ink-muted">{entry.secondary_comparison_label}</p>
+          <p className="font-mono text-[13px] text-ink-primary">{secondary ?? "unavailable"}</p>
         </div>
       ) : null}
 
       {entry.heterogeneity_note ? (
-        <p className="mt-2 text-[10px] leading-relaxed text-amber-300/80">{entry.heterogeneity_note}</p>
+        <p className="mt-2 text-xs leading-relaxed text-amber-300/80">{entry.heterogeneity_note}</p>
       ) : null}
 
       {entry.limitation ? (
-        <p className="mt-1 text-[10px] leading-relaxed text-slate-500">{entry.limitation}</p>
+        <p className="mt-1 text-xs leading-relaxed text-ink-muted">{entry.limitation}</p>
       ) : null}
 
-      <p className="mt-2 truncate font-mono text-[9px] text-slate-600" title={entry.artifact_path}>
+      <p className="mt-2 truncate font-mono text-xs text-ink-muted" title={entry.artifact_path}>
         {entry.artifact_path}
       </p>
     </div>
@@ -83,11 +83,11 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
 function ProvenanceRow({ entry }: { entry: Stage3EvidenceEntry }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
-      <span className="font-mono text-[10px] text-slate-400">{entry.family_id}</span>
-      <span className="max-w-[60%] truncate text-[10px] text-slate-500" title={entry.summary ?? undefined}>
+      <span className="font-mono text-xs text-ink-secondary">{entry.family_id}</span>
+      <span className="max-w-[60%] truncate text-xs text-ink-muted" title={entry.summary ?? undefined}>
         {entry.summary ?? "—"}
       </span>
-      <span className="font-mono text-[9px] text-slate-600" title={entry.artifact_path}>
+      <span className="font-mono text-xs text-ink-muted" title={entry.artifact_path}>
         {entry.artifact_type}
       </span>
     </div>
@@ -112,7 +112,7 @@ export function Stage3EvidenceView({ evidence }: { evidence: Stage3EvidenceEnvel
       </div>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
           Governance &amp; provenance artifacts
         </p>
         {provenanceEntries.map((entry) => (
@@ -120,7 +120,7 @@ export function Stage3EvidenceView({ evidence }: { evidence: Stage3EvidenceEnvel
         ))}
       </div>
 
-      <p className="text-[10px] text-slate-600">
+      <p className="text-xs text-ink-muted">
         pre-closure input snapshot — final_architecture: {evidence.final_architecture_status} · formal_pareto: {evidence.formal_pareto_status} ·
         source: {evidence.source_registry}
       </p>

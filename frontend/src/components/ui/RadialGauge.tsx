@@ -55,7 +55,7 @@ export function RadialGauge({ value, max = 100, label, level = "nominal", size =
           </span>
         </div>
       </div>
-      <span className="text-center text-[11px] uppercase tracking-wider text-slate-400">{label}</span>
+      <span className="text-center text-xs uppercase tracking-wider text-ink-secondary">{label}</span>
     </div>
   );
 }

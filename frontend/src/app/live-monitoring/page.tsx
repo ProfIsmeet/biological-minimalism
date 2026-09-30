@@ -28,7 +28,7 @@ export default function LiveMonitoringPage() {
   return (
     <div className="mx-auto flex min-w-0 max-w-[1480px] flex-col gap-5 overflow-x-hidden px-0 py-2">
       <div>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-final-accent">
+        <span className="text-xs font-semibold uppercase tracking-[0.1em] text-final-accent">
           Live Signals / Source-aware monitor
         </span>
         <h1 className="mt-2 text-[28px] font-semibold leading-tight tracking-[-0.025em] text-ink-primary sm:text-[34px]">

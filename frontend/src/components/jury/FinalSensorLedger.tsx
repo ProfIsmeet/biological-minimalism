@@ -41,7 +41,7 @@ export function FinalSensorLedger() {
 
   return (
     <div className="overflow-hidden rounded-[10px] border border-jury-border-subtle bg-surface-1">
-      <div className="hidden grid-cols-[0.8fr_0.8fr_1.2fr_1.4fr] gap-2 border-b border-jury-border-subtle px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted sm:grid">
+      <div className="hidden grid-cols-[0.8fr_0.8fr_1.2fr_1.4fr] gap-2 border-b border-jury-border-subtle px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-muted sm:grid">
         <span>Modality</span>
         <span>Region</span>
         <span>Architecture membership</span>
@@ -66,7 +66,7 @@ export function FinalSensorLedger() {
           );
         })}
       </ul>
-      <p className="border-t border-jury-border-subtle px-4 py-2.5 text-[11px] leading-relaxed text-ink-muted">
+      <p className="border-t border-jury-border-subtle px-4 py-2.5 text-xs leading-relaxed text-ink-muted">
         Architecture membership is a structural fact from the final architecture artifact; it is never inferred as a
         live signal. Telemetry observation reflects only what the current session&rsquo;s payload actually reports —
         EEG is not present in PPG-DaLiA replay, and EOG has no channel in the current backend contract at all.

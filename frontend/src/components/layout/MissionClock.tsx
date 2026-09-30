@@ -12,9 +12,9 @@ export function MissionClock() {
   }, []);
 
   if (!now) {
-    return <span className="tabular-nums-mono text-sm text-slate-500">--:--:-- UTC</span>;
+    return <span className="tabular-nums-mono text-sm text-ink-muted">--:--:-- UTC</span>;
   }
 
   const time = now.toISOString().slice(11, 19);
-  return <span className="tabular-nums-mono text-sm text-slate-300">{time} UTC</span>;
+  return <span className="tabular-nums-mono text-sm text-ink-secondary">{time} UTC</span>;
 }

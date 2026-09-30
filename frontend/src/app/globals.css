@@ -58,16 +58,18 @@ body {
 }
 
 @layer utilities {
-  .text-shadow-glow {
-    text-shadow: 0 0 12px rgba(79, 216, 232, 0.5);
-  }
-
+  /* Stage 8 §9.3 — the shared Panel surface is now a flat semantic surface.
+     The legacy treatment layered a translucent space-850 fill, a backdrop
+     blur and a drop shadow: exactly the glassmorphism the visual system
+     forbids, and the reason every legacy route read as a stack of floating
+     cards rather than one authored document. The `.text-shadow-glow`
+     utility was removed outright — it had zero consumers. */
   .mission-panel {
-    @apply relative rounded-xl border border-white/5 bg-space-850/70 shadow-panel backdrop-blur-sm;
+    @apply relative rounded-[10px] border border-jury-border-subtle bg-surface-1;
   }
 
   .mission-panel-header {
-    @apply flex items-start justify-between gap-3 border-b border-white/5 px-4 py-3;
+    @apply flex items-start justify-between gap-3 border-b border-jury-border-subtle px-4 py-3;
   }
 
   .tabular-nums-mono {

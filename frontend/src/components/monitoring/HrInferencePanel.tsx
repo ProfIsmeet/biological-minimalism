@@ -61,7 +61,7 @@ export function HrInferencePanel() {
 
       <dl className="grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Availability</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Availability</dt>
           <dd className="mt-0.5 text-ink-primary">
             {view.telemetryAvailability === "active"
               ? predictionAvailabilityLabel(availability)
@@ -69,7 +69,7 @@ export function HrInferencePanel() {
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Inference status</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Inference status</dt>
           <dd className="mt-0.5 text-ink-primary">
             {view.telemetryAvailability === "active"
               ? inferenceStatusLabel(inference, view.isReplay)
@@ -77,13 +77,13 @@ export function HrInferencePanel() {
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Model input modalities</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Model input modalities</dt>
           <dd className="mt-0.5 text-ink-primary">
             {prediction ? prediction.provenance.input_channels.join(" + ") : "wrist_bvp + wrist_acc (required, not currently supplying a prediction)"}
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Provenance</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Provenance</dt>
           <dd className="mt-0.5 text-ink-primary">
             {prediction
               ? `${prediction.provenance.model_id} · ${prediction.provenance.dataset_name} ${prediction.provenance.subject_id}`
@@ -91,7 +91,7 @@ export function HrInferencePanel() {
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Prediction window</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Prediction window</dt>
           <dd className="mt-0.5 text-ink-primary">
             {prediction
               ? `${prediction.provenance.window_start_seconds.toFixed(1)}–${(prediction.provenance.window_start_seconds + prediction.provenance.window_duration_seconds).toFixed(1)}s`
@@ -99,28 +99,28 @@ export function HrInferencePanel() {
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Reference HR</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Reference HR</dt>
           <dd className="mt-0.5 text-ink-secondary">Reference HR unavailable for the current window.</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Current-window difference</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Current-window difference</dt>
           <dd className="mt-0.5 text-ink-secondary">
             {currentWindowDifference !== null ? `${currentWindowDifference.toFixed(1)} bpm` : "Not computable — reference HR unavailable"}
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Active simulated fault</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Active simulated fault</dt>
           <dd className={faultPresentation.faultActive ? "mt-0.5 text-jury-fault" : "mt-0.5 text-ink-secondary"}>
             {faultPresentation.currentFaultLabel}
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Fallback status</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Fallback status</dt>
           <dd className="mt-0.5 text-ink-secondary">No fallback inference source is implemented.</dd>
         </div>
       </dl>
 
-      <p className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-[11px] leading-relaxed text-ink-secondary">
+      <p className="rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs leading-relaxed text-ink-secondary">
         Error metrics are defined only for valid predictions. Prediction availability is reported separately. Applicable
         MAE/RMSE figures are frozen experimental evaluation metrics from the PPG-DaLiA robustness replay, not a live
         measurement — see Experimental Research.

@@ -47,7 +47,7 @@ export function EvidenceDecisionFlow() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-2 rounded-md border border-jury-border-subtle bg-surface-2 p-4">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Evidence</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Evidence</p>
           <ul className="flex flex-col gap-1.5 text-sm text-ink-secondary">
             <li>PPG-DaLiA HR model</li>
             <li>Robustness replay</li>
@@ -57,7 +57,7 @@ export function EvidenceDecisionFlow() {
         </div>
 
         <div className="flex flex-col gap-2 rounded-md border border-jury-border-subtle bg-surface-2 p-4">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Burden</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Burden</p>
           <ul className="flex flex-col gap-1.5 text-sm text-ink-secondary">
             <li>{regionCount} body regions</li>
             <li>5 sensing modalities</li>
@@ -65,11 +65,11 @@ export function EvidenceDecisionFlow() {
             <li>Power: {power != null ? `~${power} mW (battery-side)` : "Not available"}</li>
             <li>Contacts: {contacts?.most_likely != null ? `${contacts.most_likely} (most likely)` : "Not available"}</li>
           </ul>
-          <p className="mt-1 text-[11px] leading-relaxed text-ink-muted">{BOUNDED_ESTIMATE_QUALIFIER}</p>
+          <p className="mt-1 text-xs leading-relaxed text-ink-muted">{BOUNDED_ESTIMATE_QUALIFIER}</p>
         </div>
 
         <div className="flex flex-col gap-2 rounded-md border border-final-accent/40 bg-final-accent-soft p-4">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-final-accent">Selection</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-final-accent">Selection</p>
           <ul className="flex flex-col gap-1.5 text-sm text-ink-primary">
             <li className="font-semibold">{FINAL_ARCHITECTURE_ID}</li>
             <li>3 body regions</li>

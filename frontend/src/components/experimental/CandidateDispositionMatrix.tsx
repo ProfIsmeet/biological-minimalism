@@ -78,7 +78,7 @@ export function CandidateDispositionMatrix() {
           {/* Desktop table */}
           <div className="hidden overflow-x-auto sm:block">
             <table className="w-full min-w-[1180px] text-left text-sm">
-              <thead className="border-b border-jury-border-subtle text-[11px] uppercase tracking-wide text-ink-muted">
+              <thead className="border-b border-jury-border-subtle text-xs uppercase tracking-wide text-ink-muted">
                 <tr>
                   <th className="px-3 py-2 font-semibold">Candidate / experiment</th>
                   <th className="px-3 py-2 font-semibold">Body region</th>
@@ -104,17 +104,17 @@ export function CandidateDispositionMatrix() {
                       <td className="px-3 py-3 align-top text-ink-secondary">
                         {display?.evaluationRole ?? "Candidate sensing modality"}
                       </td>
-                      <td className="max-w-[240px] px-3 py-3 align-top font-mono text-[11px] tabular-nums text-ink-secondary">
+                      <td className="max-w-[240px] px-3 py-3 align-top font-mono text-xs tabular-nums text-ink-secondary">
                         {evidence?.numericSupport ?? "Not measured"}
                       </td>
-                      <td className="px-3 py-3 align-top text-[11px] text-ink-secondary">{evidence?.populationScope ?? "Not applicable"}</td>
+                      <td className="px-3 py-3 align-top text-xs text-ink-secondary">{evidence?.populationScope ?? "Not applicable"}</td>
                       <td className="max-w-[280px] px-3 py-3 align-top text-ink-secondary">{entry.reason}</td>
                       <td className="px-3 py-3 align-top">
-                        <span className="inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-[11px] font-semibold text-experimental">
+                        <span className="inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-xs font-semibold text-experimental">
                           {dispositionFor(entry)}
                         </span>
                       </td>
-                      <td className="px-3 py-3 align-top font-mono text-[11px] text-ink-muted" title={provenance.path ?? undefined}>
+                      <td className="px-3 py-3 align-top font-mono text-xs text-ink-muted" title={provenance.path ?? undefined}>
                         {provenance.label}
                       </td>
                     </tr>
@@ -135,13 +135,13 @@ export function CandidateDispositionMatrix() {
                   <p className="font-medium text-ink-primary">{display?.label ?? key.replace(/_/g, " ")}</p>
                   <p className="mt-1 text-xs text-ink-muted">{display?.region ?? "Not specified"}</p>
                   <p className="mt-1 text-xs text-ink-secondary">{display?.evaluationRole ?? "Candidate sensing modality"}</p>
-                  <p className="mt-2 font-mono text-[11px] tabular-nums text-ink-secondary">{evidence?.numericSupport ?? "Not measured"}</p>
-                  <p className="mt-1 text-[11px] text-ink-muted">Population: {evidence?.populationScope ?? "Not applicable"}</p>
+                  <p className="mt-2 font-mono text-xs tabular-nums text-ink-secondary">{evidence?.numericSupport ?? "Not measured"}</p>
+                  <p className="mt-1 text-xs text-ink-muted">Population: {evidence?.populationScope ?? "Not applicable"}</p>
                   <p className="mt-2 text-xs text-ink-secondary">{entry.reason}</p>
-                  <span className="mt-2 inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-[11px] font-semibold text-experimental">
+                  <span className="mt-2 inline-flex rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-xs font-semibold text-experimental">
                     {dispositionFor(entry)}
                   </span>
-                  <p className="mt-2 font-mono text-[10px] text-ink-muted">Provenance: {provenance.label}</p>
+                  <p className="mt-2 font-mono text-xs text-ink-muted">Provenance: {provenance.label}</p>
                 </li>
               );
             })}
@@ -151,12 +151,12 @@ export function CandidateDispositionMatrix() {
             <summary className="flex cursor-pointer items-center gap-2 px-3 py-2 text-xs font-medium text-ink-muted">
               <Archive size={13} aria-hidden="true" /> Provenance detail
             </summary>
-            <div className="border-t border-jury-border-subtle px-3 py-2 text-[11px] leading-relaxed text-ink-muted">
+            <div className="border-t border-jury-border-subtle px-3 py-2 text-xs leading-relaxed text-ink-muted">
               <p>Disposition source: results/final_wearable_architecture.json (exclusion_rationale).</p>
               {entries.map(([key]) => {
                 const provenance = provenanceFor(key);
                 return provenance.path ? (
-                  <p key={key} className="mt-1 break-all font-mono text-[10px] text-ink-muted">
+                  <p key={key} className="mt-1 break-all font-mono text-xs text-ink-muted">
                     {CANDIDATE_DISPOSITION_DISPLAY[key]?.label ?? key}: {provenance.path}
                   </p>
                 ) : null;

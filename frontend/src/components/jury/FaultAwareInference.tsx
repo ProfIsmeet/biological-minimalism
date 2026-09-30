@@ -60,10 +60,10 @@ export function FaultAwareInference() {
         <span
           className={
             status === "Nominal"
-              ? "rounded-[4px] border border-jury-success/40 bg-jury-success-soft px-2 py-1 text-[11px] font-semibold text-jury-success"
+              ? "rounded-[4px] border border-jury-success/40 bg-jury-success-soft px-2 py-1 text-xs font-semibold text-jury-success"
               : status === "Degraded"
-                ? "rounded-[4px] border border-jury-warning/40 bg-jury-warning-soft px-2 py-1 text-[11px] font-semibold text-jury-warning"
-                : "rounded-[4px] border border-ink-disabled/40 bg-surface-2 px-2 py-1 text-[11px] font-semibold text-ink-disabled"
+                ? "rounded-[4px] border border-jury-warning/40 bg-jury-warning-soft px-2 py-1 text-xs font-semibold text-jury-warning"
+                : "rounded-[4px] border border-ink-disabled/40 bg-surface-2 px-2 py-1 text-xs font-semibold text-ink-disabled"
           }
         >
           {status}
@@ -72,35 +72,35 @@ export function FaultAwareInference() {
 
       <dl className="grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Source scope</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Source scope</dt>
           <dd className="mt-0.5 text-ink-primary">{sourceLabel}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Connection state</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Connection state</dt>
           <dd className="mt-0.5 text-ink-primary">{connectionLabel}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Current inference source</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Current inference source</dt>
           <dd className="mt-0.5 text-ink-primary">{currentInferenceSource}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Primary vs. fallback</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Primary vs. fallback</dt>
           <dd className="mt-0.5 text-ink-primary">{primaryVsFallback}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Active fault condition</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Active fault condition</dt>
           <dd className="mt-0.5 text-ink-primary">{activeFaultCondition}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Prediction availability</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Prediction availability</dt>
           <dd className="mt-0.5 text-ink-primary">{predictionAvailability}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Current valid prediction</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Current valid prediction</dt>
           <dd className="mt-0.5 text-ink-primary">{currentValidPrediction}</dd>
         </div>
         <div>
-          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Inference model status</dt>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Inference model status</dt>
           <dd className="mt-0.5 text-ink-primary">{inferenceModelStatus}</dd>
         </div>
       </dl>

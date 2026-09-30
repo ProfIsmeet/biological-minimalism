@@ -71,7 +71,7 @@ export function ExperimentalDispositionOrbit() {
           CORE_PLUS_CONTEXT architecture. This does not mean unsafe, broken, or scientifically useless — see each
           candidate&rsquo;s evidence below.
         </p>
-        <ul className="flex flex-col gap-1.5 text-[11px] text-ink-muted">
+        <ul className="flex flex-col gap-1.5 text-xs text-ink-muted">
           {entries.map(([key]) => {
             const display = CANDIDATE_DISPOSITION_DISPLAY[key];
             return (

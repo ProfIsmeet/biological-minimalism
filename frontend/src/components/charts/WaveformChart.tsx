@@ -47,7 +47,7 @@ function WaveformTooltip({
   if (!active || !payload?.length) return null;
   const point = payload[0]!.payload;
   return (
-    <div className="rounded-[4px] border border-jury-border-strong bg-surface-2 px-2.5 py-1.5 font-mono text-[11px] leading-relaxed text-ink-primary shadow-sm">
+    <div className="rounded-[4px] border border-jury-border-strong bg-surface-2 px-2.5 py-1.5 font-mono text-xs leading-relaxed text-ink-primary shadow-sm">
       <div>{hasTiming ? `t = ${point.t.toFixed(3)} s` : `sample ${point.index}`}</div>
       <div>
         value = {point.value.toFixed(3)}
@@ -137,16 +137,16 @@ export function WaveformChart({
           </ComposedChart>
           </ResponsiveContainer>
         </div>
-        <div className="flex w-11 shrink-0 flex-col justify-between py-0.5 text-right font-mono text-[10px] text-ink-muted">
+        <div className="flex w-11 shrink-0 flex-col justify-between py-0.5 text-right font-mono text-xs text-ink-muted">
           <span>{domain[1].toFixed(2)}</span>
           <span>{domain[0].toFixed(2)}</span>
         </div>
       </div>
-      <div className="flex justify-between font-mono text-[10px] text-ink-disabled">
+      <div className="flex justify-between font-mono text-xs text-ink-disabled">
         <span>{startLabel}</span>
         <span>{endLabel}</span>
       </div>
-      <div className="flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-[10px] text-ink-muted">
+      <div className="flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-xs text-ink-muted">
         <span>{unit ? `Unit: ${unit}` : "Unit not provided by current source"}</span>
         <span>{values.length} raw samples</span>
         <span>{points.length} pts displayed</span>

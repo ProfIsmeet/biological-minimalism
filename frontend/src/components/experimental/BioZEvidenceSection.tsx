@@ -18,7 +18,7 @@ function EvidenceCard({ entry }: { entry: Stage3EvidenceEntry }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-base font-semibold text-ink-primary">{titleCase(entry.family_id)}</h3>
         {entry.classification ? (
-          <span className="rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-[11px] font-semibold text-experimental">
+          <span className="rounded-[4px] border border-experimental/40 bg-experimental-soft px-2 py-0.5 text-xs font-semibold text-experimental">
             {entry.classification}
           </span>
         ) : null}
@@ -27,7 +27,7 @@ function EvidenceCard({ entry }: { entry: Stage3EvidenceEntry }) {
       <dl className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {entry.primary_comparison_label ? (
           <div>
-            <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">{entry.primary_comparison_label}</dt>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{entry.primary_comparison_label}</dt>
             <dd className="mt-0.5 font-mono text-sm text-ink-primary">
               {entry.primary_effect_value !== null ? entry.primary_effect_value.toFixed(3) : "N/A"} {entry.primary_effect_unit ?? ""}
             </dd>
@@ -35,7 +35,7 @@ function EvidenceCard({ entry }: { entry: Stage3EvidenceEntry }) {
         ) : null}
         {entry.secondary_comparison_label ? (
           <div>
-            <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">{entry.secondary_comparison_label}</dt>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{entry.secondary_comparison_label}</dt>
             <dd className="mt-0.5 font-mono text-sm text-ink-primary">
               {entry.secondary_effect_value !== null ? entry.secondary_effect_value.toFixed(3) : "N/A"} {entry.secondary_effect_unit ?? ""}
             </dd>
@@ -43,7 +43,7 @@ function EvidenceCard({ entry }: { entry: Stage3EvidenceEntry }) {
         ) : null}
         {entry.biological_subject_n !== null ? (
           <div>
-            <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Biological subjects</dt>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Biological subjects</dt>
             <dd className="mt-0.5 text-sm text-ink-primary">{entry.biological_subject_n}</dd>
           </div>
         ) : null}
@@ -56,7 +56,7 @@ function EvidenceCard({ entry }: { entry: Stage3EvidenceEntry }) {
       {entry.limitation ? (
         <p className="mt-2 text-[12px] leading-relaxed text-ink-muted">Limitation: {entry.limitation}</p>
       ) : null}
-      <p className="mt-3 border-t border-jury-border-subtle pt-2 font-mono text-[10px] text-ink-disabled">{entry.artifact_path}</p>
+      <p className="mt-3 border-t border-jury-border-subtle pt-2 font-mono text-xs text-ink-disabled">{entry.artifact_path}</p>
     </article>
   );
 }

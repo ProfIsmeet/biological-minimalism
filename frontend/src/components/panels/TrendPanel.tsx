@@ -52,9 +52,9 @@ export function TrendPanel({ title, subtitle, icon, color, unit, domain, metric 
       icon={icon}
       actions={
         latest !== null ? (
-          <span className="tabular-nums-mono text-sm font-semibold text-slate-200">
+          <span className="tabular-nums-mono text-sm font-semibold text-ink-primary">
             {latest.toFixed(1)}
-            {unit ? <span className="ml-1 text-xs font-normal text-slate-500">{unit}</span> : null}
+            {unit ? <span className="ml-1 text-xs font-normal text-ink-muted">{unit}</span> : null}
           </span>
         ) : undefined
       }

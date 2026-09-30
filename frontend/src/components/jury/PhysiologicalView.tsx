@@ -33,7 +33,7 @@ function HrInferencePanel() {
   if (connectionStatus !== "open") {
     return (
       <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-5">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
         <p className="text-lg font-semibold text-ink-primary">HR unavailable</p>
         <p className="text-xs leading-relaxed text-ink-secondary">
           {connectionStatus === "connecting" ? "Connecting to the data source." : "The data source is disconnected."}
@@ -45,7 +45,7 @@ function HrInferencePanel() {
   if (isWaitingForConfirmation) {
     return (
       <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-5">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
         <p className="text-lg font-semibold text-ink-primary">Waiting for confirmation</p>
         <p className="text-xs leading-relaxed text-ink-secondary">
           Waiting for a confirmed frame from the selected source.
@@ -62,15 +62,15 @@ function HrInferencePanel() {
       const nominal = !fault?.active && inference?.status === "available";
       return (
         <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-semibold tabular-nums text-ink-primary">{prediction.value.toFixed(1)}</span>
             <span className="text-sm text-ink-muted">bpm</span>
             <span
               className={
                 nominal
-                  ? "ml-2 rounded-[4px] border border-jury-success/40 bg-jury-success-soft px-1.5 py-0.5 text-[11px] font-semibold text-jury-success"
-                  : "ml-2 rounded-[4px] border border-jury-warning/40 bg-jury-warning-soft px-1.5 py-0.5 text-[11px] font-semibold text-jury-warning"
+                  ? "ml-2 rounded-[4px] border border-jury-success/40 bg-jury-success-soft px-1.5 py-0.5 text-xs font-semibold text-jury-success"
+                  : "ml-2 rounded-[4px] border border-jury-warning/40 bg-jury-warning-soft px-1.5 py-0.5 text-xs font-semibold text-jury-warning"
               }
             >
               {nominal ? "Nominal" : "Degraded"}
@@ -90,7 +90,7 @@ function HrInferencePanel() {
     }
     return (
       <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-5">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
         <p className="text-lg font-semibold text-ink-primary">HR unavailable</p>
         <p className="text-xs leading-relaxed text-ink-secondary">
           {inference ? INFERENCE_MESSAGE[inference.status] : "Waiting for a valid recorded-replay PPG + IMU window."}
@@ -102,7 +102,7 @@ function HrInferencePanel() {
   if (syntheticHr == null) {
     return (
       <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-5">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
         <p className="text-lg font-semibold text-ink-primary">HR unavailable</p>
         <p className="text-xs leading-relaxed text-ink-secondary">The synthetic demo source has not provided a value yet.</p>
       </div>
@@ -111,7 +111,7 @@ function HrInferencePanel() {
 
   return (
     <div className="flex flex-col gap-2 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-5">
-      <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
+      <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Heart rate inference</span>
       <div className="flex items-baseline gap-2">
         <span className="text-3xl font-semibold tabular-nums text-ink-primary">{syntheticHr.toFixed(0)}</span>
         <span className="text-sm text-ink-muted">bpm</span>

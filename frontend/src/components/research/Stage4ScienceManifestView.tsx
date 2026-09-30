@@ -18,7 +18,7 @@ import type {
 const STRENGTH_CLASS: Record<string, string> = {
   SAFE: "border-emerald-400/25 bg-emerald-400/[0.08] text-emerald-300",
   SAFE_WITH_LIMITATION: "border-cyan-400/20 bg-cyan-400/[0.06] text-cyan-300",
-  HISTORICAL_ONLY: "border-slate-500/20 bg-slate-500/[0.06] text-slate-400",
+  HISTORICAL_ONLY: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
   UNSAFE: "border-rose-400/25 bg-rose-400/[0.08] text-rose-300",
   PENDING: "border-amber-400/20 bg-amber-400/[0.06] text-amber-300",
 };
@@ -26,7 +26,7 @@ const STRENGTH_CLASS: Record<string, string> = {
 function StrengthPill({ strength }: { strength: string }) {
   return (
     <span
-      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${STRENGTH_CLASS[strength] ?? "border-slate-500/20 bg-slate-500/[0.06] text-slate-400"}`}
+      className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${STRENGTH_CLASS[strength] ?? "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary"}`}
     >
       {strength}
     </span>
@@ -37,22 +37,22 @@ function FamilyCard({ family }: { family: Stage4ScienceConsumptionManifest["fami
   return (
     <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="font-mono text-[11px] text-slate-300">{family.family_id}</span>
-        <span className="rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-2 py-0.5 text-[10px] font-semibold text-cyan-300">
+        <span className="font-mono text-xs text-ink-secondary">{family.family_id}</span>
+        <span className="rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-2 py-0.5 text-xs font-semibold text-cyan-300">
           {family.evidence_classification}
         </span>
       </div>
-      <p className="mt-2 text-[11px] leading-relaxed text-slate-200">{family.strongest_safe_claim}</p>
-      <p className="mt-1.5 text-[10px] leading-relaxed text-amber-300/80">
+      <p className="mt-2 text-xs leading-relaxed text-ink-primary">{family.strongest_safe_claim}</p>
+      <p className="mt-1.5 text-xs leading-relaxed text-amber-300/80">
         Must not claim: {family.prohibited_overclaim}
       </p>
       {family.heterogeneity ? (
-        <p className="mt-1.5 text-[10px] leading-relaxed text-slate-500">{family.heterogeneity}</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">{family.heterogeneity}</p>
       ) : null}
       {family.unresolved_limitation ? (
-        <p className="mt-1 text-[10px] leading-relaxed text-slate-600">{family.unresolved_limitation}</p>
+        <p className="mt-1 text-xs leading-relaxed text-ink-muted">{family.unresolved_limitation}</p>
       ) : null}
-      <p className="mt-2 truncate font-mono text-[9px] text-slate-600" title={family.governing_artifact}>
+      <p className="mt-2 truncate font-mono text-xs text-ink-muted" title={family.governing_artifact}>
         {family.governing_artifact}
       </p>
     </div>
@@ -62,11 +62,11 @@ function FamilyCard({ family }: { family: Stage4ScienceConsumptionManifest["fami
 function ModalityRow({ modality }: { modality: Stage4SensorValueMatrix["modalities"][number] }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
-      <span className="text-[11px] text-slate-300">{modality.modality}</span>
-      <span className="max-w-[45%] truncate text-[10px] text-slate-500" title={modality.supported_target_use}>
+      <span className="text-xs text-ink-secondary">{modality.modality}</span>
+      <span className="max-w-[45%] truncate text-xs text-ink-muted" title={modality.supported_target_use}>
         {modality.supported_target_use}
       </span>
-      <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[9px] font-semibold text-slate-300">
+      <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-xs font-semibold text-ink-secondary">
         {modality.architecture_implication}
       </span>
     </div>
@@ -77,11 +77,11 @@ function ClaimRow({ claim }: { claim: Stage4ScienceClaim }) {
   return (
     <div className="border-b border-white/5 py-2 last:border-0">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="font-mono text-[10px] text-slate-500">{claim.claim_id}</span>
+        <span className="font-mono text-xs text-ink-muted">{claim.claim_id}</span>
         <StrengthPill strength={claim.strength} />
       </div>
-      <p className="mt-1 text-[11px] leading-relaxed text-slate-200">{claim.exact_safe_wording}</p>
-      <p className="mt-1 text-[10px] leading-relaxed text-rose-300/70">Prohibited: {claim.prohibited_stronger_wording}</p>
+      <p className="mt-1 text-xs leading-relaxed text-ink-primary">{claim.exact_safe_wording}</p>
+      <p className="mt-1 text-xs leading-relaxed text-rose-300/70">Prohibited: {claim.prohibited_stronger_wording}</p>
     </div>
   );
 }
@@ -114,7 +114,7 @@ export function Stage4ScienceManifestView({
 
       {sensorValueMatrix ? (
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             Sensor-value decision inputs ({sensorValueMatrix.modalities.length} modalities)
           </p>
           {sensorValueMatrix.modalities.map((m) => (
@@ -125,7 +125,7 @@ export function Stage4ScienceManifestView({
 
       {claimLedger ? (
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             Claim ledger ({claimLedger.claims.length} claim areas)
           </p>
           {claimLedger.claims.map((c) => (
@@ -135,7 +135,7 @@ export function Stage4ScienceManifestView({
       ) : null}
 
       {architectureDecisionInputs ? (
-        <p className="text-[10px] text-slate-600">
+        <p className="text-xs text-ink-muted">
           pre-closure input snapshot — architecture decision inputs: {architectureDecisionInputs.candidates.length} candidates ·
           final_architecture: {architectureDecisionInputs.final_architecture_status} · formal_pareto:{" "}
           {architectureDecisionInputs.formal_pareto_status} (decision inputs only — not a selection)

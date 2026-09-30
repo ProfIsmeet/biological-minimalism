@@ -9,7 +9,7 @@ export function ExperimentalBoundary() {
       aria-labelledby="experimental-boundary-heading"
       className="flex flex-col gap-3 rounded-[10px] border border-experimental/30 bg-experimental-soft p-6"
     >
-      <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-experimental">Separate research track</span>
+      <span className="text-xs font-semibold uppercase tracking-[0.1em] text-experimental">Separate research track</span>
       <h2 id="experimental-boundary-heading" className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink-primary">
         BioZ/EIS remained experimental.
       </h2>

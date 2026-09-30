@@ -19,7 +19,7 @@ function QuantityValue({ quantity, prefix = "" }: { quantity: EngineeringQuantit
       </p>
     );
   }
-  return <p className="mt-0.5 font-mono text-slate-200">{prefix}{quantity.display}</p>;
+  return <p className="mt-0.5 font-mono text-ink-primary">{prefix}{quantity.display}</p>;
 }
 
 const LEVEL_LABEL: Record<EngineeringReadinessLevel, string> = {
@@ -32,13 +32,13 @@ const LEVEL_LABEL: Record<EngineeringReadinessLevel, string> = {
 const LEVEL_CLASS: Record<EngineeringReadinessLevel, string> = {
   AVAILABLE: "border-emerald-400/20 bg-emerald-400/[0.07] text-emerald-300",
   PARTIAL: "border-amber-400/20 bg-amber-400/[0.07] text-amber-300",
-  NOT_READY: "border-slate-500/25 bg-slate-500/[0.08] text-slate-300",
-  MISSING: "border-slate-500/20 bg-slate-500/[0.06] text-slate-400",
+  NOT_READY: "border-jury-border-subtle bg-ink-muted/[0.08] text-ink-secondary",
+  MISSING: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
 };
 
 function LevelPill({ level }: { level: EngineeringReadinessLevel }) {
   return (
-    <span className={clsx("rounded-full border px-2 py-0.5 text-[10px] font-semibold", LEVEL_CLASS[level])}>
+    <span className={clsx("rounded-full border px-2 py-0.5 text-xs font-semibold", LEVEL_CLASS[level])}>
       {LEVEL_LABEL[level]}
     </span>
   );
@@ -47,7 +47,7 @@ function LevelPill({ level }: { level: EngineeringReadinessLevel }) {
 function gateClass(gate: string): string {
   if (gate.startsWith("CONDITIONAL")) return "border-amber-400/25 bg-amber-400/[0.07] text-amber-200";
   if (gate.startsWith("DEPRIORITIZE")) return "border-rose-400/25 bg-rose-400/[0.06] text-rose-200";
-  return "border-slate-500/20 bg-slate-500/[0.06] text-slate-300";
+  return "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary";
 }
 
 function CandidateCard({ candidate }: { candidate: EngineeringCandidate }) {
@@ -55,32 +55,32 @@ function CandidateCard({ candidate }: { candidate: EngineeringCandidate }) {
     <article className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-slate-100">{candidate.label}</h3>
-          <p className="mt-0.5 text-[11px] text-slate-500">{candidate.scientific_target}</p>
+          <h3 className="text-sm font-semibold text-ink-primary">{candidate.label}</h3>
+          <p className="mt-0.5 text-xs text-ink-muted">{candidate.scientific_target}</p>
         </div>
-        <span className={clsx("rounded-full border px-2.5 py-1 text-[10px] font-semibold", gateClass(candidate.gate_status))}>
+        <span className={clsx("rounded-full border px-2.5 py-1 text-xs font-semibold", gateClass(candidate.gate_status))}>
           {candidate.gate_status.replaceAll("_", " ")}
         </span>
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
-        <div><p className="text-slate-600">Scientific direction</p><p className="mt-0.5 text-slate-300">{candidate.scientific_direction}</p></div>
-        <div><p className="text-slate-600">New sensing contacts</p><QuantityValue quantity={candidate.incremental_sensing_contacts} prefix="+" /></div>
-        <div><p className="text-slate-600">New body region</p><p className="mt-0.5 text-slate-300">{candidate.incremental_body_region}</p></div>
-        <div><p className="text-slate-600">New module</p><p className="mt-0.5 text-slate-300">{candidate.incremental_module}</p></div>
+      <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+        <div><p className="text-ink-muted">Scientific direction</p><p className="mt-0.5 text-ink-secondary">{candidate.scientific_direction}</p></div>
+        <div><p className="text-ink-muted">New sensing contacts</p><QuantityValue quantity={candidate.incremental_sensing_contacts} prefix="+" /></div>
+        <div><p className="text-ink-muted">New body region</p><p className="mt-0.5 text-ink-secondary">{candidate.incremental_body_region}</p></div>
+        <div><p className="text-ink-muted">New module</p><p className="mt-0.5 text-ink-secondary">{candidate.incremental_module}</p></div>
         <div className="col-span-2">
-          <p className="text-slate-600">Reference component power</p>
-          <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-slate-300">
+          <p className="text-ink-muted">Reference component power</p>
+          <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-ink-secondary">
             <span>{candidate.reference_component_power_display}</span>
             <LevelPill level={candidate.reference_component_power_status} />
           </p>
         </div>
-        <div><p className="text-slate-600">Raw data-rate increment</p><QuantityValue quantity={candidate.raw_data_rate_increment} /></div>
-        <div><p className="text-slate-600">Mass / BOM</p><p className="mt-0.5 text-slate-300">{candidate.mass_tier} · {candidate.bom_readiness}</p></div>
+        <div><p className="text-ink-muted">Raw data-rate increment</p><QuantityValue quantity={candidate.raw_data_rate_increment} /></div>
+        <div><p className="text-ink-muted">Mass / BOM</p><p className="mt-0.5 text-ink-secondary">{candidate.mass_tier} · {candidate.bom_readiness}</p></div>
       </div>
 
-      <p className="mt-3 border-l border-white/10 pl-2.5 text-[11px] leading-relaxed text-slate-400">{candidate.engineering_summary}</p>
-      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-relaxed text-amber-300/80"><AlertTriangle size={12} className="mt-0.5 shrink-0" /> {candidate.caveat}</p>
+      <p className="mt-3 border-l border-white/10 pl-2.5 text-xs leading-relaxed text-ink-secondary">{candidate.engineering_summary}</p>
+      <p className="mt-2 flex items-start gap-1.5 text-xs leading-relaxed text-amber-300/80"><AlertTriangle size={12} className="mt-0.5 shrink-0" /> {candidate.caveat}</p>
     </article>
   );
 }
@@ -99,13 +99,13 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
       subtitle="Historical pre-selection burden evidence used to inform the final conditional architecture decision."
       icon={<ShieldQuestion size={16} />}
       actions={
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-experimental/30 bg-experimental-soft px-2.5 py-1 text-[10px] font-semibold text-experimental">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-experimental/30 bg-experimental-soft px-2.5 py-1 text-xs font-semibold text-experimental">
           Historical pre-selection artifact
         </span>
       }
       contentClassName="space-y-4"
     >
-      <p className="text-[11px] leading-relaxed text-slate-500">
+      <p className="text-xs leading-relaxed text-ink-muted">
         {readiness.statement} This artifact&rsquo;s own <code>final_architecture_status</code> field
         (&ldquo;{readiness.final_architecture_status}&rdquo;) is preserved verbatim below as raw historical record — the
         final selection, CORE_PLUS_CONTEXT, is recorded separately in the Stage-4 closure artifact shown further down
@@ -114,19 +114,19 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
 
       <section className="overflow-hidden rounded-lg border border-white/5">
         <div className="border-b border-white/5 px-4 py-3">
-          <p className="text-xs font-semibold text-slate-200">System readiness panel</p>
-          <p className="mt-1 text-[11px] text-slate-500">Unknown quantities render as “Not ready”, never as 0 mW or 0 g.</p>
+          <p className="text-xs font-semibold text-ink-primary">System readiness panel</p>
+          <p className="mt-1 text-xs text-ink-muted">Unknown quantities render as “Not ready”, never as 0 mW or 0 g.</p>
         </div>
         <div className="divide-y divide-white/5">
           {readiness.panel.map((row) => (
             <div key={row.dimension} className="flex flex-wrap items-start gap-3 px-4 py-2.5">
               <span className="mt-0.5 text-cyan-400" aria-hidden="true">{panelIcon(row.dimension)}</span>
               <div className="min-w-40 flex-1">
-                <p className="text-[12px] font-medium text-slate-200">{row.dimension}</p>
-                <p className="mt-0.5 text-[11px] leading-relaxed text-slate-500">{row.note}</p>
+                <p className="text-[12px] font-medium text-ink-primary">{row.dimension}</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">{row.note}</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] text-slate-300">{row.value_display}</span>
+                <span className="text-xs text-ink-secondary">{row.value_display}</span>
                 <LevelPill level={row.status} />
               </div>
             </div>
@@ -135,7 +135,7 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
       </section>
 
       <div>
-        <p className="mb-2 text-xs font-semibold text-slate-300">Candidate engineering increment (scientific value vs physical burden)</p>
+        <p className="mb-2 text-xs font-semibold text-ink-secondary">Candidate engineering increment (scientific value vs physical burden)</p>
         <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
           {readiness.candidates.map((candidate) => <CandidateCard key={candidate.candidate} candidate={candidate} />)}
         </div>
@@ -143,15 +143,15 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
 
       <section className="rounded-lg border border-amber-400/20 bg-amber-400/[0.045] p-4">
         <p className="text-xs font-semibold text-amber-200">Claim boundaries</p>
-        <ul className="mt-2 space-y-1.5 text-[11px] leading-relaxed text-slate-400">
+        <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-ink-secondary">
           {readiness.boundaries.map((item) => <li key={item}>• {item}</li>)}
         </ul>
       </section>
 
       <details className="rounded-lg border border-white/5 bg-white/[0.015]">
-        <summary className="cursor-pointer px-4 py-3 text-[11px] font-semibold text-slate-400">Source artifacts ({readiness.source_artifacts.length})</summary>
+        <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-ink-secondary">Source artifacts ({readiness.source_artifacts.length})</summary>
         <div className="space-y-1 border-t border-white/5 px-4 py-3">
-          {readiness.source_artifacts.map((path) => <p key={path} className="break-all font-mono text-[10px] text-cyan-300">{path}</p>)}
+          {readiness.source_artifacts.map((path) => <p key={path} className="break-all font-mono text-xs text-cyan-300">{path}</p>)}
         </div>
       </details>
     </Panel>

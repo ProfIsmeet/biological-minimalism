@@ -48,7 +48,7 @@ function ModalityNode({ modality, isContextAddition }: { modality: FinalModality
         {modality}
       </span>
       {isContextAddition ? (
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-final-accent">context addition</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-final-accent">context addition</span>
       ) : null}
     </span>
   );
@@ -82,7 +82,7 @@ export function FinalArchitectureMap() {
                 aria-hidden="true"
                 className="absolute -left-7 top-1 h-3.5 w-3.5 rounded-full border-2 border-final-accent bg-surface-1"
               />
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
                 {region.order} — {region.label}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -96,7 +96,7 @@ export function FinalArchitectureMap() {
         </div>
       </div>
 
-      <p className="border-t border-jury-border-subtle pt-3 text-[11px] leading-relaxed text-ink-muted">
+      <p className="border-t border-jury-border-subtle pt-3 text-xs leading-relaxed text-ink-muted">
         EOG is architecture-selected context for the frontal module; it is not a current input to the wrist PPG + IMU
         heart-rate model.
       </p>

@@ -68,7 +68,7 @@ function quantityText(quantity: OperationalQuantity): string {
 }
 
 function evidenceClass(level: CostEvidenceLevel): string {
-  if (level === "unknown") return "border-slate-600/30 bg-slate-600/10 text-slate-400";
+  if (level === "unknown") return "border-jury-border-strong/30 bg-surface-3/40 text-ink-secondary";
   if (level === "architectural_count") return "border-violet-400/20 bg-violet-400/[0.07] text-violet-300";
   if (level === "derived") return "border-cyan-400/20 bg-cyan-400/[0.07] text-cyan-300";
   return "border-emerald-400/20 bg-emerald-400/[0.07] text-emerald-300";
@@ -78,14 +78,14 @@ function QuantityRow({ name, quantity }: { name: string; quantity: OperationalQu
   return (
     <tr>
       <td className="px-3 py-2.5">
-        <p className="text-slate-300">{DIMENSION_LABELS[name] ?? humanize(name)}</p>
-        <p className="mt-0.5 text-[10px] uppercase tracking-wide text-slate-600">{quantity.basis}</p>
+        <p className="text-ink-secondary">{DIMENSION_LABELS[name] ?? humanize(name)}</p>
+        <p className="mt-0.5 text-xs uppercase tracking-wide text-ink-muted">{quantity.basis}</p>
       </td>
-      <td className={clsx("px-3 py-2.5 font-mono", quantity.availability === "unknown" ? "text-slate-500" : "text-slate-200")}>
+      <td className={clsx("px-3 py-2.5 font-mono", quantity.availability === "unknown" ? "text-ink-muted" : "text-ink-primary")}>
         {quantityText(quantity)}
       </td>
       <td className="px-3 py-2.5">
-        <span className={clsx("inline-flex rounded-full border px-2 py-1 text-[10px]", evidenceClass(quantity.evidence_level))}>
+        <span className={clsx("inline-flex rounded-full border px-2 py-1 text-xs", evidenceClass(quantity.evidence_level))}>
           {EVIDENCE_LABELS[quantity.evidence_level]}
         </span>
       </td>
@@ -112,20 +112,20 @@ function ComponentCostCard({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-slate-100">{component.label}</h3>
-              <code className="rounded bg-space-700/60 px-1.5 py-0.5 text-[10px] text-cyan-300">{component.component_id}</code>
+              <h3 className="text-sm font-semibold text-ink-primary">{component.label}</h3>
+              <code className="rounded bg-surface-3/60 px-1.5 py-0.5 text-xs text-cyan-300">{component.component_id}</code>
             </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{component.architecture_role}</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">{component.architecture_role}</p>
           </div>
-          <span className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] text-slate-400">{known} known · {unknown} unknown</span>
+          <span className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-ink-secondary">{known} known · {unknown} unknown</span>
         </div>
         <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
-          <div className="rounded border border-white/5 p-2.5"><p className="text-[10px] uppercase text-slate-600">Physical site</p><p className="mt-1 text-[11px] text-slate-300">{component.physical_site}</p></div>
-          <div className="rounded border border-white/5 p-2.5"><p className="text-[10px] uppercase text-slate-600">Operation</p><p className="mt-1 text-[11px] text-slate-300">{humanize(component.operation_mode)} · duty cycle {quantityText(component.duty_cycle)}</p></div>
-          <div className="rounded border border-white/5 p-2.5"><p className="text-[10px] uppercase text-slate-600">Candidate hardware</p><p className="mt-1 text-[11px] text-slate-300">{component.candidate_hardware_identity ?? "Not selected"}</p></div>
+          <div className="rounded border border-white/5 p-2.5"><p className="text-xs uppercase text-ink-muted">Physical site</p><p className="mt-1 text-xs text-ink-secondary">{component.physical_site}</p></div>
+          <div className="rounded border border-white/5 p-2.5"><p className="text-xs uppercase text-ink-muted">Operation</p><p className="mt-1 text-xs text-ink-secondary">{humanize(component.operation_mode)} · duty cycle {quantityText(component.duty_cycle)}</p></div>
+          <div className="rounded border border-white/5 p-2.5"><p className="text-xs uppercase text-ink-muted">Candidate hardware</p><p className="mt-1 text-xs text-ink-secondary">{component.candidate_hardware_identity ?? "Not selected"}</p></div>
         </div>
         {linkedExperiments.map((experiment) => (
-          <div key={experiment.experiment_id} className="mt-3 rounded border border-cyan-400/15 bg-cyan-400/[0.04] px-3 py-2 text-[11px] leading-relaxed text-slate-400">
+          <div key={experiment.experiment_id} className="mt-3 rounded border border-cyan-400/15 bg-cyan-400/[0.04] px-3 py-2 text-xs leading-relaxed text-ink-secondary">
             <span className="font-semibold text-cyan-300">Scientific evidence remains separate:</span> {experiment.outcome_summary}
           </div>
         ))}
@@ -133,7 +133,7 @@ function ComponentCostCard({
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[630px] text-left text-xs">
-          <thead className="border-b border-white/5 text-[10px] uppercase tracking-wide text-slate-600">
+          <thead className="border-b border-white/5 text-xs uppercase tracking-wide text-ink-muted">
             <tr><th className="px-3 py-2 font-medium">Dimension</th><th className="px-3 py-2 font-medium">Value</th><th className="px-3 py-2 font-medium">Evidence</th></tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -144,13 +144,13 @@ function ComponentCostCard({
 
       <div className="grid grid-cols-1 gap-3 border-t border-white/5 p-4 lg:grid-cols-2">
         <div className="rounded-lg border border-violet-400/15 bg-violet-400/[0.04] p-3">
-          <p className="flex items-center gap-1.5 text-[11px] font-semibold text-violet-300"><Share2 size={13} /> Shared-hardware context</p>
-          <p className="mt-2 text-[11px] leading-relaxed text-slate-400">{component.shared_hardware.integration_context}</p>
-          <p className="mt-1.5 text-[11px] leading-relaxed text-amber-300/80">{component.shared_hardware.double_counting_risk}</p>
+          <p className="flex items-center gap-1.5 text-xs font-semibold text-violet-300"><Share2 size={13} /> Shared-hardware context</p>
+          <p className="mt-2 text-xs leading-relaxed text-ink-secondary">{component.shared_hardware.integration_context}</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-amber-300/80">{component.shared_hardware.double_counting_risk}</p>
         </div>
         <div className="rounded-lg border border-white/5 p-3">
-          <p className="text-[11px] font-semibold text-slate-300">Operational burden proxies</p>
-          <ul className="mt-2 space-y-1 text-[11px] leading-relaxed text-slate-500">
+          <p className="text-xs font-semibold text-ink-secondary">Operational burden proxies</p>
+          <ul className="mt-2 space-y-1 text-xs leading-relaxed text-ink-muted">
             {component.operational_burden_proxies.map((item) => <li key={item}>• {item}</li>)}
           </ul>
         </div>
@@ -174,13 +174,13 @@ export function OperationalCostView({
       title="Operational cost — multidimensional contract"
       subtitle="Physical and software burden stays in original units; Unknown is never zero"
       icon={<Scale size={16} />}
-      actions={<span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-300"><LockKeyhole size={12} /> No ranking</span>}
+      actions={<span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-amber-300"><LockKeyhole size={12} /> No ranking</span>}
       contentClassName="space-y-4"
     >
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div className="rounded-lg border border-white/5 bg-space-900/50 p-3"><p className="flex items-center gap-1.5 text-xs font-semibold text-slate-200"><Layers3 size={13} className="text-cyan-400" /> Separate dimensions</p><p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">Power, mass, contacts, modules, compute, and throughput are never blended into an arbitrary score.</p></div>
-        <div className="rounded-lg border border-white/5 bg-space-900/50 p-3"><p className="flex items-center gap-1.5 text-xs font-semibold text-slate-200"><Cpu size={13} className="text-cyan-400" /> Supported software metrics</p><p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">Parameter and sample counts are derived from frozen model/data contracts—not interpreted as embedded power.</p></div>
-        <div className="rounded-lg border border-white/5 bg-space-900/50 p-3"><p className="flex items-center gap-1.5 text-xs font-semibold text-slate-200"><Database size={13} className="text-cyan-400" /> Provenance required</p><p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">Every populated number cites a repository artifact or explicit architectural-count context.</p></div>
+        <div className="rounded-lg border border-white/5 bg-surface-1/50 p-3"><p className="flex items-center gap-1.5 text-xs font-semibold text-ink-primary"><Layers3 size={13} className="text-cyan-400" /> Separate dimensions</p><p className="mt-1.5 text-xs leading-relaxed text-ink-muted">Power, mass, contacts, modules, compute, and throughput are never blended into an arbitrary score.</p></div>
+        <div className="rounded-lg border border-white/5 bg-surface-1/50 p-3"><p className="flex items-center gap-1.5 text-xs font-semibold text-ink-primary"><Cpu size={13} className="text-cyan-400" /> Supported software metrics</p><p className="mt-1.5 text-xs leading-relaxed text-ink-muted">Parameter and sample counts are derived from frozen model/data contracts—not interpreted as embedded power.</p></div>
+        <div className="rounded-lg border border-white/5 bg-surface-1/50 p-3"><p className="flex items-center gap-1.5 text-xs font-semibold text-ink-primary"><Database size={13} className="text-cyan-400" /> Provenance required</p><p className="mt-1.5 text-xs leading-relaxed text-ink-muted">Every populated number cites a repository artifact or explicit architectural-count context.</p></div>
       </div>
 
       <div className="space-y-3">
@@ -188,25 +188,25 @@ export function OperationalCostView({
       </div>
 
       <details className="rounded-lg border border-white/5 bg-white/[0.015]">
-        <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-slate-300">Architecture placeholders ({placeholders.length})</summary>
+        <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-ink-secondary">Architecture placeholders ({placeholders.length})</summary>
         <div className="grid grid-cols-1 gap-2 border-t border-white/5 p-4 sm:grid-cols-2 xl:grid-cols-3">
           {placeholders.map((component) => (
             <div key={component.component_id} className="rounded-lg border border-white/5 p-3">
-              <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-slate-300">{component.label}</p><code className="text-[9px] text-slate-600">{component.component_id}</code></div>
-              <p className="mt-1.5 text-[10px] leading-relaxed text-slate-500">{component.physical_site}</p>
-              <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-amber-300/80">Costs unknown · no scientific value assigned</p>
+              <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-ink-secondary">{component.label}</p><code className="text-xs text-ink-muted">{component.component_id}</code></div>
+              <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">{component.physical_site}</p>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-amber-300/80">Costs unknown · no scientific value assigned</p>
             </div>
           ))}
         </div>
       </details>
 
       <details className="rounded-lg border border-white/5 bg-white/[0.015]">
-        <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-slate-300">Evidence source table ({catalog.evidence.length})</summary>
+        <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-ink-secondary">Evidence source table ({catalog.evidence.length})</summary>
         <div className="overflow-x-auto border-t border-white/5">
           <table className="w-full min-w-[780px] text-left text-xs">
-            <thead className="text-[10px] uppercase tracking-wide text-slate-600"><tr><th className="px-3 py-2 font-medium">Evidence</th><th className="px-3 py-2 font-medium">Level</th><th className="px-3 py-2 font-medium">Source</th><th className="px-3 py-2 font-medium">Operating condition</th></tr></thead>
+            <thead className="text-xs uppercase tracking-wide text-ink-muted"><tr><th className="px-3 py-2 font-medium">Evidence</th><th className="px-3 py-2 font-medium">Level</th><th className="px-3 py-2 font-medium">Source</th><th className="px-3 py-2 font-medium">Operating condition</th></tr></thead>
             <tbody className="divide-y divide-white/5">
-              {catalog.evidence.map((record) => <tr key={record.evidence_id}><td className="px-3 py-2.5 text-slate-300">{record.title}</td><td className="px-3 py-2.5"><span className={clsx("rounded-full border px-2 py-1 text-[10px]", evidenceClass(record.evidence_level))}>{EVIDENCE_LABELS[record.evidence_level]}</span></td><td className="px-3 py-2.5 font-mono text-[10px] text-cyan-300">{record.source_url ? <a className="underline decoration-cyan-400/30 underline-offset-2" href={record.source_url} target="_blank" rel="noreferrer">{record.manufacturer ?? record.source_reference}</a> : record.source_reference}<p className="mt-1 font-sans text-[9px] text-slate-600">{record.page_or_section}</p></td><td className="px-3 py-2.5 text-[11px] leading-relaxed text-slate-500">{record.operating_condition}</td></tr>)}
+              {catalog.evidence.map((record) => <tr key={record.evidence_id}><td className="px-3 py-2.5 text-ink-secondary">{record.title}</td><td className="px-3 py-2.5"><span className={clsx("rounded-full border px-2 py-1 text-xs", evidenceClass(record.evidence_level))}>{EVIDENCE_LABELS[record.evidence_level]}</span></td><td className="px-3 py-2.5 font-mono text-xs text-cyan-300">{record.source_url ? <a className="underline decoration-cyan-400/30 underline-offset-2" href={record.source_url} target="_blank" rel="noreferrer">{record.manufacturer ?? record.source_reference}</a> : record.source_reference}<p className="mt-1 font-sans text-xs text-ink-muted">{record.page_or_section}</p></td><td className="px-3 py-2.5 text-xs leading-relaxed text-ink-muted">{record.operating_condition}</td></tr>)}
             </tbody>
           </table>
         </div>
@@ -214,8 +214,8 @@ export function OperationalCostView({
 
       <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.05] p-4">
         <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-200"><LockKeyhole size={13} /> Final Pareto analysis — disabled</p>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">The reviewed scientific contract remains a separate evidence dimension in the integrated view above. Day 6 adds component-boundary hardware characterization, but unresolved deployable power, mass, duty cycles, and embedded measurements still prevent final multi-objective analysis.</p>
-        <p className="mt-2 font-mono text-[10px] text-slate-600">Source-contract join key: {catalog.scientific_join_contract.join_key}</p>
+        <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">The reviewed scientific contract remains a separate evidence dimension in the integrated view above. Day 6 adds component-boundary hardware characterization, but unresolved deployable power, mass, duty cycles, and embedded measurements still prevent final multi-objective analysis.</p>
+        <p className="mt-2 font-mono text-xs text-ink-muted">Source-contract join key: {catalog.scientific_join_contract.join_key}</p>
       </div>
     </Panel>
   );

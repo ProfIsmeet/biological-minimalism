@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { StatusLevel } from "@/components/ui/StatusBadge";
 
 const VALUE_COLOR: Record<StatusLevel, string> = {
-  nominal: "text-slate-100",
+  nominal: "text-ink-primary",
   warning: "text-signal-warning",
   critical: "text-signal-critical",
   offline: "text-signal-offline",
@@ -28,7 +28,7 @@ export function MetricTile({ label, value, unit, level = "nominal", hint }: Metr
 
   return (
     <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-white/5 bg-white/[0.02] px-3.5 py-3">
-      <span className="text-[11px] uppercase tracking-wider text-slate-500">{label}</span>
+      <span className="text-xs uppercase tracking-wider text-ink-muted">{label}</span>
       <span className="flex min-w-0 flex-wrap items-baseline gap-1">
         <span
           className={clsx(
@@ -39,9 +39,9 @@ export function MetricTile({ label, value, unit, level = "nominal", hint }: Metr
         >
           {value}
         </span>
-        {unit ? <span className="text-xs text-slate-500">{unit}</span> : null}
+        {unit ? <span className="text-xs text-ink-muted">{unit}</span> : null}
       </span>
-      {hint ? <span className="text-[11px] text-slate-500">{hint}</span> : null}
+      {hint ? <span className="text-xs text-ink-muted">{hint}</span> : null}
     </div>
   );
 }

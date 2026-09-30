@@ -34,7 +34,7 @@ const CANDIDATE_STATUS_CLASS: Record<string, string> = {
 const ALL_CANDIDATE_CLASSES = ["MINIMAL_CORE", "CORE_PLUS_CONTEXT", "EVIDENCE_EXTENDED", "EXPERIMENTAL_EXTENDED"];
 
 function Pill({ text, className }: { text: string; className: string }) {
-  return <span className={clsx("rounded-full border px-2 py-0.5 text-[10px] font-semibold", className)}>{text}</span>;
+  return <span className={clsx("rounded-full border px-2 py-0.5 text-xs font-semibold", className)}>{text}</span>;
 }
 
 function ExclusionRow({
@@ -46,9 +46,9 @@ function ExclusionRow({
 }) {
   return (
     <div className="border-b border-white/5 py-1.5 last:border-0">
-      <p className="text-[11px] font-semibold text-slate-300">{sensorKey.replace(/_/g, " ")}</p>
-      <p className="mt-0.5 text-[10px] leading-relaxed text-slate-500">{entry.reason}</p>
-      <p className="mt-0.5 text-[10px] leading-relaxed text-slate-600">Not claimed: {entry.prohibited_claim}</p>
+      <p className="text-xs font-semibold text-ink-secondary">{sensorKey.replace(/_/g, " ")}</p>
+      <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">{entry.reason}</p>
+      <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">Not claimed: {entry.prohibited_claim}</p>
     </div>
   );
 }
@@ -100,18 +100,18 @@ export function Stage4FinalArchitecturePanel({
           <span className="text-sm font-semibold text-emerald-300">Selected: {finalArchitecture.selected_class}</span>
           <Pill text={gateDStatus.gate_d_burden_completeness ?? "UNKNOWN"} className="border-amber-400/25 bg-amber-400/[0.08] text-amber-300" />
         </div>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-400">
+        <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">
           Modalities: {finalArchitecture.selected_modalities.join("; ")}
         </p>
-        <p className="mt-1 text-[10px] text-slate-500">
+        <p className="mt-1 text-xs text-ink-muted">
           Body regions: {finalArchitecture.selected_body_regions.join(", ")} · Module topology: {moduleTopology.topology_class ?? "UNKNOWN"} ·{" "}
           battery: {moduleTopology.battery_topology_selected ?? "UNKNOWN"} · MCU/radio: {moduleTopology.mcu_radio_topology_selected ?? "UNKNOWN"}
         </p>
       </div>
 
       <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Burden (accepted, disclosed)</p>
-        <p className="mt-1 text-[10px] leading-relaxed text-slate-500">
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Burden (accepted, disclosed)</p>
+        <p className="mt-1 text-xs leading-relaxed text-ink-muted">
           Contacts: {burden.contacts?.min}–{burden.contacts?.max} (most likely {burden.contacts?.most_likely}) · Power (selected distributed
           topology, battery-side): {burden.power_mw?.selected_topology_battery_side} mW — higher than the alternative single-shared-MCU/radio
           figure ({burden.power_mw?.alternative_single_shared_battery_side_not_selected} mW), accepted per Coordinator topology choice, not hidden.
@@ -119,7 +119,7 @@ export function Stage4FinalArchitecturePanel({
       </div>
 
       <div>
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Excluded from final architecture</p>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">Excluded from final architecture</p>
         {Object.entries(finalArchitecture.exclusion_rationale).map(([key, entry]) => (
           <ExclusionRow key={key} sensorKey={key} entry={entry} />
         ))}
@@ -127,16 +127,16 @@ export function Stage4FinalArchitecturePanel({
 
       {gateECoordinatorDecisions ? (
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             Gate E — Coordinator decisions ({gateECoordinatorDecisions.gate_e_pending_science_sensitivity})
           </p>
           {gateECoordinatorDecisions.decisions.map((d) => (
             <div key={d.item} className="border-b border-white/5 py-1.5 last:border-0">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-[11px] text-slate-300">{d.item}</span>
+                <span className="text-xs text-ink-secondary">{d.item}</span>
                 <Pill text={d.decision} className="border-cyan-400/25 bg-cyan-400/[0.08] text-cyan-300" />
               </div>
-              <p className="mt-0.5 text-[10px] leading-relaxed text-amber-300/80">
+              <p className="mt-0.5 text-xs leading-relaxed text-amber-300/80">
                 Revision trigger: {JSON.stringify(d.revision_trigger.condition ?? d.revision_trigger)}
               </p>
             </div>
@@ -146,29 +146,29 @@ export function Stage4FinalArchitecturePanel({
 
       {formalParetoAnalysis ? (
         <div>
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-muted">
             Formal Pareto analysis ({formalParetoAnalysis.formal_pareto_status}) — no single score, no unique winner
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {ALL_CANDIDATE_CLASSES.map((classId) => (
               <div key={classId} className="rounded-lg border border-white/10 bg-white/[0.02] p-2.5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-mono text-[11px] text-slate-300">{classId}</span>
+                  <span className="font-mono text-xs text-ink-secondary">{classId}</span>
                   <Pill
                     text={CANDIDATE_STATUS_LABEL[classId] ?? "UNKNOWN"}
-                    className={CANDIDATE_STATUS_CLASS[classId] ?? "border-slate-500/20 bg-slate-500/[0.06] text-slate-400"}
+                    className={CANDIDATE_STATUS_CLASS[classId] ?? "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary"}
                   />
                 </div>
               </div>
             ))}
           </div>
-          <p className="mt-2 text-[10px] leading-relaxed text-slate-500">{formalParetoAnalysis.coordinator_selection_rationale}</p>
-          <p className="mt-1 text-[10px] leading-relaxed text-slate-600">{formalParetoAnalysis.coordinator_selection_is_not_mathematical_dominance}</p>
+          <p className="mt-2 text-xs leading-relaxed text-ink-muted">{formalParetoAnalysis.coordinator_selection_rationale}</p>
+          <p className="mt-1 text-xs leading-relaxed text-ink-muted">{formalParetoAnalysis.coordinator_selection_is_not_mathematical_dominance}</p>
         </div>
       ) : null}
 
       {closureManifest ? (
-        <p className="text-[10px] text-slate-600">
+        <p className="text-xs text-ink-muted">
           Closure manifest status: {closureManifest.status} · {closureManifest.authoritative_artifacts.length} authoritative artifacts hashed ·
           repository SHA at manifest generation: <span className="font-mono">{closureManifest.repository_sha_after_closure.slice(0, 12)}</span>
         </p>

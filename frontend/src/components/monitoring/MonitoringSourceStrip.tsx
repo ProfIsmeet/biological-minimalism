@@ -66,7 +66,7 @@ export function MonitoringSourceStrip() {
           <button
             type="button"
             onClick={retrySourceState}
-            className="flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-[11px] font-medium text-ink-secondary hover:bg-surface-2"
+            className="flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-2"
           >
             <RefreshCw size={12} aria-hidden="true" /> Retry
           </button>
@@ -98,7 +98,7 @@ export function MonitoringSourceStrip() {
       >
         {fields.map((field, index) => (
           <div key={field.label} className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">{field.label}</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted">{field.label}</span>
             <span
               className={
                 index < 2

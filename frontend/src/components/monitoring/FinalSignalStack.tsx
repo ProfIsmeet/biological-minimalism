@@ -30,8 +30,8 @@ function SignalRow({ modality, region, observation, plot }: {
         <p className="text-sm font-semibold text-ink-primary">
           {modality} <span className="font-normal text-ink-muted">— {region}</span>
         </p>
-        <p className="text-[11px] text-ink-muted">{observation.channelName ?? "No channel in current source"}</p>
-        <p className="text-[11px] text-ink-secondary">{observation.statusLabel}</p>
+        <p className="text-xs text-ink-muted">{observation.channelName ?? "No channel in current source"}</p>
+        <p className="text-xs text-ink-secondary">{observation.statusLabel}</p>
       </div>
       <figure
         aria-label={accessibleLabel}
@@ -84,7 +84,7 @@ export function FinalSignalStack() {
         <h2 id="signal-stack-heading" className="text-sm font-semibold text-ink-primary">
           Final modality observations
         </h2>
-        <span className="text-[11px] uppercase tracking-wide text-ink-muted">Selected — CORE_PLUS_CONTEXT</span>
+        <span className="text-xs uppercase tracking-wide text-ink-muted">Selected — CORE_PLUS_CONTEXT</span>
       </div>
       {view.telemetryAvailability === "awaiting_confirmation" ? (
         <p role="status" className="mt-2 rounded-md border border-information/25 bg-information-soft px-3 py-2 text-xs text-information">

@@ -29,7 +29,7 @@ export function ScopeProvenanceFooter() {
     <footer className="flex flex-col gap-3 rounded-[10px] border border-jury-border-subtle bg-surface-1 p-4 text-xs text-ink-secondary">
       <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">{retainedContext ? "Source context" : "Active source"}</dt>
+          <dt className="text-xs uppercase tracking-wide text-ink-muted">{retainedContext ? "Source context" : "Active source"}</dt>
           <dd className="mt-0.5 text-ink-secondary">
             {retainedContext
               ? `${view.isReplay ? "RECORDED REPLAY" : "SYNTHETIC DEMO"} — retained configuration context, not current telemetry`
@@ -37,19 +37,19 @@ export function ScopeProvenanceFooter() {
           </dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Dataset</dt>
+          <dt className="text-xs uppercase tracking-wide text-ink-muted">Dataset</dt>
           <dd className="mt-0.5 text-ink-secondary">{view.isReplay ? datasetValue : "Not applicable"}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Subject</dt>
+          <dt className="text-xs uppercase tracking-wide text-ink-muted">Subject</dt>
           <dd className="mt-0.5 text-ink-secondary">{view.isReplay ? subjectValue : "Not applicable"}</dd>
         </div>
         <div>
-          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Model identity</dt>
+          <dt className="text-xs uppercase tracking-wide text-ink-muted">Model identity</dt>
           <dd className="mt-0.5 break-all text-ink-secondary">{view.prediction ? view.prediction.provenance.model_id : "Not available"}</dd>
         </div>
         <div className="sm:col-span-2 lg:col-span-2">
-          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Channel list</dt>
+          <dt className="text-xs uppercase tracking-wide text-ink-muted">Channel list</dt>
           <dd className="mt-0.5 text-ink-secondary">
             {view.telemetryAvailability === "active"
               ? availableChannels.length ? availableChannels.join(", ") : "None reported by current source"
@@ -57,7 +57,7 @@ export function ScopeProvenanceFooter() {
           </dd>
         </div>
         <div className="sm:col-span-2 lg:col-span-2">
-          <dt className="text-[10px] uppercase tracking-wide text-ink-muted">Current limitation</dt>
+          <dt className="text-xs uppercase tracking-wide text-ink-muted">Current limitation</dt>
           <dd className="mt-0.5 text-ink-secondary">
             No reference/ground-truth HR channel exists in the current runtime contract; accuracy metrics are only
             available as frozen, offline evaluation artifacts.

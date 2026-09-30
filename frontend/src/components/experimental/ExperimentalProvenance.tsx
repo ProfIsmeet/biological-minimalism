@@ -64,12 +64,12 @@ export function ExperimentalProvenance() {
             <summary className="cursor-pointer px-4 py-3 text-xs font-medium text-ink-muted">Full artifact paths</summary>
             <div className="border-t border-jury-border-subtle px-4 py-3">
               {entries.map((entry) => (
-                <p key={entry.family_id} className="break-all font-mono text-[10px] text-ink-disabled">
+                <p key={entry.family_id} className="break-all font-mono text-xs text-ink-disabled">
                   {entry.family_id}: {entry.artifact_path}
                 </p>
               ))}
               {provenance?.source_artifacts?.map((path) => (
-                <p key={path} className="break-all font-mono text-[10px] text-ink-disabled">
+                <p key={path} className="break-all font-mono text-xs text-ink-disabled">
                   {path}
                 </p>
               ))}

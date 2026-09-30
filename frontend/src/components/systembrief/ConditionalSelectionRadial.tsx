@@ -108,7 +108,7 @@ export function ConditionalSelectionRadial() {
               <span className="font-medium text-final-accent">{dimension.corePlusContext}</span>
             </li>
           ))}
-          <li className="grid grid-cols-3 gap-2 px-3 py-2 text-[10px] font-semibold uppercase tracking-wide text-ink-disabled">
+          <li className="grid grid-cols-3 gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-ink-disabled">
             <span>Dimension</span>
             <span>MINIMAL_CORE</span>
             <span>CORE_PLUS_CONTEXT</span>
