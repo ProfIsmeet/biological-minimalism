@@ -47,14 +47,21 @@ export const FULL_OPERATIONAL_ROUTES = ["/mission-overview", "/live-monitoring"]
  * / `useDatasetReplayMode`) or the source-mode control, but do NOT mount a
  * replay-session workspace and never display operational event history:
  *
- *  - `/ai-insights`     — vitals/trend/confidence panels read the confirmed
- *                          live snapshot.
+ *  - `/ai-insights`     — vitals/confidence panels read the confirmed live
+ *                          snapshot, and the route's own copy changes with
+ *                          the confirmed source.
  *  - `/mission-timeline`— reads the confirmed source mode via
  *                          `useDatasetReplayMode`.
- *  - `/settings`        — DataSourceControl reads the confirmed snapshot and
- *                          seeds `dataSourceStatus`.
+ *
+ * Stage 8 §15 removed `/settings` from this list. It only qualified because
+ * the page mounted the operational `DataSourceControl` — a duplicate of the
+ * Demo controls drawer the operational routes already own. With that control
+ * gone, Settings reads no live telemetry at all, so it drops to "static": no
+ * WebSocket, no `/data-source/state`, no `/data-source/subjects`. Its "Test
+ * connection" button is a single user-initiated fetch, not a subscription,
+ * and needs no operational tier.
  */
-export const LEGACY_LIVE_FEED_ROUTES = ["/ai-insights", "/mission-timeline", "/settings"] as const;
+export const LEGACY_LIVE_FEED_ROUTES = ["/ai-insights", "/mission-timeline"] as const;
 
 function matchesRoute(pathname: string, routes: readonly string[]): boolean {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, Info, Settings as SettingsIcon, XCircle } from "lucide-react";
 
 import { Panel } from "@/components/ui/Panel";
-import { DataSourceControl } from "@/components/demos/DataSourceControl";
 import { api } from "@/lib/api";
 import {
   REDUCE_MOTION_CHANGE_EVENT,
@@ -61,10 +60,13 @@ export function SettingsClient() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div>
-        <h1 className="text-lg font-semibold text-slate-100">Settings</h1>
-        <p className="text-sm text-slate-500">Connection diagnostics, accessibility preferences, and project attribution.</p>
-      </div>
+      <header className="flex flex-col gap-2">
+        <h1 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink-primary sm:text-[28px]">Settings</h1>
+        <p className="max-w-3xl text-sm leading-relaxed text-ink-secondary">
+          Application preferences and a user-safe service reachability check. Operational replay and fault controls live with
+          the operational routes, in the Demo controls drawer on Mission Overview.
+        </p>
+      </header>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* HIGH-3: no raw REST/WS URLs, no env vars, and no shell start
@@ -72,7 +74,7 @@ export function SettingsClient() {
             composed product copy. */}
         <Panel title="Telemetry service" subtitle="Operational connection status" icon={<SettingsIcon size={16} />}>
           <div className="flex flex-col gap-3 text-sm">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-ink-muted">
               Check whether the operational telemetry service is reachable. The explanatory pages (System Brief,
               Experimental Research, Digital Twin) remain readable regardless of this status.
             </p>
@@ -80,7 +82,7 @@ export function SettingsClient() {
               type="button"
               onClick={testConnection}
               disabled={testState === "testing"}
-              className="mt-1 w-fit rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3.5 py-2 text-xs font-medium text-cyan-300 transition-colors hover:bg-cyan-500/20 disabled:opacity-60"
+              className="mt-1 flex min-h-11 w-fit items-center rounded-md border border-information/40 bg-information-soft px-4 text-sm font-medium text-information transition-colors hover:border-information/60 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {testState === "testing" ? "Testing…" : "Test connection"}
             </button>
@@ -101,33 +103,50 @@ export function SettingsClient() {
         <Panel title="Accessibility" subtitle="Display preferences" icon={<SettingsIcon size={16} />}>
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm text-slate-200">Reduce Motion</p>
-              <p className="text-xs text-slate-500">Disables gauge, waveform, and panel transition animations across the dashboard.</p>
+              <p className="text-sm text-ink-primary">Reduce Motion</p>
+              <p className="text-xs text-ink-muted">Disables gauge, waveform, and panel transition animations across the dashboard.</p>
             </div>
+            {/* Stage 8 §18 — the switch was a 24px-tall hit target. It now
+                occupies a 44px-tall focusable button with the 24px track
+                drawn inside it, so the accessible target meets the minimum
+                without changing the visual weight of the control. The track
+                colour also moved off raw cyan onto the semantic accent. */}
             <button
               type="button"
               role="switch"
               aria-label="Reduce motion"
               aria-checked={reduceMotion}
               onClick={toggleReduceMotion}
-              className={`relative h-6 w-11 shrink-0 rounded-full transition-colors outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC] ${reduceMotion ? "bg-cyan-500" : "bg-white/10"}`}
+              className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-md outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A1D2CC]"
             >
               <span
-                className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${reduceMotion ? "translate-x-5" : "translate-x-0.5"}`}
-              />
+                aria-hidden="true"
+                className={`relative block h-6 w-11 rounded-full transition-colors ${reduceMotion ? "bg-final-accent" : "bg-surface-3"}`}
+              >
+                <span
+                  className={`absolute top-0.5 h-5 w-5 rounded-full bg-ink-primary transition-transform ${reduceMotion ? "translate-x-5" : "translate-x-0.5"}`}
+                />
+              </span>
             </button>
           </div>
         </Panel>
       </div>
 
-      <DataSourceControl />
+      {/* Stage 8 §15 — the operational DataSourceControl (synthetic/replay
+          source switching plus subject selection) was removed from Settings.
+          It duplicated the Demo controls drawer that the operational routes
+          already own, and it was the ONLY reason this preferences page
+          mounted a live-feed WebSocket. Removing it lets /settings drop to
+          the static runtime tier: no socket, no operational REST, nothing to
+          clean up on exit. The controls themselves are unchanged and remain
+          available where they belong. */}
 
       <Panel title="About" subtitle="Project attribution & scope" icon={<Info size={16} />}>
-        <div className="flex flex-col gap-2 text-sm leading-relaxed text-slate-400">
+        <div className="flex flex-col gap-2 text-sm leading-relaxed text-ink-secondary">
           <p>
-            <span className="font-medium text-slate-200">Biological Minimalism</span> — an evidence-driven methodology for
+            <span className="font-medium text-ink-primary">Biological Minimalism</span> — an evidence-driven methodology for
             determining the target-specific marginal value of sensing components for autonomous astronaut health monitoring. The
-            final selected wearable architecture is <span className="font-medium text-slate-200">CORE_PLUS_CONTEXT</span>,
+            final selected wearable architecture is <span className="font-medium text-ink-primary">CORE_PLUS_CONTEXT</span>,
             a conditional evidence–burden trade-off, not a unique mathematical optimum. Prepared for IAC 2026
             (Interactive Presentation, IAF/IAA Space Life Sciences Symposium).
           </p>

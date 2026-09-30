@@ -3227,7 +3227,17 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkEqual("runtime tier: unknown route falls through to static", classifyRuntimeTier("/some/new/page"), "static");
   checkEqual("runtime tier: /ai-insights is live-feed (deliberate legacy allowlist)", classifyRuntimeTier("/ai-insights"), "live-feed");
   checkEqual("runtime tier: /mission-timeline is live-feed", classifyRuntimeTier("/mission-timeline"), "live-feed");
-  checkEqual("runtime tier: /settings is live-feed", classifyRuntimeTier("/settings"), "live-feed");
+  // Stage 8 §15 — /settings dropped from live-feed to static once the
+  // duplicated operational DataSourceControl was removed from it. The
+  // assertion is strengthened rather than relaxed: it now proves the
+  // preferences page opens NO operational connection at all.
+  checkEqual("runtime tier: /settings is static (no operational connection)", classifyRuntimeTier("/settings"), "static");
+  checkEqual("runtime tier: /settings therefore opens no websocket", tierOpensWebSocket(classifyRuntimeTier("/settings")), false);
+  checkEqual(
+    "runtime tier: /settings therefore mounts no monitoring session",
+    tierMountsMonitoringSession(classifyRuntimeTier("/settings")),
+    false,
+  );
 
   checkEqual("runtime tier: static routes open NO websocket", tierOpensWebSocket("static"), false);
   checkEqual("runtime tier: static routes mount NO monitoring session", tierMountsMonitoringSession("static"), false);
