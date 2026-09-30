@@ -69,10 +69,15 @@ function extractLiveRegionElements(source) {
 
 const CHECKS = [
   {
+    // Mission Overview §19 — the "Last confirmed frame" age field was removed
+    // from the visible status bar entirely (it ticked every second purely to
+    // prove liveness, and its appear/disappear cycle was distracting). The
+    // clock is now the only per-second value in this component, so it is the
+    // only one that must stay out of the announced live region.
     file: "components/operations/MissionStatusBar.tsx",
-    forbiddenInLiveRegion: ["nowMs", "formatUtcClock", "frameAge"],
-    requiredInLiveRegion: ['field.label !== "Session time"', 'field.label !== "Last confirmed frame"'],
-    mustStillAppearElsewhere: ["formatUtcClock(nowMs)", "frameAge"],
+    forbiddenInLiveRegion: ["nowMs", "formatUtcClock"],
+    requiredInLiveRegion: ['field.label !== "Session time"'],
+    mustStillAppearElsewhere: ["formatUtcClock(nowMs)"],
   },
   {
     file: "components/monitoring/MonitoringSourceStrip.tsx",

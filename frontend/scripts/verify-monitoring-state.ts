@@ -68,8 +68,16 @@ import {
   downsampleForDisplay,
   formatFaultTypeLabel,
 } from "../src/lib/monitoring/formatMonitoringValue";
-import { computeDynamicDomain, downsampleExtremaPreserving } from "../src/lib/monitoring/waveformDisplay";
+import { computeDynamicDomain, downsampleExtremaPreserving, laneBoundDecimals } from "../src/lib/monitoring/waveformDisplay";
 import { classifyValue, formatMetric, directionalityLabel, uncertaintyLabel } from "../src/lib/visualization/dataToMark";
+import {
+  deriveOperationalPhase,
+  PHASE_PRESENTATION,
+  INTEGRITY_STATE_TREATMENT,
+  resolveRingStroke,
+  STAGE_IDENTITY_COLOR,
+} from "../src/lib/visualization/operationalVisualTokens";
+import { deriveCoverageRadar } from "../src/lib/visualization/coverageRadar";
 import { deriveFaultRecoveryTimeline } from "../src/lib/monitoring/faultRecoveryTimeline";
 import type { OperationalEvent } from "../src/lib/monitoring/operationalEvents";
 import { seriesMeanSd, PPG_DALIA_CAPACITY_CONTROL, PTT_SUBJECT_HETEROGENEITY, SLEEP_EDF_PRIMARY_ABC } from "../src/data/stage6/sensitivitySmallMultiples";
@@ -4326,11 +4334,35 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 {
   // C-03/C-04 — mobile (390px) and 1024x768 first viewports must show both
   // the HR-inference state and the affected-region summary without scrolling.
-  // Achieved via `order-*` decoupling visual order from DOM order below `xl`.
+  //
+  // These originally asserted three exact Tailwind class strings from the
+  // pre-recomposition `order-*` two-column split. The Mission Overview
+  // scientific visual recomposition achieves the SAME first-viewport
+  // guarantee more directly — AffectedRegionSummary sits immediately after
+  // the status bar in DOM order, and the analytical hero places the
+  // concentric orbit (which carries the current HR value at its centre) and
+  // the HR trend ahead of the physiology stage at every width below
+  // 1366px — so the guards below now assert that ordering behaviour rather
+  // than a frozen class string that no longer describes the layout.
   const experienceSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionOverviewExperience.tsx"), "utf8");
-  checkIncludes("C-04 fix: physiology stage is deprioritised below desktop split", experienceSource, "order-2 flex min-h-0 flex-col min-[1366px]:order-1");
-  checkIncludes("C-03/C-04 fix: HR/affected-region column is prioritised below desktop split", experienceSource, "order-1 flex flex-col gap-4 min-[1366px]:order-2");
-  checkIncludes("C-04 fix: tablet and 1280 widths place HR and trend side by side", experienceSource, "md:grid-cols-2 min-[1366px]:grid-cols-1");
+  const stageIndex = experienceSource.indexOf("<OperationalPhysiologyStage");
+  const orbitIndex = experienceSource.indexOf("<InferenceIntegrityOrbit");
+  const trendIndex = experienceSource.indexOf("<RecentHrEstimateTrend");
+  check(
+    "C-04: the concentric orbit (carrying current HR) precedes the physiology stage in source order, so it reaches the first viewport below the desktop split",
+    orbitIndex !== -1 && stageIndex !== -1 && orbitIndex < stageIndex,
+    `orbit index=${orbitIndex}, stage index=${stageIndex}`,
+  );
+  check(
+    "C-04: the HR trend precedes the physiology stage in source order",
+    trendIndex !== -1 && stageIndex !== -1 && trendIndex < stageIndex,
+    `trend index=${trendIndex}, stage index=${stageIndex}`,
+  );
+  check(
+    "C-04: the physiology stage is explicitly re-prioritised to first position only at the >=1366px desktop split",
+    experienceSource.includes("min-[1366px]:order-1"),
+    "expected a min-[1366px]:order-1 re-ordering on the physiology stage column",
+  );
 
   const affectedIndex = experienceSource.indexOf("<AffectedRegionSummary");
   const hrCoreIndex = experienceSource.indexOf("<HRInferenceCore");
@@ -4592,7 +4624,14 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkNotIncludes("Stage 6: Mission Overview no longer mounts the hexagonal inference flow", missionOverviewSource, "<InferenceHexFlow");
   checkNotIncludes("Stage 6: Mission Overview no longer mounts the fault/recovery spine", missionOverviewSource, "<FaultRecoverySpine");
   checkNotIncludes("Stage 6: Mission Overview no longer mounts the separate event rail", missionOverviewSource, "<OperationalEventRail");
-  checkIncludes("Stage 6: Mission Overview mounts the coverage/freshness matrix", missionOverviewSource, "<CoverageFreshnessMatrix");
+  // The Stage 6 coverage/freshness MATRIX has been succeeded on this route by
+  // the binary ArchitectureCoverageRadar (Mission Overview §11.2), which
+  // answers the same "selected architecture vs. currently observed" question
+  // with an explicit 0–1 binary encoding AND retains the exact per-modality
+  // state text as a semantic table beneath the plot. The guard therefore
+  // asserts the coverage QUESTION is still answered on this route, rather
+  // than freezing the specific component that answers it.
+  checkIncludes("Mission Overview still answers selected-vs-observed coverage (now via the binary radar)", missionOverviewSource, "<ArchitectureCoverageRadar");
   checkIncludes("Stage 6: Mission Overview mounts the linear pipeline state strip", missionOverviewSource, "<PipelineStateStrip");
   checkIncludes("Stage 6: Mission Overview mounts the real time-axis fault/recovery timeline", missionOverviewSource, "<FaultRecoveryTimeline");
 
@@ -4711,6 +4750,175 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   const chartFrameSource = readFileSync(join(REPO_SRC_ROOT, "components/visualization/shared/ChartFrame.tsx"), "utf8");
   checkIncludes("S6A-FIND-02: ChartFrame's chart body uses a definite height class", chartFrameSource, "heightClassName");
   checkNotIncludes("S6A-FIND-02: ChartFrame no longer uses a min-height-only chart body (breaks Recharts height:100% resolution)", chartFrameSource, "minHeightClassName");
+}
+
+// ===========================================================================
+// Mission Overview — scientific visual recomposition
+// ===========================================================================
+{
+  // --- §8.1 — ordinary startup must never present as a red source error ---
+  checkEqual(
+    "MO: a connecting socket during ordinary startup is ESTABLISHING SOURCE, never a source error",
+    deriveOperationalPhase({ connectionLabel: "CONNECTING", telemetryAvailability: "awaiting_confirmation" }),
+    "establishing",
+  );
+  checkEqual(
+    "MO: the establishing phase uses a warning tone, never fault red",
+    PHASE_PRESENTATION.establishing.tone,
+    "warning",
+  );
+  checkEqual(
+    "MO: awaiting-confirmation after the socket opens is still not an error",
+    deriveOperationalPhase({ connectionLabel: "CONNECTED", telemetryAvailability: "awaiting_confirmation" }),
+    "awaiting_confirmation",
+  );
+  checkEqual("MO: the awaiting phase uses a warning tone, never fault red", PHASE_PRESENTATION.awaiting_confirmation.tone, "warning");
+  checkEqual(
+    "MO: a genuine authoritative REST failure is the only path to SOURCE ERROR",
+    deriveOperationalPhase({ connectionLabel: "CONNECTED", telemetryAvailability: "source_error" }),
+    "source_error",
+  );
+  checkEqual("MO: the source-error phase is the one that earns fault red", PHASE_PRESENTATION.source_error.tone, "fault");
+  checkEqual(
+    "MO: a source error outranks a still-connecting socket (a real failure is never masked as startup)",
+    deriveOperationalPhase({ connectionLabel: "CONNECTING", telemetryAvailability: "source_error" }),
+    "source_error",
+  );
+  checkEqual(
+    "MO: a confirmed active source presents as CONNECTED",
+    deriveOperationalPhase({ connectionLabel: "CONNECTED", telemetryAvailability: "active" }),
+    "connected",
+  );
+  checkEqual("MO: the connected phase is nominal, not warning or fault", PHASE_PRESENTATION.connected.tone, "nominal");
+  checkEqual(
+    "MO: a dropped socket presents as DISCONNECTED",
+    deriveOperationalPhase({ connectionLabel: "DISCONNECTED", telemetryAvailability: "disconnected" }),
+    "disconnected",
+  );
+
+  // --- §9 — rings are categorical; no state encodes a quantity -----------
+  for (const state of Object.keys(INTEGRITY_STATE_TREATMENT) as (keyof typeof INTEGRITY_STATE_TREATMENT)[]) {
+    const treatment = INTEGRITY_STATE_TREATMENT[state];
+    check(`MO: integrity state "${state}" carries a non-empty word, so colour is never the only carrier of meaning`, treatment.word.length > 0);
+  }
+  // §9.3 deliberately specifies the two "healthy" states (confirmed,
+  // recovered) as SOLID strokes with rounded caps — they are distinguished
+  // from each other by colour plus their always-rendered word, not by a dash.
+  // Every OTHER state must additionally carry a dash pattern or reduced
+  // opacity, so no adverse/degraded state is ever separated from a healthy
+  // one by colour alone.
+  check(
+    "MO: every state other than the two solid healthy states is distinguishable by dash pattern or opacity, not colour alone",
+    (Object.keys(INTEGRITY_STATE_TREATMENT) as (keyof typeof INTEGRITY_STATE_TREATMENT)[])
+      .filter((s) => s !== "confirmed" && s !== "recovered")
+      .every((s) => INTEGRITY_STATE_TREATMENT[s].dash !== undefined || INTEGRITY_STATE_TREATMENT[s].opacity < 1),
+  );
+  checkEqual("MO: a confirmed ring uses its own stage identity colour", resolveRingStroke("ppg", "confirmed"), STAGE_IDENTITY_COLOR.ppg);
+  checkEqual("MO: a faulted ring overrides the stage identity colour with the fault colour", resolveRingStroke("ppg", "fault"), "#D46F70");
+  checkEqual("MO: only confirmed and recovered use rounded caps", INTEGRITY_STATE_TREATMENT.confirmed.roundCap && INTEGRITY_STATE_TREATMENT.recovered.roundCap, true);
+  checkEqual("MO: a faulted ring does not use a rounded cap", INTEGRITY_STATE_TREATMENT.fault.roundCap, false);
+
+  // --- §11.2 — coverage radar is strictly binary and fails closed --------
+  const activeStates = [
+    { modality: "PPG" as const, nodeState: "confirmed" as const, unavailableReason: null },
+    { modality: "IMU" as const, nodeState: "confirmed" as const, unavailableReason: null },
+    { modality: "ECG" as const, nodeState: "confirmed" as const, unavailableReason: null },
+    { modality: "EEG" as const, nodeState: "unavailable" as const, unavailableReason: "Not provided by this replay" },
+    { modality: "EOG" as const, nodeState: "unavailable" as const, unavailableReason: "Not provided by this replay" },
+  ];
+  const activeRadar = deriveCoverageRadar({ telemetry: "active", modalityStates: activeStates, isReplay: true });
+  check(
+    "MO radar: every selected value is exactly 0 or 1 — never a fraction or percentage",
+    activeRadar.axes.every((a) => a.selected === 0 || a.selected === 1),
+  );
+  check(
+    "MO radar: every observed value is exactly 0, 1 or withheld — never a fraction",
+    activeRadar.axes.every((a) => a.observed === null || a.observed === 0 || a.observed === 1),
+  );
+  checkEqual("MO radar: EEG remains a member of the final architecture even when the replay carries no EEG channel", activeRadar.axes.find((a) => a.modality === "EEG")?.selected, 1);
+  checkEqual("MO radar: EEG is NOT observed in an S14-style replay that carries no EEG channel", activeRadar.axes.find((a) => a.modality === "EEG")?.observed, 0);
+  checkEqual("MO radar: EOG is likewise architecture-member but unobserved", activeRadar.axes.find((a) => a.modality === "EOG")?.observed, 0);
+  checkEqual("MO radar: a confirmed PPG channel is observed", activeRadar.axes.find((a) => a.modality === "PPG")?.observed, 1);
+  checkIncludes(
+    "MO radar: an unobserved EEG carries its exact absence reason, never a bare zero",
+    activeRadar.axes.find((a) => a.modality === "EEG")?.observationReason ?? "",
+    "Not provided by this replay",
+  );
+
+  const faultedRadar = deriveCoverageRadar({
+    telemetry: "active",
+    modalityStates: activeStates.map((s) => (s.modality === "PPG" ? { ...s, nodeState: "fault" as const } : s)),
+    isReplay: true,
+  });
+  checkEqual("MO radar: a faulted channel is not counted as observed", faultedRadar.axes.find((a) => a.modality === "PPG")?.observed, 0);
+  checkIncludes(
+    "MO radar: a faulted channel says so explicitly rather than collapsing into generic absence",
+    faultedRadar.axes.find((a) => a.modality === "PPG")?.observationReason ?? "",
+    "Simulated fault",
+  );
+
+  const awaitingRadar = deriveCoverageRadar({ telemetry: "awaiting_confirmation", modalityStates: activeStates, isReplay: true });
+  checkEqual(
+    "MO radar: an unconfirmed source WITHHOLDS the observation polygon rather than drawing an all-zero shape",
+    awaitingRadar.observationSeriesAvailable,
+    false,
+  );
+  check("MO radar: a withheld observation series exposes every axis as null, not zero", awaitingRadar.axes.every((a) => a.observed === null));
+  checkIncludes("MO radar: the withheld reason names the awaiting state", awaitingRadar.withheldReason ?? "", "AWAITING CONFIRMED SOURCE");
+  check(
+    "MO radar: static architecture membership stays available even while live observation is withheld",
+    awaitingRadar.axes.every((a) => a.selected === 0 || a.selected === 1),
+  );
+
+  const erroredRadar = deriveCoverageRadar({ telemetry: "source_error", modalityStates: activeStates, isReplay: true });
+  checkEqual("MO radar: a source error also withholds the observation polygon", erroredRadar.observationSeriesAvailable, false);
+  const disconnectedRadar = deriveCoverageRadar({ telemetry: "disconnected", modalityStates: activeStates, isReplay: true });
+  checkEqual("MO radar: a disconnect also withholds the observation polygon", disconnectedRadar.observationSeriesAvailable, false);
+
+  // --- §19 — the unstable visible frame ticker must not return -----------
+  const statusBarSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionStatusBar.tsx"), "utf8");
+  checkNotIncludes("MO: the visible 'Last confirmed frame' field does not return to the status bar", statusBarSource, "Last confirmed frame");
+  checkNotIncludes("MO: the per-second frame-age formatter is gone from the status bar", statusBarSource, "formatFrameAge");
+  check(
+    "MO: the authoritative confirmed-frame timestamp itself is NOT deleted from the view model (still needed by guards, freshness and history isolation)",
+    readFileSync(join(REPO_SRC_ROOT, "lib/monitoring/operationalViewModel.ts"), "utf8").includes("confirmedTimestampSeconds"),
+  );
+
+  // --- §10/§11.1/§13 — materially enlarged analytical plots --------------
+  const trendSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/RecentHrEstimateTrend.tsx"), "utf8");
+  checkIncludes("MO: the HR trend reaches a primary-plot height, not a sparkline", trendSource, "min-[1366px]:h-[330px]");
+  checkIncludes("MO: the HR trend uses linear segments, never smoothing that implies unobserved samples", trendSource, 'type="linear"');
+  checkNotIncludes("MO: the HR trend does not reintroduce monotone smoothing", trendSource, 'type="monotone"');
+  checkIncludes("MO: the HR trend keeps withheld intervals as real breaks", trendSource, "connectNulls={false}");
+  const ribbonSource = readFileSync(join(REPO_SRC_ROOT, "components/operations/SignalRibbonMatrix.tsx"), "utf8");
+  checkIncludes("MO: signal lanes are materially enlarged", ribbonSource, "ROW_HEIGHT = 88");
+
+  // A narrow-range lane (the real wrist IMU spans roughly 0.96–1.04 g) must
+  // not render both gutter bounds as the same rounded number — that reads as
+  // a flat, unvarying signal even while the plotted trace visibly moves.
+  // 0.96 and 1.04 BOTH render as "1.0" at one decimal — exactly the real
+  // defect this helper exists to fix — so it must widen to two.
+  checkEqual("MO lanes: a narrow IMU-like range widens precision so the two bounds differ", laneBoundDecimals([0.96, 1.04]), 2);
+  check(
+    "MO lanes: at the chosen precision the two bounds are genuinely distinguishable",
+    (0.96).toFixed(laneBoundDecimals([0.96, 1.04])) !== (1.04).toFixed(laneBoundDecimals([0.96, 1.04])),
+  );
+  checkEqual("MO lanes: an extremely narrow range widens further rather than showing two identical bounds", laneBoundDecimals([0.999, 1.001]), 3);
+  checkEqual("MO lanes: a wide PPG-like range keeps a single decimal", laneBoundDecimals([-80.5, 57.9]), 1);
+  check(
+    "MO lanes: a genuinely flat signal is allowed to show equal bounds rather than inventing spread",
+    laneBoundDecimals([1, 1]) === 4 && (1).toFixed(4) === (1).toFixed(4),
+  );
+  checkIncludes("MO lanes: the gutter actually uses the adaptive precision helper", ribbonSource, "laneBoundDecimals(domain)");
+  const timelineSource2 = readFileSync(join(REPO_SRC_ROOT, "components/operations/FaultRecoveryTimeline.tsx"), "utf8");
+  checkIncludes("MO: the fault/recovery timeline is a major plot, not a narrow summary", timelineSource2, "h-[340px]");
+
+  // --- §9 — the orbit encodes nothing quantitative ------------------------
+  const orbitSource2 = readFileSync(join(REPO_SRC_ROOT, "components/operations/InferenceIntegrityOrbit.tsx"), "utf8");
+  checkIncludes("MO orbit: every ring uses one fixed sweep, so arc length can never read as a quantity", orbitSource2, "SWEEP_DEGREES = 300");
+  checkNotIncludes("MO orbit: no ring sweep is computed from data", orbitSource2, "sweep * ");
+  checkIncludes("MO orbit: the centre states plainly that it is not model confidence", orbitSource2, "Not model confidence");
+  checkNotIncludes("MO orbit: the removed unreadable in-ring micro-labels do not return", orbitSource2, "fontSize={10}");
 }
 
 // ===========================================================================
