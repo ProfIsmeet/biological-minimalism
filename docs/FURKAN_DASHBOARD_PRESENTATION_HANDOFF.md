@@ -2,19 +2,33 @@
 
 ## 0. Purpose and authority
 
-This document is the single presentation handoff for Furkan and Furkan's AI.
-Its purpose is to turn the accepted Biological Minimalism dashboard into an
-accurate, visually coherent interactive presentation without requiring the
-presentation team to reconstruct the project from commit history or old chat
-summaries.
+This document is the single dashboard-context handoff for Furkan and Furkan's
+AI. Its purpose is to make the AI a reliable **dashboard visual adviser** while
+Furkan prepares the presentation himself. The AI is not being asked to create
+the presentation, choose a complete deck on Furkan's behalf, or autonomously
+produce PPT/PDF files.
+
+The intended interaction is conversational. Furkan may ask questions such as:
+
+- “This slide explains sensor architecture; which dashboard visual fits?”
+- “Should I use the radar or the human figure here?”
+- “Which screenshot shows the fault most clearly?”
+- “How should I crop this screenshot?”
+- “What caption can I safely put under this image?”
+- “Does this slide overclaim what the dashboard proves?”
+
+The AI must answer with the best dashboard route, exact committed screenshot
+path where available, recommended crop/callouts, a concise caption, and the
+scientific caveat relevant to that visual. It should help Furkan make good
+presentation decisions without taking control of the presentation project.
 
 Use this document to:
 
 1. check out the correct dashboard version;
 2. select or recapture screenshots;
 3. understand what each visualization means;
-4. construct the slide narrative;
-5. write captions and speaker notes;
+4. advise Furkan which dashboard visual fits a slide he describes;
+5. suggest accurate captions, crops, callouts, and speaker-note facts;
 6. avoid scientifically unsafe claims.
 
 Do not treat older presentation scripts as current authority when they
@@ -48,7 +62,14 @@ Future Stage 8–10 work will continue independently. The handoff branch is a
 stable presentation snapshot so Furkan's deck work can continue without being
 invalidated by ongoing frontend development.
 
-## 2. Checkout instructions for Furkan's AI
+## 2. Repository access for Furkan's AI
+
+Reading this file and the committed screenshot paths is sufficient for normal
+advisory questions. The AI should not clone, run, or modify the repository
+merely to answer which visual belongs on a slide.
+
+Only if Furkan explicitly asks for a fresh screenshot or code-level inspection
+should the AI use the following checkout procedure.
 
 After cloning the GitHub repository:
 
@@ -316,10 +337,13 @@ temporarily unusable” from being confused with “absent from the source.”
 - Fault and rebuilding intervals are marked.
 - HR remains absent until a new, fresh output is produced.
 
-## 9. Recommended twelve-slide presentation
+## 9. Reference slide-to-visual map
 
-Furkan's AI may adapt the visual style and wording, but it must preserve this
-narrative and the scientific constraints.
+This section is a lookup map, not an instruction to create a twelve-slide deck.
+Furkan controls the presentation structure. When he describes a slide, use the
+closest entry below to recommend a dashboard visual, screenshot, crop, caption,
+and caveat. Multiple entries may be combined only when doing so remains clear
+and scientifically honest.
 
 ### Slide 1 — Biological Minimalism
 
@@ -601,10 +625,11 @@ When recapturing:
 - Recovery slide: show rebuilding and recovered screenshots as a sequence,
   not as an unlabeled before/after collage.
 
-## 11. Optional interactive elements for the deck
+## 11. Optional interactive advice
 
-The presentation may be interactive, but animations must clarify state rather
-than decorate it.
+If Furkan asks how to make a particular slide interactive, recommend
+interactions that clarify state rather than decorate it. Do not autonomously
+redesign the whole presentation.
 
 Recommended interactions:
 
@@ -623,7 +648,7 @@ Avoid:
 - particles, excessive glow, or generic science-fiction decoration;
 - animations that continue under a reduced-motion presentation mode.
 
-## 12. Visual direction for Furkan's AI
+## 12. Visual-advice mindset for Furkan's AI
 
 The slide deck should inherit the dashboard’s accepted visual language:
 
@@ -735,36 +760,66 @@ available locally before the jury session.
 These limitations do not invalidate the committed screenshots or the accepted
 Mission Overview behavior, but they must not be silently reported as passed.
 
-## 18. Required output from Furkan's AI
+## 18. Required conversational behavior from Furkan's AI
 
-Furkan's AI should deliver:
+After reading this document, the AI must first give Furkan a short orientation
+only:
 
-1. An editable interactive presentation.
-2. A PDF export.
-3. A slide-by-slide source/evidence ledger.
-4. Speaker notes for every slide.
-5. A list of every screenshot used with repository-relative path.
-6. A list of any visual redrawing or annotation performed.
-7. Confirmation that no metric or percentage was invented.
-8. Confirmation that all scientific non-claims remain visible or spoken.
-9. A short presenter recovery appendix.
-10. A final 3–5 minute timed narration.
+1. the purpose of each dashboard route in one sentence;
+2. the six to ten most useful committed screenshots and what each shows;
+3. the most important scientific claims and non-claims;
+4. confirmation that it is ready to answer slide-specific visual questions.
 
-Before declaring the presentation complete, Furkan's AI must independently
-check every slide against Sections 5, 13, and 14 of this document.
+It must then stop and wait for Furkan's actual presentation question. It must
+not independently create a deck, outline every slide, generate a PPT/PDF, or
+begin a long presentation-production workflow unless Furkan later explicitly
+requests one of those actions.
+
+For a normal question such as “I have a slide about fault recovery; which
+dashboard image should I use?”, answer in this compact structure:
+
+1. **Best visual:** route/component name.
+2. **Existing screenshot:** exact repository-relative path, or say that a
+   fresh capture is needed.
+3. **Recommended crop:** what must remain visible and what may be removed.
+4. **Suggested caption:** one accurate sentence.
+5. **Why it fits:** one or two sentences tied to the slide’s communication
+   goal.
+6. **Scientific guard:** the main claim Furkan must avoid.
+7. **Alternative:** one secondary visual only when genuinely useful.
+
+If Furkan shares a draft slide, review the slide in context rather than giving
+generic dashboard advice. Check:
+
+- whether the chosen dashboard region supports the slide’s message;
+- whether a more legible committed screenshot exists;
+- whether the crop removes necessary provenance or disclaimers;
+- whether annotations obscure operational state;
+- whether the caption implies confidence, clinical validation, live astronaut
+  monitoring, population validation, or a trained Digital Twin;
+- whether a fault, rebuilding, and recovery image has been mislabeled;
+- whether the screenshot remains readable on a projector.
+
+Never overwhelm Furkan with the entire dashboard inventory when he asks about
+one slide. Give a decisive first recommendation and explain the tradeoff only
+as much as needed.
 
 ## 19. Final handoff summary
 
-The stable presentation snapshot is the GitHub branch
+The stable dashboard snapshot is the GitHub branch
 `codex/furkan-dashboard-presentation-handoff`, descended from accepted
 dashboard SHA `dc2039d53773ebfad763e0716f51876fb8185058`.
 
-Use the committed independent-audit screenshots for immediate slide creation.
-Use Mission Overview as the central product narrative. Treat System Brief,
-Experimental Research, Digital Twin Reference, and Live Signals as supporting
-routes. Preserve the distinction between selected architecture, observed
-channels, demonstrated inference, offline evidence, and future conceptual
-work.
+The AI should use the committed independent-audit screenshots as its visual
+catalogue and Mission Overview as the primary source of dashboard imagery.
+System Brief, Experimental Research, Digital Twin Reference, and Live Signals
+are supporting sources that should be recommended only when they better match
+Furkan's stated slide objective.
+
+The AI's job is to know the dashboard well enough that Furkan can ask a casual
+question — “kanka, bu sayfaya dashboardun neresinden görsel koyayım?” — and
+receive a precise, presentation-aware, scientifically safe answer immediately.
+It is an adviser, not the owner or autonomous producer of the presentation.
 
 The presentation succeeds when the audience understands both what the system
 demonstrates and where its evidence boundary ends.
