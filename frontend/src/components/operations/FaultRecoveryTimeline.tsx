@@ -130,7 +130,7 @@ export function FaultRecoveryTimeline() {
                 confirmed HR output, which can lag the clear itself by a real
                 warm-up interval (S6A-FIND-03). */}
             {model.recoveryMarkers.map((m) => (
-              <ReferenceLine key={m.id} x={m.timeSeconds} stroke="#63BFB7" strokeWidth={2} strokeDasharray="3 3" label={{ value: "Recovery", position: "top", fontSize: 11, fill: "#63BFB7" }} />
+              <ReferenceLine key={m.id} x={m.timeSeconds} stroke="#63BFB7" strokeWidth={2} strokeDasharray="3 3" label={{ value: "Recovery", position: "top", fontSize: 12, fill: "#63BFB7" }} />
             ))}
             <XAxis
               dataKey="timeSeconds"

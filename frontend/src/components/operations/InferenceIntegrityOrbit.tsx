@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { deriveIntegrityRings, type IntegrityRing } from "@/lib/monitoring/integrityRings";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 import { INTEGRITY_STATE_TREATMENT, resolveRingStroke, type StageKey } from "@/lib/visualization/operationalVisualTokens";
+import { fixedOrbitArcPath } from "@/lib/visualization/concentricOrbitGeometry";
 
 /**
  * Mission Overview §9 — the restored four-ring concentric Inference Integrity
@@ -29,10 +30,6 @@ import { INTEGRITY_STATE_TREATMENT, resolveRingStroke, type StageKey } from "@/l
 const DESKTOP = { size: 320, center: 160, radii: [138, 111, 86, 63], strokes: [13, 12, 11, 10] };
 const MOBILE = { size: 288, center: 144, radii: [124, 100, 77, 57], strokes: [11, 10, 9.5, 9] };
 
-/** Fixed for every ring in every state (§9.2) — never data-driven. */
-const SWEEP_DEGREES = 300;
-const GAP_DEGREES = 60;
-
 const STAGE_KEYS: StageKey[] = ["source", "ppg", "imu", "output"];
 
 const RING_LABEL: Record<StageKey, string> = {
@@ -41,23 +38,6 @@ const RING_LABEL: Record<StageKey, string> = {
   imu: "IMU input",
   output: "HR output",
 };
-
-/**
- * Arc path for a fixed sweep centred on the bottom gap. Deterministic
- * rounding keeps SSR and client markup byte-identical (hydration safety).
- */
-function arcPath(cx: number, cy: number, r: number): string {
-  const startAngle = 90 + GAP_DEGREES / 2;
-  const endAngle = startAngle + SWEEP_DEGREES;
-  const toXY = (deg: number) => {
-    const rad = (deg * Math.PI) / 180;
-    return { x: Math.round((cx + r * Math.cos(rad)) * 100) / 100, y: Math.round((cy + r * Math.sin(rad)) * 100) / 100 };
-  };
-  const start = toXY(startAngle);
-  const end = toXY(endAngle);
-  const largeArc = SWEEP_DEGREES > 180 ? 1 : 0;
-  return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
-}
 
 function OrbitSvg({
   rings,
@@ -76,7 +56,7 @@ function OrbitSvg({
         const strokeWidth = geometry.strokes[i]!;
         const treatment = INTEGRITY_STATE_TREATMENT[ring.state];
         const color = resolveRingStroke(stage, ring.state);
-        const d = arcPath(geometry.center, geometry.center, r);
+        const d = fixedOrbitArcPath(geometry.center, geometry.center, r);
         return (
           <g key={ring.key}>
             {/* Subtle full track behind every arc (§9.2) — 3px, low opacity.
@@ -195,7 +175,7 @@ export function InferenceIntegrityOrbit() {
                   <span className="mt-1 text-[13px] leading-none text-ink-secondary">bpm</span>
                 </>
               ) : (
-                <span className="text-[20px] font-semibold leading-tight text-ink-disabled">Unavailable</span>
+                <span className="text-[16px] font-semibold leading-none tracking-tight text-ink-disabled">Unavailable</span>
               )}
             </div>
           </div>

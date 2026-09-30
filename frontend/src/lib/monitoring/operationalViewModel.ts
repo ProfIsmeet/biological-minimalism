@@ -23,7 +23,7 @@ import { deriveFaultSummaryLabel, derivePredictionAvailability, inferenceStatusL
 import { deriveModalityObservation, type ModalityObservation } from "@/lib/monitoring/modalityObservation";
 import { deriveModalityNodeState, nodeStateLabel, type ModalityNodeState, type OperationalStateWord } from "@/lib/monitoring/modalityNodeState";
 import { resolvePlotSeries, type PlotSeries } from "@/lib/monitoring/plotSeries";
-import { deriveReplaySessionState, type ReplaySessionState } from "@/lib/monitoring/runtimeState";
+import { deriveReplaySessionState, resolveAuthoritativePlaybackState, type ReplaySessionState } from "@/lib/monitoring/runtimeState";
 import { deriveConnectionLabel, deriveSourceLabel, deriveSourceType, type SourceType } from "@/lib/monitoring/sourceState";
 import { applyFaultOverride, applyTelemetryGate, deriveTelemetryAvailability, resolveReplayStateLabel, type TelemetryAvailability } from "@/lib/monitoring/telemetryAvailability";
 import { useConfirmedSnapshot } from "@/lib/monitoring/useConfirmedSnapshot";
@@ -42,6 +42,13 @@ export interface OperationalModalityState {
   stateLabel: OperationalStateWord;
   /** Real plottable samples for this modality/source, or null — never fabricated. */
   plot: PlotSeries | null;
+  /**
+   * Whether the authoritative source contract provides this channel. This is
+   * deliberately separate from `nodeState`: a supplied channel may be
+   * temporarily faulted or warming up without becoming absent from the
+   * source. Null means the source itself is not currently authoritative.
+   */
+  providedBySource: boolean | null;
 }
 
 export interface OperationalViewModel {
@@ -171,14 +178,22 @@ export function useOperationalViewModel(): OperationalViewModel {
   const rawReplaySessionState = deriveReplaySessionState({
     datasetConfigured,
     isReplaySource: isReplay,
-    playbackState: current?.source.playback_state ?? (statusFallbackAllowed ? status?.playback_state : undefined),
+    // REST owns replay controls. In particular a successful Pause produces no
+    // subsequent replay frame, so preferring the last WebSocket snapshot here
+    // leaves the UI stuck on "Playing" forever. The telemetry gate below still
+    // prevents this retained status from presenting as current while the
+    // source is disconnected/erroring/unconfirmed.
+    playbackState: resolveAuthoritativePlaybackState({
+      restPlaybackState: status?.playback_state,
+      snapshotPlaybackState: current?.source.playback_state,
+    }),
     selectedSubjectId: subjectId,
     pendingAction: pending,
     requestError,
   });
   const replayPositionSeconds = current?.source.replay_position_seconds ?? (statusFallbackAllowed ? status?.replay_position_seconds : null) ?? null;
   const replayDurationSeconds = current?.source.duration_seconds ?? (statusFallbackAllowed ? status?.duration_seconds : null) ?? null;
-  const playbackSpeed = (statusFallbackAllowed ? status?.playback_speed : null) ?? current?.source.playback_speed ?? null;
+  const playbackSpeed = status?.playback_speed ?? current?.source.playback_speed ?? null;
 
   // Prompt 3A.1 §4.3/§5 — "Simulated-fault status must not be presented as
   // currently confirmed" while telemetry is gated; dropping the `status`
@@ -207,6 +222,11 @@ export function useOperationalViewModel(): OperationalViewModel {
     const observation =
       nodeState === "fault" ? applyFaultOverride(rawObservation, entry.modality) : applyTelemetryGate(rawObservation, telemetryAvailability);
     const plot = nodeState === "fault" ? null : resolvePlotSeries(entry.modality, isReplay, rawObservation, syntheticPpgWaveform);
+    const providedBySource = telemetryActive
+      ? isReplay
+        ? rawObservation.channelName !== null && Boolean(status?.channels.some((channel) => channel.name === rawObservation.channelName))
+        : rawObservation.state === "synthetic_observed"
+      : null;
     return {
       modality: entry.modality,
       region: entry.region,
@@ -214,6 +234,7 @@ export function useOperationalViewModel(): OperationalViewModel {
       nodeState,
       stateLabel: nodeStateLabel(nodeState),
       plot,
+      providedBySource,
     };
   });
   const confirmedModalityCount = modalities.filter((entry) => entry.nodeState === "confirmed").length;

@@ -22,7 +22,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { deriveTransportState, deriveReplaySessionState, replaySessionStateLabel } from "../src/lib/monitoring/runtimeState";
+import { deriveTransportState, deriveReplaySessionState, replaySessionStateLabel, resolveAuthoritativePlaybackState } from "../src/lib/monitoring/runtimeState";
 import { applyFaultOverride, applyTelemetryGate, deriveTelemetryAvailability, resolveReplayStateLabel, telemetryAvailabilityLabel } from "../src/lib/monitoring/telemetryAvailability";
 import { useMissionStore } from "../src/store/missionStore";
 import { computeOrthographicFit, orthoCameraPosition } from "../src/components/visualization/human/humanLayout";
@@ -78,6 +78,7 @@ import {
   STAGE_IDENTITY_COLOR,
 } from "../src/lib/visualization/operationalVisualTokens";
 import { deriveCoverageRadar } from "../src/lib/visualization/coverageRadar";
+import { FIXED_ORBIT_SWEEP_DEGREES, fixedOrbitArcPath } from "../src/lib/visualization/concentricOrbitGeometry";
 import { deriveFaultRecoveryTimeline } from "../src/lib/monitoring/faultRecoveryTimeline";
 import type { OperationalEvent } from "../src/lib/monitoring/operationalEvents";
 import { seriesMeanSd, PPG_DALIA_CAPACITY_CONTROL, PTT_SUBJECT_HETEROGENEITY, SLEEP_EDF_PRIMARY_ABC } from "../src/data/stage6/sensitivitySmallMultiples";
@@ -428,6 +429,16 @@ checkEqual(
 );
 checkEqual("replay state label: playing", replaySessionStateLabel("playing"), "Playing");
 checkEqual("replay state label: dataset_unavailable", replaySessionStateLabel("dataset_unavailable"), "Dataset unavailable");
+checkEqual(
+  "replay control truth: authoritative REST pause outranks the last playing WebSocket frame",
+  resolveAuthoritativePlaybackState({ restPlaybackState: "paused", snapshotPlaybackState: "playing" }),
+  "paused",
+);
+checkEqual(
+  "replay control truth: current frame is used while REST has no playback state",
+  resolveAuthoritativePlaybackState({ restPlaybackState: null, snapshotPlaybackState: "playing" }),
+  "playing",
+);
 
 // ===========================================================================
 // Prediction and inference
@@ -4820,11 +4831,11 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 
   // --- §11.2 — coverage radar is strictly binary and fails closed --------
   const activeStates = [
-    { modality: "PPG" as const, nodeState: "confirmed" as const, unavailableReason: null },
-    { modality: "IMU" as const, nodeState: "confirmed" as const, unavailableReason: null },
-    { modality: "ECG" as const, nodeState: "confirmed" as const, unavailableReason: null },
-    { modality: "EEG" as const, nodeState: "unavailable" as const, unavailableReason: "Not provided by this replay" },
-    { modality: "EOG" as const, nodeState: "unavailable" as const, unavailableReason: "Not provided by this replay" },
+    { modality: "PPG" as const, nodeState: "confirmed" as const, unavailableReason: null, providedBySource: true },
+    { modality: "IMU" as const, nodeState: "confirmed" as const, unavailableReason: null, providedBySource: true },
+    { modality: "ECG" as const, nodeState: "confirmed" as const, unavailableReason: null, providedBySource: true },
+    { modality: "EEG" as const, nodeState: "unavailable" as const, unavailableReason: "Not provided by this replay", providedBySource: false },
+    { modality: "EOG" as const, nodeState: "unavailable" as const, unavailableReason: "Not provided by this replay", providedBySource: false },
   ];
   const activeRadar = deriveCoverageRadar({ telemetry: "active", modalityStates: activeStates, isReplay: true });
   check(
@@ -4832,16 +4843,16 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     activeRadar.axes.every((a) => a.selected === 0 || a.selected === 1),
   );
   check(
-    "MO radar: every observed value is exactly 0, 1 or withheld — never a fraction",
-    activeRadar.axes.every((a) => a.observed === null || a.observed === 0 || a.observed === 1),
+    "MO radar: every source-provision value is exactly 0, 1 or withheld — never a fraction",
+    activeRadar.axes.every((a) => a.provided === null || a.provided === 0 || a.provided === 1),
   );
   checkEqual("MO radar: EEG remains a member of the final architecture even when the replay carries no EEG channel", activeRadar.axes.find((a) => a.modality === "EEG")?.selected, 1);
-  checkEqual("MO radar: EEG is NOT observed in an S14-style replay that carries no EEG channel", activeRadar.axes.find((a) => a.modality === "EEG")?.observed, 0);
-  checkEqual("MO radar: EOG is likewise architecture-member but unobserved", activeRadar.axes.find((a) => a.modality === "EOG")?.observed, 0);
-  checkEqual("MO radar: a confirmed PPG channel is observed", activeRadar.axes.find((a) => a.modality === "PPG")?.observed, 1);
+  checkEqual("MO radar: EEG is NOT provided by an S14-style replay", activeRadar.axes.find((a) => a.modality === "EEG")?.provided, 0);
+  checkEqual("MO radar: EOG is likewise architecture-member but not source-provided", activeRadar.axes.find((a) => a.modality === "EOG")?.provided, 0);
+  checkEqual("MO radar: the confirmed replay source provides PPG", activeRadar.axes.find((a) => a.modality === "PPG")?.provided, 1);
   checkIncludes(
     "MO radar: an unobserved EEG carries its exact absence reason, never a bare zero",
-    activeRadar.axes.find((a) => a.modality === "EEG")?.observationReason ?? "",
+    activeRadar.axes.find((a) => a.modality === "EEG")?.provisionReason ?? "",
     "Not provided by this replay",
   );
 
@@ -4850,12 +4861,20 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     modalityStates: activeStates.map((s) => (s.modality === "PPG" ? { ...s, nodeState: "fault" as const } : s)),
     isReplay: true,
   });
-  checkEqual("MO radar: a faulted channel is not counted as observed", faultedRadar.axes.find((a) => a.modality === "PPG")?.observed, 0);
+  checkEqual("MO radar: a faulted-but-provided channel remains source-provided, never misreported as absent", faultedRadar.axes.find((a) => a.modality === "PPG")?.provided, 1);
   checkIncludes(
     "MO radar: a faulted channel says so explicitly rather than collapsing into generic absence",
-    faultedRadar.axes.find((a) => a.modality === "PPG")?.observationReason ?? "",
-    "Simulated fault",
+    faultedRadar.axes.find((a) => a.modality === "PPG")?.provisionReason ?? "",
+    "simulated fault",
   );
+
+  const warmupRadar = deriveCoverageRadar({
+    telemetry: "active",
+    modalityStates: activeStates.map((s) => (s.modality === "IMU" ? { ...s, nodeState: "warmup" as const } : s)),
+    isReplay: true,
+  });
+  checkEqual("MO radar: a warming-up channel remains source-provided", warmupRadar.axes.find((a) => a.modality === "IMU")?.provided, 1);
+  checkIncludes("MO radar: warming-up usability is exact table text, not a fractional mark", warmupRadar.axes.find((a) => a.modality === "IMU")?.provisionReason ?? "", "awaiting current-window samples");
 
   const awaitingRadar = deriveCoverageRadar({ telemetry: "awaiting_confirmation", modalityStates: activeStates, isReplay: true });
   checkEqual(
@@ -4863,8 +4882,10 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     awaitingRadar.observationSeriesAvailable,
     false,
   );
-  check("MO radar: a withheld observation series exposes every axis as null, not zero", awaitingRadar.axes.every((a) => a.observed === null));
+  check("MO radar: a withheld source-coverage series exposes every axis as null, not zero", awaitingRadar.axes.every((a) => a.provided === null));
   checkIncludes("MO radar: the withheld reason names the awaiting state", awaitingRadar.withheldReason ?? "", "AWAITING CONFIRMED SOURCE");
+  const startupRadar = deriveCoverageRadar({ telemetry: "disconnected", modalityStates: activeStates, isReplay: false, initialSourceEstablishment: true });
+  checkEqual("MO radar: ordinary initial establishment is presented as awaiting, not as a disconnect", startupRadar.withheldReason, "AWAITING CONFIRMED SOURCE");
   check(
     "MO radar: static architecture membership stays available even while live observation is withheld",
     awaitingRadar.axes.every((a) => a.selected === 0 || a.selected === 1),
@@ -4915,7 +4936,11 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 
   // --- §9 — the orbit encodes nothing quantitative ------------------------
   const orbitSource2 = readFileSync(join(REPO_SRC_ROOT, "components/operations/InferenceIntegrityOrbit.tsx"), "utf8");
-  checkIncludes("MO orbit: every ring uses one fixed sweep, so arc length can never read as a quantity", orbitSource2, "SWEEP_DEGREES = 300");
+  checkIncludes("MO orbit: rendered rings use the pure fixed-sweep helper", orbitSource2, "fixedOrbitArcPath(geometry.center, geometry.center, r)");
+  checkEqual("MO orbit: the fixed categorical sweep is exactly 300 degrees", FIXED_ORBIT_SWEEP_DEGREES, 300);
+  const orbitPaths = [138, 111, 86, 63].map((radius) => fixedOrbitArcPath(160, 160, radius));
+  check("MO orbit: every desktop ring path uses the same large-arc and sweep flags", orbitPaths.every((path) => / A [\d.]+ [\d.]+ 0 1 1 /.test(path)));
+  check("MO orbit: every desktop ring path has exactly one arc command and no data-dependent segments", orbitPaths.every((path) => (path.match(/ A /g) ?? []).length === 1));
   checkNotIncludes("MO orbit: no ring sweep is computed from data", orbitSource2, "sweep * ");
   checkIncludes("MO orbit: the centre states plainly that it is not model confidence", orbitSource2, "Not model confidence");
   checkNotIncludes("MO orbit: the removed unreadable in-ring micro-labels do not return", orbitSource2, "fontSize={10}");

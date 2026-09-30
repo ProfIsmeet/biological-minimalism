@@ -9,9 +9,10 @@ import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
  *
  * STRICT SEMANTICS (see lib/visualization/coverageRadar.ts for the enforced
  * contract): two BINARY series on a fixed 0–1 scale. Series A is static
- * CORE_PLUS_CONTEXT membership; series B is whether that channel is
- * genuinely confirmed in the current source right now. This encodes
- * coverage and nothing else — not performance, quality, reliability,
+ * CORE_PLUS_CONTEXT membership; series B is whether the authoritative
+ * current-source contract provides that channel. Current usability remains
+ * exact categorical table text, so a fault cannot be mistaken for source
+ * absence. This encodes coverage and nothing else — not performance, quality, reliability,
  * sensitivity, accuracy or confidence — and no percentage is ever printed.
  *
  * Fail-closed: when the source is unconfirmed or erroring, the observation
@@ -31,7 +32,7 @@ function RadarSvg({ size, model }: { size: number; model: ReturnType<typeof deri
 
   const selectedPoints = radarPolygonPoints({ cx, cy, radius, values: axes.map((a) => a.selected) });
   const observedPoints = model.observationSeriesAvailable
-    ? radarPolygonPoints({ cx, cy, radius, values: axes.map((a) => a.observed ?? 0) })
+    ? radarPolygonPoints({ cx, cy, radius, values: axes.map((a) => a.provided ?? 0) })
     : null;
 
   return (
@@ -60,13 +61,13 @@ function RadarSvg({ size, model }: { size: number; model: ReturnType<typeof deri
         return <circle key={`sel-${axis.modality}`} cx={p.x} cy={p.y} r={5} fill={PLOT_COLOR.architectureSeries} />;
       })}
 
-      {/* Series B — live channel observation (cyan). Withheld entirely when
+      {/* Series B — current-source channel provision (cyan). Withheld entirely when
           the source cannot currently be spoken for. */}
       {observedPoints ? (
         <>
           <polygon points={observedPoints} fill={PLOT_COLOR.observationSeries} fillOpacity={0.12} stroke={PLOT_COLOR.observationSeries} strokeWidth={2.5} />
           {axes.map((axis, index) => {
-            if (axis.observed !== 1) return null;
+            if (axis.provided !== 1) return null;
             const p = radarPoint({ cx, cy, radius, index, count, value: 1 });
             return <circle key={`obs-${axis.modality}`} cx={p.x} cy={p.y} r={5} fill={PLOT_COLOR.observationSeries} />;
           })}
@@ -94,12 +95,14 @@ export function ArchitectureCoverageRadar() {
       modality: m.modality,
       nodeState: m.nodeState,
       unavailableReason: m.observation.unavailableReason,
+      providedBySource: m.providedBySource,
     })),
     isReplay: view.isReplay,
+    initialSourceEstablishment: view.sourceStateStatus === "loading" && view.confirmedTimestampSeconds === null,
   });
 
   const accessibleSummary = model.axes
-    .map((a) => `${a.modality}: architecture ${a.selected === 1 ? "member" : "not a member"}, ${a.observed === null ? "observation withheld" : a.observed === 1 ? "observed in current source" : "not observed in current source"}`)
+    .map((a) => `${a.modality}: architecture ${a.selected === 1 ? "member" : "not a member"}, ${a.provided === null ? "source coverage withheld" : a.provided === 1 ? "provided by current source" : "not provided by current source"}`)
     .join(". ");
 
   return (
@@ -115,8 +118,8 @@ export function ArchitectureCoverageRadar() {
         <span className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Binary 0–1</span>
       </div>
       <p id="coverage-radar-desc" className="sr-only">
-        Binary coverage radar on a fixed zero-to-one scale. {accessibleSummary}. This encodes channel coverage only, never model
-        performance.
+        Binary coverage radar on a fixed zero-to-one scale. {accessibleSummary}. Current usability is stated in the exact table and
+        never encoded as a fractional value. This encodes channel coverage only, never model performance.
       </p>
 
       <div className="relative">
@@ -144,7 +147,7 @@ export function ArchitectureCoverageRadar() {
           <svg width={20} height={10} aria-hidden="true" focusable="false" className="shrink-0">
             <line x1={1} y1={5} x2={19} y2={5} stroke={PLOT_COLOR.observationSeries} strokeWidth={3} />
           </svg>
-          <span className="text-[12px] text-ink-secondary">Current-source channel observation</span>
+          <span className="text-[12px] text-ink-secondary">Channel provided by confirmed source</span>
         </li>
       </ul>
 
@@ -156,7 +159,7 @@ export function ArchitectureCoverageRadar() {
             <tr>
               <th scope="col" className="py-1.5 pr-2 font-semibold">Modality</th>
               <th scope="col" className="py-1.5 pr-2 font-semibold">Arch.</th>
-              <th scope="col" className="py-1.5 font-semibold">Current source</th>
+              <th scope="col" className="py-1.5 font-semibold">Source provision · current state</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-jury-border-subtle">
@@ -165,7 +168,7 @@ export function ArchitectureCoverageRadar() {
                 <td className="py-1.5 pr-2 font-semibold text-ink-primary">{axis.modality}</td>
                 <td className="py-1.5 pr-2 tabular-nums text-ink-secondary">{axis.selected}</td>
                 <td className="py-1.5 text-ink-secondary">
-                  {axis.observed === null ? "Withheld" : axis.observed} · {axis.observationReason}
+                  {axis.provided === null ? "Withheld" : axis.provided} · {axis.provisionReason}
                 </td>
               </tr>
             ))}

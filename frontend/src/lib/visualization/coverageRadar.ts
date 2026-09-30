@@ -7,16 +7,16 @@
  * - Series A "Selected final architecture": STATIC membership in
  *   CORE_PLUS_CONTEXT. Value is exactly 0 or 1. Never live, never derived
  *   from the current source.
- * - Series B "Observed in current confirmed source": LIVE. Value is exactly
- *   0 or 1, and is 1 ONLY when that channel is genuinely present AND
- *   confirmed right now.
+ * - Series B "Provided by current confirmed source": LIVE SOURCE-CONTRACT
+ *   membership. Value is exactly 0 or 1. Operational usability remains
+ *   categorical text and never changes this binary membership value.
  * - Scale: exactly [0, 1]. There is no percentage, quality, performance,
  *   reliability, accuracy, sensitivity or confidence anywhere in this
  *   module, and no third continuous series may be added to these axes.
  *
  * The critical fail-closed rule (§11.2): when the source is not yet
- * confirmed, or is erroring, the observation series is WITHHELD entirely
- * (`observed: null`) rather than drawn as an all-zero polygon — an all-zero
+ * confirmed, or is erroring, the source-provision series is WITHHELD entirely
+ * (`provided: null`) rather than drawn as an all-zero polygon — an all-zero
  * polygon would read as "we looked and found nothing", which is a different
  * and false claim from "we cannot yet say".
  *
@@ -37,13 +37,13 @@ export interface CoverageAxis {
   /** Static architecture membership — 0 or 1, never live. */
   selected: BinaryCoverage;
   /**
-   * Live channel observation — 0 or 1, or null when the observation series
+   * Confirmed-source channel provision — 0 or 1, or null when the series
    * as a whole is withheld (unconfirmed/erroring source). Never a partial
    * or fractional value.
    */
-  observed: BinaryCoverage | null;
-  /** Exact operator-facing reason, for the semantic table beside the radar. */
-  observationReason: string;
+  provided: BinaryCoverage | null;
+  /** Exact source-membership and current-usability reason for the table. */
+  provisionReason: string;
 }
 
 export interface CoverageRadarModel {
@@ -56,16 +56,23 @@ export interface CoverageRadarModel {
 
 export function deriveCoverageRadar(params: {
   telemetry: TelemetryAvailability;
-  modalityStates: { modality: FinalModality; nodeState: ModalityNodeState; unavailableReason: string | null }[];
+  modalityStates: {
+    modality: FinalModality;
+    nodeState: ModalityNodeState;
+    unavailableReason: string | null;
+    providedBySource: boolean | null;
+  }[];
   isReplay: boolean;
+  /** True only before this browser session has ever confirmed a source. */
+  initialSourceEstablishment?: boolean;
 }): CoverageRadarModel {
-  const { telemetry, modalityStates, isReplay } = params;
+  const { telemetry, modalityStates, isReplay, initialSourceEstablishment = false } = params;
 
   // Fail closed: never draw an all-zero observation polygon for a source we
   // simply cannot speak for yet.
   let observationSeriesAvailable = true;
   let withheldReason: string | null = null;
-  if (telemetry === "awaiting_confirmation") {
+  if (initialSourceEstablishment || telemetry === "awaiting_confirmation") {
     observationSeriesAvailable = false;
     withheldReason = "AWAITING CONFIRMED SOURCE";
   } else if (telemetry === "source_error") {
@@ -81,27 +88,25 @@ export function deriveCoverageRadar(params: {
     const live = modalityStates.find((m) => m.modality === entry.modality);
 
     if (!observationSeriesAvailable) {
-      return { modality: entry.modality, selected, observed: null, observationReason: withheldReason ?? "Withheld" };
+      return { modality: entry.modality, selected, provided: null, provisionReason: withheldReason ?? "Withheld" };
     }
 
-    // "Confirmed" is the only state that counts as genuinely observed. A
-    // faulted, warming-up, or absent channel is 0 — and each carries its own
-    // exact reason so the semantic table never collapses them together.
     const nodeState = live?.nodeState ?? "unavailable";
-    if (nodeState === "confirmed") {
-      return { modality: entry.modality, selected, observed: 1, observationReason: "Confirmed in current source" };
-    }
-    if (nodeState === "fault") {
-      return { modality: entry.modality, selected, observed: 0, observationReason: "Simulated fault — channel withheld" };
-    }
-    if (nodeState === "warmup") {
-      return { modality: entry.modality, selected, observed: 0, observationReason: "Awaiting current-window samples" };
+    if (live?.providedBySource === true) {
+      const usability = nodeState === "confirmed"
+        ? "currently confirmed"
+        : nodeState === "fault"
+          ? "simulated fault; current samples withheld"
+          : nodeState === "warmup"
+            ? "provided; awaiting current-window samples"
+            : "provided; currently unavailable";
+      return { modality: entry.modality, selected, provided: 1, provisionReason: `Provided by source · ${usability}` };
     }
     return {
       modality: entry.modality,
       selected,
-      observed: 0,
-      observationReason: live?.unavailableReason ?? (isReplay ? "Not provided by this replay" : "Not reported by current telemetry"),
+      provided: 0,
+      provisionReason: live?.unavailableReason ?? (isReplay ? "Not provided by this replay" : "Not provided by current source"),
     };
   });
 

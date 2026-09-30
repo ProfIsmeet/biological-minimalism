@@ -65,18 +65,19 @@ export function MissionOverviewExperience() {
             trend 9–12, all three visually aligned at one height so the human
             model no longer consumes nearly all visual attention while the
             graphs stay tiny.
-            Tablet (768–1365px): orbit (4) + HR trend (8) on row 1, human
-            stage full width on row 2 — the analytical pair reaches the first
-            viewport before the stage.
+            Compact desktop (1180–1365px): orbit (4) + HR trend (8) on row 1,
+            human stage full width on row 2. Narrower tablet widths stack the
+            analytical panels so the fixed-size orbit cannot intrude into the
+            neighboring chart.
             Mobile: single column in the §8.4 order (orbit, trend, stage). */}
-        <div className="grid grid-cols-1 gap-4 min-[768px]:grid-cols-12">
-          <div className="min-[768px]:col-span-4 min-[1366px]:order-2 min-[1366px]:col-span-3">
+        <div className="grid grid-cols-1 gap-4 min-[1180px]:grid-cols-12">
+          <div className="min-[1180px]:col-span-4 min-[1366px]:order-2 min-[1366px]:col-span-3">
             <InferenceIntegrityOrbit />
           </div>
-          <div className="min-[768px]:col-span-8 min-[1366px]:order-3 min-[1366px]:col-span-4">
+          <div className="min-[1180px]:col-span-8 min-[1366px]:order-3 min-[1366px]:col-span-4">
             <RecentHrEstimateTrend />
           </div>
-          <div className="min-h-0 min-[768px]:col-span-12 min-[1366px]:order-1 min-[1366px]:col-span-5">
+          <div className="min-h-0 min-[1180px]:col-span-12 min-[1366px]:order-1 min-[1366px]:col-span-5">
             <OperationalPhysiologyStage selected={selected} onSelectModality={setSelected} />
           </div>
         </div>

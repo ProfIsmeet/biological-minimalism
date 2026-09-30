@@ -32,6 +32,19 @@ export type ReplaySessionState =
   | "completed"
   | "error";
 
+/**
+ * REST is authoritative for control mutations. A paused replay emits no new
+ * frame, so the successful REST state must outrank the last (playing)
+ * WebSocket snapshot. The telemetry availability gate remains responsible
+ * for whether this state may be presented as current.
+ */
+export function resolveAuthoritativePlaybackState(params: {
+  restPlaybackState: ReplayPlaybackState | null | undefined;
+  snapshotPlaybackState: ReplayPlaybackState | null | undefined;
+}): ReplayPlaybackState | null | undefined {
+  return params.restPlaybackState ?? params.snapshotPlaybackState;
+}
+
 export function deriveReplaySessionState(params: {
   /** null = `/data-source/state` has not resolved yet. */
   datasetConfigured: boolean | null;
