@@ -91,7 +91,8 @@
         "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/19-ring-fault.png",
         "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/20-radar-ppg-fault.png",
         "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/21-hr-fault-gap.png",
-        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/26-mobile-fault-state.png"
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/26-mobile-fault-state.png",
+        "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/33-imu-fault-first-viewport.png"
       ]
     },
     "state-rebuilding": {

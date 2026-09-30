@@ -12,4 +12,4 @@
 | Essential text | Pass after fix | Recovery label raised to 12 px; chart/legend/status text meets the intended minimum. |
 | Genuine 200% page zoom | `BLOCKED_EXTERNAL` | Actual browser shortcut attempts did not change reported CSS viewport or expose verifiable zoom state; forbidden substitutes were not used. |
 
-All 32 evidence images were opened and visually inspected. An early mis-scrolled responsive capture was rejected and replaced before manifest hashing.
+All 33 evidence images were opened and visually inspected. An early mis-scrolled responsive capture was rejected and replaced before manifest hashing.

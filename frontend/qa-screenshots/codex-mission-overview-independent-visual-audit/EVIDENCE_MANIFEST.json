@@ -486,6 +486,21 @@
       "expectedFacts": "A failed authoritative source request withholds the entire source-provision polygon and gives the exact reason.",
       "visuallyInspected": true,
       "adjudication": "AUDIT_ONLY"
+    },
+    {
+      "path": "frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/33-imu-fault-first-viewport.png",
+      "sha256": "e039386899c17b6ab2b1a6805cfdd6797aab077a28428f3a7c90196ca0c23a80",
+      "pixelDimensions": {
+        "width": 1440,
+        "height": 900
+      },
+      "viewport": "1440x900",
+      "route": "/mission-overview",
+      "state": "fault",
+      "source": "real PPG-DaLiA S14 recorded replay with validated PPG+IMU HR checkpoint",
+      "expectedFacts": "Real S14 replay shows the labeled simulated IMU dropout, withheld HR, categorical fault ring, and no stale value.",
+      "visuallyInspected": true,
+      "adjudication": "AUDIT_ONLY"
     }
   ]
 }

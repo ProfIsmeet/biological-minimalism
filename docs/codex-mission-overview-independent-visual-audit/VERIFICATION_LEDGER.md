@@ -10,7 +10,7 @@
 | Backend pytest | `351 passed, 4 skipped` | `351 passed, 4 skipped, 2 sandbox cache warnings in 13.39s` |
 | Environment verifier | `PASS=19 WARN=7 FAIL=0` | `PASS=20 WARN=6 FAIL=0`; Docker/default-path warnings are environmental |
 | Release evidence | Exit 2: `PRESENT=21 MISSING=1 AMBIGUOUS=2` | Exit 0: `PRESENT=23 MISSING=1 optional AMBIGUOUS=0` |
-| Manifest hash/pixels | N/A | `32/32 passed` |
+| Manifest hash/pixels | N/A | `33/33 passed` |
 | `git diff --check` | Pass | Pass |
 
 The final production build compiled, type-checked, generated all 14 static pages, and completed trace collection. The final standalone TypeScript command returned zero after the build. The two pytest warnings concern inability to write optional `.pytest_cache` in the managed worktree; no test failed.

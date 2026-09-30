@@ -33,7 +33,7 @@ The source implementation achieved the intended four-ring categorical display, l
 
 The recomposition is materially stronger than Stage 6: the orbit and HR plot are immediate on desktop, the human model remains useful without dominating, and the lower page alternates visual grammars instead of becoming a uniform card wall. Cyan/lime/blue/amber/coral/gray are controlled by role. Tablet widths now stack the fixed-size orbit and HR chart below 1180 px, removing the observed plot intrusion. All required viewports passed with no measured horizontal overflow.
 
-Evidence was independently captured at 1440×900, 1366×768, 1280×800, 1024×768, 768×1024, and 390×844. All 32 PNGs were visually inspected; manifest hashes and pixel dimensions verify 32/32.
+Evidence was independently captured at 1440×900, 1366×768, 1280×800, 1024×768, 768×1024, and 390×844. All 33 PNGs were visually inspected; manifest hashes and pixel dimensions verify 33/33.
 
 ## Accessibility and motion
 
@@ -74,7 +74,7 @@ Evidence/closure changes:
 - `docs/JURY_RELEASE_EVIDENCE_POLICY.json`
 - The nine files in `docs/codex-mission-overview-independent-visual-audit/`
 - `frontend/qa-screenshots/codex-mission-overview-independent-visual-audit/EVIDENCE_MANIFEST.json`
-- PNGs `01-1440-nominal-first-viewport.png` through `32-radar-source-error.png`, exactly as enumerated by that manifest.
+- PNGs `01-1440-nominal-first-viewport.png` through `33-imu-fault-first-viewport.png`, exactly as enumerated by that manifest.
 
 No dependency cache, build output, dataset, checkpoint, or private absolute path is included.
 

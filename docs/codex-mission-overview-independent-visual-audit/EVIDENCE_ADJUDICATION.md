@@ -1,9 +1,9 @@
 # Evidence Adjudication
 
-The audit package contains 32 fresh Codex PNGs and one JSON manifest. No Ismet screenshot was reused as independent proof.
+The audit package contains 33 fresh Codex PNGs and one JSON manifest. No Ismet screenshot was reused as independent proof.
 
 - Every PNG was opened and visually inspected.
-- SHA-256 and PNG width/height were recomputed from bytes: 32/32 matched.
+- SHA-256 and PNG width/height were recomputed from bytes: 33/33 matched.
 - Nominal, fault, rebuilding, recovered, startup, awaiting-source, source-error, keyboard, reduced-motion, desktop, tablet, and mobile states are represented.
 - The real fault/recovery timeline was produced in one continuing browser session and records a 9.4-second PPG-fault interval followed by a new confirmed HR.
 - Canonical release evidence was not replaced. Source-branch and Codex state images are registered as `audit_only` in the fail-closed policy.
