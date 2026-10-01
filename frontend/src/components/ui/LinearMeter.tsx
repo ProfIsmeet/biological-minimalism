@@ -31,7 +31,7 @@ export function LinearMeter({ label, value, max = 100, level = "nominal", valueL
         <span className="tabular-nums-mono font-medium text-ink-primary">{valueLabel ?? `${clamped.toFixed(0)}`}</span>
       </div>
       <div
-        className="h-1.5 w-full overflow-hidden rounded-full bg-white/5"
+        className="h-1.5 w-full overflow-hidden rounded-full bg-surface-2"
         role="progressbar"
         aria-valuenow={clamped}
         aria-valuemin={0}

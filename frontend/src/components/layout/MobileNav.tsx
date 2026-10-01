@@ -86,7 +86,7 @@ export function MobileNav() {
       {open && typeof document !== "undefined"
         ? createPortal(
             <div ref={overlayRef} className="fixed inset-0 z-50 flex items-end md:hidden">
-              <button type="button" aria-label="Close menu" onClick={close} className="absolute inset-0 bg-black/50" />
+              <button type="button" aria-label="Close menu" onClick={close} className="absolute inset-0 bg-surface-2" />
               <div
                 ref={sheetRef}
                 id="mobile-more-sheet"

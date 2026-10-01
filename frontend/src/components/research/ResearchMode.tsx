@@ -41,17 +41,17 @@ const RESULT_PRESENTATION: Record<
 > = {
   positive_marginal_value: {
     label: "Positive marginal value",
-    className: "border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
+    className: "border-jury-success/25 bg-jury-success/10 text-jury-success",
     icon: CheckCircle2,
   },
   negative_marginal_result: {
     label: "Negative marginal result",
-    className: "border-amber-400/25 bg-amber-400/10 text-amber-300",
+    className: "border-jury-warning/25 bg-jury-warning/10 text-jury-warning",
     icon: CircleSlash2,
   },
   robustness_characterization: {
     label: "Robustness characterization",
-    className: "border-cyan-400/25 bg-cyan-400/10 text-cyan-300",
+    className: "border-final-accent/25 bg-final-accent/10 text-final-accent",
     icon: ShieldAlert,
   },
 };
@@ -64,30 +64,30 @@ function humanize(value: string): string {
 // gets a success (emerald) treatment; PARTIAL/UNAVAILABLE are neutral/amber,
 // FAIL/MALFORMED are error (red). Unknown/failure never looks like PASS.
 function reproSectionClass(overallStatus: string): string {
-  if (overallStatus.endsWith("_PASS")) return "border-emerald-400/15 bg-emerald-400/[0.03]";
-  if (overallStatus.endsWith("_FAIL") || overallStatus.endsWith("_MALFORMED")) return "border-red-400/25 bg-red-400/[0.04]";
-  return "border-amber-400/20 bg-amber-400/[0.03]";
+  if (overallStatus.endsWith("_PASS")) return "border-jury-success/15 bg-jury-success/[0.03]";
+  if (overallStatus.endsWith("_FAIL") || overallStatus.endsWith("_MALFORMED")) return "border-jury-fault/25 bg-jury-fault/[0.04]";
+  return "border-jury-warning/20 bg-jury-warning/[0.03]";
 }
 function reproBadgeClass(overallStatus: string): string {
-  if (overallStatus.endsWith("_PASS")) return "border-emerald-400/25 bg-emerald-400/[0.06] text-emerald-200";
-  if (overallStatus.endsWith("_FAIL") || overallStatus.endsWith("_MALFORMED")) return "border-red-400/30 bg-red-400/[0.08] text-red-200";
-  return "border-amber-400/30 bg-amber-400/[0.06] text-amber-200";
+  if (overallStatus.endsWith("_PASS")) return "border-jury-success/25 bg-jury-success/[0.06] text-jury-success";
+  if (overallStatus.endsWith("_FAIL") || overallStatus.endsWith("_MALFORMED")) return "border-jury-fault/30 bg-jury-fault/[0.08] text-jury-fault";
+  return "border-jury-warning/30 bg-jury-warning/[0.06] text-jury-warning";
 }
 function reproDotClass(status: string): string {
   switch (status) {
-    case "PASS": return "bg-emerald-400";
-    case "PARTIAL": return "bg-amber-400";
-    case "FAIL": return "bg-red-400";
-    case "MALFORMED": return "bg-red-400";
+    case "PASS": return "bg-jury-success";
+    case "PARTIAL": return "bg-jury-warning";
+    case "FAIL": return "bg-jury-fault";
+    case "MALFORMED": return "bg-jury-fault";
     default: return "bg-ink-muted"; // UNAVAILABLE
   }
 }
 function reproTextClass(status: string): string {
   switch (status) {
-    case "PASS": return "text-emerald-300";
-    case "PARTIAL": return "text-amber-300";
-    case "FAIL": return "text-red-300";
-    case "MALFORMED": return "text-red-300";
+    case "PASS": return "text-jury-success";
+    case "PARTIAL": return "text-jury-warning";
+    case "FAIL": return "text-jury-fault";
+    case "MALFORMED": return "text-jury-fault";
     default: return "text-ink-muted"; // UNAVAILABLE
   }
 }
@@ -135,14 +135,14 @@ function OverviewCard({
       className={clsx(
         "group flex min-h-56 flex-col rounded-xl border p-4 text-left transition-colors",
         selected
-          ? "border-cyan-400/35 bg-cyan-400/[0.07]"
-          : "border-white/5 bg-white/[0.025] hover:border-white/15 hover:bg-white/[0.04]",
+          ? "border-final-accent/35 bg-final-accent/[0.07]"
+          : "border-jury-border-subtle bg-surface-2 hover:border-jury-border-strong hover:bg-surface-2",
       )}
       aria-pressed={selected}
     >
       <div className="mb-4 flex items-start justify-between gap-3">
         <ResultBadge resultClass={experiment.result_class} />
-        <ChevronRight size={17} className={clsx("mt-1 shrink-0", selected ? "text-cyan-300" : "text-ink-muted group-hover:text-ink-secondary")} />
+        <ChevronRight size={17} className={clsx("mt-1 shrink-0", selected ? "text-final-accent" : "text-ink-muted group-hover:text-ink-secondary")} />
       </div>
       <h3 className="text-sm font-semibold leading-snug text-ink-primary">{experiment.title}</h3>
       <p className="mt-2 text-xs leading-relaxed text-ink-secondary">{experiment.outcome_summary}</p>
@@ -173,14 +173,14 @@ function MarginalValueTable({ experiments }: { experiments: ResearchExperiment[]
       icon={<FlaskConical size={16} />}
       contentClassName="overflow-x-auto p-0"
     >
-      <p className="px-4 pt-3 text-xs leading-relaxed text-amber-200/80">
+      <p className="px-4 pt-3 text-xs leading-relaxed text-jury-warning/80">
         Each row uses its own target-specific primary metric (see the Metric column). Values in
         different rows are <strong className="font-semibold">not comparable</strong> across
         targets/datasets/metrics (e.g. bpm MAE vs macro-F1) and are never ranked or combined into a
         single sensor score.
       </p>
       <table className="w-full min-w-[920px] text-left text-xs">
-        <thead className="border-b border-white/5 bg-white/[0.02] text-xs uppercase tracking-wider text-ink-muted">
+        <thead className="border-b border-jury-border-subtle bg-surface-2 text-xs uppercase tracking-wider text-ink-muted">
           <tr>
             <th className="px-4 py-3 font-medium">Experiment / target</th>
             <th className="px-4 py-3 font-medium">Added sensing</th>
@@ -191,7 +191,7 @@ function MarginalValueTable({ experiments }: { experiments: ResearchExperiment[]
             <th className="px-4 py-3 font-medium">Result</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-jury-border-subtle">
           {marginalExperiments.map((experiment) => {
             const marginal = experiment.marginal_result;
             if (!marginal) return null;
@@ -212,7 +212,7 @@ function MarginalValueTable({ experiments }: { experiments: ResearchExperiment[]
                 </td>
                 <td className="tabular-nums-mono px-4 py-3 text-right">{metricText(baseline?.metrics[metricKey])}</td>
                 <td className="tabular-nums-mono px-4 py-3 text-right">{metricText(candidate?.metrics[metricKey])}</td>
-                <td className={clsx("tabular-nums-mono px-4 py-3 text-right font-semibold", marginal.direction === "improved" ? "text-emerald-300" : "text-amber-300")}>{signedMetric(marginal.delta)}{isClassification ? " ↑better" : " ↓better"}</td>
+                <td className={clsx("tabular-nums-mono px-4 py-3 text-right font-semibold", marginal.direction === "improved" ? "text-jury-success" : "text-jury-warning")}>{signedMetric(marginal.delta)}{isClassification ? " ↑better" : " ↓better"}</td>
                 <td className="px-4 py-3"><ResultBadge resultClass={experiment.result_class} /></td>
               </tr>
             );
@@ -227,7 +227,7 @@ function ConfigurationGrid({ experiment }: { experiment: ResearchExperiment }) {
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
       {experiment.configurations.map((configuration) => (
-        <article key={configuration.configuration_id} className="rounded-lg border border-white/5 bg-white/[0.025] p-4">
+        <article key={configuration.configuration_id} className="rounded-lg border border-jury-border-subtle bg-surface-2 p-4">
           <p className="text-xs font-semibold text-ink-primary">{configuration.label}</p>
           <p className="mt-1.5 min-h-10 text-xs leading-relaxed text-ink-muted">{configuration.description}</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -237,7 +237,7 @@ function ConfigurationGrid({ experiment }: { experiment: ResearchExperiment }) {
           </div>
           <dl className="mt-4 grid grid-cols-2 gap-2">
             {Object.entries(configuration.metrics).map(([metricName, metric]) => (
-              <div key={metricName} className="rounded-md border border-white/5 bg-surface-1/60 p-2.5">
+              <div key={metricName} className="rounded-md border border-jury-border-subtle bg-surface-1/60 p-2.5">
                 <dt className="text-xs uppercase tracking-wide text-ink-muted">{humanize(metricName)}</dt>
                 <dd className="tabular-nums-mono mt-1 text-xs text-ink-primary">{metricText(metric)}</dd>
                 {metric.n !== null ? <p className="mt-1 text-xs text-ink-muted">N = {metric.n.toLocaleString()}</p> : null}
@@ -257,7 +257,7 @@ function deltaClass(entry: ResearchBreakdownEntry, higherIsBetter = false): stri
   if (entry.delta?.mean === null || entry.delta?.mean === undefined) return "text-ink-muted";
   if (entry.delta.mean === 0) return "text-ink-secondary";
   const improved = higherIsBetter ? entry.delta.mean > 0 : entry.delta.mean < 0;
-  return improved ? "text-emerald-300" : "text-amber-300";
+  return improved ? "text-jury-success" : "text-jury-warning";
 }
 
 function metricUnitFor(configuration: ResearchConfiguration, metricKey: string): string {
@@ -268,8 +268,8 @@ function BreakdownTable({ breakdown, experiment }: { breakdown: ResearchBreakdow
   const breakdownMetricKey = experiment.marginal_result?.metric ?? "mae";
   const breakdownHigherIsBetter = experiment.marginal_result?.metric_directionality === "higher_is_better";
   return (
-    <div className="overflow-hidden rounded-lg border border-white/5">
-      <div className="border-b border-white/5 bg-white/[0.025] px-3 py-2.5">
+    <div className="overflow-hidden rounded-lg border border-jury-border-subtle">
+      <div className="border-b border-jury-border-subtle bg-surface-2 px-3 py-2.5">
         <h4 className="text-xs font-semibold text-ink-secondary">{breakdown.title}</h4>
       </div>
       <div className="overflow-x-auto">
@@ -283,7 +283,7 @@ function BreakdownTable({ breakdown, experiment }: { breakdown: ResearchBreakdow
               <th className="px-3 py-2 text-right font-medium">Candidate − baseline</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-jury-border-subtle">
             {breakdown.entries.map((entry) => (
               <tr key={entry.entry_id}>
                 <td className="px-3 py-2.5 text-ink-secondary">{entry.label}</td>
@@ -316,7 +316,7 @@ function FaultRows({ entries }: { entries: ResearchBreakdownEntry[] }) {
           <th className="px-3 py-2 text-right font-medium">ΔMAE</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-white/5">
+      <tbody className="divide-y divide-jury-border-subtle">
         {entries.map((entry) => {
           const metrics = entry.configuration_metrics.canonical_pipeline;
           return (
@@ -324,7 +324,7 @@ function FaultRows({ entries }: { entries: ResearchBreakdownEntry[] }) {
               <td className="max-w-72 px-3 py-2.5 font-mono text-xs text-ink-secondary">{entry.label}</td>
               <td className="px-3 py-2.5 text-ink-secondary">{String(entry.dimensions.target ?? "—")}</td>
               <td className="tabular-nums-mono px-3 py-2.5 text-right text-ink-secondary">{entry.dimensions.severity === null ? "—" : String(entry.dimensions.severity)}</td>
-              <td className="tabular-nums-mono px-3 py-2.5 text-right text-cyan-300">{metricText(metrics?.availability, 2)}</td>
+              <td className="tabular-nums-mono px-3 py-2.5 text-right text-final-accent">{metricText(metrics?.availability, 2)}</td>
               <td className="tabular-nums-mono px-3 py-2.5 text-right text-ink-secondary">{metricText(metrics?.mae, 3)}</td>
               <td className="tabular-nums-mono px-3 py-2.5 text-right text-ink-secondary">{metricText(metrics?.rmse, 3)}</td>
               <td className={clsx("tabular-nums-mono px-3 py-2.5 text-right", deltaClass(entry))}>{signedMetric(entry.delta)}</td>
@@ -343,38 +343,38 @@ function RobustnessDetail({ experiment }: { experiment: ResearchExperiment }) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <div className="rounded-lg border border-rose-400/15 bg-rose-400/[0.05] p-4">
-          <p className="text-xs font-semibold text-rose-200">Accuracy degradation</p>
+        <div className="rounded-lg border border-jury-fault/15 bg-jury-fault/[0.05] p-4">
+          <p className="text-xs font-semibold text-jury-fault">Accuracy degradation</p>
           <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">PPG additive noise increased valid-prediction error while availability remained 100%.</p>
         </div>
-        <div className="rounded-lg border border-cyan-400/15 bg-cyan-400/[0.05] p-4">
-          <p className="text-xs font-semibold text-cyan-200">Availability loss</p>
+        <div className="rounded-lg border border-final-accent/15 bg-final-accent/[0.05] p-4">
+          <p className="text-xs font-semibold text-final-accent">Availability loss</p>
           <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">Dropout, flat/full-saturated PPG, and native sample loss caused explicit rejection. Rejected windows have N/A accuracy.</p>
         </div>
-        <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.06] p-4">
-          <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-200"><AlertTriangle size={13} /> IMU calibration caveat</p>
+        <div className="rounded-lg border border-jury-warning/20 bg-jury-warning/[0.06] p-4">
+          <p className="flex items-center gap-1.5 text-xs font-semibold text-jury-warning"><AlertTriangle size={13} /> IMU calibration caveat</p>
           <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">Fault amplitude used the first affected S14 batch, whose motion variance was substantially below typical later windows. Small degradation is valid only for that implemented perturbation—not universally severe IMU corruption.</p>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-white/5">
-        <div className="border-b border-white/5 bg-white/[0.025] px-3 py-2.5">
+      <div className="overflow-hidden rounded-lg border border-jury-border-subtle">
+        <div className="border-b border-jury-border-subtle bg-surface-2 px-3 py-2.5">
           <h4 className="text-xs font-semibold text-ink-secondary">Five-seed stochastic aggregates</h4>
           <p className="mt-0.5 text-xs text-ink-muted">Availability and valid-only accuracy remain separate; N/A is preserved when no valid prediction exists.</p>
         </div>
-        <div className="overflow-x-auto">{aggregates ? <FaultRows entries={aggregates.entries} /> : <p className="p-4 text-xs text-rose-300">Aggregate artifact section unavailable.</p>}</div>
+        <div className="overflow-x-auto">{aggregates ? <FaultRows entries={aggregates.entries} /> : <p className="p-4 text-xs text-jury-fault">Aggregate artifact section unavailable.</p>}</div>
       </div>
 
-      <details className="rounded-lg border border-white/5 bg-white/[0.015]">
+      <details className="rounded-lg border border-jury-border-subtle bg-surface-2">
         <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-ink-secondary">Deterministic fault conditions ({deterministic.length})</summary>
-        <div className="overflow-x-auto border-t border-white/5"><FaultRows entries={deterministic} /></div>
+        <div className="overflow-x-auto border-t border-jury-border-subtle"><FaultRows entries={deterministic} /></div>
       </details>
-      <details className="rounded-lg border border-white/5 bg-white/[0.015]">
+      <details className="rounded-lg border border-jury-border-subtle bg-surface-2">
         <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-ink-secondary">All concrete conditions ({conditions?.entries.length ?? 0})</summary>
-        <div className="overflow-x-auto border-t border-white/5">{conditions ? <FaultRows entries={conditions.entries} /> : null}</div>
+        <div className="overflow-x-auto border-t border-jury-border-subtle">{conditions ? <FaultRows entries={conditions.entries} /> : null}</div>
       </details>
 
-      <p className="rounded-lg border border-white/5 bg-surface-1/50 px-4 py-3 text-xs leading-relaxed text-ink-secondary">
+      <p className="rounded-lg border border-jury-border-subtle bg-surface-1/50 px-4 py-3 text-xs leading-relaxed text-ink-secondary">
         Packet loss is a <strong className="font-semibold text-ink-primary">fail-closed pipeline availability</strong> result: the current path requires complete contiguous native-rate windows. It is not evidence that neural-network MAE explodes, and surviving windows form small selected subsets.
       </p>
     </div>
@@ -383,19 +383,19 @@ function RobustnessDetail({ experiment }: { experiment: ResearchExperiment }) {
 
 function ClaimBoundaries({ experiment }: { experiment: ResearchExperiment }) {
   const groups = [
-    { title: "Supported", items: experiment.claim_boundaries.supported, className: "text-emerald-300", icon: CheckCircle2 },
-    { title: "Not supported", items: experiment.claim_boundaries.unsupported, className: "text-rose-300", icon: CircleSlash2 },
-    { title: "Limitations", items: experiment.claim_boundaries.limitations, className: "text-amber-300", icon: AlertTriangle },
+    { title: "Supported", items: experiment.claim_boundaries.supported, className: "text-jury-success", icon: CheckCircle2 },
+    { title: "Not supported", items: experiment.claim_boundaries.unsupported, className: "text-jury-fault", icon: CircleSlash2 },
+    { title: "Limitations", items: experiment.claim_boundaries.limitations, className: "text-jury-warning", icon: AlertTriangle },
   ];
   return (
     <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
       {groups.map((group) => {
         const Icon = group.icon;
         return (
-          <section key={group.title} className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
+          <section key={group.title} className="rounded-lg border border-jury-border-subtle bg-surface-2 p-4">
             <h4 className={clsx("flex items-center gap-1.5 text-xs font-semibold", group.className)}><Icon size={13} /> {group.title}</h4>
             <ul className="mt-3 space-y-2 text-xs leading-relaxed text-ink-secondary">
-              {group.items.map((item) => <li key={item} className="border-l border-white/10 pl-2.5">{item}</li>)}
+              {group.items.map((item) => <li key={item} className="border-l border-jury-border-subtle pl-2.5">{item}</li>)}
             </ul>
           </section>
         );
@@ -407,20 +407,20 @@ function ClaimBoundaries({ experiment }: { experiment: ResearchExperiment }) {
 function Provenance({ experiment }: { experiment: ResearchExperiment }) {
   const provenance = experiment.provenance;
   return (
-    <details className="rounded-lg border border-white/5 bg-white/[0.015]">
-      <summary className="flex cursor-pointer items-center gap-2 px-4 py-3 text-xs font-semibold text-ink-secondary"><Archive size={14} className="text-cyan-400" /> Provenance and artifact identity</summary>
-      <div className="grid grid-cols-1 gap-4 border-t border-white/5 p-4 text-xs lg:grid-cols-2">
+    <details className="rounded-lg border border-jury-border-subtle bg-surface-2">
+      <summary className="flex cursor-pointer items-center gap-2 px-4 py-3 text-xs font-semibold text-ink-secondary"><Archive size={14} className="text-final-accent" /> Provenance and artifact identity</summary>
+      <div className="grid grid-cols-1 gap-4 border-t border-jury-border-subtle p-4 text-xs lg:grid-cols-2">
         <dl className="space-y-2">
           <div><dt className="text-ink-muted">Evidence level</dt><dd className="mt-0.5 text-ink-secondary">Experimental evaluation metric</dd></div>
           <div><dt className="text-ink-muted">Environment</dt><dd className="mt-0.5 text-ink-secondary">{humanize(experiment.scope.environment_scope)}</dd></div>
           <div><dt className="text-ink-muted">Dataset version</dt><dd className="mt-0.5 text-ink-secondary">{provenance.dataset_version ?? "Not specified"}</dd></div>
           <div><dt className="text-ink-muted">Split identity</dt><dd className="mt-0.5 break-all font-mono text-ink-secondary">{provenance.split_identity ?? "Not specified"}</dd></div>
-          <div><dt className="text-ink-muted">Source artifact</dt><dd className="mt-0.5 break-all font-mono text-cyan-300">{provenance.source_artifact}</dd></div>
+          <div><dt className="text-ink-muted">Source artifact</dt><dd className="mt-0.5 break-all font-mono text-final-accent">{provenance.source_artifact}</dd></div>
         </dl>
         <div className="space-y-3">
           <div><p className="text-ink-muted">Model identity</p><ul className="mt-1 space-y-1 font-mono text-ink-secondary">{provenance.model_identity.map((item) => <li key={item}>{item}</li>)}</ul></div>
           <div><p className="text-ink-muted">Supporting artifacts</p><ul className="mt-1 space-y-1 font-mono text-ink-secondary">{provenance.supporting_artifacts.map((item) => <li key={item} className="break-all">{item}</li>)}</ul></div>
-          {provenance.checkpoints.length ? <div><p className="text-ink-muted">Checkpoint identities (artifact paths intentionally omitted)</p><ul className="mt-1 space-y-2">{provenance.checkpoints.map((checkpoint) => <li key={checkpoint.run_id} className="rounded border border-white/5 p-2 font-mono text-ink-secondary"><span className="text-ink-secondary">{checkpoint.run_id}</span><br />SHA256 {checkpoint.sha256}<br />{checkpoint.size_bytes.toLocaleString()} bytes</li>)}</ul></div> : null}
+          {provenance.checkpoints.length ? <div><p className="text-ink-muted">Checkpoint identities (artifact paths intentionally omitted)</p><ul className="mt-1 space-y-2">{provenance.checkpoints.map((checkpoint) => <li key={checkpoint.run_id} className="rounded border border-jury-border-subtle p-2 font-mono text-ink-secondary"><span className="text-ink-secondary">{checkpoint.run_id}</span><br />SHA256 {checkpoint.sha256}<br />{checkpoint.size_bytes.toLocaleString()} bytes</li>)}</ul></div> : null}
         </div>
       </div>
     </details>
@@ -429,11 +429,11 @@ function Provenance({ experiment }: { experiment: ResearchExperiment }) {
 
 function VersionStateTable({ breakdown }: { breakdown: ResearchBreakdown }) {
   return (
-    <div className="mt-3 overflow-hidden rounded-lg border border-white/5">
-      <div className="border-b border-white/5 bg-white/[0.025] px-3 py-2.5">
+    <div className="mt-3 overflow-hidden rounded-lg border border-jury-border-subtle">
+      <div className="border-b border-jury-border-subtle bg-surface-2 px-3 py-2.5">
         <h4 className="text-xs font-semibold text-ink-secondary">{breakdown.title}</h4>
       </div>
-      <div className="divide-y divide-white/5">
+      <div className="divide-y divide-jury-border-subtle">
         {breakdown.entries.map((entry) => {
           const preferred = entry.dimensions.preferred_for_current_claim === true;
           const pending = entry.dimensions.result_status === "V2_PENDING_FOLLOWUP";
@@ -441,10 +441,10 @@ function VersionStateTable({ breakdown }: { breakdown: ResearchBreakdown }) {
             <div key={entry.entry_id} className="px-3 py-2.5">
               <div className="flex flex-wrap items-center gap-1.5">
                 <span className="text-xs font-medium text-ink-secondary">{entry.label}</span>
-                <span className={clsx("rounded-full border px-1.5 py-px text-xs font-semibold", preferred ? "border-emerald-400/30 text-emerald-300" : pending ? "border-amber-400/30 text-amber-300" : "border-jury-border-strong/40 text-ink-secondary")}>
+                <span className={clsx("rounded-full border px-1.5 py-px text-xs font-semibold", preferred ? "border-jury-success/30 text-jury-success" : pending ? "border-jury-warning/30 text-jury-warning" : "border-jury-border-strong/40 text-ink-secondary")}>
                   {String(entry.dimensions.result_status ?? "")}
                 </span>
-                <span className="rounded-full border border-white/10 px-1.5 py-px text-xs font-semibold text-ink-muted">{String(entry.dimensions.protocol_version ?? "")}</span>
+                <span className="rounded-full border border-jury-border-subtle px-1.5 py-px text-xs font-semibold text-ink-muted">{String(entry.dimensions.protocol_version ?? "")}</span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-ink-muted">
                 {String(entry.dimensions.training_seed_protocol ?? "")} · {String(entry.dimensions.checkpoint_set ?? "")}
@@ -471,16 +471,16 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
       contentClassName="space-y-5"
     >
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Dataset</p><p className="mt-1 text-xs text-ink-primary">{experiment.dataset}</p></div>
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Target</p><p className="mt-1 text-xs text-ink-primary">{experiment.target}</p></div>
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Held-out subjects</p><p className="tabular-nums-mono mt-1 text-xs text-ink-primary">{experiment.scope.held_out_subjects.length} / {experiment.scope.subjects.length}</p></div>
-        <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Evaluation windows</p><p className="tabular-nums-mono mt-1 text-xs text-ink-primary">{experiment.scope.evaluation_windows.toLocaleString()}</p></div>
+        <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Dataset</p><p className="mt-1 text-xs text-ink-primary">{experiment.dataset}</p></div>
+        <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Target</p><p className="mt-1 text-xs text-ink-primary">{experiment.target}</p></div>
+        <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Held-out subjects</p><p className="tabular-nums-mono mt-1 text-xs text-ink-primary">{experiment.scope.held_out_subjects.length} / {experiment.scope.subjects.length}</p></div>
+        <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3"><p className="text-xs uppercase tracking-wide text-ink-muted">Evaluation windows</p><p className="tabular-nums-mono mt-1 text-xs text-ink-primary">{experiment.scope.evaluation_windows.toLocaleString()}</p></div>
       </div>
 
       <ConfigurationGrid experiment={experiment} />
 
       {experiment.marginal_result ? (
-        <div className={clsx("rounded-lg border p-4", experiment.marginal_result.direction === "improved" ? "border-emerald-400/20 bg-emerald-400/[0.05]" : "border-amber-400/20 bg-amber-400/[0.05]")}>
+        <div className={clsx("rounded-lg border p-4", experiment.marginal_result.direction === "improved" ? "border-jury-success/20 bg-jury-success/[0.05]" : "border-jury-warning/20 bg-jury-warning/[0.05]")}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs font-semibold text-ink-primary">Marginal result: {humanize(experiment.marginal_result.direction)}</p>
             <p className="tabular-nums-mono text-sm font-semibold text-ink-primary">Δ {signedMetric(experiment.marginal_result.delta)}{experiment.marginal_result.metric_directionality === "higher_is_better" ? " (higher is better)" : experiment.marginal_result.metric_directionality === "lower_is_better" ? " (lower is better)" : ""}</p>
@@ -500,9 +500,9 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
                 const isPending = comparison.role === "SEED_CORRECTION_PENDING_FOLLOWUP";
                 const historicalBadgeLabel = comparison.role === "HISTORICAL_PRE_SEEDFIX_V1_RESULT" ? "HISTORICAL — pre-seedfix (V1)" : "HISTORICAL — capacity-confounded";
                 return (
-                  <div key={comparison.comparison_id} className={clsx("rounded border px-2.5 py-1.5 text-xs", isPending ? "border-amber-400/25 bg-amber-400/[0.04]" : isHistorical ? "border-jury-border-strong/40 bg-ink-muted/[0.04] opacity-70" : isHeadline ? "border-emerald-400/25 bg-emerald-400/[0.05]" : "border-white/10 bg-white/[0.02]")}>
+                  <div key={comparison.comparison_id} className={clsx("rounded border px-2.5 py-1.5 text-xs", isPending ? "border-jury-warning/25 bg-jury-warning/[0.04]" : isHistorical ? "border-jury-border-strong/40 bg-ink-muted/[0.04] opacity-70" : isHeadline ? "border-jury-success/25 bg-jury-success/[0.05]" : "border-jury-border-subtle bg-surface-2")}>
                     <div className="flex flex-wrap items-center justify-between gap-1.5">
-                      <span className="text-ink-secondary">{comparison.label}{isHeadline ? <span className="ml-1 rounded-full border border-emerald-400/30 px-1.5 py-px text-xs font-semibold text-emerald-300">HEADLINE</span> : null}{isHistorical ? <span className="ml-1 rounded-full border border-jury-border-strong/40 px-1.5 py-px text-xs font-semibold text-ink-secondary">{historicalBadgeLabel}</span> : null}{isPending ? <span className="ml-1 rounded-full border border-amber-400/30 px-1.5 py-px text-xs font-semibold text-amber-300">PENDING — not retrained under corrected protocol</span> : null}</span>
+                      <span className="text-ink-secondary">{comparison.label}{isHeadline ? <span className="ml-1 rounded-full border border-jury-success/30 px-1.5 py-px text-xs font-semibold text-jury-success">HEADLINE</span> : null}{isHistorical ? <span className="ml-1 rounded-full border border-jury-border-strong/40 px-1.5 py-px text-xs font-semibold text-ink-secondary">{historicalBadgeLabel}</span> : null}{isPending ? <span className="ml-1 rounded-full border border-jury-warning/30 px-1.5 py-px text-xs font-semibold text-jury-warning">PENDING — not retrained under corrected protocol</span> : null}</span>
                       <span className="tabular-nums-mono font-semibold text-ink-primary">{signedMetric(comparison.delta)}{comparison.n_seeds !== null ? ` · ${comparison.n_seeds_favor_candidate}/${comparison.n_seeds} seeds` : ""}</span>
                     </div>
                     <p className="mt-0.5 text-xs text-ink-muted">{comparison.delta_definition}. {comparison.interpretation}</p>
@@ -529,7 +529,7 @@ function ExperimentDetail({ experiment }: { experiment: ResearchExperiment }) {
 function LoadingState() {
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-3" aria-label="Loading research artifacts">
-      {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-xl border border-white/5 bg-white/[0.025]" />)}
+      {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-xl border border-jury-border-subtle bg-surface-2" />)}
     </div>
   );
 }
@@ -604,11 +604,11 @@ export function ResearchMode() {
           <h3 className="text-xl font-semibold text-ink-primary">Measured marginal sensor evidence</h3>
           <p className="mt-1 max-w-4xl text-sm leading-relaxed text-ink-muted">Biological Minimalism evaluates each added sensing component by measured target-specific marginal value rather than assuming more sensors are inherently better.</p>
         </div>
-        {projectSummary ? <div className="flex gap-2 text-xs"><span className="rounded-full border border-white/10 px-2.5 py-1 text-ink-secondary">{projectSummary.available_count}/{projectSummary.experiment_count} artifacts available</span><span className="rounded-full border border-emerald-400/20 bg-emerald-400/[0.05] px-2.5 py-1 text-emerald-300">Read only</span></div> : null}
+        {projectSummary ? <div className="flex gap-2 text-xs"><span className="rounded-full border border-jury-border-subtle px-2.5 py-1 text-ink-secondary">{projectSummary.available_count}/{projectSummary.experiment_count} artifacts available</span><span className="rounded-full border border-jury-success/20 bg-jury-success/[0.05] px-2.5 py-1 text-jury-success">Read only</span></div> : null}
       </header>
 
-      <div className="flex items-start gap-2 rounded-lg border border-cyan-400/15 bg-cyan-400/[0.04] px-4 py-3 text-xs leading-relaxed text-ink-secondary">
-        <Info size={15} className="mt-0.5 shrink-0 text-cyan-400" />
+      <div className="flex items-start gap-2 rounded-lg border border-final-accent/15 bg-final-accent/[0.04] px-4 py-3 text-xs leading-relaxed text-ink-secondary">
+        <Info size={15} className="mt-0.5 shrink-0 text-final-accent" />
         <p>MAE and RMSE here are frozen <strong className="font-semibold text-ink-primary">experimental evaluation metrics</strong>. They are not live measurements, current-person confidence, or predictive uncertainty.</p>
       </div>
 
@@ -618,7 +618,7 @@ export function ResearchMode() {
             <span className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-secondary">Reproducibility</span>
             <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${reproBadgeClass(projectSummary.reproducibility.overall_status)}`}>{projectSummary.reproducibility.overall_status}</span>
             {!projectSummary.reproducibility.overall_matches_declared && projectSummary.reproducibility.overall_declared ? (
-              <span className="rounded-full border border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-xs font-semibold text-amber-200">artifact declared {projectSummary.reproducibility.overall_declared}</span>
+              <span className="rounded-full border border-jury-warning/30 bg-jury-warning/[0.06] px-2 py-0.5 text-xs font-semibold text-jury-warning">artifact declared {projectSummary.reproducibility.overall_declared}</span>
             ) : null}
             <span className="text-xs text-ink-muted">— re-evaluated from frozen artifacts; this is not a final-architecture readiness signal.</span>
           </div>
@@ -637,10 +637,10 @@ export function ResearchMode() {
           </ul>
           <p className="mt-2 text-xs leading-relaxed text-ink-muted">Environment scope — {projectSummary.reproducibility.environment_scope}. {projectSummary.reproducibility.independence_caveat}.</p>
           {projectSummary.reproducibility.interaction?.tested ? (
-            <div className="mt-2 rounded border border-white/10 bg-white/[0.02] px-3 py-2">
+            <div className="mt-2 rounded border border-jury-border-subtle bg-surface-2 px-3 py-2">
               <p className="text-xs font-semibold text-ink-secondary">Interaction experiment (Sleep, EEG × EOG × Resp)</p>
               <p className="mt-0.5 text-xs text-ink-muted">{projectSummary.reproducibility.interaction.configs}</p>
-              <p className="mt-1 text-xs text-ink-secondary">Interaction estimate {projectSummary.reproducibility.interaction.interaction_estimate} ({projectSummary.reproducibility.interaction.uncertainty}) — <span className="text-amber-300">{projectSummary.reproducibility.interaction.interpretation}</span></p>
+              <p className="mt-1 text-xs text-ink-secondary">Interaction estimate {projectSummary.reproducibility.interaction.interaction_estimate} ({projectSummary.reproducibility.interaction.uncertainty}) — <span className="text-jury-warning">{projectSummary.reproducibility.interaction.interpretation}</span></p>
               <p className="mt-1 text-xs leading-relaxed text-ink-secondary">{projectSummary.reproducibility.interaction.plain_language}</p>
               <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">{projectSummary.reproducibility.interaction.boundary}</p>
             </div>
@@ -649,22 +649,22 @@ export function ResearchMode() {
       ) : null}
 
       {error ? (
-        <div role="alert" className="flex items-start justify-between gap-4 rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3">
-          <div className="flex gap-2"><AlertTriangle size={15} className="mt-0.5 shrink-0 text-rose-300" /><div><p className="text-xs font-semibold text-rose-200">Research artifact loading issue</p><p className="mt-1 text-xs leading-relaxed text-ink-secondary">{error}</p></div></div>
-          <button type="button" onClick={() => void load()} className="flex shrink-0 items-center gap-1.5 rounded border border-white/10 px-2.5 py-1.5 text-xs text-ink-secondary hover:bg-white/5"><RefreshCw size={12} /> Retry</button>
+        <div role="alert" className="flex items-start justify-between gap-4 rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3">
+          <div className="flex gap-2"><AlertTriangle size={15} className="mt-0.5 shrink-0 text-jury-fault" /><div><p className="text-xs font-semibold text-jury-fault">Research artifact loading issue</p><p className="mt-1 text-xs leading-relaxed text-ink-secondary">{error}</p></div></div>
+          <button type="button" onClick={() => void load()} className="flex shrink-0 items-center gap-1.5 rounded border border-jury-border-subtle px-2.5 py-1.5 text-xs text-ink-secondary hover:bg-surface-2"><RefreshCw size={12} /> Retry</button>
         </div>
       ) : null}
 
       {loading && !experimentList.length ? <LoadingState /> : (
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
           {experimentList.map((experiment) => <OverviewCard key={experiment.experiment_id} experiment={experiment} selected={experiment.experiment_id === selectedExperimentId} onSelect={() => selectExperiment(experiment.experiment_id)} />)}
-          {!experimentList.length && !loading ? <p className="col-span-full rounded-lg border border-white/5 p-5 text-sm text-ink-muted">No validated research artifacts are available.</p> : null}
+          {!experimentList.length && !loading ? <p className="col-span-full rounded-lg border border-jury-border-subtle p-5 text-sm text-ink-muted">No validated research artifacts are available.</p> : null}
         </div>
       )}
 
-      {engineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Engineering readiness unavailable: {engineeringReadinessError}</p> : null}
+      {engineeringReadinessError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Engineering readiness unavailable: {engineeringReadinessError}</p> : null}
       {engineeringReadiness ? <EngineeringReadinessView readiness={engineeringReadiness} /> : null}
-      {stage4EngineeringReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 4 engineering readiness unavailable: {stage4EngineeringReadinessError}</p> : null}
+      {stage4EngineeringReadinessError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Stage 4 engineering readiness unavailable: {stage4EngineeringReadinessError}</p> : null}
       {stage4EngineeringReadiness ? <Stage4EngineeringReadinessCard readiness={stage4EngineeringReadiness} /> : null}
       <Stage4FinalArchitecturePanel
         finalArchitecture={finalWearableArchitecture}
@@ -684,7 +684,7 @@ export function ResearchMode() {
         batteryTopologyScenarios={stage4BatteryTopologyScenarios}
         candidateBurdenMatrix={stage4CandidateBurdenMatrix}
       />
-      {stage4ScienceManifestError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Science Owner Stage 4 handoff unavailable: {stage4ScienceManifestError}</p> : null}
+      {stage4ScienceManifestError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Science Owner Stage 4 handoff unavailable: {stage4ScienceManifestError}</p> : null}
       {stage4ScienceManifest ? (
         <Stage4ScienceManifestView
           manifest={stage4ScienceManifest}
@@ -693,7 +693,7 @@ export function ResearchMode() {
           architectureDecisionInputs={stage4ArchitectureDecisionInputsScience}
         />
       ) : null}
-      {stage3EvidenceError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Stage 3 evidence unavailable: {stage3EvidenceError}</p> : null}
+      {stage3EvidenceError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Stage 3 evidence unavailable: {stage3EvidenceError}</p> : null}
       {stage3Evidence ? (
         <div>
           <p className="mb-1.5 text-xs uppercase tracking-wide text-ink-muted">
@@ -703,18 +703,18 @@ export function ResearchMode() {
         </div>
       ) : null}
       {experimentList.length ? <MarginalValueTable experiments={experimentList} /> : null}
-      {hardwareTopologyError || paretoReadinessError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Hardware architecture unavailable: {hardwareTopologyError ?? paretoReadinessError}</p> : null}
+      {hardwareTopologyError || paretoReadinessError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Hardware architecture unavailable: {hardwareTopologyError ?? paretoReadinessError}</p> : null}
       {hardwareTopology && paretoReadiness && operationalCostCatalog ? <HardwareArchitectureView topology={hardwareTopology} catalog={operationalCostCatalog} readiness={paretoReadiness} /> : null}
-      {decisionInputsError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Integrated decision inputs unavailable: {decisionInputsError}</p> : null}
+      {decisionInputsError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Integrated decision inputs unavailable: {decisionInputsError}</p> : null}
       {decisionInputs ? <DecisionInputsView artifact={decisionInputs} /> : null}
-      {operationalCostError ? <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">Operational-cost catalog unavailable: {operationalCostError}</p> : null}
+      {operationalCostError ? <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">Operational-cost catalog unavailable: {operationalCostError}</p> : null}
       {operationalCostCatalog ? <OperationalCostView catalog={operationalCostCatalog} experiments={experiments} /> : null}
       {selected ? <ExperimentDetail experiment={selected} /> : null}
 
       {futureScienceManifest ? <FutureScienceHandoffCard envelope={futureScienceManifest} /> : null}
 
       {projectSummary ? (
-        <footer className="rounded-lg border border-white/5 bg-white/[0.015] px-4 py-3 text-xs leading-relaxed text-ink-muted">{projectSummary.statement} Experiment-level evidence and operational burdens remain provenance-bearing dimensions. The final CORE_PLUS_CONTEXT selection is recorded as a conditional evidence–burden decision, not a unique mathematical optimum.</footer>
+        <footer className="rounded-lg border border-jury-border-subtle bg-surface-2 px-4 py-3 text-xs leading-relaxed text-ink-muted">{projectSummary.statement} Experiment-level evidence and operational burdens remain provenance-bearing dimensions. The final CORE_PLUS_CONTEXT selection is recorded as a conditional evidence–burden decision, not a unique mathematical optimum.</footer>
       ) : null}
     </div>
   );

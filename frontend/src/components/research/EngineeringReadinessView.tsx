@@ -14,7 +14,7 @@ import type {
 function QuantityValue({ quantity, prefix = "" }: { quantity: EngineeringQuantity; prefix?: string }) {
   if (quantity.status !== "AVAILABLE" || quantity.value === null) {
     return (
-      <p className="mt-0.5 font-mono text-amber-300" title={quantity.reason_if_unavailable ?? undefined}>
+      <p className="mt-0.5 font-mono text-jury-warning" title={quantity.reason_if_unavailable ?? undefined}>
         {quantity.display}
       </p>
     );
@@ -30,8 +30,8 @@ const LEVEL_LABEL: Record<EngineeringReadinessLevel, string> = {
 };
 
 const LEVEL_CLASS: Record<EngineeringReadinessLevel, string> = {
-  AVAILABLE: "border-emerald-400/20 bg-emerald-400/[0.07] text-emerald-300",
-  PARTIAL: "border-amber-400/20 bg-amber-400/[0.07] text-amber-300",
+  AVAILABLE: "border-jury-success/20 bg-jury-success/[0.07] text-jury-success",
+  PARTIAL: "border-jury-warning/20 bg-jury-warning/[0.07] text-jury-warning",
   NOT_READY: "border-jury-border-subtle bg-ink-muted/[0.08] text-ink-secondary",
   MISSING: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
 };
@@ -45,14 +45,14 @@ function LevelPill({ level }: { level: EngineeringReadinessLevel }) {
 }
 
 function gateClass(gate: string): string {
-  if (gate.startsWith("CONDITIONAL")) return "border-amber-400/25 bg-amber-400/[0.07] text-amber-200";
-  if (gate.startsWith("DEPRIORITIZE")) return "border-rose-400/25 bg-rose-400/[0.06] text-rose-200";
+  if (gate.startsWith("CONDITIONAL")) return "border-jury-warning/25 bg-jury-warning/[0.07] text-jury-warning";
+  if (gate.startsWith("DEPRIORITIZE")) return "border-jury-fault/25 bg-jury-fault/[0.06] text-jury-fault";
   return "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary";
 }
 
 function CandidateCard({ candidate }: { candidate: EngineeringCandidate }) {
   return (
-    <article className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+    <article className="rounded-xl border border-jury-border-subtle bg-surface-2 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h3 className="text-sm font-semibold text-ink-primary">{candidate.label}</h3>
@@ -79,8 +79,8 @@ function CandidateCard({ candidate }: { candidate: EngineeringCandidate }) {
         <div><p className="text-ink-muted">Mass / BOM</p><p className="mt-0.5 text-ink-secondary">{candidate.mass_tier} · {candidate.bom_readiness}</p></div>
       </div>
 
-      <p className="mt-3 border-l border-white/10 pl-2.5 text-xs leading-relaxed text-ink-secondary">{candidate.engineering_summary}</p>
-      <p className="mt-2 flex items-start gap-1.5 text-xs leading-relaxed text-amber-300/80"><AlertTriangle size={12} className="mt-0.5 shrink-0" /> {candidate.caveat}</p>
+      <p className="mt-3 border-l border-jury-border-subtle pl-2.5 text-xs leading-relaxed text-ink-secondary">{candidate.engineering_summary}</p>
+      <p className="mt-2 flex items-start gap-1.5 text-xs leading-relaxed text-jury-warning/80"><AlertTriangle size={12} className="mt-0.5 shrink-0" /> {candidate.caveat}</p>
     </article>
   );
 }
@@ -112,15 +112,15 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
         this archive.
       </p>
 
-      <section className="overflow-hidden rounded-lg border border-white/5">
-        <div className="border-b border-white/5 px-4 py-3">
+      <section className="overflow-hidden rounded-lg border border-jury-border-subtle">
+        <div className="border-b border-jury-border-subtle px-4 py-3">
           <p className="text-xs font-semibold text-ink-primary">System readiness panel</p>
           <p className="mt-1 text-xs text-ink-muted">Unknown quantities render as “Not ready”, never as 0 mW or 0 g.</p>
         </div>
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-jury-border-subtle">
           {readiness.panel.map((row) => (
             <div key={row.dimension} className="flex flex-wrap items-start gap-3 px-4 py-2.5">
-              <span className="mt-0.5 text-cyan-400" aria-hidden="true">{panelIcon(row.dimension)}</span>
+              <span className="mt-0.5 text-final-accent" aria-hidden="true">{panelIcon(row.dimension)}</span>
               <div className="min-w-40 flex-1">
                 <p className="text-[12px] font-medium text-ink-primary">{row.dimension}</p>
                 <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">{row.note}</p>
@@ -141,17 +141,17 @@ export function EngineeringReadinessView({ readiness }: { readiness: Engineering
         </div>
       </div>
 
-      <section className="rounded-lg border border-amber-400/20 bg-amber-400/[0.045] p-4">
-        <p className="text-xs font-semibold text-amber-200">Claim boundaries</p>
+      <section className="rounded-lg border border-jury-warning/20 bg-jury-warning/[0.045] p-4">
+        <p className="text-xs font-semibold text-jury-warning">Claim boundaries</p>
         <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-ink-secondary">
           {readiness.boundaries.map((item) => <li key={item}>• {item}</li>)}
         </ul>
       </section>
 
-      <details className="rounded-lg border border-white/5 bg-white/[0.015]">
+      <details className="rounded-lg border border-jury-border-subtle bg-surface-2">
         <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-ink-secondary">Source artifacts ({readiness.source_artifacts.length})</summary>
-        <div className="space-y-1 border-t border-white/5 px-4 py-3">
-          {readiness.source_artifacts.map((path) => <p key={path} className="break-all font-mono text-xs text-cyan-300">{path}</p>)}
+        <div className="space-y-1 border-t border-jury-border-subtle px-4 py-3">
+          {readiness.source_artifacts.map((path) => <p key={path} className="break-all font-mono text-xs text-final-accent">{path}</p>)}
         </div>
       </details>
     </Panel>

@@ -101,7 +101,7 @@ export function ReplaySessionControl() {
           <button
             type="button"
             onClick={retrySubjectList}
-            className="flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-2"
+            className="min-h-11 flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-sm font-medium text-ink-secondary hover:bg-surface-2"
           >
             <RefreshCw size={12} aria-hidden="true" /> Retry
           </button>
@@ -119,7 +119,7 @@ export function ReplaySessionControl() {
               value={selectedSubjectId}
               onChange={(event) => setSelectedSubjectId(event.target.value)}
               disabled={subjectListState !== "available" || !control.canChangeSource}
-              className="min-w-40 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+              className="min-h-11 min-w-40 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-sm text-ink-primary disabled:opacity-50"
             >
               {subjectListState === "loading"
                 ? <option>Loading subjects…</option>
@@ -132,7 +132,7 @@ export function ReplaySessionControl() {
               onClick={() => void loadSubject(selectedSubjectId)}
               disabled={!selectedSubjectId || !control.canChangeSource}
               title={!selectedSubjectId ? "Select a subject returned by the backend before loading." : undefined}
-              className="rounded-[6px] bg-final-accent px-3 py-2 text-xs font-semibold text-[#07100F] disabled:opacity-40"
+              className="min-h-11 inline-flex items-center rounded-[6px] bg-final-accent px-3 py-2 text-sm font-semibold text-[#07100F] disabled:opacity-40"
             >
               {pending === "load" ? "Loading real subject…" : "Load subject"}
             </button>
@@ -140,7 +140,7 @@ export function ReplaySessionControl() {
               type="button"
               onClick={() => void switchToSynthetic()}
               disabled={!control.canChangeSource || !view.isReplay}
-              className="rounded-[6px] border border-jury-border-strong px-3 py-2 text-xs font-medium text-ink-secondary disabled:opacity-40"
+              className="min-h-11 inline-flex items-center rounded-[6px] border border-jury-border-strong px-3 py-2 text-sm font-medium text-ink-secondary disabled:opacity-40"
             >
               Switch to synthetic demo
             </button>
@@ -159,7 +159,7 @@ export function ReplaySessionControl() {
           disabled={!control.canPlay}
           title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void play()}
-          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
+          className="min-h-11 inline-flex items-center rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40"
         >
           Play
         </button>
@@ -168,7 +168,7 @@ export function ReplaySessionControl() {
           disabled={!control.canControlPlayback}
           title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void pause()}
-          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
+          className="min-h-11 inline-flex items-center rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40"
         >
           Pause
         </button>
@@ -177,7 +177,7 @@ export function ReplaySessionControl() {
           disabled={!control.canControlPlayback}
           title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
           onClick={() => void reset()}
-          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
+          className="min-h-11 inline-flex items-center rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40"
         >
           Reset
         </button>
@@ -195,9 +195,12 @@ export function ReplaySessionControl() {
             type="button"
             disabled={!control.canControlPlayback}
             onClick={() => void setSpeed(value)}
+            aria-pressed={control.playbackSpeed === value}
             className={clsx(
-              "rounded-[6px] border px-2.5 py-1.5 text-xs disabled:opacity-40",
-              control.playbackSpeed === value ? "border-final-accent/50 text-final-accent" : "border-jury-border-subtle text-ink-muted",
+              "inline-flex min-h-11 items-center rounded-[6px] border px-2.5 text-sm disabled:opacity-40",
+              control.playbackSpeed === value
+                ? "border-final-accent/50 font-semibold text-final-accent"
+                : "border-jury-border-subtle font-medium text-ink-muted",
             )}
           >
             {value}x

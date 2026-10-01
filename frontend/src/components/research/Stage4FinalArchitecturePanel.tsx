@@ -25,10 +25,10 @@ const CANDIDATE_STATUS_LABEL: Record<string, string> = {
 };
 
 const CANDIDATE_STATUS_CLASS: Record<string, string> = {
-  MINIMAL_CORE: "border-cyan-400/25 bg-cyan-400/[0.08] text-cyan-300",
-  CORE_PLUS_CONTEXT: "border-emerald-400/30 bg-emerald-400/[0.10] text-emerald-300",
-  EVIDENCE_EXTENDED: "border-amber-400/20 bg-amber-400/[0.06] text-amber-300",
-  EXPERIMENTAL_EXTENDED: "border-amber-400/20 bg-amber-400/[0.06] text-amber-300",
+  MINIMAL_CORE: "border-final-accent/25 bg-final-accent/[0.08] text-final-accent",
+  CORE_PLUS_CONTEXT: "border-jury-success/30 bg-jury-success/[0.10] text-jury-success",
+  EVIDENCE_EXTENDED: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
+  EXPERIMENTAL_EXTENDED: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
 };
 
 const ALL_CANDIDATE_CLASSES = ["MINIMAL_CORE", "CORE_PLUS_CONTEXT", "EVIDENCE_EXTENDED", "EXPERIMENTAL_EXTENDED"];
@@ -45,7 +45,7 @@ function ExclusionRow({
   entry: { reason: string; prohibited_claim: string };
 }) {
   return (
-    <div className="border-b border-white/5 py-1.5 last:border-0">
+    <div className="border-b border-jury-border-subtle py-1.5 last:border-0">
       <p className="text-xs font-semibold text-ink-secondary">{sensorKey.replace(/_/g, " ")}</p>
       <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">{entry.reason}</p>
       <p className="mt-0.5 text-xs leading-relaxed text-ink-muted">Not claimed: {entry.prohibited_claim}</p>
@@ -68,7 +68,7 @@ export function Stage4FinalArchitecturePanel({
 }) {
   if (!finalArchitecture) {
     return finalArchitectureError ? (
-      <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-4 py-3 text-xs text-rose-200">
+      <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-4 py-3 text-xs text-jury-fault">
         Final wearable architecture unavailable: {finalArchitectureError}
       </p>
     ) : null;
@@ -95,10 +95,10 @@ export function Stage4FinalArchitecturePanel({
       icon={<CheckCircle2 size={16} />}
       contentClassName="space-y-4"
     >
-      <div className="rounded-lg border border-emerald-400/25 bg-emerald-400/[0.06] p-3">
+      <div className="rounded-lg border border-jury-success/25 bg-jury-success/[0.06] p-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-sm font-semibold text-emerald-300">Selected: {finalArchitecture.selected_class}</span>
-          <Pill text={gateDStatus.gate_d_burden_completeness ?? "UNKNOWN"} className="border-amber-400/25 bg-amber-400/[0.08] text-amber-300" />
+          <span className="text-sm font-semibold text-jury-success">Selected: {finalArchitecture.selected_class}</span>
+          <Pill text={gateDStatus.gate_d_burden_completeness ?? "UNKNOWN"} className="border-jury-warning/25 bg-jury-warning/[0.08] text-jury-warning" />
         </div>
         <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">
           Modalities: {finalArchitecture.selected_modalities.join("; ")}
@@ -109,7 +109,7 @@ export function Stage4FinalArchitecturePanel({
         </p>
       </div>
 
-      <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+      <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Burden (accepted, disclosed)</p>
         <p className="mt-1 text-xs leading-relaxed text-ink-muted">
           Contacts: {burden.contacts?.min}–{burden.contacts?.max} (most likely {burden.contacts?.most_likely}) · Power (selected distributed
@@ -131,12 +131,12 @@ export function Stage4FinalArchitecturePanel({
             Gate E — Coordinator decisions ({gateECoordinatorDecisions.gate_e_pending_science_sensitivity})
           </p>
           {gateECoordinatorDecisions.decisions.map((d) => (
-            <div key={d.item} className="border-b border-white/5 py-1.5 last:border-0">
+            <div key={d.item} className="border-b border-jury-border-subtle py-1.5 last:border-0">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="text-xs text-ink-secondary">{d.item}</span>
-                <Pill text={d.decision} className="border-cyan-400/25 bg-cyan-400/[0.08] text-cyan-300" />
+                <Pill text={d.decision} className="border-final-accent/25 bg-final-accent/[0.08] text-final-accent" />
               </div>
-              <p className="mt-0.5 text-xs leading-relaxed text-amber-300/80">
+              <p className="mt-0.5 text-xs leading-relaxed text-jury-warning/80">
                 Revision trigger: {JSON.stringify(d.revision_trigger.condition ?? d.revision_trigger)}
               </p>
             </div>
@@ -151,7 +151,7 @@ export function Stage4FinalArchitecturePanel({
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {ALL_CANDIDATE_CLASSES.map((classId) => (
-              <div key={classId} className="rounded-lg border border-white/10 bg-white/[0.02] p-2.5">
+              <div key={classId} className="rounded-lg border border-jury-border-subtle bg-surface-2 p-2.5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-mono text-xs text-ink-secondary">{classId}</span>
                   <Pill

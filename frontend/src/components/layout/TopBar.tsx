@@ -45,7 +45,7 @@ export function TopBar() {
     : dataSourceStatus?.fault_injection;
 
   return (
-    <header className="flex items-center justify-between gap-4 border-b border-white/5 bg-surface-1/60 px-4 py-3 backdrop-blur-sm sm:px-6">
+    <header className="flex items-center justify-between gap-4 border-b border-jury-border-subtle bg-surface-1/60 px-4 py-3 backdrop-blur-sm sm:px-6">
       <div className="flex items-center gap-3">
         <p className="text-sm font-semibold text-ink-primary">Mission Control</p>
         <span className="hidden text-ink-muted sm:inline">/</span>
@@ -56,13 +56,13 @@ export function TopBar() {
 
       <div className="flex items-center gap-3 sm:gap-5">
         {isReplay && fault?.active ? (
-          <span className="hidden rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-300 md:inline">
+          <span className="hidden rounded-full border border-jury-warning/30 bg-jury-warning/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-jury-warning md:inline">
             Simulated Fault Active · {fault.target} · {formatFaultTypeLabel(fault.fault_type)}
             {fault.severity !== null && fault.severity !== undefined ? ` · severity ${fault.severity}` : ""}
           </span>
         ) : null}
         {isReplay ? (
-          <span className="hidden text-xs font-semibold uppercase tracking-wider text-cyan-300 lg:inline">
+          <span className="hidden text-xs font-semibold uppercase tracking-wider text-final-accent lg:inline">
             Real Recorded Data — Replay Mode
           </span>
         ) : (

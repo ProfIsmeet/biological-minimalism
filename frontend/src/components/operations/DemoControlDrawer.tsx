@@ -114,7 +114,7 @@ export function DemoControlDrawer() {
         type="button"
         aria-label="Close demonstration controls"
         onClick={close}
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-surface-2"
       />
       <div
         ref={panelRef}

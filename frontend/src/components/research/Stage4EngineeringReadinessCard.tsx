@@ -19,10 +19,10 @@ const EVIDENCE_LABEL: Record<Stage4EvidenceClass, string> = {
 };
 
 const EVIDENCE_CLASS: Record<Stage4EvidenceClass, string> = {
-  DATASHEET_DIRECT: "border-emerald-400/25 bg-emerald-400/[0.08] text-emerald-300",
-  DATASHEET_CALCULATED: "border-emerald-400/20 bg-emerald-400/[0.06] text-emerald-400/90",
-  ENGINEERING_ASSUMPTION: "border-amber-400/25 bg-amber-400/[0.08] text-amber-300",
-  ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE: "border-amber-400/20 bg-amber-400/[0.06] text-amber-200",
+  DATASHEET_DIRECT: "border-jury-success/25 bg-jury-success/[0.08] text-jury-success",
+  DATASHEET_CALCULATED: "border-jury-success/20 bg-jury-success/[0.06] text-jury-success/90",
+  ENGINEERING_ASSUMPTION: "border-jury-warning/25 bg-jury-warning/[0.08] text-jury-warning",
+  ENGINEERING_ALLOWANCE_MECHANICAL_ESTIMATE: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
   ASSUMED_USE_SCHEDULE: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
 };
 
@@ -36,7 +36,7 @@ function EvidencePill({ evidenceClass }: { evidenceClass: Stage4EvidenceClass })
 
 function QuantityRow({ label, quantity }: { label: string; quantity: Stage4EvidenceQuantity }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-jury-border-subtle py-1.5 last:border-0">
       <span className="text-xs text-ink-secondary">{label}</span>
       <div className="flex items-center gap-2">
         <span className="font-mono text-[12px] text-ink-primary">

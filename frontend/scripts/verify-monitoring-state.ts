@@ -5159,10 +5159,33 @@ function allSourceFiles(): Array<[string, string]> {
   // `slate-*` and `space-*` expressed the same visual roles as the semantic
   // tokens, so a token change could not be trusted to propagate. Asserting
   // their absence is what keeps the design system single-sourced.
-  const legacyPalette = offenders(/\b(?:bg|text|border|from|to|via|ring|divide|fill|stroke|shadow|outline|decoration|placeholder|accent|caret)-(?:slate|space)-\d/);
+  // The first Stage 8 palette pass only retired slate-*/space-*, and this
+  // guard only checked for those — so it passed while 528 raw-palette
+  // utilities (cyan, amber, emerald, rose, violet, and alpha over white)
+  // survived, mostly in the research archive tree. Those bypass the token
+  // system exactly as slate-* did: the same meaning expressed two ways, so a
+  // token change cannot be trusted to propagate. The guard now covers the
+  // whole default palette plus the alpha-over-white forms, which is what it
+  // should have checked from the start.
+  const LEGACY_FAMILIES = [
+    "slate", "space", "gray", "zinc", "neutral", "stone",
+    "cyan", "teal", "sky", "blue", "indigo", "violet", "purple", "fuchsia",
+    "pink", "rose", "red", "orange", "amber", "yellow", "lime", "green", "emerald",
+  ].join("|");
+  const UTILITY_PREFIXES = "bg|text|border|from|to|via|ring|divide|fill|stroke|shadow|outline|decoration|placeholder|accent|caret";
+  const legacyPalette = offenders(new RegExp(`\b(?:${UTILITY_PREFIXES})-(?:${LEGACY_FAMILIES})-\d{2,3}\b`));
   checkEqual(
-    `stage8: no file uses the retired slate-*/space-* palettes (${legacyPalette.join(", ") || "none"})`,
+    `stage8: no file uses a raw Tailwind palette instead of a semantic token (${legacyPalette.join(", ") || "none"})`,
     legacyPalette.length,
+    0,
+  );
+  // Alpha over white/black stood in for the surface and border tokens. Note
+  // the absent trailing \b: after "]" there is no word boundary, which is why
+  // an earlier version of this pattern silently missed every bg-white/[0.02].
+  const alphaSurfaces = offenders(/\b(?:bg|border|divide|ring|text)-(?:white|black)\/(?:\[[^\]]+\]|\d{1,3})/);
+  checkEqual(
+    `stage8: no file layers alpha over white or black instead of a surface or border token (${alphaSurfaces.join(", ") || "none"})`,
+    alphaSurfaces.length,
     0,
   );
 
@@ -5230,6 +5253,46 @@ function allSourceFiles(): Array<[string, string]> {
   checkIncludes("stage8 §13: the confidence panel names synthetic contribution as synthetic", confidencePanel, "Synthetic sensor contribution");
   const explanationPanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/ExplanationPanel.tsx"), "utf8");
   checkIncludes("stage8 §17: the SHAP refresh control is disabled when no explanation exists", explanationPanel, "disabled={loading || isReplay}");
+
+  // --- §18 — the operational demo controls meet the 44px minimum ----------
+  //
+  // These are the controls a presenter drives live: load a replay subject,
+  // pause and step it, apply and clear a simulated fault, switch source. They
+  // rendered at roughly 28-32px tall (`px-3 py-1.5 text-xs` and
+  // `px-3 py-2 text-xs`), which made the most-used controls in the product
+  // the smallest targets in it. Asserted structurally per file, since the
+  // rendered height cannot be measured from a plain-Node harness.
+  const CONTROL_FILES = [
+    "components/monitoring/ReplaySessionControl.tsx",
+    "components/monitoring/SimulatedFaultControl.tsx",
+    "components/monitoring/MonitoringSourceStrip.tsx",
+    "components/demos/DataSourceControl.tsx",
+    "components/ui/DataStateError.tsx",
+  ];
+  for (const relativePath of CONTROL_FILES) {
+    const source = readFileSync(join(REPO_SRC_ROOT, relativePath), "utf8");
+    // Every button/select className that sets a short vertical padding must
+    // also set the 44px floor, so a new control cannot be added at 28px.
+    // Interactive elements only. A status paragraph, a badge span, or a layout
+    // div is allowed to be short — the 44px floor is about targets people
+    // press, and an earlier version of this check flagged eight
+    // non-interactive elements before being narrowed.
+    const fileLines = source.split("\n");
+    const shortControls = fileLines.filter((line, index) => {
+      if (!/className="[^"]*\bpy-(?:0\.5|1|1\.5|2|2\.5)\b[^"]*"/.test(line)) return false;
+      if (/min-h-11|\bh-1[1-9]\b|inset-0/.test(line)) return false;
+      // The className may sit several lines below its own opening tag.
+      const context = fileLines.slice(Math.max(0, index - 6), index + 1).join(" ");
+      return /<(?:button|select|input|textarea|a|summary)\b/.test(context);
+    });
+    checkEqual(
+      `stage8 §18: ${relativePath} has no control below the 44px minimum (${shortControls.length} found)`,
+      shortControls.length,
+      0,
+    );
+    checkNotIncludes(`stage8 §18: ${relativePath} puts no operational control text below 14px`, source, "py-1.5 text-xs");
+  }
+
 
   // --- §18 — one focus indicator, one focus colour ------------------------
   //

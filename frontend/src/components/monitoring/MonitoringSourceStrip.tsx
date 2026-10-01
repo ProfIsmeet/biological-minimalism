@@ -66,7 +66,7 @@ export function MonitoringSourceStrip() {
           <button
             type="button"
             onClick={retrySourceState}
-            className="flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-xs font-medium text-ink-secondary hover:bg-surface-2"
+            className="min-h-11 flex w-fit shrink-0 items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-sm font-medium text-ink-secondary hover:bg-surface-2"
           >
             <RefreshCw size={12} aria-hidden="true" /> Retry
           </button>

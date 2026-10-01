@@ -20,7 +20,7 @@ function formatEffect(value: number | null, unit: string | null): string | null 
 function NPill({ label, value }: { label: string; value: number | null }) {
   if (value === null) return null;
   return (
-    <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-xs text-ink-secondary">
+    <span className="rounded-full border border-jury-border-subtle bg-surface-2 px-2 py-0.5 text-xs text-ink-secondary">
       {label}: <span className="font-mono text-ink-primary">{value}</span>
     </span>
   );
@@ -30,11 +30,11 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
   const primary = formatEffect(entry.primary_effect_value, entry.primary_effect_unit);
   const secondary = formatEffect(entry.secondary_effect_value, entry.secondary_effect_unit);
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+    <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-xs text-ink-secondary">{entry.family_id}</span>
         {entry.classification ? (
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-2 py-0.5 text-xs font-semibold text-cyan-300">
+          <span className="rounded-full border border-final-accent/20 bg-final-accent/[0.06] px-2 py-0.5 text-xs font-semibold text-final-accent">
             {entry.classification}
           </span>
         ) : (
@@ -52,7 +52,7 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
       </div>
 
       {entry.primary_comparison_label ? (
-        <div className="mt-2 border-t border-white/5 pt-2 text-xs">
+        <div className="mt-2 border-t border-jury-border-subtle pt-2 text-xs">
           <p className="text-ink-muted">{entry.primary_comparison_label}</p>
           <p className="font-mono text-[13px] text-ink-primary">{primary ?? "unavailable"}</p>
         </div>
@@ -66,7 +66,7 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
       ) : null}
 
       {entry.heterogeneity_note ? (
-        <p className="mt-2 text-xs leading-relaxed text-amber-300/80">{entry.heterogeneity_note}</p>
+        <p className="mt-2 text-xs leading-relaxed text-jury-warning/80">{entry.heterogeneity_note}</p>
       ) : null}
 
       {entry.limitation ? (
@@ -82,7 +82,7 @@ function ExperimentCard({ entry }: { entry: Stage3EvidenceEntry }) {
 
 function ProvenanceRow({ entry }: { entry: Stage3EvidenceEntry }) {
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
+    <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-jury-border-subtle py-1.5 last:border-0">
       <span className="font-mono text-xs text-ink-secondary">{entry.family_id}</span>
       <span className="max-w-[60%] truncate text-xs text-ink-muted" title={entry.summary ?? undefined}>
         {entry.summary ?? "—"}

@@ -122,14 +122,14 @@ export function DataSourceControl() {
             disabled={pending !== null}
             className={clsx(
               "rounded-lg border px-3 py-2.5 text-left text-xs font-medium transition-colors disabled:opacity-60",
-              !isReplay ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-300" : "border-white/5 text-ink-secondary",
+              !isReplay ? "border-final-accent/40 bg-final-accent/10 text-final-accent" : "border-jury-border-subtle text-ink-secondary",
             )}
           >
             Synthetic Demo
           </button>
           <div className={clsx(
             "rounded-lg border px-3 py-2.5 text-xs font-medium",
-            isReplay ? "border-cyan-400/40 bg-cyan-500/10 text-cyan-300" : "border-white/5 text-ink-secondary",
+            isReplay ? "border-final-accent/40 bg-final-accent/10 text-final-accent" : "border-jury-border-subtle text-ink-secondary",
           )}>
             PPG-DaLiA Replay
           </div>
@@ -140,7 +140,7 @@ export function DataSourceControl() {
             value={selectedSubject}
             onChange={(event) => setSelectedSubject(event.target.value)}
             disabled={!subjects.length || pending !== null}
-            className="min-w-40 rounded-lg border border-white/10 bg-surface-1 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+            className="min-h-11 min-w-40 rounded-lg border border-jury-border-subtle bg-surface-1 px-3 py-2 text-sm text-ink-primary disabled:opacity-50"
           >
             {subjects.length ? subjects.map((subject) => <option key={subject}>{subject}</option>) : <option>Dataset not configured</option>}
           </select>
@@ -148,16 +148,16 @@ export function DataSourceControl() {
             type="button"
             onClick={() => run("load", () => api.loadReplaySubject(selectedSubject))}
             disabled={!selectedSubject || pending !== null}
-            className="rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-xs font-medium text-cyan-300 disabled:opacity-50"
+            className="min-h-11 inline-flex items-center rounded-lg border border-final-accent/30 bg-final-accent/10 px-3 py-2 text-sm font-medium text-final-accent disabled:opacity-50"
           >
             {pending === "load" ? "Loading real subject…" : "Load Subject"}
           </button>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <button type="button" disabled={!isReplay || pending !== null || playbackState === "ended"} onClick={() => run("play", api.playReplay)} className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40">Play</button>
-          <button type="button" disabled={!isReplay || pending !== null} onClick={() => run("pause", api.pauseReplay)} className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40">Pause</button>
-          <button type="button" disabled={!isReplay || pending !== null} onClick={() => run("reset", api.resetReplay)} className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40">Reset</button>
+          <button type="button" disabled={!isReplay || pending !== null || playbackState === "ended"} onClick={() => run("play", api.playReplay)} className="min-h-11 inline-flex items-center rounded-md border border-jury-border-subtle px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40">Play</button>
+          <button type="button" disabled={!isReplay || pending !== null} onClick={() => run("pause", api.pauseReplay)} className="min-h-11 inline-flex items-center rounded-md border border-jury-border-subtle px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40">Pause</button>
+          <button type="button" disabled={!isReplay || pending !== null} onClick={() => run("reset", api.resetReplay)} className="min-h-11 inline-flex items-center rounded-md border border-jury-border-subtle px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40">Reset</button>
           <span className="mx-1 self-center text-xs uppercase tracking-wider text-ink-muted">Speed</span>
           {SPEEDS.map((value) => (
             <button
@@ -165,9 +165,12 @@ export function DataSourceControl() {
               type="button"
               disabled={!isReplay || pending !== null}
               onClick={() => run(`speed-${value}`, () => api.setReplaySpeed(value))}
+              aria-pressed={speed === value}
               className={clsx(
-                "rounded-md border px-2.5 py-1.5 text-xs disabled:opacity-40",
-                speed === value ? "border-cyan-400/40 text-cyan-300" : "border-white/10 text-ink-muted",
+                "inline-flex min-h-11 items-center rounded-md border px-2.5 text-sm disabled:opacity-40",
+                speed === value
+                  ? "border-final-accent/40 font-semibold text-final-accent"
+                  : "border-jury-border-subtle font-medium text-ink-muted",
               )}
             >
               {value}x
@@ -176,19 +179,19 @@ export function DataSourceControl() {
         </div>
 
         {isReplay ? (
-          <div className="rounded-lg border border-cyan-400/15 bg-cyan-500/5 p-3 text-xs text-ink-secondary">
-            <p className="font-semibold uppercase tracking-wider text-cyan-300">Real Recorded Data — Replay Mode</p>
+          <div className="rounded-lg border border-final-accent/15 bg-final-accent/5 p-3 text-xs text-ink-secondary">
+            <p className="font-semibold uppercase tracking-wider text-final-accent">Real Recorded Data — Replay Mode</p>
             <p className="mt-1">PPG-DaLiA · {activeSubject} · {playbackState} · {position.toFixed(1)} / {duration.toFixed(1)} s · {speed}x</p>
             <p className="mt-1 text-ink-muted">Recorded/measured: wrist PPG, wrist IMU, chest ECG, and temperature when loaded.</p>
             <p className="mt-1 text-ink-muted">AI estimated: PPG + IMU heart-rate estimate. Not live astronaut monitoring.</p>
             {activeSubject === "S14" ? (
-              <p className="mt-1 text-amber-300/90">S14 single-participant robustness demonstration; not population validation.</p>
+              <p className="mt-1 text-jury-warning/90">S14 single-participant robustness demonstration; not population validation.</p>
             ) : null}
           </div>
         ) : null}
         {isReplay ? (
-          <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-amber-300">Simulated fault injection</p>
+          <div className="rounded-lg border border-jury-warning/20 bg-jury-warning/5 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-jury-warning">Simulated fault injection</p>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
               <select
                 value={faultType}
@@ -198,7 +201,7 @@ export function DataSourceControl() {
                   setFaultSeverity(value === "modality_dropout" || value === "frozen_sensor" ? 1 : 0.25);
                 }}
                 disabled={pending !== null}
-                className="rounded-lg border border-white/10 bg-surface-1 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+                className="min-h-11 rounded-lg border border-jury-border-subtle bg-surface-1 px-3 py-2 text-sm text-ink-primary disabled:opacity-50"
               >
                 {FAULT_TYPES.map((fault) => <option key={fault.value} value={fault.value}>{fault.label}</option>)}
               </select>
@@ -206,7 +209,7 @@ export function DataSourceControl() {
                 value={faultTarget}
                 onChange={(event) => setFaultTarget(event.target.value as ReplayFaultTarget)}
                 disabled={pending !== null}
-                className="rounded-lg border border-white/10 bg-surface-1 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+                className="min-h-11 rounded-lg border border-jury-border-subtle bg-surface-1 px-3 py-2 text-sm text-ink-primary disabled:opacity-50"
               >
                 <option value="ppg">PPG</option>
                 <option value="imu">IMU</option>
@@ -222,7 +225,7 @@ export function DataSourceControl() {
                   value={faultSeverity}
                   disabled={!severityIsConfigurable || pending !== null}
                   onChange={(event) => setFaultSeverity(Number(event.target.value))}
-                  className="w-20 rounded-md border border-white/10 bg-surface-1 px-2 py-1.5 text-ink-primary disabled:opacity-40"
+                  className="min-h-11 w-20 rounded-md border border-jury-border-subtle bg-surface-1 px-2 py-1.5 text-sm text-ink-primary disabled:opacity-40"
                 />
               </label>
               <label className="flex items-center gap-2 text-xs text-ink-secondary">
@@ -234,7 +237,7 @@ export function DataSourceControl() {
                   value={faultSeed}
                   disabled={pending !== null}
                   onChange={(event) => setFaultSeed(Number(event.target.value))}
-                  className="w-24 rounded-md border border-white/10 bg-surface-1 px-2 py-1.5 text-ink-primary disabled:opacity-40"
+                  className="min-h-11 w-24 rounded-md border border-jury-border-subtle bg-surface-1 px-2 py-1.5 text-sm text-ink-primary disabled:opacity-40"
                 />
               </label>
             </div>
@@ -248,7 +251,7 @@ export function DataSourceControl() {
                   severity: severityIsConfigurable ? faultSeverity : 1,
                   seed: faultSeed,
                 }))}
-                className="rounded-md border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-medium text-amber-300 disabled:opacity-40"
+                className="min-h-11 inline-flex items-center rounded-md border border-jury-warning/30 bg-jury-warning/10 px-3 py-1.5 text-sm font-medium text-jury-warning disabled:opacity-40"
               >
                 Enable fault
               </button>
@@ -256,13 +259,13 @@ export function DataSourceControl() {
                 type="button"
                 disabled={!activeFault?.active || pending !== null}
                 onClick={() => run("fault-disable", api.clearReplayFault)}
-                className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
+                className="min-h-11 inline-flex items-center rounded-md border border-jury-border-subtle px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40"
               >
                 Disable / clear
               </button>
             </div>
             {activeFault?.active ? (
-              <p className="mt-2 text-xs text-amber-200">{deriveFaultSummaryLabel(activeFault)} · seed {activeFault.seed}</p>
+              <p className="mt-2 text-xs text-jury-warning">{deriveFaultSummaryLabel(activeFault)} · seed {activeFault.seed}</p>
             ) : (
               <p className="mt-2 text-xs text-ink-muted">Disabled — clean replay samples pass through unchanged.</p>
             )}

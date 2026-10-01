@@ -32,21 +32,21 @@ function valueOrUnknown(value: unknown): string {
 // (governing prompt Part VIII §37).
 
 const GATE_D_STATUS_CLASS: Record<string, string> = {
-  READY: "border-emerald-400/25 bg-emerald-400/[0.08] text-emerald-300",
-  CONDITIONALLY_READY: "border-amber-400/25 bg-amber-400/[0.08] text-amber-300",
-  NOT_READY: "border-rose-400/25 bg-rose-400/[0.08] text-rose-300",
+  READY: "border-jury-success/25 bg-jury-success/[0.08] text-jury-success",
+  CONDITIONALLY_READY: "border-jury-warning/25 bg-jury-warning/[0.08] text-jury-warning",
+  NOT_READY: "border-jury-fault/25 bg-jury-fault/[0.08] text-jury-fault",
 };
 
 const DOMINANCE_CLASS: Record<string, string> = {
-  PARETO_RELEVANT: "border-emerald-400/20 bg-emerald-400/[0.06] text-emerald-300",
-  POTENTIALLY_DOMINATED: "border-amber-400/20 bg-amber-400/[0.06] text-amber-300",
+  PARETO_RELEVANT: "border-jury-success/20 bg-jury-success/[0.06] text-jury-success",
+  POTENTIALLY_DOMINATED: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
   BURDEN_DATA_INCOMPLETE: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
 };
 
 const SEVERITY_CLASS: Record<string, string> = {
-  HARD_BLOCK: "border-rose-400/20 bg-rose-400/[0.06] text-rose-300",
-  COORDINATOR_DECISION_REQUIRED: "border-amber-400/20 bg-amber-400/[0.06] text-amber-300",
-  DISCLOSURE_REQUIRED: "border-cyan-400/20 bg-cyan-400/[0.06] text-cyan-300",
+  HARD_BLOCK: "border-jury-fault/20 bg-jury-fault/[0.06] text-jury-fault",
+  COORDINATOR_DECISION_REQUIRED: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
+  DISCLOSURE_REQUIRED: "border-final-accent/20 bg-final-accent/[0.06] text-final-accent",
   NONBLOCKING: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
 };
 
@@ -56,7 +56,7 @@ function Pill({ text, className }: { text: string; className: string }) {
 
 function CandidateClassRow({ candidate }: { candidate: Stage4ArchitectureCandidateClasses["classes"][number] }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+    <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-xs text-ink-secondary">{candidate.class_id}</span>
         <span className="text-xs text-ink-muted">{candidate.pending_science_exposure}</span>
@@ -70,7 +70,7 @@ function CandidateClassRow({ candidate }: { candidate: Stage4ArchitectureCandida
 
 function BurdenClassRow({ item }: { item: Stage4CandidateClassBurdenComparison["classes"][number] }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-jury-border-subtle py-1.5 last:border-0">
       <span className="text-xs text-ink-secondary">{item.class_id}</span>
       <Pill
         text={item.dominance_flag}
@@ -83,7 +83,7 @@ function BurdenClassRow({ item }: { item: Stage4CandidateClassBurdenComparison["
 function ContactModalityRow({ modality }: { modality: Stage4ContactElectrodeBurden["modalities"][number] }) {
   const c = modality.total_contacts;
   return (
-    <div className="border-b border-white/5 py-1.5 last:border-0">
+    <div className="border-b border-jury-border-subtle py-1.5 last:border-0">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-xs text-ink-secondary">{modality.modality}</span>
         <span className="font-mono text-xs text-ink-secondary">
@@ -94,7 +94,7 @@ function ContactModalityRow({ modality }: { modality: Stage4ContactElectrodeBurd
         {modality.anatomical_region} · {modality.electrode_type} · confidence: {modality.confidence}
       </p>
       {modality.unresolved_topology_question ? (
-        <p className="mt-0.5 text-xs leading-relaxed text-amber-300/80">
+        <p className="mt-0.5 text-xs leading-relaxed text-jury-warning/80">
           Unresolved: {valueOrUnknown((modality.unresolved_topology_question as { question?: string }).question)}
         </p>
       ) : null}
@@ -105,7 +105,7 @@ function ContactModalityRow({ modality }: { modality: Stage4ContactElectrodeBurd
 function BurdenMatrixClassRow({ row }: { row: Stage4CandidateBurdenMatrix["classes"][number] }) {
   const powerRange = row.power_range_mw as { single_shared_mcu_radio?: { battery_side?: number }; per_module_mcu_radio?: { battery_side?: number } };
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+    <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-xs text-ink-secondary">{row.class_id}</span>
         <span className="text-xs text-ink-muted">{row.module_count} module{row.module_count === 1 ? "" : "s"}</span>
@@ -118,7 +118,7 @@ function BurdenMatrixClassRow({ row }: { row: Stage4CandidateBurdenMatrix["class
         (shared vs. per-module MCU/radio)
       </p>
       {row.major_unknowns.length ? (
-        <ul className="mt-1 space-y-0.5 text-xs leading-relaxed text-amber-300/70">
+        <ul className="mt-1 space-y-0.5 text-xs leading-relaxed text-jury-warning/70">
           {row.major_unknowns.map((u) => (
             <li key={u}>• {u}</li>
           ))}
@@ -130,7 +130,7 @@ function BurdenMatrixClassRow({ row }: { row: Stage4CandidateBurdenMatrix["class
 
 function BatteryScenarioSummary({ scenarios }: { scenarios: Stage4BatteryTopologyScenarios }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+    <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
       <p className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">Battery/electronics topology — {scenarios.not_a_final_battery_selection ? "not a final selection" : ""}</p>
       <p className="mt-1 text-xs leading-relaxed text-ink-secondary">{scenarios.does_ranking_depend_on_topology.verdict}</p>
       <p className="mt-1 text-xs leading-relaxed text-ink-muted">
@@ -142,7 +142,7 @@ function BatteryScenarioSummary({ scenarios }: { scenarios: Stage4BatteryTopolog
 
 function GateRow({ gate }: { gate: Stage4ArchitectureAcceptanceGates["gates"][number] }) {
   return (
-    <div className="border-b border-white/5 py-2 last:border-0">
+    <div className="border-b border-jury-border-subtle py-2 last:border-0">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-xs text-ink-secondary">{gate.gate_id}</span>
         <Pill text={gate.severity} className={SEVERITY_CLASS[gate.severity] ?? "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary"} />
@@ -181,7 +181,7 @@ export function Stage4ArchitectureDecisionPanel({
       contentClassName="space-y-4"
     >
       {gateD ? (
-        <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+        <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-ink-secondary">
               Gate D — Burden Completeness
@@ -193,7 +193,7 @@ export function Stage4ArchitectureDecisionPanel({
           </div>
           <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">{gateD.rationale}</p>
           {gateD.gate_d_burden_completeness !== "READY" ? (
-            <ul className="mt-2 space-y-1 text-xs leading-relaxed text-amber-300/80">
+            <ul className="mt-2 space-y-1 text-xs leading-relaxed text-jury-warning/80">
               {gateD.what_would_close_it.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
@@ -201,7 +201,7 @@ export function Stage4ArchitectureDecisionPanel({
           ) : null}
         </div>
       ) : gateDError ? (
-        <p role="alert" className="rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-3 py-2 text-xs text-rose-200">
+        <p role="alert" className="rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-3 py-2 text-xs text-jury-fault">
           Gate D assessment unavailable: {gateDError}
         </p>
       ) : null}
@@ -240,7 +240,7 @@ export function Stage4ArchitectureDecisionPanel({
             {gateE.high_sensitivity_items.length === 1 ? "" : "s"}, no option selected)
           </p>
           {gateE.high_sensitivity_items.map((item) => (
-            <div key={item.item} className="border-b border-white/5 py-1.5 last:border-0">
+            <div key={item.item} className="border-b border-jury-border-subtle py-1.5 last:border-0">
               <p className="text-xs text-ink-secondary">{item.item}</p>
               <p className="text-xs text-ink-muted">
                 WAIT / FREEZE_CONDITIONALLY / FREEZE_DESPITE_UNCERTAINTY_WITH_DISCLOSURE — Coordinator choice required

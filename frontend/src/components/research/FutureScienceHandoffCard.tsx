@@ -19,17 +19,17 @@ import type {
 // manifest did not declare (Phase-3 consumer-guard requirement).
 
 const COMPLETION_STATE_CLASS: Record<ExperimentCompletionState, string> = {
-  COMPLETE: "border-emerald-400/25 bg-emerald-400/[0.08] text-emerald-300",
-  BOUNDED_DIAGNOSTIC: "border-amber-400/25 bg-amber-400/[0.08] text-amber-300",
-  BLOCKED_BY_DATA_ACCESS: "border-rose-400/25 bg-rose-400/[0.07] text-rose-300",
+  COMPLETE: "border-jury-success/25 bg-jury-success/[0.08] text-jury-success",
+  BOUNDED_DIAGNOSTIC: "border-jury-warning/25 bg-jury-warning/[0.08] text-jury-warning",
+  BLOCKED_BY_DATA_ACCESS: "border-jury-fault/25 bg-jury-fault/[0.07] text-jury-fault",
   PENDING: "border-jury-border-subtle bg-ink-muted/[0.08] text-ink-secondary",
   HISTORICAL: "border-jury-border-subtle bg-ink-muted/[0.05] text-ink-secondary",
-  SUPERSEDED: "border-rose-400/20 bg-rose-400/[0.05] text-rose-400/90",
+  SUPERSEDED: "border-jury-fault/20 bg-jury-fault/[0.05] text-jury-fault/90",
 };
 
 const REPLICATION_CLASS_CLASS: Record<ReplicationClass, string> = {
-  EXTERNAL_REPLICATION: "border-cyan-400/25 bg-cyan-400/[0.08] text-cyan-300",
-  SAME_DATASET_HOLDOUT: "border-amber-400/20 bg-amber-400/[0.06] text-amber-200",
+  EXTERNAL_REPLICATION: "border-final-accent/25 bg-final-accent/[0.08] text-final-accent",
+  SAME_DATASET_HOLDOUT: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
   SINGLE_RUN: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
   NOT_APPLICABLE: "border-jury-border-subtle bg-ink-muted/[0.04] text-ink-muted",
 };
@@ -54,18 +54,18 @@ function SensitivitySection({ label, block }: { label: string; block: FutureScie
     );
   }
   return (
-    <details className="mt-2 rounded-lg border border-white/5 bg-white/[0.015]">
+    <details className="mt-2 rounded-lg border border-jury-border-subtle bg-surface-2">
       <summary className="cursor-pointer px-3 py-2 text-xs font-semibold text-ink-secondary">
         {label} ({block.entries.length}){block.dominant_key ? ` — dominant: ${block.dominant_key}` : ""}
       </summary>
-      <div className="space-y-1 border-t border-white/5 px-3 py-2">
+      <div className="space-y-1 border-t border-jury-border-subtle px-3 py-2">
         {block.entries.map((entry) => (
           <p key={entry.key} className="flex justify-between gap-3 font-mono text-xs text-ink-secondary">
             <span>{entry.key}</span>
             <span>{entry.value ?? "—"}{entry.note ? ` (${entry.note})` : ""}</span>
           </p>
         ))}
-        {block.note ? <p className="pt-1 text-xs text-amber-300/80">{block.note}</p> : null}
+        {block.note ? <p className="pt-1 text-xs text-jury-warning/80">{block.note}</p> : null}
       </div>
     </details>
   );
@@ -73,7 +73,7 @@ function SensitivitySection({ label, block }: { label: string; block: FutureScie
 
 function ProjectionCard({ projection }: { projection: ManifestEntryDisplayProjection }) {
   return (
-    <article className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+    <article className="rounded-xl border border-jury-border-subtle bg-surface-2 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <h3 className="text-sm font-semibold text-ink-primary">{projection.experiment_id}</h3>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -130,7 +130,7 @@ export function FutureScienceHandoffCard({ envelope }: { envelope: FutureScience
       ) : null}
 
       {envelope.status === "INGESTION_FAILED" ? (
-        <p role="alert" className="flex items-start gap-2 rounded-lg border border-rose-400/20 bg-rose-400/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-rose-200">
+        <p role="alert" className="flex items-start gap-2 rounded-lg border border-jury-fault/20 bg-jury-fault/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-jury-fault">
           <ShieldAlert size={14} className="mt-0.5 shrink-0" />
           Ingestion failed ({envelope.error_code ?? "UNKNOWN"}): {envelope.error ?? "no further detail."} No
           fallback to any prior or cached result was used.

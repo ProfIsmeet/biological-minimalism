@@ -16,11 +16,11 @@ import type {
 // (governing prompt §30).
 
 const STRENGTH_CLASS: Record<string, string> = {
-  SAFE: "border-emerald-400/25 bg-emerald-400/[0.08] text-emerald-300",
-  SAFE_WITH_LIMITATION: "border-cyan-400/20 bg-cyan-400/[0.06] text-cyan-300",
+  SAFE: "border-jury-success/25 bg-jury-success/[0.08] text-jury-success",
+  SAFE_WITH_LIMITATION: "border-final-accent/20 bg-final-accent/[0.06] text-final-accent",
   HISTORICAL_ONLY: "border-jury-border-subtle bg-ink-muted/[0.06] text-ink-secondary",
-  UNSAFE: "border-rose-400/25 bg-rose-400/[0.08] text-rose-300",
-  PENDING: "border-amber-400/20 bg-amber-400/[0.06] text-amber-300",
+  UNSAFE: "border-jury-fault/25 bg-jury-fault/[0.08] text-jury-fault",
+  PENDING: "border-jury-warning/20 bg-jury-warning/[0.06] text-jury-warning",
 };
 
 function StrengthPill({ strength }: { strength: string }) {
@@ -35,15 +35,15 @@ function StrengthPill({ strength }: { strength: string }) {
 
 function FamilyCard({ family }: { family: Stage4ScienceConsumptionManifest["families"][number] }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+    <div className="rounded-lg border border-jury-border-subtle bg-surface-2 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-xs text-ink-secondary">{family.family_id}</span>
-        <span className="rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-2 py-0.5 text-xs font-semibold text-cyan-300">
+        <span className="rounded-full border border-final-accent/20 bg-final-accent/[0.06] px-2 py-0.5 text-xs font-semibold text-final-accent">
           {family.evidence_classification}
         </span>
       </div>
       <p className="mt-2 text-xs leading-relaxed text-ink-primary">{family.strongest_safe_claim}</p>
-      <p className="mt-1.5 text-xs leading-relaxed text-amber-300/80">
+      <p className="mt-1.5 text-xs leading-relaxed text-jury-warning/80">
         Must not claim: {family.prohibited_overclaim}
       </p>
       {family.heterogeneity ? (
@@ -61,12 +61,12 @@ function FamilyCard({ family }: { family: Stage4ScienceConsumptionManifest["fami
 
 function ModalityRow({ modality }: { modality: Stage4SensorValueMatrix["modalities"][number] }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/5 py-1.5 last:border-0">
+    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-jury-border-subtle py-1.5 last:border-0">
       <span className="text-xs text-ink-secondary">{modality.modality}</span>
       <span className="max-w-[45%] truncate text-xs text-ink-muted" title={modality.supported_target_use}>
         {modality.supported_target_use}
       </span>
-      <span className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-xs font-semibold text-ink-secondary">
+      <span className="rounded-full border border-jury-border-subtle bg-surface-2 px-2 py-0.5 text-xs font-semibold text-ink-secondary">
         {modality.architecture_implication}
       </span>
     </div>
@@ -75,13 +75,13 @@ function ModalityRow({ modality }: { modality: Stage4SensorValueMatrix["modaliti
 
 function ClaimRow({ claim }: { claim: Stage4ScienceClaim }) {
   return (
-    <div className="border-b border-white/5 py-2 last:border-0">
+    <div className="border-b border-jury-border-subtle py-2 last:border-0">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-xs text-ink-muted">{claim.claim_id}</span>
         <StrengthPill strength={claim.strength} />
       </div>
       <p className="mt-1 text-xs leading-relaxed text-ink-primary">{claim.exact_safe_wording}</p>
-      <p className="mt-1 text-xs leading-relaxed text-rose-300/70">Prohibited: {claim.prohibited_stronger_wording}</p>
+      <p className="mt-1 text-xs leading-relaxed text-jury-fault/70">Prohibited: {claim.prohibited_stronger_wording}</p>
     </div>
   );
 }

@@ -75,7 +75,7 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
           disabled={loading || isReplay}
           aria-label={isReplay ? "Refresh explanation — unavailable for the current source" : "Refresh explanation"}
           title={isReplay ? "No SHAP explanation exists for the replay heart-rate model" : undefined}
-          className="flex h-11 w-11 items-center justify-center rounded-md text-ink-muted transition-colors hover:bg-white/5 hover:text-ink-primary disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex h-11 w-11 items-center justify-center rounded-md text-ink-muted transition-colors hover:bg-surface-2 hover:text-ink-primary disabled:cursor-not-allowed disabled:opacity-40"
         >
           <RefreshCw size={14} aria-hidden="true" className={loading ? "animate-spin" : ""} />
         </button>
@@ -93,7 +93,7 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
             key={explanation.summary_text}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg border border-cyan-400/15 bg-cyan-500/5 px-3.5 py-3 text-sm leading-relaxed text-ink-primary"
+            className="rounded-lg border border-final-accent/15 bg-final-accent/5 px-3.5 py-3 text-sm leading-relaxed text-ink-primary"
           >
             {explanation.summary_text}
           </motion.p>
@@ -108,7 +108,7 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
                 <div key={contribution.feature} className="flex items-center gap-3 text-xs">
                   <span className="w-36 shrink-0 truncate text-ink-secondary">{contribution.feature}</span>
                   <div className="relative h-3 flex-1">
-                    <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/10" />
+                    <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-surface-2" />
                     <motion.div
                       className={clsx("absolute top-0 h-full rounded-sm")}
                       style={{ backgroundColor: color, left: isPositive ? "50%" : undefined, right: isPositive ? undefined : "50%" }}
@@ -126,7 +126,7 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
             })}
           </div>
 
-          <div className="flex items-center justify-between border-t border-white/5 pt-3 text-xs text-ink-muted">
+          <div className="flex items-center justify-between border-t border-jury-border-subtle pt-3 text-xs text-ink-muted">
             <span>Baseline (expected value): {explanation.base_value.toFixed(1)}</span>
             <span>Current: {explanation.predicted_value.toFixed(1)}</span>
           </div>

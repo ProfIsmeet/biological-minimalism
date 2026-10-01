@@ -27,7 +27,7 @@ export function MetricTile({ label, value, unit, level = "nominal", hint }: Metr
   const isLongValue = value.length > 6;
 
   return (
-    <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-white/5 bg-white/[0.02] px-3.5 py-3">
+    <div className="flex min-w-0 flex-col gap-1 rounded-lg border border-jury-border-subtle bg-surface-2 px-3.5 py-3">
       <span className="text-xs uppercase tracking-wider text-ink-muted">{label}</span>
       <span className="flex min-w-0 flex-wrap items-baseline gap-1">
         <span

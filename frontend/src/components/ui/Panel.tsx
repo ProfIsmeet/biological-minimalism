@@ -21,7 +21,7 @@ export function Panel({ title, subtitle, icon, actions, children, className, con
     <section className={clsx("mission-panel flex flex-col", className)} aria-label={title}>
       <div className="mission-panel-header">
         <div className="flex min-w-0 items-center gap-2.5">
-          {icon ? <span className="text-cyan-400" aria-hidden="true">{icon}</span> : null}
+          {icon ? <span className="text-final-accent" aria-hidden="true">{icon}</span> : null}
           <div className="min-w-0">
             <HeadingTag className="break-words text-[15px] font-semibold uppercase tracking-wide text-ink-primary">{title}</HeadingTag>
             {subtitle ? <p className="text-[13px] leading-snug text-ink-secondary">{subtitle}</p> : null}

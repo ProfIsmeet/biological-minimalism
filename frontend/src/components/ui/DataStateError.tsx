@@ -30,7 +30,7 @@ export function DataStateError({ title, source, cause, onRetry }: DataStateError
         <button
           type="button"
           onClick={onRetry}
-          className="flex w-fit items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-xs font-medium text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+          className="min-h-11 flex w-fit items-center gap-1.5 rounded-[4px] border border-jury-border-strong px-2.5 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-150 hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           <RefreshCw size={12} aria-hidden="true" /> Retry
         </button>

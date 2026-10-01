@@ -86,7 +86,7 @@ export function SimulatedFaultControl() {
             setSeverity(value === "modality_dropout" || value === "frozen_sensor" ? 1 : 0.25);
           }}
           disabled={!control.canApply}
-          className="rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+          className="min-h-11 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-sm text-ink-primary disabled:opacity-50"
         >
           {FAULT_TYPES.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
@@ -97,7 +97,7 @@ export function SimulatedFaultControl() {
           value={target}
           onChange={(event) => setTarget(event.target.value as ReplayFaultTarget)}
           disabled={!control.canApply}
-          className="rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-xs text-ink-primary disabled:opacity-50"
+          className="min-h-11 rounded-[6px] border border-jury-border-strong bg-surface-2 px-3 py-2 text-sm text-ink-primary disabled:opacity-50"
         >
           {FAULT_TARGETS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
@@ -113,7 +113,7 @@ export function SimulatedFaultControl() {
             value={severity}
             disabled={!severityIsConfigurable || !control.canApply}
             onChange={(event) => setSeverity(Number(event.target.value))}
-            className="w-20 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-ink-primary disabled:opacity-40"
+            className="min-h-11 w-20 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-sm text-ink-primary disabled:opacity-40"
           />
         </label>
         <label className="flex items-center gap-2 text-xs text-ink-secondary" htmlFor="fault-seed-input">
@@ -127,7 +127,7 @@ export function SimulatedFaultControl() {
             value={seed}
             disabled={!control.canApply}
             onChange={(event) => setSeed(Number(event.target.value))}
-            className="w-24 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-ink-primary disabled:opacity-40"
+            className="min-h-11 w-24 rounded-[6px] border border-jury-border-strong bg-surface-2 px-2 py-1.5 text-sm text-ink-primary disabled:opacity-40"
           />
         </label>
       </div>
@@ -137,7 +137,7 @@ export function SimulatedFaultControl() {
           type="button"
           disabled={!control.canApply}
           onClick={() => void configureFault({ fault_type: faultType, target, severity: severityIsConfigurable ? severity : 1, seed })}
-          className="rounded-[6px] border border-experimental/40 bg-experimental-soft px-3 py-1.5 text-xs font-medium text-experimental disabled:opacity-40"
+          className="min-h-11 inline-flex items-center rounded-[6px] border border-experimental/40 bg-experimental-soft px-3 py-1.5 text-sm font-medium text-experimental disabled:opacity-40"
         >
           Apply fault
         </button>
@@ -145,7 +145,7 @@ export function SimulatedFaultControl() {
           type="button"
           disabled={!control.canClear}
           onClick={() => void clearFault()}
-          className="rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-xs text-ink-secondary disabled:opacity-40"
+          className="min-h-11 inline-flex items-center rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40"
           title={!control.authoritativeCurrent ? "Current fault state must be confirmed before clearing." : !control.faultActive ? "No simulated fault is active to clear." : undefined}
         >
           Clear fault

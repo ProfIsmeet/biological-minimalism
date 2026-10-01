@@ -18,7 +18,7 @@ interface TrendLineChartProps {
 function TrendTooltip({ active, payload, unit }: { active?: boolean; payload?: { value: number }[]; unit?: string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-white/10 bg-canvas/95 px-2.5 py-1.5 text-xs text-ink-primary shadow-lg">
+    <div className="rounded-md border border-jury-border-subtle bg-canvas/95 px-2.5 py-1.5 text-xs text-ink-primary shadow-lg">
       {payload[0]!.value.toFixed(1)}
       {unit ? ` ${unit}` : ""}
     </div>
