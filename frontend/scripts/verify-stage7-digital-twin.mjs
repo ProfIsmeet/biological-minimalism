@@ -14,7 +14,12 @@ const rejectText = (file, text, reason) => {
   if (read(file).includes(text)) violations.push(`${file}: ${reason}`);
 };
 
-const page = "src/app/digital-twin/page.tsx";
+// Stage 8 split this route into a server shell (page.tsx, owning metadata)
+// and DigitalTwinClient.tsx (owning the view). The view is what these
+// assertions are about, and the shell is checked too so neither half can
+// reintroduce operational state.
+const page = "src/app/digital-twin/DigitalTwinClient.tsx";
+const pageShell = "src/app/digital-twin/page.tsx";
 const stage = "src/components/visualization/human/ConceptualTwinStage.tsx";
 const fallback = "src/components/visualization/human/ConceptualTwinFallback.tsx";
 const contacts = "src/components/visualization/human/ArchitectureSensorContacts.tsx";
@@ -22,6 +27,7 @@ const contacts = "src/components/visualization/human/ArchitectureSensorContacts.
 for (const forbidden of ["useMissionStore", "useLiveFeed", "fetch(", "WebSocket", "getDigitalTwin", "overall_adaptation"]) {
   rejectText(stage, forbidden, `static architecture route must not own or fabricate operational/model state (${forbidden})`);
   rejectText(page, forbidden, `page must stay architecture-only (${forbidden})`);
+  rejectText(pageShell, forbidden, `page shell must stay architecture-only (${forbidden})`);
 }
 
 for (const control of ['"front"', '"back"', '"chest"', '"wrist"', "Reset view", "Pause rotation"]) {

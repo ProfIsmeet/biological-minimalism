@@ -148,6 +148,16 @@ import { reduceMotionEnabledFromStorage } from "../src/lib/runtime/reduceMotion"
 /** Repo `frontend/src` root, for the Prompt 3A.1 Digital Twin source-inspection tests (readFileSync-based, since that route's .tsx cannot be imported into this plain-Node harness). */
 const REPO_SRC_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
 
+/**
+ * Both halves of the /digital-twin route. Stage 8 split it into a server shell
+ * (page.tsx, which owns `metadata`) and DigitalTwinClient.tsx (which owns the
+ * view), because a client component cannot export metadata and the route was
+ * silently inheriting the layout's default title and description. Every
+ * protected source assertion for this route reads BOTH files concatenated, so
+ * moving the body out of page.tsx cannot quietly empty a check.
+ */
+const DIGITAL_TWIN_ROUTE_FILES = ["app/digital-twin/page.tsx", "app/digital-twin/DigitalTwinClient.tsx"] as const;
+
 import type { ConnectionStatus } from "../src/store/missionStore";
 import type {
   DataSourceStatus,
@@ -2741,7 +2751,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 // ===========================================================================
 
 {
-  const digitalTwinPageSource = readFileSync(join(REPO_SRC_ROOT, "app/digital-twin/page.tsx"), "utf8");
+  const digitalTwinPageSource = DIGITAL_TWIN_ROUTE_FILES.map((file) => readFileSync(join(REPO_SRC_ROOT, file), "utf8")).join("");
   check("digital twin: milestone_label is never read from state (optional-chain form)", !digitalTwinPageSource.includes("state?.milestone_label"));
   check("digital twin: milestone_label is never read from state (direct form)", !digitalTwinPageSource.includes("state.milestone_label"));
   check("digital twin: the backend narrative field is never rendered", !digitalTwinPageSource.includes("state?.narrative") && !digitalTwinPageSource.includes("state.narrative"));
@@ -3269,7 +3279,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   check("boundary: mounts OperationalEventLogWatcher on the full tier", runtimeSource.includes("OperationalEventLogWatcher"));
   check("boundary: passes seedDataSourceState={false} on full tier (dedupe)", runtimeSource.includes("seedDataSourceState={false}"));
 
-  for (const staticRoute of ["app/system-brief/page.tsx", "app/research/experimental/page.tsx", "app/digital-twin/page.tsx"]) {
+  for (const staticRoute of ["app/system-brief/page.tsx", "app/research/experimental/page.tsx", ...DIGITAL_TWIN_ROUTE_FILES]) {
     const src = readFileSync(join(REPO_SRC_ROOT, staticRoute), "utf8");
     check(`${staticRoute}: does not call useLiveFeed`, !src.includes("useLiveFeed"));
     check(`${staticRoute}: does not call useMonitoringSession`, !src.includes("useMonitoringSession"));
@@ -3990,7 +4000,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
 
   const expSource = readFileSync(join(REPO_SRC_ROOT, "app/research/experimental/page.tsx"), "utf8");
   check("claim safety: /research/experimental retains BioZ evidence content", expSource.includes("BioZEvidenceSection"));
-  const twinSource = readFileSync(join(REPO_SRC_ROOT, "app/digital-twin/page.tsx"), "utf8");
+  const twinSource = DIGITAL_TWIN_ROUTE_FILES.map((file) => readFileSync(join(REPO_SRC_ROOT, file), "utf8")).join("");
   check("claim safety: /digital-twin retains untrained/unvalidated scope language", /untrained|unvalidated|architecture only/i.test(twinSource));
 }
 
@@ -5336,7 +5346,7 @@ function allSourceFiles(): Array<[string, string]> {
   checkIncludes("stage8 §9.1: the shared route title sits inside the 24-30px band", routeHeaderSource, 'className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink-primary sm:text-[28px]"');
   const STANDARD_ROUTE_HEADERS = [
     "app/live-monitoring/page.tsx",
-    "app/digital-twin/page.tsx",
+    "app/digital-twin/DigitalTwinClient.tsx",
     "app/ai-insights/AIInsightsClient.tsx",
     "app/mission-timeline/MissionTimelineClient.tsx",
     "app/settings/SettingsClient.tsx",

@@ -7,6 +7,8 @@ import { SettingsClient } from "@/app/settings/SettingsClient";
 // route's browser tab title falling back to a stale, unrelated title.
 export const metadata: Metadata = {
   title: "Settings — Biological Minimalism",
+  description:
+    "Application preferences and a user-safe telemetry reachability check. Operational replay and fault controls live with the operational routes.",
 };
 
 export default function SettingsPage() {

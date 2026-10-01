@@ -4,6 +4,8 @@ import { MissionOverviewExperience } from "@/components/operations/MissionOvervi
 
 export const metadata: Metadata = {
   title: "Mission Overview — Biological Minimalism",
+  description:
+    "The operational mission view: confirmed modality coverage, AI-estimated heart rate from PPG and IMU, and the fault, rebuilding, and recovery sequence for the current source.",
 };
 
 // Prompt 3B §5/§13 — /mission-overview is now a genuinely scrollable

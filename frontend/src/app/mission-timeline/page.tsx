@@ -11,6 +11,8 @@ import { MissionTimelineClient } from "@/app/mission-timeline/MissionTimelineCli
 // title without changing any client behavior.
 export const metadata: Metadata = {
   title: "Mission Timeline — Biological Minimalism",
+  description:
+    "Chronological record of this interface session's operational events, each stating its origin and the clock its timestamp is measured on, followed by the conceptual architecture checkpoints.",
 };
 
 export default function MissionTimelinePage() {
