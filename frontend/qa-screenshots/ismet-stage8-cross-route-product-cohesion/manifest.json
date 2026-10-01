@@ -1,0 +1,52 @@
+{
+  "stage": 8,
+  "branch": "ismet/stage8-cross-route-product-cohesion",
+  "source_sha": "dc2039d53773ebfad763e0716f51876fb8185058",
+  "capture_status": "BLOCKED_EXTERNAL",
+  "blocked_reason": "No Chrome browser extension was connected to this environment. tabs_context_mcp returned an extension-not-connected error and list_connected_browsers returned an empty list, so there was no browser to drive and no screenshot could be taken.",
+  "reuse_policy": "Screenshots from earlier stages were deliberately NOT copied here. Section 23 forbids reuse, and carrying stale images forward would make this evidence package actively misleading about what was observed at this SHA.",
+  "fabrication_policy": "No manifest entry describes an artifact that does not exist. The artifact list is empty because nothing was captured.",
+  "artifacts": [],
+  "artifact_counts": {
+    "canonical": 0,
+    "audit": 0,
+    "superseded": 0
+  },
+  "required_matrix_unverified": [
+    { "viewport": "1440x900", "class": "desktop", "status": "NOT_VERIFIED" },
+    { "viewport": "1366x768", "class": "desktop-short", "status": "NOT_VERIFIED" },
+    { "viewport": "1280x800", "class": "desktop-narrow", "status": "NOT_VERIFIED" },
+    { "viewport": "1024x768", "class": "tablet-landscape", "status": "NOT_VERIFIED" },
+    { "viewport": "768x1024", "class": "tablet-portrait", "status": "NOT_VERIFIED" },
+    { "viewport": "390x844", "class": "mobile", "status": "NOT_VERIFIED" }
+  ],
+  "substitute_evidence": {
+    "kind": "rendered-HTML acceptance against a running server",
+    "script": "frontend/scripts/verify-rendered-routes.mjs",
+    "command": "npm run verify:rendered -- http://127.0.0.1:3147",
+    "result": "146/146 passed, 0 failed",
+    "routes_checked": 10,
+    "proves": [
+      "every route responds 200",
+      "every route renders its own title naming that route",
+      "every route renders a meta description differing from the layout default",
+      "every route renders exactly one h1",
+      "expected copy is present in visible text",
+      "no section-7 forbidden claim appears in visible text",
+      "no retired palette class reaches the browser",
+      "no sub-12px text class reaches the browser",
+      "static routes deliver no /ws/live-feed reference",
+      "/research redirects to /research/experimental preserving its query"
+    ],
+    "cannot_prove": [
+      "horizontal overflow at any viewport",
+      "measured contrast ratios",
+      "focus-ring visibility against any surface",
+      "rendered hit-target geometry",
+      "keyboard traversal order or focus-trap behaviour",
+      "200% zoom behaviour",
+      "screen-reader behaviour",
+      "runtime socket counts or cleanup on unmount"
+    ]
+  }
+}
