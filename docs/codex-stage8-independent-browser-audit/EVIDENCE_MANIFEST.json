@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "branch": "codex/stage8-independent-browser-audit",
+  "source_sha": "208c1b44c7c99d7b9a41e7e1807e5a0e67650645",
+  "implementation_commit": "5c2fcf6f2f26925ce0207c446c15d9e55414ee10",
+  "durable_file_evidence_count": 0,
+  "export_status": "BLOCKED_EXTERNAL",
+  "export_reason": "The in-app browser displayed screenshot bytes but its security boundary did not permit export into the managed worktree.",
+  "entries": [
+    {"id":"mission-final-1024-initial","route":"/mission-overview","viewport":"1024x768","state":"final corrected source-error boundary","source":"synthetic configuration context","file_path":null,"sha256":"b24d878ffaf43060089fd22361e890e94bbccac879bf11b82a50a7c433f734af","visually_reviewed":true,"result":"PASS"},
+    {"id":"mission-final-1024-full","route":"/mission-overview","viewport":"1024x768","state":"final corrected full page; noncanonical stitching artifact noted","source":"synthetic configuration context","file_path":null,"sha256":"21c28d5ac76da681147f3f5b6441f28f4739d489d0aff6b279f4864a22e71d17","visually_reviewed":true,"result":"REJECTED_CANONICAL"},
+    {"id":"mission-final-768-initial","route":"/mission-overview","viewport":"768x1024","state":"final corrected source-error boundary","source":"synthetic configuration context","file_path":null,"sha256":"93bd15d7d7e2c2d555c0f0984653518dc27269d9f49bcd5710662f72b14891e5","visually_reviewed":true,"result":"PASS"},
+    {"id":"mission-final-768-full","route":"/mission-overview","viewport":"768x1024","state":"final corrected full page; noncanonical stitching artifact noted","source":"synthetic configuration context","file_path":null,"sha256":"3cdad4cfc6cfdc5964ba63e0aeb22a0a47e4fdc8df4519203a338019bd837dd6","visually_reviewed":true,"result":"REJECTED_CANONICAL"},
+    {"id":"mission-final-390-initial","route":"/mission-overview","viewport":"390x844","state":"final corrected source-error boundary","source":"synthetic configuration context","file_path":null,"sha256":"ac60a21f6d8dfa1cfe5563ccd60d00612fbf1b506381694b3e1f0e5d1788baf2","visually_reviewed":true,"result":"PASS"},
+    {"id":"mission-final-390-full","route":"/mission-overview","viewport":"390x844","state":"final corrected full page; noncanonical stitching artifact noted","source":"synthetic configuration context","file_path":null,"sha256":"f7ba3f48d4e41ac02b82f7ebaedd3cbee7f502026f4da2b73ef61f4768046452","visually_reviewed":true,"result":"REJECTED_CANONICAL"},
+    {"id":"ai-1440-initial","route":"/ai-insights","viewport":"1440x900","state":"connected synthetic","source":"synthetic demo","file_path":null,"sha256":"f89d5d2655eeb6295c4ff6fc5d20bc6e4a1dad6a599fe9d2dd94e3fb2e67f72c","visually_reviewed":true,"result":"PASS"},
+    {"id":"ai-768-initial","route":"/ai-insights","viewport":"768x1024","state":"connected synthetic","source":"synthetic demo","file_path":null,"sha256":"4edc0e98fcb90f3fd461f27487816914840e4ff7b3b65e5c9c78bb4fd5a32f1b","visually_reviewed":true,"result":"PASS"},
+    {"id":"ai-390-initial","route":"/ai-insights","viewport":"390x844","state":"connected synthetic","source":"synthetic demo","file_path":null,"sha256":"a0fbaac2f44ef5cc49caeef748a318264447df961fd0743eeac16460866dbf6e","visually_reviewed":true,"result":"PASS"},
+    {"id":"digital-1440-initial","route":"/digital-twin","viewport":"1440x900","state":"architecture viewer settled","source":"conceptual reference","file_path":null,"sha256":"f52a70b6cce9720cf8b37ec5776f52dbd461a0f9c4cc5c0029c5415a4be30121","visually_reviewed":true,"result":"PASS"},
+    {"id":"digital-768-initial","route":"/digital-twin","viewport":"768x1024","state":"architecture viewer settled","source":"conceptual reference","file_path":null,"sha256":"0f48c9f227cb1e12b19243e1667026516554cf895ac7573dd5d831dba30cc597","visually_reviewed":true,"result":"PASS"},
+    {"id":"live-390-initial","route":"/live-monitoring","viewport":"390x844","state":"connected synthetic","source":"synthetic demo","file_path":null,"sha256":"66f1c676b973476482437081356638861cb6bdff485105026848c6903b0ed9f0","visually_reviewed":true,"result":"PASS"}
+  ],
+  "ambiguity_count": 0,
+  "note": "Hash records are audit metadata only; null file paths prevent them from being represented as durable canonical evidence."
+}
