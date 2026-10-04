@@ -1,0 +1,805 @@
+{
+  "schema_version": 1,
+  "method": "Installed Google Chrome browser-supported chrome.tabs.setZoom API; Playwright measured state; macOS screencapture persisted the exact dedicated browser-window rectangle",
+  "prohibited_substitutes_used": false,
+  "browser": "Google Chrome 153.0.8010.12",
+  "artifact_count": 8,
+  "artifacts": [
+    {
+      "artifact_id": "S8C-Z100-MO-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z100-mo-native.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 722,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 100,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:26.972Z",
+      "sha256": "a806a43df057bf7e0e66e6260c0b9f1ddf62c2ec3d2fb5df169ebc87fb1f2f1c",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 721368,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 1440,
+        "inner_height": 722,
+        "device_pixel_ratio": 2,
+        "visual_viewport_width": 1440,
+        "visual_viewport_height": 722,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": true,
+        "media_min_1280_matches": true,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 215,
+            "width": 215
+          }
+        ],
+        "active_title": "Mission Overview — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z200-MO-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z200-mo-native.png",
+      "route": "/mission-overview",
+      "viewport_width": 720,
+      "viewport_height": 361,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 200,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:34.567Z",
+      "sha256": "3830f19a4531df08ddb2f69b426e14f913e6001c75ad353ac0cf7bccf23d78c4",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 481250,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 720,
+        "inner_height": 361,
+        "device_pixel_ratio": 4,
+        "visual_viewport_width": 720,
+        "visual_viewport_height": 361,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": false,
+        "media_min_1280_matches": false,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 0,
+            "width": 0
+          },
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 720,
+            "width": 720
+          }
+        ],
+        "active_title": "Mission Overview — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z100-LM-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z100-lm-native.png",
+      "route": "/live-monitoring",
+      "viewport_width": 1440,
+      "viewport_height": 722,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 100,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:42.798Z",
+      "sha256": "ce78428b0b668cd2ff2d5dace33b44dbc8eb30614bcdf19c71bef963cff2c9ba",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 672772,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 1440,
+        "inner_height": 722,
+        "device_pixel_ratio": 2,
+        "visual_viewport_width": 1440,
+        "visual_viewport_height": 722,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": true,
+        "media_min_1280_matches": true,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 215,
+            "width": 215
+          }
+        ],
+        "active_title": "Signal and Inference Monitor — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z200-LM-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z200-lm-native.png",
+      "route": "/live-monitoring",
+      "viewport_width": 720,
+      "viewport_height": 361,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 200,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:44.998Z",
+      "sha256": "30a4a119fd51349b73c0dfe430ce5764571c75a32c118b9100af44923214a8cc",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 483086,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 720,
+        "inner_height": 361,
+        "device_pixel_ratio": 4,
+        "visual_viewport_width": 720,
+        "visual_viewport_height": 361,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": false,
+        "media_min_1280_matches": false,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 0,
+            "width": 0
+          },
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 720,
+            "width": 720
+          }
+        ],
+        "active_title": "Signal and Inference Monitor — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z100-DT-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z100-dt-native.png",
+      "route": "/digital-twin",
+      "viewport_width": 1440,
+      "viewport_height": 722,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 100,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:49.887Z",
+      "sha256": "0ceda4280bcf77794e02d3b651a0771e6cf233889ea33bce1d8468a1b0b5431f",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 872169,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 1440,
+        "inner_height": 722,
+        "device_pixel_ratio": 2,
+        "visual_viewport_width": 1440,
+        "visual_viewport_height": 722,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": true,
+        "media_min_1280_matches": true,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 215,
+            "width": 215
+          }
+        ],
+        "active_title": "Digital Twin Architecture — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z200-DT-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z200-dt-native.png",
+      "route": "/digital-twin",
+      "viewport_width": 720,
+      "viewport_height": 361,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 200,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:53.725Z",
+      "sha256": "e9289672964e81b126cde881c25b4b7d67b32ec170700a6a01c0d4fb8bd9c671",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 487864,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 720,
+        "inner_height": 361,
+        "device_pixel_ratio": 4,
+        "visual_viewport_width": 720,
+        "visual_viewport_height": 361,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": false,
+        "media_min_1280_matches": false,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 0,
+            "width": 0
+          },
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 720,
+            "width": 720
+          }
+        ],
+        "active_title": "Digital Twin Architecture — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z100-MT-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z100-mt-native.png",
+      "route": "/mission-timeline",
+      "viewport_width": 1440,
+      "viewport_height": 722,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 100,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:28:59.020Z",
+      "sha256": "d99c527be43b60956eb597637e7cd48a87c362321578a5ac55efe5ac47859d06",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 601302,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 1440,
+        "inner_height": 722,
+        "device_pixel_ratio": 2,
+        "visual_viewport_width": 1440,
+        "visual_viewport_height": 722,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": true,
+        "media_min_1280_matches": true,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 215,
+            "width": 215
+          }
+        ],
+        "active_title": "Mission Timeline — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    },
+    {
+      "artifact_id": "S8C-Z200-MT-NATIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/z200-mt-native.png",
+      "route": "/mission-timeline",
+      "viewport_width": 720,
+      "viewport_height": 361,
+      "actual_png_width": 2880,
+      "actual_png_height": 1618,
+      "browser_identity_version": "Google Chrome 153.0.8010.12",
+      "zoom_value": 200,
+      "motion_preference": "reduce",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:29:00.725Z",
+      "sha256": "f250fffa2f3a12834932890c49c560a428de6d33bec49d85004c9ec04d3a9cc7",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 488039,
+      "runtime": {
+        "outer_width": 1440,
+        "outer_height": 809,
+        "screen_x": 0,
+        "screen_y": 30,
+        "inner_width": 720,
+        "inner_height": 361,
+        "device_pixel_ratio": 4,
+        "visual_viewport_width": 720,
+        "visual_viewport_height": 361,
+        "visual_viewport_scale": 1,
+        "horizontal_overflow_px": 0,
+        "media_min_768_matches": false,
+        "media_min_1280_matches": false,
+        "visible_nav_rects": [
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 0,
+            "width": 0
+          },
+          {
+            "label": "Primary",
+            "left": 0,
+            "right": 720,
+            "width": 720
+          }
+        ],
+        "active_title": "Mission Timeline — Biological Minimalism",
+        "native_window_id": 9761,
+        "native_window_bounds_points": {
+          "x": 0,
+          "y": 30,
+          "width": 1440,
+          "height": 809
+        }
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "/mission-overview: browser API reports 100% baseline",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/mission-overview: 100% has no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 100%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"y\":30,\"width\":1440,\"layer\":0,\"name\":\"Mission Overview — Biological Minimalism\",\"id\":9761,\"owner\":\"Google Chrome for Testing\",\"x\":0,\"height\":809}]"
+    },
+    {
+      "name": "/mission-overview 100% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-overview: browser-supported tabs.setZoom reports 200%",
+      "result": "PASS",
+      "detail": "2"
+    },
+    {
+      "name": "/mission-overview: outer browser window unchanged at 200%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Overview — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Overview — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-overview: CSS viewport capacity approximately halves at 200%",
+      "result": "PASS",
+      "detail": "{\"widthRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Overview — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Overview — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-overview: device-pixel relationship doubles at 200%",
+      "result": "PASS",
+      "detail": "{\"dprRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Overview — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Overview — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-overview: visual viewport confirms zoomed CSS capacity",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview: 200% has no horizontal reading overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview: primary title remains visible",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-overview: dialog opens and remains usable at 200%",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-overview: dialog fits zoomed viewport",
+      "result": "PASS",
+      "detail": "{\"box\":{\"x\":336,\"y\":0,\"width\":384,\"height\":361},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Overview — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-overview: content remains meaningfully labelled at 200%",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-overview 200%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"x\":0,\"y\":30,\"height\":809,\"layer\":0,\"name\":\"Mission Overview — Biological Minimalism\",\"width\":1440,\"id\":9761,\"owner\":\"Google Chrome for Testing\"}]"
+    },
+    {
+      "name": "/mission-overview 200% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-overview: browser API reports reset to 100%",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/mission-overview: zoom restored to 100%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Overview — Biological Minimalism\"},\"restored\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Overview — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/live-monitoring: browser API reports 100% baseline",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/live-monitoring: 100% has no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 100%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"owner\":\"Google Chrome for Testing\",\"name\":\"Signal and Inference Monitor — Biological Minimalism\",\"y\":30,\"x\":0,\"width\":1440,\"layer\":0,\"height\":809,\"id\":9761}]"
+    },
+    {
+      "name": "/live-monitoring 100% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/live-monitoring: browser-supported tabs.setZoom reports 200%",
+      "result": "PASS",
+      "detail": "2"
+    },
+    {
+      "name": "/live-monitoring: outer browser window unchanged at 200%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/live-monitoring: CSS viewport capacity approximately halves at 200%",
+      "result": "PASS",
+      "detail": "{\"widthRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/live-monitoring: device-pixel relationship doubles at 200%",
+      "result": "PASS",
+      "detail": "{\"dprRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/live-monitoring: visual viewport confirms zoomed CSS capacity",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring: 200% has no horizontal reading overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring: primary title remains visible",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/live-monitoring: content remains meaningfully labelled at 200%",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/live-monitoring 200%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"owner\":\"Google Chrome for Testing\",\"id\":9761,\"width\":1440,\"layer\":0,\"x\":0,\"y\":30,\"height\":809,\"name\":\"Signal and Inference Monitor — Biological Minimalism\"}]"
+    },
+    {
+      "name": "/live-monitoring 200% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/live-monitoring: browser API reports reset to 100%",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/live-monitoring: zoom restored to 100%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"},\"restored\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Signal and Inference Monitor — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/digital-twin: browser API reports 100% baseline",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/digital-twin: 100% has no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin 100%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"y\":30,\"layer\":0,\"width\":1440,\"height\":809,\"owner\":\"Google Chrome for Testing\",\"x\":0,\"id\":9761,\"name\":\"Digital Twin Architecture — Biological Minimalism\"}]"
+    },
+    {
+      "name": "/digital-twin 100% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/digital-twin: browser-supported tabs.setZoom reports 200%",
+      "result": "PASS",
+      "detail": "2"
+    },
+    {
+      "name": "/digital-twin: outer browser window unchanged at 200%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/digital-twin: CSS viewport capacity approximately halves at 200%",
+      "result": "PASS",
+      "detail": "{\"widthRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/digital-twin: device-pixel relationship doubles at 200%",
+      "result": "PASS",
+      "detail": "{\"dprRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/digital-twin: visual viewport confirms zoomed CSS capacity",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin: 200% has no horizontal reading overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin: primary title remains visible",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/digital-twin: content remains meaningfully labelled at 200%",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/digital-twin 200%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"id\":9761,\"name\":\"Digital Twin Architecture — Biological Minimalism\",\"x\":0,\"layer\":0,\"owner\":\"Google Chrome for Testing\",\"y\":30,\"width\":1440,\"height\":809}]"
+    },
+    {
+      "name": "/digital-twin 200% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/digital-twin: browser API reports reset to 100%",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/digital-twin: zoom restored to 100%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"},\"restored\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Digital Twin Architecture — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-timeline: browser API reports 100% baseline",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/mission-timeline: 100% has no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline 100%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"owner\":\"Google Chrome for Testing\",\"height\":809,\"layer\":0,\"name\":\"Mission Timeline — Biological Minimalism\",\"width\":1440,\"id\":9761,\"y\":30,\"x\":0}]"
+    },
+    {
+      "name": "/mission-timeline 100% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-timeline: browser-supported tabs.setZoom reports 200%",
+      "result": "PASS",
+      "detail": "2"
+    },
+    {
+      "name": "/mission-timeline: outer browser window unchanged at 200%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Timeline — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-timeline: CSS viewport capacity approximately halves at 200%",
+      "result": "PASS",
+      "detail": "{\"widthRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Timeline — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-timeline: device-pixel relationship doubles at 200%",
+      "result": "PASS",
+      "detail": "{\"dprRatio\":2,\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Timeline — Biological Minimalism\"},\"zoomed\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}}"
+    },
+    {
+      "name": "/mission-timeline: visual viewport confirms zoomed CSS capacity",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline: 200% has no horizontal reading overflow",
+      "result": "PASS",
+      "detail": "{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":720,\"inner_height\":361,\"device_pixel_ratio\":4,\"visual_viewport_width\":720,\"visual_viewport_height\":361,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":false,\"media_min_1280_matches\":false,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":0,\"width\":0},{\"label\":\"Primary\",\"left\":0,\"right\":720,\"width\":720}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline: primary title remains visible",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-timeline: content remains meaningfully labelled at 200%",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-timeline 200%: exact Chrome window resolved",
+      "result": "PASS",
+      "detail": "[{\"name\":\"Mission Timeline — Biological Minimalism\",\"width\":1440,\"layer\":0,\"y\":30,\"x\":0,\"id\":9761,\"height\":809,\"owner\":\"Google Chrome for Testing\"}]"
+    },
+    {
+      "name": "/mission-timeline 200% screenshot decodes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "/mission-timeline: browser API reports reset to 100%",
+      "result": "PASS",
+      "detail": "1"
+    },
+    {
+      "name": "/mission-timeline: zoom restored to 100%",
+      "result": "PASS",
+      "detail": "{\"baseline\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Timeline — Biological Minimalism\"},\"restored\":{\"outer_width\":1440,\"outer_height\":809,\"screen_x\":0,\"screen_y\":30,\"inner_width\":1440,\"inner_height\":722,\"device_pixel_ratio\":2,\"visual_viewport_width\":1440,\"visual_viewport_height\":722,\"visual_viewport_scale\":1,\"horizontal_overflow_px\":0,\"media_min_768_matches\":true,\"media_min_1280_matches\":true,\"visible_nav_rects\":[{\"label\":\"Primary\",\"left\":0,\"right\":215,\"width\":215}],\"active_title\":\"Mission Timeline — Biological Minimalism\"}}"
+    }
+  ]
+}

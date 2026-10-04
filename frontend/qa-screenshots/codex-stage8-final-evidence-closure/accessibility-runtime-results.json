@@ -1,0 +1,506 @@
+{
+  "schema_version": 1,
+  "run_timestamp": "2026-10-04T21:34:06.187Z",
+  "browser": "Google Chrome 154.0.8037.93",
+  "protocol": "Chrome DevTools Protocol Accessibility.getFullAXTree",
+  "routes": [
+    {
+      "route": "/mission-overview",
+      "total_ax_nodes": 965,
+      "exposed_ax_nodes": 732,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 13,
+        "complementary": 1,
+        "generic": 22,
+        "main": 1,
+        "statictext": 255,
+        "paragraph": 32,
+        "navigation": 1,
+        "banner": 1,
+        "heading": 15,
+        "region": 14,
+        "alert": 1,
+        "inlinetextbox": 292,
+        "status": 1,
+        "button": 15,
+        "sectionfooter": 1,
+        "list": 5,
+        "table": 1,
+        "descriptionlist": 1,
+        "listitem": 21,
+        "caption": 1,
+        "rowgroup": 1,
+        "row": 6,
+        "term": 6,
+        "definition": 6,
+        "cell": 15,
+        "columnheader": 3
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/live-monitoring",
+      "total_ax_nodes": 616,
+      "exposed_ax_nodes": 523,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 15,
+        "complementary": 1,
+        "generic": 11,
+        "main": 1,
+        "statictext": 163,
+        "paragraph": 35,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "status": 6,
+        "region": 6,
+        "sectionfooter": 1,
+        "alert": 1,
+        "inlinetextbox": 198,
+        "heading": 7,
+        "descriptionlist": 2,
+        "labeltext": 5,
+        "combobox": 3,
+        "button": 10,
+        "figure": 5,
+        "term": 15,
+        "definition": 15,
+        "menulistpopup": 3,
+        "spinbutton": 2,
+        "figcaption": 5,
+        "option": 9
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/system-brief",
+      "total_ax_nodes": 637,
+      "exposed_ax_nodes": 538,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 13,
+        "complementary": 1,
+        "generic": 6,
+        "main": 1,
+        "statictext": 179,
+        "paragraph": 26,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "region": 6,
+        "list": 5,
+        "alert": 1,
+        "inlinetextbox": 211,
+        "heading": 6,
+        "table": 1,
+        "listitem": 22,
+        "caption": 1,
+        "rowgroup": 1,
+        "row": 6,
+        "cell": 40,
+        "columnheader": 8
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/research/experimental",
+      "total_ax_nodes": 1395,
+      "exposed_ax_nodes": 1263,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 9,
+        "complementary": 1,
+        "generic": 40,
+        "main": 1,
+        "statictext": 372,
+        "paragraph": 66,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "region": 10,
+        "alert": 1,
+        "inlinetextbox": 504,
+        "heading": 23,
+        "group": 3,
+        "article": 6,
+        "list": 5,
+        "table": 5,
+        "disclosuretriangle": 3,
+        "descriptionlist": 2,
+        "listitem": 34,
+        "rowgroup": 5,
+        "row": 22,
+        "term": 6,
+        "definition": 6,
+        "svgroot": 4,
+        "caption": 4,
+        "cell": 64,
+        "image": 45,
+        "columnheader": 18
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/digital-twin",
+      "total_ax_nodes": 362,
+      "exposed_ax_nodes": 318,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 9,
+        "complementary": 2,
+        "generic": 7,
+        "main": 1,
+        "statictext": 106,
+        "paragraph": 22,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "region": 1,
+        "alert": 1,
+        "inlinetextbox": 122,
+        "heading": 5,
+        "button": 10,
+        "status": 1,
+        "list": 3,
+        "descriptionlist": 1,
+        "listitem": 11,
+        "term": 3,
+        "definition": 3,
+        "strong": 6
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/ai-insights",
+      "total_ax_nodes": 243,
+      "exposed_ax_nodes": 182,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 9,
+        "complementary": 1,
+        "generic": 2,
+        "main": 1,
+        "statictext": 55,
+        "paragraph": 19,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "region": 7,
+        "alert": 1,
+        "inlinetextbox": 73,
+        "heading": 8,
+        "button": 2
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/mission-timeline",
+      "total_ax_nodes": 208,
+      "exposed_ax_nodes": 166,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 9,
+        "complementary": 1,
+        "generic": 2,
+        "main": 1,
+        "statictext": 52,
+        "paragraph": 22,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "region": 3,
+        "alert": 1,
+        "inlinetextbox": 65,
+        "heading": 4,
+        "note": 1,
+        "status": 1
+      },
+      "empty_named_controls": []
+    },
+    {
+      "route": "/settings",
+      "total_ax_nodes": 172,
+      "exposed_ax_nodes": 136,
+      "roles": {
+        "rootwebarea": 1,
+        "link": 9,
+        "complementary": 1,
+        "generic": 2,
+        "main": 1,
+        "statictext": 40,
+        "paragraph": 18,
+        "navigation": 1,
+        "banner": 1,
+        "sectionheader": 1,
+        "region": 3,
+        "alert": 1,
+        "inlinetextbox": 51,
+        "heading": 4,
+        "button": 1,
+        "switch": 1
+      },
+      "empty_named_controls": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "/mission-overview: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":22,\"main\":1,\"statictext\":255,\"paragraph\":32,\"navigation\":1,\"banner\":1,\"heading\":15,\"region\":14,\"alert\":1,\"inlinetextbox\":292,\"status\":1,\"button\":15,\"sectionfooter\":1,\"list\":5,\"table\":1,\"descriptionlist\":1,\"listitem\":21,\"caption\":1,\"rowgroup\":1,\"row\":6,\"term\":6,\"definition\":6,\"cell\":15,\"columnheader\":3}"
+    },
+    {
+      "name": "/mission-overview: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":22,\"main\":1,\"statictext\":255,\"paragraph\":32,\"navigation\":1,\"banner\":1,\"heading\":15,\"region\":14,\"alert\":1,\"inlinetextbox\":292,\"status\":1,\"button\":15,\"sectionfooter\":1,\"list\":5,\"table\":1,\"descriptionlist\":1,\"listitem\":21,\"caption\":1,\"rowgroup\":1,\"row\":6,\"term\":6,\"definition\":6,\"cell\":15,\"columnheader\":3}"
+    },
+    {
+      "name": "/mission-overview: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":22,\"main\":1,\"statictext\":255,\"paragraph\":32,\"navigation\":1,\"banner\":1,\"heading\":15,\"region\":14,\"alert\":1,\"inlinetextbox\":292,\"status\":1,\"button\":15,\"sectionfooter\":1,\"list\":5,\"table\":1,\"descriptionlist\":1,\"listitem\":21,\"caption\":1,\"rowgroup\":1,\"row\":6,\"term\":6,\"definition\":6,\"cell\":15,\"columnheader\":3}"
+    },
+    {
+      "name": "/mission-overview: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":22,\"main\":1,\"statictext\":255,\"paragraph\":32,\"navigation\":1,\"banner\":1,\"heading\":15,\"region\":14,\"alert\":1,\"inlinetextbox\":292,\"status\":1,\"button\":15,\"sectionfooter\":1,\"list\":5,\"table\":1,\"descriptionlist\":1,\"listitem\":21,\"caption\":1,\"rowgroup\":1,\"row\":6,\"term\":6,\"definition\":6,\"cell\":15,\"columnheader\":3}"
+    },
+    {
+      "name": "/mission-overview: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview: data table is represented in browser AX tree",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":22,\"main\":1,\"statictext\":255,\"paragraph\":32,\"navigation\":1,\"banner\":1,\"heading\":15,\"region\":14,\"alert\":1,\"inlinetextbox\":292,\"status\":1,\"button\":15,\"sectionfooter\":1,\"list\":5,\"table\":1,\"descriptionlist\":1,\"listitem\":21,\"caption\":1,\"rowgroup\":1,\"row\":6,\"term\":6,\"definition\":6,\"cell\":15,\"columnheader\":3}"
+    },
+    {
+      "name": "/live-monitoring: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":15,\"complementary\":1,\"generic\":11,\"main\":1,\"statictext\":163,\"paragraph\":35,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"status\":6,\"region\":6,\"sectionfooter\":1,\"alert\":1,\"inlinetextbox\":198,\"heading\":7,\"descriptionlist\":2,\"labeltext\":5,\"combobox\":3,\"button\":10,\"figure\":5,\"term\":15,\"definition\":15,\"menulistpopup\":3,\"spinbutton\":2,\"figcaption\":5,\"option\":9}"
+    },
+    {
+      "name": "/live-monitoring: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":15,\"complementary\":1,\"generic\":11,\"main\":1,\"statictext\":163,\"paragraph\":35,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"status\":6,\"region\":6,\"sectionfooter\":1,\"alert\":1,\"inlinetextbox\":198,\"heading\":7,\"descriptionlist\":2,\"labeltext\":5,\"combobox\":3,\"button\":10,\"figure\":5,\"term\":15,\"definition\":15,\"menulistpopup\":3,\"spinbutton\":2,\"figcaption\":5,\"option\":9}"
+    },
+    {
+      "name": "/live-monitoring: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":15,\"complementary\":1,\"generic\":11,\"main\":1,\"statictext\":163,\"paragraph\":35,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"status\":6,\"region\":6,\"sectionfooter\":1,\"alert\":1,\"inlinetextbox\":198,\"heading\":7,\"descriptionlist\":2,\"labeltext\":5,\"combobox\":3,\"button\":10,\"figure\":5,\"term\":15,\"definition\":15,\"menulistpopup\":3,\"spinbutton\":2,\"figcaption\":5,\"option\":9}"
+    },
+    {
+      "name": "/live-monitoring: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":15,\"complementary\":1,\"generic\":11,\"main\":1,\"statictext\":163,\"paragraph\":35,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"status\":6,\"region\":6,\"sectionfooter\":1,\"alert\":1,\"inlinetextbox\":198,\"heading\":7,\"descriptionlist\":2,\"labeltext\":5,\"combobox\":3,\"button\":10,\"figure\":5,\"term\":15,\"definition\":15,\"menulistpopup\":3,\"spinbutton\":2,\"figcaption\":5,\"option\":9}"
+    },
+    {
+      "name": "/live-monitoring: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/system-brief: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":6,\"main\":1,\"statictext\":179,\"paragraph\":26,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":6,\"list\":5,\"alert\":1,\"inlinetextbox\":211,\"heading\":6,\"table\":1,\"listitem\":22,\"caption\":1,\"rowgroup\":1,\"row\":6,\"cell\":40,\"columnheader\":8}"
+    },
+    {
+      "name": "/system-brief: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":6,\"main\":1,\"statictext\":179,\"paragraph\":26,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":6,\"list\":5,\"alert\":1,\"inlinetextbox\":211,\"heading\":6,\"table\":1,\"listitem\":22,\"caption\":1,\"rowgroup\":1,\"row\":6,\"cell\":40,\"columnheader\":8}"
+    },
+    {
+      "name": "/system-brief: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":6,\"main\":1,\"statictext\":179,\"paragraph\":26,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":6,\"list\":5,\"alert\":1,\"inlinetextbox\":211,\"heading\":6,\"table\":1,\"listitem\":22,\"caption\":1,\"rowgroup\":1,\"row\":6,\"cell\":40,\"columnheader\":8}"
+    },
+    {
+      "name": "/system-brief: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":6,\"main\":1,\"statictext\":179,\"paragraph\":26,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":6,\"list\":5,\"alert\":1,\"inlinetextbox\":211,\"heading\":6,\"table\":1,\"listitem\":22,\"caption\":1,\"rowgroup\":1,\"row\":6,\"cell\":40,\"columnheader\":8}"
+    },
+    {
+      "name": "/system-brief: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/system-brief: data table is represented in browser AX tree",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":13,\"complementary\":1,\"generic\":6,\"main\":1,\"statictext\":179,\"paragraph\":26,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":6,\"list\":5,\"alert\":1,\"inlinetextbox\":211,\"heading\":6,\"table\":1,\"listitem\":22,\"caption\":1,\"rowgroup\":1,\"row\":6,\"cell\":40,\"columnheader\":8}"
+    },
+    {
+      "name": "/research/experimental: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":40,\"main\":1,\"statictext\":372,\"paragraph\":66,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":10,\"alert\":1,\"inlinetextbox\":504,\"heading\":23,\"group\":3,\"article\":6,\"list\":5,\"table\":5,\"disclosuretriangle\":3,\"descriptionlist\":2,\"listitem\":34,\"rowgroup\":5,\"row\":22,\"term\":6,\"definition\":6,\"svgroot\":4,\"caption\":4,\"cell\":64,\"image\":45,\"columnheader\":18}"
+    },
+    {
+      "name": "/research/experimental: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":40,\"main\":1,\"statictext\":372,\"paragraph\":66,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":10,\"alert\":1,\"inlinetextbox\":504,\"heading\":23,\"group\":3,\"article\":6,\"list\":5,\"table\":5,\"disclosuretriangle\":3,\"descriptionlist\":2,\"listitem\":34,\"rowgroup\":5,\"row\":22,\"term\":6,\"definition\":6,\"svgroot\":4,\"caption\":4,\"cell\":64,\"image\":45,\"columnheader\":18}"
+    },
+    {
+      "name": "/research/experimental: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":40,\"main\":1,\"statictext\":372,\"paragraph\":66,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":10,\"alert\":1,\"inlinetextbox\":504,\"heading\":23,\"group\":3,\"article\":6,\"list\":5,\"table\":5,\"disclosuretriangle\":3,\"descriptionlist\":2,\"listitem\":34,\"rowgroup\":5,\"row\":22,\"term\":6,\"definition\":6,\"svgroot\":4,\"caption\":4,\"cell\":64,\"image\":45,\"columnheader\":18}"
+    },
+    {
+      "name": "/research/experimental: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":40,\"main\":1,\"statictext\":372,\"paragraph\":66,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":10,\"alert\":1,\"inlinetextbox\":504,\"heading\":23,\"group\":3,\"article\":6,\"list\":5,\"table\":5,\"disclosuretriangle\":3,\"descriptionlist\":2,\"listitem\":34,\"rowgroup\":5,\"row\":22,\"term\":6,\"definition\":6,\"svgroot\":4,\"caption\":4,\"cell\":64,\"image\":45,\"columnheader\":18}"
+    },
+    {
+      "name": "/research/experimental: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/research/experimental: data table is represented in browser AX tree",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":40,\"main\":1,\"statictext\":372,\"paragraph\":66,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":10,\"alert\":1,\"inlinetextbox\":504,\"heading\":23,\"group\":3,\"article\":6,\"list\":5,\"table\":5,\"disclosuretriangle\":3,\"descriptionlist\":2,\"listitem\":34,\"rowgroup\":5,\"row\":22,\"term\":6,\"definition\":6,\"svgroot\":4,\"caption\":4,\"cell\":64,\"image\":45,\"columnheader\":18}"
+    },
+    {
+      "name": "/digital-twin: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":2,\"generic\":7,\"main\":1,\"statictext\":106,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":1,\"alert\":1,\"inlinetextbox\":122,\"heading\":5,\"button\":10,\"status\":1,\"list\":3,\"descriptionlist\":1,\"listitem\":11,\"term\":3,\"definition\":3,\"strong\":6}"
+    },
+    {
+      "name": "/digital-twin: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":2,\"generic\":7,\"main\":1,\"statictext\":106,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":1,\"alert\":1,\"inlinetextbox\":122,\"heading\":5,\"button\":10,\"status\":1,\"list\":3,\"descriptionlist\":1,\"listitem\":11,\"term\":3,\"definition\":3,\"strong\":6}"
+    },
+    {
+      "name": "/digital-twin: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":2,\"generic\":7,\"main\":1,\"statictext\":106,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":1,\"alert\":1,\"inlinetextbox\":122,\"heading\":5,\"button\":10,\"status\":1,\"list\":3,\"descriptionlist\":1,\"listitem\":11,\"term\":3,\"definition\":3,\"strong\":6}"
+    },
+    {
+      "name": "/digital-twin: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":2,\"generic\":7,\"main\":1,\"statictext\":106,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":1,\"alert\":1,\"inlinetextbox\":122,\"heading\":5,\"button\":10,\"status\":1,\"list\":3,\"descriptionlist\":1,\"listitem\":11,\"term\":3,\"definition\":3,\"strong\":6}"
+    },
+    {
+      "name": "/digital-twin: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/ai-insights: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":55,\"paragraph\":19,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":7,\"alert\":1,\"inlinetextbox\":73,\"heading\":8,\"button\":2}"
+    },
+    {
+      "name": "/ai-insights: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":55,\"paragraph\":19,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":7,\"alert\":1,\"inlinetextbox\":73,\"heading\":8,\"button\":2}"
+    },
+    {
+      "name": "/ai-insights: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":55,\"paragraph\":19,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":7,\"alert\":1,\"inlinetextbox\":73,\"heading\":8,\"button\":2}"
+    },
+    {
+      "name": "/ai-insights: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":55,\"paragraph\":19,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":7,\"alert\":1,\"inlinetextbox\":73,\"heading\":8,\"button\":2}"
+    },
+    {
+      "name": "/ai-insights: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-timeline: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":52,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":65,\"heading\":4,\"note\":1,\"status\":1}"
+    },
+    {
+      "name": "/mission-timeline: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":52,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":65,\"heading\":4,\"note\":1,\"status\":1}"
+    },
+    {
+      "name": "/mission-timeline: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":52,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":65,\"heading\":4,\"note\":1,\"status\":1}"
+    },
+    {
+      "name": "/mission-timeline: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":52,\"paragraph\":22,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":65,\"heading\":4,\"note\":1,\"status\":1}"
+    },
+    {
+      "name": "/mission-timeline: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/settings: browser AX tree has document",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":40,\"paragraph\":18,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":51,\"heading\":4,\"button\":1,\"switch\":1}"
+    },
+    {
+      "name": "/settings: browser AX tree has main landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":40,\"paragraph\":18,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":51,\"heading\":4,\"button\":1,\"switch\":1}"
+    },
+    {
+      "name": "/settings: browser AX tree has navigation landmark",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":40,\"paragraph\":18,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":51,\"heading\":4,\"button\":1,\"switch\":1}"
+    },
+    {
+      "name": "/settings: browser AX tree has heading",
+      "result": "PASS",
+      "detail": "{\"rootwebarea\":1,\"link\":9,\"complementary\":1,\"generic\":2,\"main\":1,\"statictext\":40,\"paragraph\":18,\"navigation\":1,\"banner\":1,\"sectionheader\":1,\"region\":3,\"alert\":1,\"inlinetextbox\":51,\"heading\":4,\"button\":1,\"switch\":1}"
+    },
+    {
+      "name": "/settings: exposed interactive controls are named",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "cross-route AX inventory includes tables",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "cross-route AX inventory includes named buttons",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "cross-route AX inventory includes live status semantics",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "keyboard: trigger receives focus",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "keyboard: Enter opens named dialog",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "keyboard: dialog traps reverse tab",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "keyboard: Escape closes dialog",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "keyboard: focus returns to trigger",
+      "result": "PASS",
+      "detail": ""
+    }
+  ],
+  "passed": 51,
+  "failed": 0
+}

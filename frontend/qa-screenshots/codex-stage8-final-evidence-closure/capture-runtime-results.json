@@ -1,0 +1,1950 @@
+{
+  "schema_version": 1,
+  "run_timestamp": "2026-10-04T21:01:21.254Z",
+  "frontend_origin": "http://127.0.0.1:3168",
+  "backend_origin": "http://127.0.0.1:8168",
+  "browser": "Google Chrome 154.0.8037.93",
+  "standards_based_reduced_motion": "Playwright/CDP Browser.setEmulatedMedia prefers-reduced-motion",
+  "artifact_count": 32,
+  "artifacts": [
+    {
+      "artifact_id": "S8C-MO-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mo-1440x900.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4139,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:31.180Z",
+      "sha256": "4e2fcada4f1a3157db035ffb1610d993c01fe1dbd96172f37add17425db9fedc",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 602381,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 4139,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Overview — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MO-1366x768",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mo-1366x768.png",
+      "route": "/mission-overview",
+      "viewport_width": 1366,
+      "viewport_height": 768,
+      "actual_png_width": 1366,
+      "actual_png_height": 4139,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:34.960Z",
+      "sha256": "f8b4e1c60922f362b3b5184815a03328a34596535cc15a332475239633d51962",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 598433,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1366,
+        "clientWidth": 1366,
+        "documentHeight": 4139,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Overview — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MO-1280x720",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mo-1280x720.png",
+      "route": "/mission-overview",
+      "viewport_width": 1280,
+      "viewport_height": 720,
+      "actual_png_width": 1280,
+      "actual_png_height": 4527,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:37.448Z",
+      "sha256": "91512b64f65bf08e55dd6a8d39bf0c5759da31384a6c737ba2b3c64a32a84299",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 573096,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1280,
+        "clientWidth": 1280,
+        "documentHeight": 4527,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Overview — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MO-1024x768",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mo-1024x768.png",
+      "route": "/mission-overview",
+      "viewport_width": 1024,
+      "viewport_height": 768,
+      "actual_png_width": 1024,
+      "actual_png_height": 5794,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:39.927Z",
+      "sha256": "0e862b5520f23e9fb882e8be46ee05fe2a7abe5babe011e673a754996f0cfa44",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 576569,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1024,
+        "clientWidth": 1024,
+        "documentHeight": 5794,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Overview — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MO-768x1024",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mo-768x1024.png",
+      "route": "/mission-overview",
+      "viewport_width": 768,
+      "viewport_height": 1024,
+      "actual_png_width": 768,
+      "actual_png_height": 6434,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:42.135Z",
+      "sha256": "cd96b7decf469efb048980ab976cca63c34e3933cf2e8ccfd9e2c3135bb33a31",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 575952,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 768,
+        "clientWidth": 768,
+        "documentHeight": 6434,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Overview — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MO-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mo-390x844.png",
+      "route": "/mission-overview",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 7476,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:44.672Z",
+      "sha256": "ff7a77783d4cadb1d0021c1de70ae2695fd9b2374131a59a4d33dc813e17ef35",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 488557,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 7476,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Overview — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-LM-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/lm-1440x900.png",
+      "route": "/live-monitoring",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 2211,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:46.713Z",
+      "sha256": "d8f8f6ecbc36039bffa6199877fea7fc37bdbba3ad973e07ba232cbc7d4498ef",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 375677,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 2211,
+        "smallEssential": [],
+        "undersized": [
+          {
+            "label": "1x",
+            "width": 37.328125,
+            "height": 44
+          },
+          {
+            "label": "5x",
+            "width": 37.328125,
+            "height": 44
+          }
+        ],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Signal and Inference Monitor — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-LM-1366x768",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/lm-1366x768.png",
+      "route": "/live-monitoring",
+      "viewport_width": 1366,
+      "viewport_height": 768,
+      "actual_png_width": 1366,
+      "actual_png_height": 2248,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:48.631Z",
+      "sha256": "9b741df3e2e7c1e9bc3548b25196dd2af1d1e54b01c90ea618a623cf3753d2f7",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 375384,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1366,
+        "clientWidth": 1366,
+        "documentHeight": 2248,
+        "smallEssential": [],
+        "undersized": [
+          {
+            "label": "1x",
+            "width": 37.328125,
+            "height": 44
+          },
+          {
+            "label": "5x",
+            "width": 37.328125,
+            "height": 44
+          }
+        ],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Signal and Inference Monitor — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-LM-1280x720",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/lm-1280x720.png",
+      "route": "/live-monitoring",
+      "viewport_width": 1280,
+      "viewport_height": 720,
+      "actual_png_width": 1280,
+      "actual_png_height": 2276,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:50.493Z",
+      "sha256": "a76d511291d1cc09c182b8f01673f8609e3a946f6a5768a0981a9929115bdbf8",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 375074,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1280,
+        "clientWidth": 1280,
+        "documentHeight": 2276,
+        "smallEssential": [],
+        "undersized": [
+          {
+            "label": "1x",
+            "width": 37.328125,
+            "height": 44
+          },
+          {
+            "label": "5x",
+            "width": 37.328125,
+            "height": 44
+          }
+        ],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Signal and Inference Monitor — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-LM-1024x768",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/lm-1024x768.png",
+      "route": "/live-monitoring",
+      "viewport_width": 1024,
+      "viewport_height": 768,
+      "actual_png_width": 1024,
+      "actual_png_height": 2459,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:52.403Z",
+      "sha256": "e267482da3714ef72fb4a5cd9ce108ef248364e35f760f3172a8c639f09320fd",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 377040,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1024,
+        "clientWidth": 1024,
+        "documentHeight": 2459,
+        "smallEssential": [],
+        "undersized": [
+          {
+            "label": "1x",
+            "width": 37.328125,
+            "height": 44
+          },
+          {
+            "label": "5x",
+            "width": 37.328125,
+            "height": 44
+          }
+        ],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Signal and Inference Monitor — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-LM-768x1024",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/lm-768x1024.png",
+      "route": "/live-monitoring",
+      "viewport_width": 768,
+      "viewport_height": 1024,
+      "actual_png_width": 768,
+      "actual_png_height": 3319,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:54.301Z",
+      "sha256": "606ffd2daf650310f9eea889d861d5c133f7917813890a49ab13432db53778da",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 370288,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 768,
+        "clientWidth": 768,
+        "documentHeight": 3319,
+        "smallEssential": [],
+        "undersized": [
+          {
+            "label": "1x",
+            "width": 37.328125,
+            "height": 44
+          },
+          {
+            "label": "5x",
+            "width": 37.328125,
+            "height": 44
+          }
+        ],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Signal and Inference Monitor — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-LM-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/lm-390x844.png",
+      "route": "/live-monitoring",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 4242,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:56.142Z",
+      "sha256": "ed0c0f84426824b8cddd33652ed48e83541648b0f6388c16814326e1a55156d2",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 308076,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 4242,
+        "smallEssential": [],
+        "undersized": [
+          {
+            "label": "1x",
+            "width": 37.328125,
+            "height": 44
+          },
+          {
+            "label": "5x",
+            "width": 37.328125,
+            "height": 44
+          }
+        ],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Signal and Inference Monitor — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-SB-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/sb-1440x900.png",
+      "route": "/system-brief",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 3514,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:57.975Z",
+      "sha256": "14212da0b0aacd17d173ea6c9f129a3ace18673c29d55159dd4caa772b269aaf",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 509079,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 3514,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "System Brief — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-SB-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/sb-390x844.png",
+      "route": "/system-brief",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 5170,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:01:59.561Z",
+      "sha256": "472b0c0d1ac9965c264048a0c36df4407e6056339de47d1ec7406df18ace91ff",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 362832,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 5170,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "System Brief — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-RX-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/rx-1440x900.png",
+      "route": "/research/experimental",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 6766,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:02.315Z",
+      "sha256": "eb9b80a4afdc6dce3806d731f22a9843ec4f728f9e07699fd80674bd7b18f01c",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 1189542,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 6766,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Experimental Research — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-RX-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/rx-390x844.png",
+      "route": "/research/experimental",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 11146,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:04.481Z",
+      "sha256": "3677b9e34ebe1d9ab2148a6f57651087e55599a646d2dde505b8e13668171892",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 1088771,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 11146,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Experimental Research — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-DT-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/dt-1440x900.png",
+      "route": "/digital-twin",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 1381,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:07.402Z",
+      "sha256": "2ff30adcfe8ca258b36410e5acc27b6a2c16b454de97d7bbd866f602b3422a49",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 343228,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 1381,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Digital Twin Architecture — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-DT-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/dt-390x844.png",
+      "route": "/digital-twin",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 2626,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:09.518Z",
+      "sha256": "71338d2ae1ebca0f1cb4ea61b40c9d7d81b15ae4824aa7d363cdd808a1b253ee",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 209501,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 2626,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Digital Twin Architecture — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-AI-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/ai-1440x900.png",
+      "route": "/ai-insights",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 1431,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:12.077Z",
+      "sha256": "68c7e7461ae7c35bf4107c764d47978f2c7ef440d5d2fc5a68ba41b71e5fda2c",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 264833,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 1431,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "AI Insights — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-AI-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/ai-390x844.png",
+      "route": "/ai-insights",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 2612,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:13.666Z",
+      "sha256": "4d01997e88ae2c4af581af2bcafd804171b66aa604766f6d0aaf34d6155e9c03",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 205415,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 2612,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "AI Insights — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MT-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mt-1440x900.png",
+      "route": "/mission-timeline",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 900,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:15.112Z",
+      "sha256": "9a57df18086229d7ba76696b304b9f69f88fc178e8bb92c07fc0ff5c7bf61cbb",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 186916,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 900,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Timeline — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MT-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/mt-390x844.png",
+      "route": "/mission-timeline",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 1520,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:16.628Z",
+      "sha256": "dc866334990cd14d1caa950de82a0fe1872dd373f2c3982abe23574f202a80a7",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 134829,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 1520,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Mission Timeline — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-ST-1440x900",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/st-1440x900.png",
+      "route": "/settings",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 900,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:18.084Z",
+      "sha256": "be48eaae522e21e280cf31f94df7c541a41462634054c7a387a52e54eda2208e",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 188444,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 1440,
+        "clientWidth": 1440,
+        "documentHeight": 900,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Settings — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-ST-390x844",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/st-390x844.png",
+      "route": "/settings",
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "actual_png_width": 390,
+      "actual_png_height": 1322,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:19.523Z",
+      "sha256": "405e5c69c76bd229a14448ebbb043500a1daf7de2548156cfc856ee8a27320ac",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 130967,
+      "runtime": {
+        "overflow": 0,
+        "documentWidth": 390,
+        "clientWidth": 390,
+        "documentHeight": 1322,
+        "smallEssential": [],
+        "undersized": [],
+        "suspicious": [],
+        "h1Count": 1,
+        "title": "Settings — Biological Minimalism"
+      }
+    },
+    {
+      "artifact_id": "S8C-MOTION-REDUCE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/motion-reduced-dt.png",
+      "route": "/digital-twin",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 1435,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "reduce",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:23.674Z",
+      "sha256": "c90cafd98f9cb5e8e19a0b8af308e52defd97e9409f5543fedf15307c7877d18",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 350537,
+      "runtime": {
+        "match_media_reduce": true,
+        "effective_class": true
+      }
+    },
+    {
+      "artifact_id": "S8C-MOTION-NORMAL",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/motion-normal-mo.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4139,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "synthetic",
+      "dataset_label": "not_applicable",
+      "subject": "not_applicable",
+      "replay_state": "not_applicable",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:02:56.382Z",
+      "sha256": "eda8c1d3b6c21d696dccf982ebc35e877caa8189d644f60965da7719575a0126",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 603334,
+      "runtime": {
+        "match_media_reduce": false,
+        "effective_class": false
+      }
+    },
+    {
+      "artifact_id": "S8C-S14-NOM",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/s14-01-nom.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4160,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "nominal_connected",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:03:08.810Z",
+      "sha256": "a52a0b217962020e6721bcc6839415036ff6413018d2bdf72a166c8020197322",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 623639,
+      "runtime": {
+        "hr_bpm": 68.25598977283755,
+        "window_index": 0,
+        "channels": [
+          "wrist_bvp",
+          "wrist_acc",
+          "chest_ecg",
+          "wrist_temp"
+        ],
+        "model_id": "PPGDaliaHRModelB:PPGPlusIMUHRModel"
+      }
+    },
+    {
+      "artifact_id": "S8C-S14-ACTIVE",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/s14-02-active-condition.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4281,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "active_simulated_fault",
+      "fault_state": "modality_dropout:ppg:severity_1",
+      "capture_timestamp": "2026-10-04T21:03:10.936Z",
+      "sha256": "f0a54a0d3c54cf1dbe9ab4e129ef9018f5ace9db6e4b808dc994fa1a2c4052cc",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 650436,
+      "runtime": {
+        "inference_status": "input_unavailable",
+        "prediction": null
+      }
+    },
+    {
+      "artifact_id": "S8C-S14-WITHHELD",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/s14-03-output-withheld.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4281,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "output_withheld_fail_closed",
+      "fault_state": "modality_dropout:ppg:severity_1",
+      "capture_timestamp": "2026-10-04T21:03:12.650Z",
+      "sha256": "822650e04d64579f71451bb9e69d6cc0eb06490e76a3d98d96558bd4ad4f9c27",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 650870,
+      "runtime": {
+        "inference_status": "input_unavailable",
+        "prediction": null
+      }
+    },
+    {
+      "artifact_id": "S8C-S14-REBUILD",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/s14-04-warmup-window.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4197,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "rebuilding",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:03:14.318Z",
+      "sha256": "94435ff85df73f12a080f6ae6b7f4ec25597e26f10743610a94ab1adf272dced",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 635835,
+      "runtime": {
+        "inference_status": "warming_up",
+        "prediction": null,
+        "clear_position_seconds": 28.41853104007896
+      }
+    },
+    {
+      "artifact_id": "S8C-S14-POST",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/s14-05-postcondition.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4256,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "recovered",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:03:15.600Z",
+      "sha256": "b535da5b8fa33f95a6ece97178a68f178e26e318296789273a913d9048e53a2f",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 639134,
+      "runtime": {
+        "hr_bpm": 73.8207543101579,
+        "window_index": 23,
+        "window_start_seconds": 46
+      }
+    },
+    {
+      "artifact_id": "S8C-S14-FRESH-HR",
+      "relative_repository_path": "frontend/qa-screenshots/codex-stage8-final-evidence-closure/s14-06-fresh-hr.png",
+      "route": "/mission-overview",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "actual_png_width": 1440,
+      "actual_png_height": 4256,
+      "browser_identity_version": "Google Chrome 154.0.8037.93",
+      "zoom_value": 100,
+      "motion_preference": "no-preference",
+      "source_type": "dataset_replay",
+      "dataset_label": "owner-provided local PPG-DaLiA archive",
+      "subject": "S14",
+      "replay_state": "fresh_recovered_hr",
+      "fault_state": "none",
+      "capture_timestamp": "2026-10-04T21:03:17.079Z",
+      "sha256": "d6f4b52ef2cef6a0bdc179171cd79b126c6ecf5f3df4ffa894cc3308ba4a5887",
+      "visual_review_status": "PENDING_MANUAL_REVIEW",
+      "acceptance_result": "PENDING_MANUAL_REVIEW",
+      "associated_finding_id": "none",
+      "canonical_status": "canonical",
+      "byte_size": 643121,
+      "runtime": {
+        "hr_bpm": 73.8207543101579,
+        "nominal_window_index": 0,
+        "recovered_window_index": 23,
+        "fresh_after_fault": true
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "/mission-overview 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":4139,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":4139,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MO-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 602381 bytes"
+    },
+    {
+      "name": "/mission-overview 1366x768: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1366,\"clientWidth\":1366,\"documentHeight\":4139,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1366x768: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1366,\"clientWidth\":1366,\"documentHeight\":4139,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1366x768: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1366x768: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MO-1366x768: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 598433 bytes"
+    },
+    {
+      "name": "/mission-overview 1280x720: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1280,\"clientWidth\":1280,\"documentHeight\":4527,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1280x720: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1280,\"clientWidth\":1280,\"documentHeight\":4527,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1280x720: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1280x720: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MO-1280x720: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 573096 bytes"
+    },
+    {
+      "name": "/mission-overview 1024x768: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1024,\"clientWidth\":1024,\"documentHeight\":5794,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1024x768: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1024,\"clientWidth\":1024,\"documentHeight\":5794,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 1024x768: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1024x768: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MO-1024x768: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 576569 bytes"
+    },
+    {
+      "name": "/mission-overview 768x1024: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":768,\"clientWidth\":768,\"documentHeight\":6434,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 768x1024: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":768,\"clientWidth\":768,\"documentHeight\":6434,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 768x1024: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 768x1024: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MO-768x1024: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 575952 bytes"
+    },
+    {
+      "name": "/mission-overview 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":7476,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":7476,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Overview — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-overview 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MO-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 488557 bytes"
+    },
+    {
+      "name": "/live-monitoring 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":2211,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":2211,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-LM-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 375677 bytes"
+    },
+    {
+      "name": "/live-monitoring 1366x768: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1366,\"clientWidth\":1366,\"documentHeight\":2248,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1366x768: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1366,\"clientWidth\":1366,\"documentHeight\":2248,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1366x768: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1366x768: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-LM-1366x768: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 375384 bytes"
+    },
+    {
+      "name": "/live-monitoring 1280x720: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1280,\"clientWidth\":1280,\"documentHeight\":2276,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1280x720: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1280,\"clientWidth\":1280,\"documentHeight\":2276,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1280x720: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1280x720: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-LM-1280x720: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 375074 bytes"
+    },
+    {
+      "name": "/live-monitoring 1024x768: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1024,\"clientWidth\":1024,\"documentHeight\":2459,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1024x768: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1024,\"clientWidth\":1024,\"documentHeight\":2459,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 1024x768: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1024x768: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-LM-1024x768: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 377040 bytes"
+    },
+    {
+      "name": "/live-monitoring 768x1024: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":768,\"clientWidth\":768,\"documentHeight\":3319,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 768x1024: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":768,\"clientWidth\":768,\"documentHeight\":3319,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 768x1024: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 768x1024: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-LM-768x1024: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 370288 bytes"
+    },
+    {
+      "name": "/live-monitoring 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":4242,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":4242,\"smallEssential\":[],\"undersized\":[{\"label\":\"1x\",\"width\":37.328125,\"height\":44},{\"label\":\"5x\",\"width\":37.328125,\"height\":44}],\"suspicious\":[],\"h1Count\":1,\"title\":\"Signal and Inference Monitor — Biological Minimalism\"}"
+    },
+    {
+      "name": "/live-monitoring 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-LM-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 308076 bytes"
+    },
+    {
+      "name": "/system-brief 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":3514,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"System Brief — Biological Minimalism\"}"
+    },
+    {
+      "name": "/system-brief 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":3514,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"System Brief — Biological Minimalism\"}"
+    },
+    {
+      "name": "/system-brief 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/system-brief 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-SB-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 509079 bytes"
+    },
+    {
+      "name": "/system-brief 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":5170,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"System Brief — Biological Minimalism\"}"
+    },
+    {
+      "name": "/system-brief 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":5170,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"System Brief — Biological Minimalism\"}"
+    },
+    {
+      "name": "/system-brief 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/system-brief 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-SB-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 362832 bytes"
+    },
+    {
+      "name": "/research/experimental 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":6766,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Experimental Research — Biological Minimalism\"}"
+    },
+    {
+      "name": "/research/experimental 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":6766,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Experimental Research — Biological Minimalism\"}"
+    },
+    {
+      "name": "/research/experimental 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/research/experimental 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-RX-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 1189542 bytes"
+    },
+    {
+      "name": "/research/experimental 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":11146,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Experimental Research — Biological Minimalism\"}"
+    },
+    {
+      "name": "/research/experimental 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":11146,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Experimental Research — Biological Minimalism\"}"
+    },
+    {
+      "name": "/research/experimental 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/research/experimental 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-RX-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 1088771 bytes"
+    },
+    {
+      "name": "/digital-twin 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":1381,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":1381,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/digital-twin 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-DT-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 343228 bytes"
+    },
+    {
+      "name": "/digital-twin 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":2626,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":2626,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Digital Twin Architecture — Biological Minimalism\"}"
+    },
+    {
+      "name": "/digital-twin 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/digital-twin 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-DT-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 209501 bytes"
+    },
+    {
+      "name": "/ai-insights 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":1431,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"AI Insights — Biological Minimalism\"}"
+    },
+    {
+      "name": "/ai-insights 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":1431,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"AI Insights — Biological Minimalism\"}"
+    },
+    {
+      "name": "/ai-insights 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/ai-insights 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-AI-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 264833 bytes"
+    },
+    {
+      "name": "/ai-insights 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":2612,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"AI Insights — Biological Minimalism\"}"
+    },
+    {
+      "name": "/ai-insights 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":2612,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"AI Insights — Biological Minimalism\"}"
+    },
+    {
+      "name": "/ai-insights 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/ai-insights 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-AI-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 205415 bytes"
+    },
+    {
+      "name": "/mission-timeline 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":900,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":900,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-timeline 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MT-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 186916 bytes"
+    },
+    {
+      "name": "/mission-timeline 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":1520,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":1520,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Mission Timeline — Biological Minimalism\"}"
+    },
+    {
+      "name": "/mission-timeline 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-timeline 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-MT-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 134829 bytes"
+    },
+    {
+      "name": "/settings 1440x900: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":900,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Settings — Biological Minimalism\"}"
+    },
+    {
+      "name": "/settings 1440x900: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":1440,\"clientWidth\":1440,\"documentHeight\":900,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Settings — Biological Minimalism\"}"
+    },
+    {
+      "name": "/settings 1440x900: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/settings 1440x900: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-ST-1440x900: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 188444 bytes"
+    },
+    {
+      "name": "/settings 390x844: no horizontal overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":1322,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Settings — Biological Minimalism\"}"
+    },
+    {
+      "name": "/settings 390x844: one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"documentWidth\":390,\"clientWidth\":390,\"documentHeight\":1322,\"smallEssential\":[],\"undersized\":[],\"suspicious\":[],\"h1Count\":1,\"title\":\"Settings — Biological Minimalism\"}"
+    },
+    {
+      "name": "/settings 390x844: no essential text below 12px",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/settings 390x844: no browser/application error or loading residue",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "S8C-ST-390x844: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 130967 bytes"
+    },
+    {
+      "name": "motion 01 initial media query is no-preference",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 02 app preference initially off",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 03 CDP media transition becomes reduce",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 04 OS media alone activates effective reduction",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 05 Digital Twin remains readable",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 06 information is not hidden",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S8C-MOTION-REDUCE: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 350537 bytes"
+    },
+    {
+      "name": "motion 07 live media transition returns to normal",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 08 cross-tab setting synchronization",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 09 persisted app preference activates reduction with OS normal",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 10 preference survives route switch",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 11 play-pause intent control remains represented",
+      "result": "PASS",
+      "detail": "control unavailable"
+    },
+    {
+      "name": "motion 12 dialog opens under reduction",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 13 dialog closes without clearing reduction",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "motion 14 cross-tab disable restores normal when OS is normal",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S8C-MOTION-NORMAL: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 603334 bytes"
+    },
+    {
+      "name": "S14 subject list is authoritative",
+      "result": "PASS",
+      "detail": "{\"dataset_name\":\"PPG-DaLiA\",\"subjects\":[\"S14\"]}"
+    },
+    {
+      "name": "S14 nominal source identity",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S14 channel identity",
+      "result": "PASS",
+      "detail": "[\"wrist_bvp\",\"wrist_acc\",\"chest_ecg\",\"wrist_temp\"]"
+    },
+    {
+      "name": "S14 model identity",
+      "result": "PASS",
+      "detail": "{\"dataset_name\":\"PPG-DaLiA\",\"subject_id\":\"S14\",\"window_index\":0,\"window_start_seconds\":0,\"window_duration_seconds\":8,\"input_channels\":[\"wrist_bvp\",\"wrist_acc\"],\"model_id\":\"PPGDaliaHRModelB:PPGPlusIMUHRModel\",\"checkpoint_path\":\"owner-provided local Model B checkpoint\",\"checkpoint_sha256\":\"c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77\",\"fault_injection\":null}"
+    },
+    {
+      "name": "S8C-S14-NOM: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 623639 bytes"
+    },
+    {
+      "name": "S14 fault state active",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S14 HR output withheld",
+      "result": "PASS",
+      "detail": "{\"status\":\"input_unavailable\",\"message\":\"Heart Rate AI unavailable: missing recorded channel(s): wrist_bvp.\",\"required_window_seconds\":8,\"required_channels\":[\"wrist_bvp\",\"wrist_acc\"]}"
+    },
+    {
+      "name": "S8C-S14-ACTIVE: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 650436 bytes"
+    },
+    {
+      "name": "S8C-S14-WITHHELD: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 650870 bytes"
+    },
+    {
+      "name": "S14 rebuilding is fail-closed",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S8C-S14-REBUILD: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 635835 bytes"
+    },
+    {
+      "name": "S14 recovered HR is fresh",
+      "result": "PASS",
+      "detail": "{\"nominal\":{\"dataset_name\":\"PPG-DaLiA\",\"subject_id\":\"S14\",\"window_index\":0,\"window_start_seconds\":0,\"window_duration_seconds\":8,\"input_channels\":[\"wrist_bvp\",\"wrist_acc\"],\"model_id\":\"PPGDaliaHRModelB:PPGPlusIMUHRModel\",\"checkpoint_path\":\"owner-provided local Model B checkpoint\",\"checkpoint_sha256\":\"c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77\",\"fault_injection\":null},\"recovered\":{\"dataset_name\":\"PPG-DaLiA\",\"subject_id\":\"S14\",\"window_index\":23,\"window_start_seconds\":46,\"window_duration_seconds\":8,\"input_channels\":[\"wrist_bvp\",\"wrist_acc\"],\"model_id\":\"PPGDaliaHRModelB:PPGPlusIMUHRModel\",\"checkpoint_path\":\"owner-provided local Model B checkpoint\",\"checkpoint_sha256\":\"c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77\",\"fault_injection\":null}}"
+    },
+    {
+      "name": "S8C-S14-POST: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 639134 bytes"
+    },
+    {
+      "name": "S8C-S14-FRESH-HR: PNG decodes",
+      "result": "PASS",
+      "detail": "png; 643121 bytes"
+    },
+    {
+      "name": "keyboard visible focus",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "dialog semantic role and accessible name",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "dialog focus trap wraps",
+      "result": "PASS",
+      "detail": "Close demonstration controls"
+    },
+    {
+      "name": "dialog Escape closes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "dialog focus restores",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "semantic landmarks present",
+      "result": "PASS",
+      "detail": "{\"main\":1,\"nav\":2,\"tables\":2,\"buttonsWithoutName\":0,\"skipLink\":true}"
+    },
+    {
+      "name": "buttons have accessible names",
+      "result": "PASS",
+      "detail": "{\"main\":1,\"nav\":2,\"tables\":2,\"buttonsWithoutName\":0,\"skipLink\":true}"
+    },
+    {
+      "name": "skip link present",
+      "result": "PASS",
+      "detail": "{\"main\":1,\"nav\":2,\"tables\":2,\"buttonsWithoutName\":0,\"skipLink\":true}"
+    },
+    {
+      "name": "no page or console errors",
+      "result": "PASS",
+      "detail": "[]"
+    }
+  ],
+  "console_errors": []
+}
