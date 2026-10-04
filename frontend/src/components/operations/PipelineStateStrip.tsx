@@ -87,7 +87,7 @@ export function PipelineStateStrip() {
       </div>
 
       {/* Desktop: linear horizontal strip. Mobile: vertical ordered process list. */}
-      <ol className="flex flex-col gap-2 sm:hidden" aria-label="Pipeline stages, in order">
+      <ol className="flex flex-col gap-2 min-[1180px]:hidden" aria-label="Pipeline stages, in order">
         <li>
           <Chip id="source" />
         </li>
@@ -101,7 +101,7 @@ export function PipelineStateStrip() {
           </li>
         ))}
       </ol>
-      <ol className="hidden items-start gap-2 sm:flex" aria-label="Pipeline stages, in order">
+      <ol className="hidden items-start gap-2 min-[1180px]:flex" aria-label="Pipeline stages, in order">
         <li>
           <Chip id="source" />
         </li>

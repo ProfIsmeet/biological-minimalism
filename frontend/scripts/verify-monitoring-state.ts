@@ -5264,6 +5264,42 @@ function allSourceFiles(): Array<[string, string]> {
   const explanationPanel = readFileSync(join(REPO_SRC_ROOT, "components/panels/ExplanationPanel.tsx"), "utf8");
   checkIncludes("stage8 §17: the SHAP refresh control is disabled when no explanation exists", explanationPanel, "disabled={loading || isReplay}");
 
+  // --- Independent Stage 8 browser-audit corrections ----------------------
+  // Real Chromium inspection found that the source-neutral affected-region
+  // summary called synthetic channels "replay inputs", and that two Mission
+  // Overview layouts switched to their desktop geometry before the persistent
+  // sidebar left enough content width. These assertions preserve the exact
+  // source-aware wording and the corrected responsive thresholds.
+  const affectedRegionSummary = readFileSync(join(REPO_SRC_ROOT, "components/operations/AffectedRegionSummary.tsx"), "utf8");
+  checkIncludes("independent Stage 8: affected-region copy branches on the authoritative source", affectedRegionSummary, 'view.isReplay ? "confirmed replay inputs" : "confirmed synthetic inputs"');
+  checkIncludes("independent Stage 8: empty affected-region copy is also source-aware", affectedRegionSummary, 'view.isReplay ? "replay" : "synthetic"');
+
+  const missionOverviewExperience = readFileSync(join(REPO_SRC_ROOT, "components/operations/MissionOverviewExperience.tsx"), "utf8");
+  checkIncludes("independent Stage 8: signal/radar split waits for 1280px", missionOverviewExperience, 'min-[1280px]:grid-cols-12');
+  checkNotIncludes("independent Stage 8: signal/radar split does not clip at the 1024px tablet width", missionOverviewExperience, 'min-[1024px]:grid-cols-12');
+
+  const pipelineStrip = readFileSync(join(REPO_SRC_ROOT, "components/operations/PipelineStateStrip.tsx"), "utf8");
+  checkIncludes("independent Stage 8: pipeline remains vertical below the content-safe desktop width", pipelineStrip, 'min-[1180px]:hidden');
+  checkIncludes("independent Stage 8: horizontal pipeline starts only at the content-safe desktop width", pipelineStrip, 'min-[1180px]:flex');
+
+  const avatarOverlay = readFileSync(join(REPO_SRC_ROOT, "components/visualization/human/OperationalAvatarOverlay.tsx"), "utf8");
+  checkIncludes("independent Stage 8: operational sensor targets meet the 44px minimum", avatarOverlay, 'className="pointer-events-auto flex min-h-11');
+
+  const demoDrawer = readFileSync(join(REPO_SRC_ROOT, "components/operations/DemoControlDrawer.tsx"), "utf8");
+  checkIncludes("independent Stage 8: demo drawer opener meets the 44px minimum", demoDrawer, 'className="flex min-h-11');
+  checkNotIncludes("independent Stage 8: demo drawer opener no longer uses a 36px fixed height", demoDrawer, 'className="flex h-9');
+
+  const sensorConstellation = readFileSync(join(REPO_SRC_ROOT, "components/operations/SensorConstellation.tsx"), "utf8");
+  checkIncludes("independent Stage 8: constellation jump links meet the 44px minimum", sensorConstellation, "min-h-11 min-w-11");
+
+  const juryHero = readFileSync(join(REPO_SRC_ROOT, "components/jury/JuryHero.tsx"), "utf8");
+  checkIncludes("independent Stage 8: System Brief hero actions meet the 44px minimum", juryHero, 'className="flex h-11 items-center');
+  checkNotIncludes("independent Stage 8: System Brief hero actions no longer use a 42px fixed height", juryHero, "h-[42px]");
+
+  const experimentalBoundary = readFileSync(join(REPO_SRC_ROOT, "components/jury/ExperimentalBoundary.tsx"), "utf8");
+  checkIncludes("independent Stage 8: research boundary action meets the 44px minimum", experimentalBoundary, 'className="mt-1 flex h-11');
+  checkNotIncludes("independent Stage 8: research boundary action no longer uses a 42px fixed height", experimentalBoundary, "h-[42px]");
+
   // --- §18 — the operational demo controls meet the 44px minimum ----------
   //
   // These are the controls a presenter drives live: load a replay subject,

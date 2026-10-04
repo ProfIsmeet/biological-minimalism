@@ -59,7 +59,9 @@ export function AffectedRegionSummary() {
       <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-final-accent" />
       <span className="font-semibold text-ink-primary">No active simulated-fault region</span>
       <span className="text-ink-secondary">
-        — {confirmedRegions.length > 0 ? `confirmed replay inputs: ${confirmedRegions.join(", ")}` : "no replay input region currently confirmed"}
+        — {confirmedRegions.length > 0
+          ? `${view.isReplay ? "confirmed replay inputs" : "confirmed synthetic inputs"}: ${confirmedRegions.join(", ")}`
+          : `no ${view.isReplay ? "replay" : "synthetic"} input region currently confirmed`}
       </span>
     </div>
   );

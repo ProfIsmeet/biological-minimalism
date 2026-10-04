@@ -21,6 +21,7 @@ Two targets are wired up:
 from __future__ import annotations
 
 import time
+from threading import Lock
 
 import numpy as np
 import shap
@@ -79,6 +80,10 @@ class AIExplainer:
         confidence_bg = rng.uniform(0.0, 1.0, size=(n, len(CONFIDENCE_FEATURES)))
         self._confidence_bg_mean = confidence_bg.mean(axis=0)
         self._confidence_explainer = shap.KernelExplainer(_confidence_fn, confidence_bg)
+        # KernelExplainer mutates scratch arrays while calculating SHAP values.
+        # FastAPI serves this singleton from multiple worker threads, so calls
+        # against the same explainer must not overlap.
+        self._confidence_lock = Lock()
 
         fatigue_bg = np.column_stack(
             [
@@ -91,10 +96,12 @@ class AIExplainer:
         )
         self._fatigue_bg_mean = fatigue_bg.mean(axis=0)
         self._fatigue_explainer = shap.KernelExplainer(_fatigue_fn, fatigue_bg)
+        self._fatigue_lock = Lock()
 
     def explain_confidence(self, quality: dict[str, float]) -> AIExplanation:
         x = np.array([[quality.get(s, 1.0) for s in ("ppg", "eeg", "temperature", "bioimpedance")]])
-        shap_values = np.asarray(self._confidence_explainer.shap_values(x, silent=True))[0]
+        with self._confidence_lock:
+            shap_values = np.asarray(self._confidence_explainer.shap_values(x, silent=True))[0]
         predicted = float(_confidence_fn(x)[0])
         base_value = float(self._confidence_explainer.expected_value)
         # Positive SHAP = raises confidence = GOOD, so it is a "risk-decreasing" contribution.
@@ -113,7 +120,8 @@ class AIExplainer:
 
     def explain_fatigue(self, hrv: float, theta: float, alpha: float, cognitive_load: float, mode_risk_bias: float) -> AIExplanation:
         x = np.array([[hrv, theta, alpha, cognitive_load, mode_risk_bias]])
-        shap_values = np.asarray(self._fatigue_explainer.shap_values(x, silent=True))[0]
+        with self._fatigue_lock:
+            shap_values = np.asarray(self._fatigue_explainer.shap_values(x, silent=True))[0]
         predicted = float(_fatigue_fn(x)[0])
         base_value = float(self._fatigue_explainer.expected_value)
         return self._build(

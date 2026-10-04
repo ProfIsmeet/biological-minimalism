@@ -108,11 +108,11 @@ export function MissionOverviewExperience() {
         {/* §11 — 12-column split: signal ribbons (8) beside the binary
             architecture-coverage radar (4). At tablet/mobile the ribbons
             stack first, the radar second. */}
-        <div className="grid grid-cols-1 gap-4 min-[1024px]:grid-cols-12">
-          <div className="min-[1024px]:col-span-8">
+        <div className="grid grid-cols-1 gap-4 min-[1280px]:grid-cols-12">
+          <div className="min-[1280px]:col-span-8">
             <SignalRibbonMatrix selected={selected} onSelect={setSelected} />
           </div>
-          <div className="min-[1024px]:col-span-4">
+          <div className="min-[1280px]:col-span-4">
             <ArchitectureCoverageRadar />
           </div>
         </div>

@@ -53,13 +53,13 @@ export function JuryHero() {
       <div className="flex flex-col gap-3 pt-1 sm:flex-row">
         <Link
           href="/live-monitoring"
-          className="flex h-[42px] items-center justify-center rounded-[7px] bg-final-accent px-4 text-sm font-semibold text-[#07100F] transition-colors duration-150 hover:bg-final-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+          className="flex h-11 items-center justify-center rounded-[7px] bg-final-accent px-4 text-sm font-semibold text-[#07100F] transition-colors duration-150 hover:bg-final-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           Open live signals
         </Link>
         <Link
           href="/research/experimental"
-          className="flex h-[42px] items-center justify-center rounded-[7px] border border-jury-border-strong px-4 text-sm font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+          className="flex h-11 items-center justify-center rounded-[7px] border border-jury-border-strong px-4 text-sm font-semibold text-ink-secondary transition-colors duration-150 hover:bg-surface-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           View experimental evidence
         </Link>
