@@ -157,7 +157,7 @@ export function ReplaySessionControl() {
         <button
           type="button"
           disabled={!control.canPlay}
-          title={!control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : undefined}
+          title={!control.canPlay && !control.authoritativeCurrent ? "Current source state must be confirmed before playback controls are available." : !view.isReplay ? "Load a subject before playback controls are available." : control.canPlay && !control.authoritativeCurrent ? "Start the paused replay to confirm its first telemetry frame." : undefined}
           onClick={() => void play()}
           className="min-h-11 inline-flex items-center rounded-[6px] border border-jury-border-strong px-3 py-1.5 text-sm text-ink-secondary disabled:opacity-40"
         >

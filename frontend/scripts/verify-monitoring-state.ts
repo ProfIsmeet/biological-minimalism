@@ -4180,7 +4180,7 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     checkEqual(`controls residual 2 (${unavailableCase.name}): retained position is absent`, replay.replayPositionSeconds, null);
     checkEqual(`controls residual 2 (${unavailableCase.name}): retained duration is absent`, replay.replayDurationSeconds, null);
     checkEqual(`controls residual 2 (${unavailableCase.name}): playback mutations are disabled`, replay.canControlPlayback, false);
-    checkEqual(`controls residual 2 (${unavailableCase.name}): play is disabled`, replay.canPlay, false);
+    checkEqual(`controls residual 2 (${unavailableCase.name}): non-paused unconfirmed replay cannot play`, replay.canPlay, false);
     checkEqual(`controls residual 2 (${unavailableCase.name}): source-changing actions are disabled`, replay.canChangeSource, false);
 
     const fault = deriveFaultControlPresentation({
@@ -4196,6 +4196,43 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
     checkNotIncludes(`controls residual 2 (${unavailableCase.name}): no false no-fault assertion`, fault.currentFaultLabel, "No simulated fault is active");
     checkNotIncludes(`controls residual 2 (${unavailableCase.name}): stale PPG fault detail is withheld`, fault.currentFaultLabel, "Simulated PPG");
   }
+
+  const awaitingPausedReplay = deriveReplayControlPresentation({
+    telemetry: "awaiting_confirmation",
+    isReplay: true,
+    replaySessionState: "paused",
+    playbackSpeed: 1,
+    replayPositionSeconds: 0,
+    replayDurationSeconds: 120,
+    subjectId: "S14",
+    pendingAction: null,
+  });
+  checkEqual("controls residual 2: paused replay awaiting its first frame may start", awaitingPausedReplay.canPlay, true);
+  checkEqual("controls residual 2: paused replay awaiting its first frame keeps other playback mutations disabled", awaitingPausedReplay.canControlPlayback, false);
+
+  const awaitingPlayingReplay = deriveReplayControlPresentation({
+    telemetry: "awaiting_confirmation",
+    isReplay: true,
+    replaySessionState: "playing",
+    playbackSpeed: 1,
+    replayPositionSeconds: 0,
+    replayDurationSeconds: 120,
+    subjectId: "S14",
+    pendingAction: null,
+  });
+  checkEqual("controls residual 2: awaiting replay already marked playing cannot issue duplicate play", awaitingPlayingReplay.canPlay, false);
+
+  const awaitingPausedSynthetic = deriveReplayControlPresentation({
+    telemetry: "awaiting_confirmation",
+    isReplay: false,
+    replaySessionState: "paused",
+    playbackSpeed: null,
+    replayPositionSeconds: null,
+    replayDurationSeconds: null,
+    subjectId: null,
+    pendingAction: null,
+  });
+  checkEqual("controls residual 2: awaiting synthetic source cannot use replay recovery play", awaitingPausedSynthetic.canPlay, false);
 
   const pendingReplay = deriveReplayControlPresentation({
     telemetry: activeTelemetry,

@@ -30,6 +30,16 @@ export function deriveReplayControlPresentation(params: {
   const unavailableMessage = authoritativeCurrent ? null : telemetryAvailabilityLabel(params.telemetry);
   const canChangeSource = authoritativeCurrent && params.pendingAction === null;
   const canControlPlayback = canChangeSource && params.isReplay;
+  // A freshly loaded replay is intentionally paused before it has emitted a
+  // WebSocket frame.  In that bounded state, Play is the action that can
+  // produce the first confirmable frame; requiring an already-confirmed frame
+  // would deadlock the canonical jury flow at time zero.  Other mutations stay
+  // fail-closed until telemetry is authoritative.
+  const canStartAwaitingReplay =
+    params.telemetry === "awaiting_confirmation" &&
+    params.isReplay &&
+    params.replaySessionState === "paused" &&
+    params.pendingAction === null;
   return {
     authoritativeCurrent,
     unavailableMessage,
@@ -42,7 +52,7 @@ export function deriveReplayControlPresentation(params: {
     activeSubjectId: authoritativeCurrent ? params.subjectId : null,
     canChangeSource,
     canControlPlayback,
-    canPlay: canControlPlayback && params.replaySessionState !== "completed",
+    canPlay: (canControlPlayback && params.replaySessionState !== "completed") || canStartAwaitingReplay,
   };
 }
 
