@@ -233,12 +233,50 @@ def _load_from_directory(data_path: Path, subject_id: str) -> dict[str, Any]:
         ) from exc
 
 
+def _load_from_presentation_npz(path: Path, subject_id: str) -> dict[str, Any]:
+    """Load the bounded, pickle-free channel bundle used by free hosting.
+
+    The bundle contains only the four public replay channels.  Each array is
+    loaded independently, avoiding the transient memory spike caused by
+    materializing every modality in the original subject pickle.
+    """
+
+    try:
+        with np.load(path, allow_pickle=False) as archive:
+            embedded_subject = str(archive["subject"].item()).upper()
+            if embedded_subject != subject_id:
+                raise PpgDaliaSubjectError(
+                    f"Requested {subject_id}, but the recording identifies itself as "
+                    f"{embedded_subject!r}; refusing to mix or relabel subjects."
+                )
+            return {
+                "subject": embedded_subject,
+                "signal": {
+                    "wrist": {
+                        "BVP": archive["wrist_bvp"],
+                        "ACC": archive["wrist_acc"],
+                        "TEMP": archive["wrist_temp"],
+                    },
+                    "chest": {"ECG": archive["chest_ecg"]},
+                },
+            }
+    except PpgDaliaSubjectError:
+        raise
+    except (OSError, ValueError, KeyError) as exc:
+        raise PpgDaliaPathError(
+            f"Could not read PPG-DaLiA presentation bundle {path}: {exc}"
+        ) from exc
+
+
 def load_subject_payload(data_path: str | Path, subject_id: str) -> dict[str, Any]:
     path = Path(data_path).expanduser()
     subject = normalize_subject_id(subject_id)
     if not path.exists():
         raise PpgDaliaPathError(f"Configured PPG-DaLiA path does not exist: {path}")
-    raw = _load_from_archive(path, subject) if path.is_file() else _load_from_directory(path, subject)
+    if path.is_file() and path.suffix.lower() == ".npz":
+        raw = _load_from_presentation_npz(path, subject)
+    else:
+        raw = _load_from_archive(path, subject) if path.is_file() else _load_from_directory(path, subject)
     if not isinstance(raw, dict):
         raise PpgDaliaPathError(
             f"PPG-DaLiA subject {subject} did not contain the expected dictionary payload."

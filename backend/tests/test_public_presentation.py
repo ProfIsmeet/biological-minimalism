@@ -187,3 +187,23 @@ def test_reduced_s14_bundle_preserves_selected_arrays_exactly(
         assert np.array_equal(actual, expected)
         assert actual.dtype == expected.dtype
     assert manifest["bundle_sha256"] == hashlib.sha256(output.read_bytes()).hexdigest()
+
+
+def test_pickle_free_s14_bundle_preserves_selected_arrays_exactly(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _write_subject(tmp_path, duration_seconds=1.0)
+    source = tmp_path / "PPG_FieldStudy" / "S14" / "S14.pkl"
+    monkeypatch.setattr(build_public_s14_bundle, "SOURCE_SHA256", hashlib.sha256(source.read_bytes()).hexdigest())
+    output = tmp_path / "S14-public.npz"
+
+    manifest = build_public_s14_bundle.build_bundle(source, output)
+    original = pickle.loads(source.read_bytes())
+    reduced = load_subject_payload(output, "S14")
+
+    for path in build_public_s14_bundle.SELECTED_CHANNELS.values():
+        expected = original[path[0]][path[1]][path[2]]
+        actual = reduced[path[0]][path[1]][path[2]]
+        assert np.array_equal(actual, expected)
+        assert actual.dtype == expected.dtype
+    assert manifest["bundle_sha256"] == hashlib.sha256(output.read_bytes()).hexdigest()

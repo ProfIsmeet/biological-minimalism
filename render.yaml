@@ -18,7 +18,7 @@ services:
       - key: BIOMIN_PRESENTATION_LOOP_REPLAY
         value: "true"
       - key: BIOMIN_PPG_DALIA_PATH
-        value: /tmp/biological-minimalism/PPG_FieldStudy_S14.zip
+        value: /tmp/biological-minimalism/PPG_FieldStudy_S14.presentation.npz
       - key: BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH
         value: /tmp/biological-minimalism/model_b_ppg_plus_imu_ppg_dalia.pt
       - key: BIOMIN_ALLOWED_ORIGINS
@@ -26,7 +26,7 @@ services:
       - key: BIOMIN_PRESENTATION_DATASET_URL
         sync: false
       - key: BIOMIN_PRESENTATION_DATASET_SHA256
-        value: e5f4fc0cb0722f98d1c86e499d1c0f49e7bfa4048a909f017df65978842821a5
+        value: 04964b41dbdcb518c23b452608dfef52a66670673ff6bfbc97686a2677ed843c
       - key: BIOMIN_PRESENTATION_CHECKPOINT_URL
         sync: false
       - key: BIOMIN_PRESENTATION_CHECKPOINT_SHA256

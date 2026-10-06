@@ -92,11 +92,26 @@ def build_bundle(source: Path, output: Path) -> dict[str, Any]:
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix(output.suffix + ".partial")
     try:
-        with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-            with archive.open(f"PPG_FieldStudy/{SUBJECT}/{SUBJECT}.pkl", "w") as stream:
-                pickle.dump(reduced, stream, protocol=pickle.HIGHEST_PROTOCOL)
-            archive.writestr("DERIVATION.json", json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-            archive.writestr("ATTRIBUTION.txt", attribution)
+        if output.suffix.lower() == ".npz":
+            # Store arrays as separate members so production can inflate only
+            # the selected channels, never the whole pickle graph at once.
+            with temporary.open("wb") as stream:
+                np.savez_compressed(
+                    stream,
+                    subject=np.asarray(SUBJECT),
+                    **{
+                        name: np.asarray(nested_value(raw, path))
+                        for name, path in SELECTED_CHANNELS.items()
+                    },
+                    derivation=np.asarray(json.dumps(manifest, sort_keys=True)),
+                    attribution=np.asarray(attribution),
+                )
+        else:
+            with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+                with archive.open(f"PPG_FieldStudy/{SUBJECT}/{SUBJECT}.pkl", "w") as stream:
+                    pickle.dump(reduced, stream, protocol=pickle.HIGHEST_PROTOCOL)
+                archive.writestr("DERIVATION.json", json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+                archive.writestr("ATTRIBUTION.txt", attribution)
         temporary.replace(output)
     finally:
         temporary.unlink(missing_ok=True)
@@ -109,7 +124,7 @@ def build_bundle(source: Path, output: Path) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("source", type=Path, help="Trusted official S14.pkl")
-    parser.add_argument("output", type=Path, help="Output S14 presentation zip")
+    parser.add_argument("output", type=Path, help="Output S14 presentation .zip or pickle-free .npz")
     args = parser.parse_args()
     print(json.dumps(build_bundle(args.source, args.output), indent=2, sort_keys=True))
 
