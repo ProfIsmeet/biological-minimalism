@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "verify:rendered": "node scripts/verify-rendered-routes.mjs",
     "verify:monitoring": "node --experimental-strip-types --no-warnings scripts/run-verify-monitoring-state.mjs && node scripts/verify-monitoring-consumers.mjs && node scripts/verify-live-region-boundaries.mjs && node scripts/verify-reduced-motion-unification.mjs && node scripts/verify-modal-dialog-primitives.mjs && node scripts/verify-webgl-fallback.mjs && node scripts/verify-stage7-digital-twin.mjs",
-    "verify:public-deployment-evidence": "node scripts/verify-public-deployment-evidence.mjs"
+    "verify:public-deployment-evidence": "node scripts/verify-public-deployment-evidence.mjs",
+    "verify:stage9-evidence": "node scripts/verify-stage9-evidence.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",

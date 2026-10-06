@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "stage": 9,
+  "verdict": "PARTIAL",
+  "source_branch": "origin/codex/public-presentation-deploy",
+  "source_sha": "1e2fb5b913d5ae7d5bd93a4c180f28603e1ec5fc",
+  "branch": "codex/stage9-final-accessibility-jury-acceptance",
+  "actual_voiceover_enabled": true,
+  "voiceover_browsers": ["Safari", "Chrome"],
+  "exact_voiceover_speech_captured": false,
+  "caption_panel_screenshots": 0,
+  "transcript_records": 10,
+  "ambiguous_evidence": 0,
+  "real_macos_reduce_motion": "pass",
+  "os_settings_restored": true,
+  "findings": {
+    "critical_open": 0,
+    "high_open": 0,
+    "medium_product_open": 0,
+    "closed": ["S9-F01"],
+    "evidence_gaps": ["E-VO-01", "E-MOB-01", "E-COLD-01", "E-JURY-01"]
+  },
+  "evidence_directory": "frontend/qa-screenshots/codex-stage9-final-accessibility-jury-acceptance",
+  "note": "Transcript files explicitly mark exact speech NOT_CAPTURED; no ARIA text is misrepresented as spoken output."
+}
