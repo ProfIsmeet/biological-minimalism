@@ -11,6 +11,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import hashlib
+import json
 import os
 import urllib.parse
 import urllib.request
@@ -86,6 +87,35 @@ def _provision_asset(
         }
         if settings.presentation_asset_bearer_token:
             request_headers["Authorization"] = f"Bearer {settings.presentation_asset_bearer_token}"
+        # GitHub's browser release URL does not accept API bearer tokens for
+        # private repositories. Resolve it through the authenticated Releases
+        # API, then request the matching asset with the octet-stream media type.
+        parsed = urllib.parse.urlsplit(url)
+        parts = parsed.path.strip("/").split("/")
+        if (
+            parsed.netloc.lower() == "github.com"
+            and len(parts) >= 6
+            and parts[2:4] == ["releases", "download"]
+        ):
+            owner, repository, tag = parts[0], parts[1], parts[4]
+            asset_name = urllib.parse.unquote("/".join(parts[5:]))
+            release_url = (
+                f"https://api.github.com/repos/{urllib.parse.quote(owner)}/"
+                f"{urllib.parse.quote(repository)}/releases/tags/{urllib.parse.quote(tag)}"
+            )
+            metadata_headers = dict(request_headers)
+            metadata_headers["Accept"] = "application/vnd.github+json"
+            metadata_request = urllib.request.Request(release_url, headers=metadata_headers)
+            opener = urllib.request.build_opener(_SafeAssetRedirectHandler())
+            with opener.open(metadata_request, timeout=30) as response:
+                release = json.load(response)
+            asset = next(
+                (item for item in release.get("assets", []) if item.get("name") == asset_name),
+                None,
+            )
+            if asset is None or not str(asset.get("url", "")).startswith("https://api.github.com/"):
+                raise RuntimeError("Public presentation asset was not found in the private release.")
+            url = str(asset["url"])
         request = urllib.request.Request(url, headers=request_headers)
         opener = urllib.request.build_opener(_SafeAssetRedirectHandler())
         with opener.open(request, timeout=30) as response, temporary.open("wb") as target:
