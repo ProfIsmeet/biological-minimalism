@@ -5,7 +5,7 @@
 | Accepted monitoring verifier | 1341/1341 PASS |
 | Seven monitoring sub-verifiers | PASS |
 | Rendered routes | 146/146 PASS |
-| Full backend suite | 361 passed, 4 skipped |
+| Full backend suite | 363 passed, 4 skipped |
 | Public deployment targeted suite | PASS |
 | ESLint | PASS |
 | TypeScript | PASS |

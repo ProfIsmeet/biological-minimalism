@@ -102,6 +102,8 @@ class Settings(BaseSettings):
     presentation_checkpoint_sha256: str = (
         "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77"
     )
+    presentation_asset_bearer_token: str | None = Field(default=None, repr=False)
+    """Optional server-only token for authenticated private asset bootstrap."""
 
     explanation_max_concurrency: int = Field(default=1, ge=1, le=8)
     """Maximum simultaneous expensive explanation calculations."""

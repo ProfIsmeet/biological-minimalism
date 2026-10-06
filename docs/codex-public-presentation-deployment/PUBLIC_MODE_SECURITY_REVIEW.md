@@ -6,7 +6,8 @@
 - Dataset/checkpoint paths and hashes are server settings only.
 - No admin credential exists in the browser bundle.
 - Dataset/checkpoint files have no serving route.
-- Dataset URL bootstrap, if ever used, requires HTTPS, bounded size, atomic write, and exact SHA; production uses a private disk instead.
+- Asset bootstrap requires HTTPS, bounded size, atomic write, and exact SHA before startup.
+- Private asset bootstrap uses a server-only bearer credential, requests binary content explicitly, strips authorization on cross-host redirects, and never returns asset URLs or bytes to clients.
 - Public HTTP requests have size and 30-second limits.
 - WebSocket fan-out is bounded to 100 clients and 2-second send timeout.
 - Explanation work has a bounded non-blocking concurrency slot.

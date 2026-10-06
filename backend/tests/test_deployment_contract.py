@@ -85,6 +85,9 @@ def test_public_deployment_is_explicitly_read_only_and_hash_pinned() -> None:
     assert "BIOMIN_PUBLIC_PRESENTATION_MODE" in blueprint
     assert "BIOMIN_PRESENTATION_DATASET_SHA256" in blueprint
     assert "BIOMIN_PRESENTATION_CHECKPOINT_SHA256" in blueprint
+    assert "BIOMIN_PRESENTATION_ASSET_BEARER_TOKEN" in blueprint
+    assert "BIOMIN_PRESENTATION_DATASET_URL" in blueprint
+    assert "BIOMIN_PRESENTATION_CHECKPOINT_URL" in blueprint
     assert "BIOMIN_PRESENTATION_SUBJECT_ID" in blueprint
     assert "value: S14" in blueprint
     assert "plan: free" in blueprint

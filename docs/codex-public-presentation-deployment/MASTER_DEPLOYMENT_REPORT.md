@@ -6,7 +6,7 @@ Publish the accepted Stage 8 application as a Vercel frontend plus Render FastAP
 
 ## Current verdict
 
-Local public-mode implementation and real-S14 acceptance are complete. Provider authentication and explicit approval for paid Render compute/private disk remain required before production creation. No protected branch was modified and Stage 9 was not started.
+Local public-mode implementation and real-S14 acceptance are complete. The owner declined paid Render compute/storage, so the deployment uses Render Free plus an authenticated, hash-pinned private release bootstrap. Render email verification and a least-privilege private-asset read credential remain required before production creation. No protected branch was modified and Stage 9 was not started.
 
 ## Deployment-only changes
 
@@ -17,6 +17,7 @@ Local public-mode implementation and real-S14 acceptance are complete. Provider 
 - conservative public request, WebSocket, and explanation concurrency limits;
 - frontend public read-only indicator and removal of unusable mutation controls;
 - Render Blueprint and repeatable endurance verifier.
+- reproducible exact-channel S14 bundler and credential-safe private cold-start bootstrap.
 
 Scientific calculations, checkpoint behavior, thresholds, telemetry authority, missing-data semantics, charts, and accepted responsive composition are unchanged.
 
@@ -26,4 +27,4 @@ The official UCI distribution was downloaded and verified. A deployment-only S14
 
 ## Production result
 
-Pending provider authorization and paid-resource approval. Public URLs and deployment identities must not be claimed until the production acceptance report is complete.
+Pending Render email verification and private-asset credential entry. No paid-resource approval is required. Public URLs and deployment identities must not be claimed until the production acceptance report is complete.

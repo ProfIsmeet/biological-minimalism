@@ -12,6 +12,7 @@ import asyncio
 import contextlib
 import hashlib
 import os
+import urllib.parse
 import urllib.request
 from collections.abc import AsyncIterator
 from pathlib import Path
@@ -28,6 +29,19 @@ from app.engine.data_sources import data_source_manager
 from app.ml.inference import create_inference_engine
 
 _tick_task: asyncio.Task | None = None
+
+
+class _SafeAssetRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Never forward a private bootstrap credential to a different host."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
+        redirected = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if redirected is not None:
+            old_host = urllib.parse.urlsplit(req.full_url).netloc.lower()
+            new_host = urllib.parse.urlsplit(newurl).netloc.lower()
+            if old_host != new_host:
+                redirected.remove_header("Authorization")
+        return redirected
 
 # Resolved once at import time: RuleBasedInferenceEngine unless
 # BIOMIN_MODEL_CHECKPOINT_PATH points at a real trained checkpoint (see
@@ -66,8 +80,15 @@ def _provision_asset(
     digest = hashlib.sha256()
     written = 0
     try:
-        request = urllib.request.Request(url, headers={"User-Agent": "biological-minimalism-deploy/1"})
-        with urllib.request.urlopen(request, timeout=30) as response, temporary.open("wb") as target:
+        request_headers = {
+            "Accept": "application/octet-stream",
+            "User-Agent": "biological-minimalism-deploy/1",
+        }
+        if settings.presentation_asset_bearer_token:
+            request_headers["Authorization"] = f"Bearer {settings.presentation_asset_bearer_token}"
+        request = urllib.request.Request(url, headers=request_headers)
+        opener = urllib.request.build_opener(_SafeAssetRedirectHandler())
+        with opener.open(request, timeout=30) as response, temporary.open("wb") as target:
             while chunk := response.read(1024 * 1024):
                 written += len(chunk)
                 if written > max_bytes:

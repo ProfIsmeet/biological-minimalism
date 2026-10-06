@@ -23,7 +23,19 @@ services:
         value: /tmp/biological-minimalism/model_b_ppg_plus_imu_ppg_dalia.pt
       - key: BIOMIN_ALLOWED_ORIGINS
         sync: false
+      - key: BIOMIN_PRESENTATION_DATASET_URL
+        sync: false
       - key: BIOMIN_PRESENTATION_DATASET_SHA256
+        value: e5f4fc0cb0722f98d1c86e499d1c0f49e7bfa4048a909f017df65978842821a5
+      - key: BIOMIN_PRESENTATION_CHECKPOINT_URL
         sync: false
       - key: BIOMIN_PRESENTATION_CHECKPOINT_SHA256
         value: c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77
+      - key: BIOMIN_PRESENTATION_ASSET_BEARER_TOKEN
+        sync: false
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"

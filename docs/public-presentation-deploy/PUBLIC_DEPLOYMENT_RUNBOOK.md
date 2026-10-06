@@ -30,7 +30,9 @@ Set these non-secret values in the Render service:
 - `BIOMIN_ALLOWED_ORIGINS=["https://<exact-vercel-production-host>"]`
 - `BIOMIN_PRESENTATION_DATASET_SHA256=<sha256>`
 
-The Blueprint supplies the remaining presentation values. No API token, asset credential, or admin bypass belongs in source control. For the stable presentation, both assets are uploaded through Render's authenticated backend shell into an approved private persistent disk. The optional HTTPS bootstrap variables are reserved for an owner-controlled private object store only; they must never name a public raw-participant archive.
+The Blueprint supplies the remaining presentation values. No API token, asset credential, or admin bypass belongs in source control. For the $0 deployment, both URLs identify authenticated private release assets. Set `BIOMIN_PRESENTATION_ASSET_BEARER_TOKEN` to a least-privilege read-only credential in Render's secret field. The backend strips that credential before any cross-host signed redirect, verifies both complete hashes, and fails closed. The URLs and credential must never appear in the frontend or public access guide.
+
+Render Free has no persistent disk. Every spin-down, restart, or redeploy removes the local copies and forces a new authenticated bootstrap. Expect roughly one minute or more for a cold start, and validate the 512 MB memory limit on the deployed Linux instance before presentation use.
 
 ## Vercel environment
 

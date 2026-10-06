@@ -9,7 +9,7 @@ This report is finalized only after the public URLs, provider deployment identit
 - Browser → Vercel Next.js frontend over HTTPS
 - Browser → Render FastAPI over HTTPS
 - Browser → Render `/ws/live-feed` over WSS
-- Render private persistent disk → hash-pinned S14 archive and checkpoint
+- Render ephemeral startup → authenticated private, hash-pinned S14 bundle and checkpoint
 - Backend → committed, hash-pinned Model B checkpoint
 
 No provider token or credential is committed.

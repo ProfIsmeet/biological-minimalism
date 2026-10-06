@@ -7,13 +7,17 @@
     "official_archive_sha256": "5772387956e34e2e2dc4c2ddbeb98cb70569d5112fa4c13ee98a17680b84a1f3",
     "s14_pickle_sha256": "c192b9090ac3c0107000d8424c038ccd11292cded1f6c46c97e2cae85c725392",
     "deployment_archive_sha256": "3e4499a0ad6eb024dfd39b2ec53c5739f2d25bced51d22ac55da332271444c03",
+    "free_tier_bundle_sha256": "e5f4fc0cb0722f98d1c86e499d1c0f49e7bfa4048a909f017df65978842821a5",
+    "free_tier_bundle_bytes": 19058604,
     "checkpoint_sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
-    "tracked_in_git": false
+    "tracked_in_git": false,
+    "publicly_downloadable": false,
+    "storage": "private_authenticated_release_assets"
   },
   "local": {
     "monitoring": "1341/1341",
     "rendered_routes": "146/146",
-    "backend": "361 passed, 4 skipped",
+    "backend": "363 passed, 4 skipped",
     "production_build_pages": "14/14",
     "viewports": ["1440x900", "1024x768", "390x844"],
     "routes_tested": 8,
