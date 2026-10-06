@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "local_complete_production_pending",
+  "status": "production_verified",
   "source_sha": "36cc9d36a9c11c47374bd6be142761d93b7cdfb5",
   "deployment_branch": "codex/public-presentation-deploy",
   "assets": {
@@ -33,5 +33,18 @@
       "disconnects_or_stalls": 0
     }
   },
-  "production": null
+  "production": {
+    "verified_at": "2026-10-06",
+    "frontend_url": "https://biological-minimalism-iac.vercel.app",
+    "backend_url": "https://biological-minimalism-api.onrender.com",
+    "websocket_url": "wss://biological-minimalism-api.onrender.com/ws/live-feed",
+    "deployed_source_commit": "08481f69649892c56cd5cf38aed2dad47d02ec37",
+    "dataset": "PPG-DaLiA",
+    "subject": "S14",
+    "public_read_only": true,
+    "browser_wss": "pass",
+    "browser_endurance_seconds": 621,
+    "render_plan": "Free",
+    "cold_start_limitation_disclosed": true
+  }
 }

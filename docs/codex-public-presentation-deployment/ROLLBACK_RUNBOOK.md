@@ -8,4 +8,4 @@
 6. Rotate a private bootstrap credential only in provider secret fields. No such credential is present in Git.
 7. The accepted Stage 8 source remains recoverable at `36cc9d36a9c11c47374bd6be142761d93b7cdfb5`.
 
-Final deployment IDs and URLs are appended after production acceptance.
+Accepted production identities: frontend `https://biological-minimalism-iac.vercel.app`, backend `https://biological-minimalism-api.onrender.com`, source commit `08481f69649892c56cd5cf38aed2dad47d02ec37`, Render deploy `dep-db2ekbcs728c73c5vgj0`. These facts were appended after the original pre-authorization run.

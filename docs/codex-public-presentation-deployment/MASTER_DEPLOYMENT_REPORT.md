@@ -6,7 +6,7 @@ Publish the accepted Stage 8 application as a Vercel frontend plus Render FastAP
 
 ## Current verdict
 
-Local public-mode implementation and real-S14 acceptance are complete. The owner declined paid Render compute/storage, so the deployment uses Render Free plus an authenticated, hash-pinned private release bootstrap. Render email verification and a least-privilege private-asset read credential remain required before production creation. No protected branch was modified and Stage 9 was not started.
+Production is complete and verified. The owner selected Render Free plus an authenticated, hash-pinned private release bootstrap. The earlier pre-authorization status was accurate at the time; provider authorization was later completed without rewriting history. No protected branch was modified.
 
 ## Deployment-only changes
 
@@ -27,4 +27,4 @@ The official UCI distribution was downloaded and verified. A deployment-only S14
 
 ## Production result
 
-Pending Render email verification and private-asset credential entry. No paid-resource approval is required. Public URLs and deployment identities must not be claimed until the production acceptance report is complete.
+PASS on 2026-10-06. Frontend: `https://biological-minimalism-iac.vercel.app`; backend: `https://biological-minimalism-api.onrender.com`; deployed source `08481f69649892c56cd5cf38aed2dad47d02ec37`. Real S14, public read-only enforcement, browser WSS, and 621 seconds of uninterrupted browser endurance passed. Render Free cold starts remain an operational limitation, not an acceptance failure.

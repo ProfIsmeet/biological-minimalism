@@ -1,5 +1,5 @@
 # Public browser evidence
 
-Status: **PENDING PRODUCTION**
+Status: **PASS — PRODUCTION BROWSER VERIFIED**
 
-Local visual review confirmed the accepted dark presentation system, visible public read-only state, connected S14 source strip, truthful recorded-replay boundary, mobile navigation, unclipped signal cards, current HR, and post-warmup trend. Durable screenshots are captured only against the final Vercel URL so their URLs, deployment ID, dimensions, hashes, and state are unambiguous.
+The earlier pending status was accurate before production authorization. The final Vercel URL was reviewed in a real browser: `PUBLIC · READ-ONLY`, connected PPG-DaLiA S14, recorded-replay disclaimers, fresh signals, and Model B HR output were present. Browser WSS passed and remained connected for 621 seconds. Stage 9 separately records the later accessibility review and its VoiceOver-capture limitation.

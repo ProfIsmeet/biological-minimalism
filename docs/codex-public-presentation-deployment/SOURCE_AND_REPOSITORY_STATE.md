@@ -9,4 +9,4 @@
 - Base ancestry: exact source commit
 - Protected refs: observed and not modified
 
-Final remote SHA and clean status are recorded after provider deployment evidence is committed.
+The deployed source commit is `08481f69649892c56cd5cf38aed2dad47d02ec37` on `codex/public-presentation-deploy`. Production evidence was subsequently committed and pushed; protected refs remained untouched. The worktree path above is historical and intentionally non-absolute.

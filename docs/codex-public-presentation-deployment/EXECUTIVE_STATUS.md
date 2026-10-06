@@ -1,3 +1,3 @@
 # Executive status
 
-`PARTIAL` — local implementation and the $0 private-bootstrap fallback are ready. Vercel is authenticated; Render email verification and entry of a least-privilege private-asset read credential remain owner-only actions. No charge will occur. Furkan must not begin public screenshot capture until Render Free cold-start/memory behavior and full production acceptance close.
+`COMPLETE` — production was subsequently authorized and verified on 2026-10-06. The earlier `PARTIAL` status was accurate before provider authorization. The Vercel frontend and Render Free backend now serve the read-only PPG-DaLiA S14 presentation; browser WSS and a 621-second endurance session passed. See `docs/public-presentation-deploy/PRODUCTION_VERIFICATION_REPORT.md`.

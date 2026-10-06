@@ -13,4 +13,4 @@ Local production build result:
 | `/mission-timeline` | PASS | PASS | PASS | PASS | absent |
 | `/settings` | PASS | PASS | PASS | PASS | absent |
 
-Production URLs remain pending.
+The same eight-route matrix was subsequently verified at `https://biological-minimalism-iac.vercel.app`. Production is no longer pending. The earlier local-only statement remains historically attributable to the pre-authorization run.
