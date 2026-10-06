@@ -223,6 +223,7 @@ export interface DataSourceStatus {
   end_behavior: string | null;
   channels: ChannelMetadata[];
   fault_injection: ReplayFaultState;
+  public_read_only: boolean;
 }
 
 export interface AvailableSubjectsResponse {

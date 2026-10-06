@@ -425,6 +425,19 @@ class DataSourceManager:
 
     def tick(self, dt: float, now: float | None = None) -> LiveMetricsSnapshot | None:
         with self._lock:
+            if (
+                settings.public_presentation_mode
+                and settings.presentation_loop_replay
+                and self.source_type == DataSourceType.DATASET_REPLAY
+                and self.replay_source.status().playback_state == ReplayPlaybackState.ENDED
+            ):
+                self.replay_source.reset()
+                self._replay_fault_injector.clear()
+                if self._replay_inference is not None:
+                    self._replay_inference.reset()
+                self._replay_history.clear()
+                self._last_replay_snapshot = None
+                self.replay_source.play()
             snapshot = self._active.tick(dt, now)
             if snapshot is not None and snapshot.source.source_type == DataSourceType.DATASET_REPLAY:
                 snapshot = self._replay_fault_injector.apply(snapshot)
@@ -441,10 +454,24 @@ class DataSourceManager:
                 return DataSourceStatus(
                     source_type=DataSourceType.SYNTHETIC,
                     dataset_configured=self._ppg_dalia_path is not None and self._ppg_dalia_path.exists(),
+                    public_read_only=settings.public_presentation_mode,
                 )
             return self.replay_source.status().model_copy(
-                update={"fault_injection": self._replay_fault_injector.status()}
+                update={
+                    "fault_injection": self._replay_fault_injector.status(),
+                    "public_read_only": settings.public_presentation_mode,
+                }
             )
+
+    def initialize_public_presentation(self) -> DataSourceStatus:
+        """Load, validate, and start the immutable recorded presentation."""
+
+        if self._replay_inference is None:
+            raise ReplayStateError("The replay inference service is unavailable.")
+        self._replay_inference.validate_model()
+        self.load_replay(settings.presentation_subject_id)
+        self.set_replay_speed(settings.presentation_replay_speed)
+        return self.play_replay()
 
 
 data_source_manager = DataSourceManager(

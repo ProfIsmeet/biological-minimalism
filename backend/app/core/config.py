@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pydantic import field_validator
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -83,6 +83,32 @@ class Settings(BaseSettings):
         REPOSITORY_ROOT / "ml" / "checkpoints" / "model_b_ppg_plus_imu_ppg_dalia.pt"
     )
     """Validated Model B checkpoint used only for PPG-DaLiA replay HR inference."""
+
+    public_presentation_mode: bool = False
+    """Fail-closed, read-only public deployment mode (disabled for local development)."""
+
+    presentation_subject_id: str = "S14"
+    presentation_replay_speed: float = 5.0
+    presentation_loop_replay: bool = True
+    presentation_dataset_sha256: str | None = None
+    """Expected SHA-256 of the official archive. Required in public mode."""
+
+    presentation_dataset_url: str | None = None
+    """Optional HTTPS URL for a hash-pinned, licensed S14-only archive."""
+
+    presentation_dataset_max_bytes: int = 512 * 1024 * 1024
+
+    presentation_checkpoint_url: str | None = None
+    presentation_checkpoint_sha256: str = (
+        "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77"
+    )
+
+    explanation_max_concurrency: int = Field(default=1, ge=1, le=8)
+    """Maximum simultaneous expensive explanation calculations."""
+
+    public_request_timeout_seconds: float = Field(default=30.0, gt=0, le=120)
+    public_max_request_bytes: int = Field(default=1024 * 1024, ge=1024)
+    public_max_websocket_clients: int = Field(default=100, ge=1, le=1000)
 
     # ML
     model_checkpoint_path: Path | None = None

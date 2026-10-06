@@ -40,3 +40,6 @@ export function deriveWebSocketUrl(apiBaseUrl: string): string {
 
 export const WS_URL =
   firstConfiguredValue(process.env.NEXT_PUBLIC_WS_URL) ?? deriveWebSocketUrl(API_BASE_URL);
+
+export const PUBLIC_PRESENTATION_MODE =
+  process.env.NEXT_PUBLIC_PRESENTATION_MODE?.trim().toLowerCase() === "true";

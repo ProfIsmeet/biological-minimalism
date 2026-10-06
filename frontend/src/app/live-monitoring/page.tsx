@@ -5,10 +5,12 @@ import { FinalSignalStack } from "@/components/monitoring/FinalSignalStack";
 import { HrInferencePanel } from "@/components/monitoring/HrInferencePanel";
 import { InferenceResponseTimeline } from "@/components/monitoring/InferenceResponseTimeline";
 import { MonitoringSourceStrip } from "@/components/monitoring/MonitoringSourceStrip";
+import { PublicPresentationNotice } from "@/components/monitoring/PublicPresentationNotice";
 import { ReplaySessionControl } from "@/components/monitoring/ReplaySessionControl";
 import { ScopeProvenanceFooter } from "@/components/monitoring/ScopeProvenanceFooter";
 import { SimulatedFaultControl } from "@/components/monitoring/SimulatedFaultControl";
 import { SensorConstellation } from "@/components/operations/SensorConstellation";
+import { PUBLIC_PRESENTATION_MODE } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Signal and Inference Monitor — Biological Minimalism",
@@ -48,8 +50,14 @@ export default function LiveMonitoringPage() {
         </div>
         <div className="flex flex-col gap-5 lg:col-span-4">
           <SensorConstellation compact />
-          <ReplaySessionControl />
-          <SimulatedFaultControl />
+          {PUBLIC_PRESENTATION_MODE ? (
+            <PublicPresentationNotice />
+          ) : (
+            <>
+              <ReplaySessionControl />
+              <SimulatedFaultControl />
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 import { DemoControlDrawer } from "@/components/operations/DemoControlDrawer";
+import { PUBLIC_PRESENTATION_MODE } from "@/lib/config";
 import { useOperationalViewModel } from "@/lib/monitoring/operationalViewModel";
 import { deriveOperationalPhase, PHASE_PRESENTATION } from "@/lib/visualization/operationalVisualTokens";
 
@@ -177,7 +178,11 @@ export function MissionStatusBar() {
         <span className="text-xs leading-snug text-ink-muted sm:max-w-[420px]">
           {view.isReplay ? "Recorded human-data replay" : "Synthetic demonstrator"} · Not live astronaut monitoring
         </span>
-        <DemoControlDrawer />
+        {PUBLIC_PRESENTATION_MODE ? (
+          <span className="rounded-[4px] border border-final-accent/30 bg-final-accent/5 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-final-accent">
+            Public read-only
+          </span>
+        ) : <DemoControlDrawer />}
       </div>
     </div>
   );

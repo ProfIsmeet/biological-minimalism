@@ -80,6 +80,16 @@ def test_config_ts_exposes_ws_derivation_contract() -> None:
     assert ".trim()" in config
 
 
+def test_public_deployment_is_explicitly_read_only_and_hash_pinned() -> None:
+    blueprint = _read("render.yaml")
+    assert "BIOMIN_PUBLIC_PRESENTATION_MODE" in blueprint
+    assert "BIOMIN_PRESENTATION_DATASET_SHA256" in blueprint
+    assert "BIOMIN_PRESENTATION_CHECKPOINT_SHA256" in blueprint
+    assert "BIOMIN_PRESENTATION_SUBJECT_ID" in blueprint
+    assert "value: S14" in blueprint
+    assert "plan: free" in blueprint
+
+
 # --- Task C / F-18: no backend setup leakage in public frontend copy ---------
 
 def test_data_source_control_has_no_backend_env_leak() -> None:

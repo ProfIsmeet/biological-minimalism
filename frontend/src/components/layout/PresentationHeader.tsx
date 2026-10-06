@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { Wifi, WifiOff } from "lucide-react";
 
+import { PUBLIC_PRESENTATION_MODE } from "@/lib/config";
 import { deriveConnectionLabel, deriveSourceLabel } from "@/lib/sourceLabel";
 import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useMissionStore } from "@/store/missionStore";
@@ -79,6 +80,11 @@ export function PresentationHeader({ variant }: PresentationHeaderProps) {
         <span className={clsx("hidden text-xs font-semibold uppercase tracking-[0.1em] sm:inline", accent)}>
           {VARIANT_LABEL[variant]}
         </span>
+        {PUBLIC_PRESENTATION_MODE ? (
+          <span className="rounded-[4px] border border-final-accent/30 bg-final-accent/5 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-final-accent">
+            Public · read-only
+          </span>
+        ) : null}
       </div>
 
       {staticScope ? (

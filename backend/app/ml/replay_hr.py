@@ -74,6 +74,12 @@ class ReplayHeartRateInferenceService:
         self._latest_prediction = None
         self._last_state = None
 
+    def validate_model(self) -> None:
+        """Eagerly validate the checkpoint for fail-fast production startup."""
+
+        if self._ensure_bridge() is None:
+            raise ModelUnavailableError(self._bridge_error or "model validation failed")
+
     def _state(self, status: ModelInferenceStatus, message: str) -> HeartRateInferenceState:
         state = HeartRateInferenceState(status=status, message=message)
         self._last_state = state

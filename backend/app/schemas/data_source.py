@@ -73,6 +73,7 @@ class DataSourceStatus(BaseModel):
     end_behavior: str | None = None
     channels: list[ChannelMetadata] = Field(default_factory=list)
     fault_injection: ReplayFaultState = Field(default_factory=ReplayFaultState)
+    public_read_only: bool = False
 
 
 class AvailableSubjectsResponse(BaseModel):
