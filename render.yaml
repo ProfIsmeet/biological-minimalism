@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: biological-minimalism-api
+    runtime: docker
+    plan: free
+    branch: codex/public-presentation-deploy
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: BIOMIN_PUBLIC_PRESENTATION_MODE
+        value: "true"
+      - key: BIOMIN_PRESENTATION_SUBJECT_ID
+        value: S14
+      - key: BIOMIN_PRESENTATION_REPLAY_SPEED
+        value: "5"
+      - key: BIOMIN_PRESENTATION_LOOP_REPLAY
+        value: "true"
+      - key: BIOMIN_PPG_DALIA_PATH
+        value: /tmp/biological-minimalism/PPG_FieldStudy_S14.zip
+      - key: BIOMIN_PPG_DALIA_HR_CHECKPOINT_PATH
+        value: /tmp/biological-minimalism/model_b_ppg_plus_imu_ppg_dalia.pt
+      - key: BIOMIN_ALLOWED_ORIGINS
+        sync: false
+      - key: BIOMIN_PRESENTATION_DATASET_SHA256
+        sync: false
+      - key: BIOMIN_PRESENTATION_CHECKPOINT_SHA256
+        value: c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77

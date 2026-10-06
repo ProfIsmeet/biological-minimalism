@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "local_complete_production_pending",
+  "source_sha": "36cc9d36a9c11c47374bd6be142761d93b7cdfb5",
+  "deployment_branch": "codex/public-presentation-deploy",
+  "assets": {
+    "official_archive_sha256": "5772387956e34e2e2dc4c2ddbeb98cb70569d5112fa4c13ee98a17680b84a1f3",
+    "s14_pickle_sha256": "c192b9090ac3c0107000d8424c038ccd11292cded1f6c46c97e2cae85c725392",
+    "deployment_archive_sha256": "3e4499a0ad6eb024dfd39b2ec53c5739f2d25bced51d22ac55da332271444c03",
+    "checkpoint_sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
+    "tracked_in_git": false
+  },
+  "local": {
+    "monitoring": "1341/1341",
+    "rendered_routes": "146/146",
+    "backend": "361 passed, 4 skipped",
+    "production_build_pages": "14/14",
+    "viewports": ["1440x900", "1024x768", "390x844"],
+    "routes_tested": 8,
+    "real_s14": true,
+    "public_read_only": true,
+    "endurance": {
+      "duration_seconds": 600,
+      "concurrent_clients": 3,
+      "frames_per_client": 1143,
+      "first_timestamp": 1791228845.493547,
+      "last_timestamp": 1791229445.665357,
+      "prediction_seen_by_every_client": true,
+      "disconnects_or_stalls": 0
+    }
+  },
+  "production": null
+}
