@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "product_name": "Biological Minimalism",
+  "candidate_version": "stage10-rc-2026-10-07",
+  "verdict": "COMPLETE_RELEASE_CANDIDATE_AFTER_CORRECTIONS",
+  "source_branch": "origin/codex/stage9-final-accessibility-jury-acceptance",
+  "source_sha": "9ea9ef4b8f0f4a9d58344a29541faeb065037665",
+  "stage10_branch": "codex/stage10-final-integration-release-freeze",
+  "implementation_checkpoint_sha": "4acc4d3109295d4d3da1ece023e5eb86d1d3a032",
+  "final_report_path": "docs/codex-stage10-final-integration-release-freeze/MASTER_STAGE10_REPORT.md",
+  "final_report_sha_kind": "sha256",
+  "final_report_sha": "efca4d0a34f4b1f2699199f152a0a0ed629f8e9afa2cd53c3bee7446ef73917d",
+  "canonical_ancestry": [
+    {"stage": "1", "commit": "cfd4935ee264cdeb3953c8b437c3936cd9e2f0ae", "ancestor": true},
+    {"stage": "2-3", "commit": "779c265ca4f3d9f24c15994b8d301e68fc02ea3c", "ancestor": true},
+    {"stage": "4-5", "commit": "7b077a443905b89d834e781119e0f5210455cc47", "ancestor": true},
+    {"stage": "6", "commit": "96a5db37323ba72385698cf78080686d303c936c", "ancestor": true},
+    {"stage": "7", "commit": "011a31683ce3444cd1b8f258c0308fb4c6997490", "ancestor": true},
+    {"stage": "8-audit", "commit": "035549d57748f5efb763cb1da550a115a58a36c0", "ancestor": true},
+    {"stage": "8-closure", "commit": "36cc9d36a9c11c47374bd6be142761d93b7cdfb5", "ancestor": true},
+    {"stage": "public", "commit": "1e2fb5b913d5ae7d5bd93a4c180f28603e1ec5fc", "ancestor": true},
+    {"stage": "9", "commit": "9ea9ef4b8f0f4a9d58344a29541faeb065037665", "ancestor": true}
+  ],
+  "route_inventory": [
+    "/mission-overview",
+    "/live-monitoring",
+    "/system-brief",
+    "/research/experimental",
+    "/digital-twin",
+    "/ai-insights",
+    "/mission-timeline",
+    "/settings"
+  ],
+  "environment": {
+    "node": "22.23.1",
+    "npm": "10.9.8",
+    "python": "3.12.14",
+    "fastapi": "0.115.6",
+    "uvicorn": "0.34.0",
+    "pydantic": "2.10.4",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "shap": "0.52.0",
+    "torch": "2.6.0"
+  },
+  "hashes": {
+    "frontend_package_lock_sha256": "fe872a4c639b23df5911fb78f023b15b8246749cb6c3b601dc76e58e1b3cf3b5",
+    "backend_requirements_sha256": "c54927f8e89673eef999558e11a1128e4a39419d7ec655fc979227266951e6f3",
+    "frontend_dockerfile_sha256": "c7dc8c81da9d977e0879e67bdc51c58345d25b9aa6ae1c86891869f4988f2fb4",
+    "backend_dockerfile_sha256": "f35f2b7f4c3ff848f452f618643d6a4d69a7289e1b9f383fb959863d72c415e4",
+    "compose_sha256": "cf6a4573d85c5f86b29ee07113a6982e2d246798a9b4549c82a70c118fe85f9f"
+  },
+  "model": {
+    "identifier": "PPGDaliaHRModelB:PPGPlusIMUHRModel",
+    "checkpoint_sha256": "c53a34586d2d6baf68aae4441b6c15a0f5f623f0ea70c023c7371c2dbded0e77",
+    "external": true
+  },
+  "dataset": {
+    "identifier": "PPG-DaLiA/S14",
+    "subject_asset_sha256": "c192b9090ac3c0107000d8424c038ccd11292cded1f6c46c97e2cae85c725392",
+    "external": true
+  },
+  "external_asset_requirements": [
+    "licensed PPG-DaLiA S14 subject archive or extracted subject file",
+    "approved Model B PPG+IMU checkpoint",
+    "server-only deployment credentials for private asset bootstrap"
+  ],
+  "evidence_directories": [
+    "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze",
+    "docs/codex-stage10-final-integration-release-freeze"
+  ],
+  "test_counts": {
+    "monitoring": "1345/1345",
+    "rendered_routes": "146/146",
+    "backend": "365 passed, 4 skipped",
+    "shap_concurrency": "2/2",
+    "public_contract": "23/23",
+    "production_pages": "14/14",
+    "browser_artifacts": 42,
+    "browser_checks": 160,
+    "clean_clone": "PASS",
+    "local_endurance_seconds": 600
+  },
+  "known_limitations": [
+    "actual VoiceOver acceptance is owner-deferred",
+    "Docker runtime is unavailable locally",
+    "physical projector is unavailable",
+    "S14 is a single-participant demonstration",
+    "current reference HR is unavailable",
+    "public production remains the prior stable deployment",
+    "14 npm registry advisories are classified as non-exposed build/transitive paths"
+  ],
+  "public_urls": {
+    "frontend": "https://biological-minimalism-iac.vercel.app",
+    "backend_health": "https://biological-minimalism-api.onrender.com/health",
+    "websocket": "wss://biological-minimalism-api.onrender.com/ws/live-feed"
+  },
+  "public_deployment_sha": "1e2fb5b913d5ae7d5bd93a4c180f28603e1ec5fc",
+  "actual_voiceover_status": "DEFERRED_BY_OWNER_TO_POST_STAGE10",
+  "merge_recommendation": "INDEPENDENT_AUDIT_THEN_OWNER_APPROVAL",
+  "rollback_base": "9ea9ef4b8f0f4a9d58344a29541faeb065037665",
+  "tag_recommendation": "NO_TAG_UNTIL_INDEPENDENT_AUDIT_AND_OWNER_APPROVAL",
+  "timestamp": "2026-10-07T07:31:59Z"
+}

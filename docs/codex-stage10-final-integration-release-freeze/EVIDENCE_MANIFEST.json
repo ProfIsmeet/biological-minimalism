@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "stage": 10,
+  "canonical_manifest": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/EVIDENCE_MANIFEST.json",
+  "canonical_manifest_sha256": "f2ffe4772bbb54cf73bc226005eebd263822167aee9b397dee87b567e5e9d001",
+  "artifact_count": 42,
+  "browser_check_count": 160,
+  "hashes_verified": true,
+  "visually_reviewed": true,
+  "ambiguous_evidence_count": 0,
+  "unexpected_console_error_count": 0,
+  "state_classes": [
+    "responsive_route_matrix",
+    "mobile_modal_keyboard_focus",
+    "reduced_motion",
+    "real_s14_nominal",
+    "real_s14_fault",
+    "real_s14_output_withheld",
+    "real_s14_rebuilding",
+    "real_s14_fresh_recovery",
+    "backend_disconnected",
+    "jury_1920x1080",
+    "public_read_only"
+  ],
+  "actual_voiceover_status": "DEFERRED_BY_OWNER_TO_POST_STAGE10",
+  "generated_at": "2026-10-07T07:31:59Z"
+}
