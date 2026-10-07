@@ -2,9 +2,9 @@
 
 ## Identity
 - Repo: https://github.com/ProfIsmeet/biological-minimalism.git
-- Anchor checkout (untouched): /Users/emirharunsunbul/Documents/ChatGPT/IAC
-- Prior review worktree (untouched, source of this branch): /Users/emirharunsunbul/Documents/ChatGPT/IAC-claude-stage4-5-visual-command-deck
-- This worktree: /Users/emirharunsunbul/Documents/ChatGPT/IAC-claude-stage4-5-real-visual-implementation
+- Anchor checkout (untouched): <local-anchor-checkout>
+- Prior review worktree (untouched, source of this branch): <local-stage4-5-worktree>
+- This worktree: <local-stage4-5-implementation-worktree>
 - Branch: claude/stage4-5-real-visual-implementation
 - Source branch: origin/claude/stage4-5-visual-command-deck
 - SOURCE_SHA (verified via git rev-parse origin/claude/stage4-5-visual-command-deck before any edit): 7afe57114ad6f7537b73f17683f7ecd733606730 — exact match confirmed

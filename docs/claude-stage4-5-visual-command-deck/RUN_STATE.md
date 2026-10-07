@@ -8,8 +8,8 @@ completed work.
 ## Identity
 
 - Repository: `https://github.com/ProfIsmeet/biological-minimalism.git`
-- Anchor checkout (untouched by this task): `/Users/emirharunsunbul/Documents/ChatGPT/IAC` (branch `codex/stage1-scientific-data-integrity`, substantial unrelated untracked work — never edited by this task)
-- Isolated worktree for this task: `/Users/emirharunsunbul/Documents/ChatGPT/IAC-claude-stage4-5-visual-command-deck`
+- Anchor checkout (untouched by this task): `<local-anchor-checkout>` (branch `codex/stage1-scientific-data-integrity`, substantial unrelated untracked work — never edited by this task)
+- Isolated worktree for this task: `<local-stage4-5-worktree>`
 - Branch: `claude/stage4-5-visual-command-deck` (new, created this task)
 - Required starting SHA: `98b73c168f95c91e7f5f5e8e4beef9ca79136d53` (`claude/stage2-3-final-acceptance`) — verified exact via `git rev-parse` before any edit
 - `main` SHA at start: `3efb49a02e4c824a82410793d245d3141a5942f1` (untouched)
@@ -31,7 +31,7 @@ completed work.
 The prior `claude-stage2-3-final-acceptance` audit reported the PPG-DaLiA dataset
 and HR checkpoint as genuinely absent on this host. Independent re-discovery
 this session found **both assets present as git-ignored files in the anchor
-worktree** (`/Users/emirharunsunbul/Documents/ChatGPT/IAC`), not in this
+worktree** (`<local-anchor-checkout>`), not in this
 task's isolated worktree (which only carries the tracked `.gitkeep` / README
 placeholders):
 

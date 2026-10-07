@@ -4,7 +4,7 @@
 > Everything below is derived only from committed artifacts. Part-2 is **engineering only** — no scientific change, no architecture finalization, no formal Pareto.
 
 ## 0. Branch / commit state
-- **Repository:** `/Users/emirharunsunbul/Documents/ChatGPT/IAC`
+- **Repository:** `<local-anchor-checkout>`
 - **Remote:** `origin` → `https://github.com/ProfIsmeet/biological-minimalism.git`
 - **Part-1 base (verified HEAD):** `a43b7aa8e65349d703a0eb1ef34307e3a00ab4c1` (`day11-engineering-audit`)
 - **Part-2 branch:** `day11-power-mass-bom` (created from `a43b7aa`)

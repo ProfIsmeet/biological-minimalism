@@ -6,7 +6,7 @@ Last updated: 2026-09-27 (milestone: mission complete, ready to push).
 
 - Base (verified): `claude/stage2-3-final-acceptance` @ `98b73c168f95c91e7f5f5e8e4beef9ca79136d53`
 - Working branch: `claude/stage4-5-visual-command-deck`
-- Worktree path: `/Users/emirharunsunbul/Documents/ChatGPT/IAC-claude-stage4-5-visual-command-deck` (isolated sibling worktree; the anchor checkout at `/Users/emirharunsunbul/Documents/ChatGPT/IAC`, which carries substantial unrelated untracked work on a different branch, was never switched, edited, or cleaned)
+- Worktree path: `<local-stage4-5-worktree>` (isolated sibling worktree; the anchor checkout at `<local-anchor-checkout>`, which carries substantial unrelated untracked work on a different branch, was never switched, edited, or cleaned)
 - Commits: `6ea2d05` (Stage 2-3 remediation), `ec655e9` (Stage 4/V1), `a44235c` (Stage 4-5 docs/evidence) — pushed and confirmed equal to `origin/claude/stage4-5-visual-command-deck`
 
 ## Completed

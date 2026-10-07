@@ -1,6 +1,6 @@
 # VERIFICATION_LEDGER — claude/stage4-5-visual-command-deck
 
-All commands run from `/Users/emirharunsunbul/Documents/ChatGPT/IAC-claude-stage4-5-visual-command-deck` unless noted. "Directory" below is relative to that root.
+All commands run from `<local-stage4-5-worktree>` unless noted. "Directory" below is relative to that root.
 
 ## Phase 0 — clean baseline (before any edit)
 

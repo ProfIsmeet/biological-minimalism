@@ -13,7 +13,7 @@ Merge is not recommended and Stage 4 is not ready until the higher-level runtime
 | Item | Verified value |
 | --- | --- |
 | Remote | `https://github.com/ProfIsmeet/biological-minimalism.git` |
-| Isolated worktree | `/private/tmp/codex-stage2-3-independent-acceptance` |
+| Isolated worktree | `<local-stage2-3-audit-worktree>` |
 | Successor branch | `codex/stage2-3-independent-acceptance` |
 | Audit target | `origin/ismet/frontend-stage2-3-hardening` at `50233e882cdead9643f53ca3b9ba93f785990951` |
 | Stage 1 comparison base | `origin/codex/stage1-scientific-data-integrity` at `cfd4935ee264cdeb3953c8b437c3936cd9e2f0ae` |

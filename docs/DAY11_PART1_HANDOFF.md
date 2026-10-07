@@ -5,7 +5,7 @@
 
 ## 0. Canonical starting point
 
-- **Repository:** `/Users/emirharunsunbul/Documents/ChatGPT/IAC`
+- **Repository:** `<local-anchor-checkout>`
 - **Remote:** `origin` → `https://github.com/ProfIsmeet/biological-minimalism.git`
 - **Canonical Day-10 base commit (verified):** `e414ef5c0c2b00f7d80b681848d37d7c59e523b5` (matches accepted report `e414ef5`)
 - **Day-10 scientific branch (verified):** `origin/day10-scientific-repro-freeze-ml` @ `94d366f` — already integrated; **no merge needed**.

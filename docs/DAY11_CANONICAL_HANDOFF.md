@@ -6,7 +6,7 @@
 > selecting a final architecture, fabricating system power/mass, or computing a formal Pareto.
 
 ## 0. Branch / commit state
-- **Repository:** `/Users/emirharunsunbul/Documents/ChatGPT/IAC`
+- **Repository:** `<local-anchor-checkout>`
 - **Remote:** `origin` → `https://github.com/ProfIsmeet/biological-minimalism.git`
 - **Base (verified Part-2 HEAD):** `3ecba0e` (`day11-power-mass-bom`)
 - **Final branch:** `day11-canonical-integration` (created from `3ecba0e`)

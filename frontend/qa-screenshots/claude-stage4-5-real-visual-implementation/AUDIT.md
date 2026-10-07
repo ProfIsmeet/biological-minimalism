@@ -22,7 +22,7 @@ The original C-06 defect happened because a screenshot was taken *after* the `wa
 already elapsed, but was filed under the "rebuilding" evidence slot anyway. To fix this without
 repeating the mistake, this run first characterized the real, actual duration of the `warming_up`
 window using a small diagnostic WebSocket probe script
-(`/private/tmp/.../scratchpad/probe_warmup.py`, run once against the same isolated backend, using only
+(`<ephemeral-scratch>/probe_warmup.py`, run once against the same isolated backend, using only
 the existing public `POST`/`DELETE /data-source/replay/fault` endpoints and reading the existing
 `heart_rate_inference.status` telemetry field — no DOM freezing, no CSS injection, no response
 interception, no fabricated state):

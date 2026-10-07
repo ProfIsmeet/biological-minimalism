@@ -13,6 +13,7 @@
     "verify:public-deployment-evidence": "node scripts/verify-public-deployment-evidence.mjs",
     "verify:stage9-evidence": "node scripts/verify-stage9-evidence.mjs",
     "verify:stage10-scientific": "node scripts/verify-stage10-scientific-integrity.mjs",
+    "verify:stage10-evidence": "node scripts/verify-stage10-evidence.mjs",
     "capture:stage10": "node scripts/capture-stage10-release-evidence.mjs"
   },
   "dependencies": {

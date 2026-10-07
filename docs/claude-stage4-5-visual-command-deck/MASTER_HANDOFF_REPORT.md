@@ -16,8 +16,8 @@
 ## 2. Repository identity and ancestry
 
 - Repository URL: `https://github.com/ProfIsmeet/biological-minimalism.git`
-- Isolated worktree: `/Users/emirharunsunbul/Documents/ChatGPT/IAC-claude-stage4-5-visual-command-deck`
-- Anchor checkout (untouched): `/Users/emirharunsunbul/Documents/ChatGPT/IAC` (branch `codex/stage1-scientific-data-integrity`, substantial unrelated pre-existing untracked work — never switched, edited, or cleaned by this task)
+- Isolated worktree: `<local-stage4-5-worktree>`
+- Anchor checkout (untouched): `<local-anchor-checkout>` (branch `codex/stage1-scientific-data-integrity`, substantial unrelated pre-existing untracked work — never switched, edited, or cleaned by this task)
 - Branch: `claude/stage4-5-visual-command-deck`
 - Required base: `origin/claude/stage2-3-final-acceptance`
 - Actual base (verified via `git rev-parse` before any edit): `98b73c168f95c91e7f5f5e8e4beef9ca79136d53` — exact match
@@ -168,7 +168,7 @@ See `VERIFICATION_LEDGER.md`, "Phase 0" section, for the complete command/exit/c
 
 ## 8. Dataset/checkpoint provenance
 
-- Discovery locations attempted, in order: this task's isolated worktree (only `.gitkeep`/README placeholders — tracked, git-ignored real assets absent); sibling worktrees of the same repository on the same host — found in `/Users/emirharunsunbul/Documents/ChatGPT/IAC` (the anchor checkout)
+- Discovery locations attempted, in order: this task's isolated worktree (only `.gitkeep`/README placeholders — tracked, git-ignored real assets absent); sibling worktrees of the same repository on the same host — found in `<local-anchor-checkout>` (the anchor checkout)
 - Archive structure: `ppg_dalia_uci.zip` (outer) → `data.zip` (inner, nested) → `PPG_FieldStudy/S14/S14.pkl` — confirmed present by listing, handled natively by `backend/app/data/ppg_dalia.py`'s existing nested-zip support (no manual extraction performed or needed)
 - S14 verification: `GET /data-source/subjects` on the real backend returned `{"dataset_name": "PPG-DaLiA", "subjects": ["S14"]}`
 - Checkpoint filename: `model_b_ppg_plus_imu_ppg_dalia.pt`
@@ -371,7 +371,7 @@ See `INDEPENDENT_REVIEW_ENTRYPOINT.md` for portable, copy-pasteable commands cov
 - Started processes: backend `uvicorn` (port 8003, PID in `task-logs/backend.pid`), frontend `next start`/`next dev` (port 3003, PID in `task-logs/frontend.pid`) — both stopped as part of this mission's cleanup (see STATUS.md).
 - Started containers: none (Docker unavailable).
 - Temporary artifacts: `backend/.venv312/` (Python venv, left in place as low-risk/reusable per the prior session's own precedent, matching the inherited pattern); `task-logs/` (process logs, not committed).
-- User assets preserved: the anchor worktree at `/Users/emirharunsunbul/Documents/ChatGPT/IAC` was never switched, edited, or cleaned; the discovered dataset/checkpoint were used strictly read-only and never copied or committed.
+- User assets preserved: the anchor worktree at `<local-anchor-checkout>` was never switched, edited, or cleaned; the discovered dataset/checkpoint were used strictly read-only and never copied or committed.
 - `main` before/after: `3efb49a02e4c824a82410793d245d3141a5942f1`, unchanged.
 - Source branch (`claude/stage2-3-final-acceptance`) before/after: `98b73c168f95c91e7f5f5e8e4beef9ca79136d53`, unchanged.
 - Target local/remote equality: verified after push (see STATUS.md for the confirmed final SHA).
