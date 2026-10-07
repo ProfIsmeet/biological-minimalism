@@ -9,7 +9,7 @@
   "implementation_checkpoint_sha": "4acc4d3109295d4d3da1ece023e5eb86d1d3a032",
   "final_report_path": "docs/codex-stage10-final-integration-release-freeze/MASTER_STAGE10_REPORT.md",
   "final_report_sha_kind": "sha256",
-  "final_report_sha": "efca4d0a34f4b1f2699199f152a0a0ed629f8e9afa2cd53c3bee7446ef73917d",
+  "final_report_sha": "c5a183af410e95fd47ca55dbd718e9e33614a9d1783947103422a2bd53bb0c5c",
   "canonical_ancestry": [
     {"stage": "1", "commit": "cfd4935ee264cdeb3953c8b437c3936cd9e2f0ae", "ancestor": true},
     {"stage": "2-3", "commit": "779c265ca4f3d9f24c15994b8d301e68fc02ea3c", "ancestor": true},

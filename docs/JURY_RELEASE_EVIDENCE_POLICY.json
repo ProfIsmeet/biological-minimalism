@@ -4,7 +4,7 @@
   "entries": {
     "audit-main": {
       "canonical": "frontend/qa-screenshots/claude-stage4-5-real-visual-implementation/AUDIT.md",
-      "sha256": "78838536e492ec6dd04c5cda93255a56865707effa9dfdd7ee7a01764676c0c7",
+      "sha256": "b780525ed59a04ced394a969c4157b4019da4ad995d6e282633baa1a4f731a25",
       "visually_reviewed": true,
       "superseded": [
         "frontend/qa-screenshots/claude-stage2-3-final-acceptance/AUDIT.md",
