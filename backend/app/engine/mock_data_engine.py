@@ -23,7 +23,7 @@ import numpy as np
 
 from app.core.config import settings
 from app.engine import physiology as phys
-from app.schemas.digital_twin import DigitalTwinState, DigitalTwinSystemScore
+from app.schemas.digital_twin import DigitalTwinState
 from app.schemas.mission import MissionMode, SensorName, SensorStatus
 from app.schemas.telemetry import (
     AIConfidenceSnapshot,
@@ -41,14 +41,6 @@ _EEG_MODE_BIAS = {
     MissionMode.DEEP_SPACE: {"delta": 0.17, "theta": 0.25, "alpha": 0.24, "beta": 0.34},
     MissionMode.SOLAR_EVENT: {"delta": 0.15, "theta": 0.27, "alpha": 0.18, "beta": 0.40},
 }
-
-_DIGITAL_TWIN_SYSTEMS = {
-    "Cardiovascular": {"baseline": 42.0, "k": 0.16, "asymptote": 88.0},
-    "Cognitive": {"baseline": 55.0, "k": 0.20, "asymptote": 90.0},
-    "Fluid Balance": {"baseline": 33.0, "k": 0.11, "asymptote": 82.0},
-    "Thermal Regulation": {"baseline": 60.0, "k": 0.24, "asymptote": 93.0},
-}
-
 
 def _quality_for(status: SensorStatus) -> float:
     if status == SensorStatus.OFFLINE:
@@ -226,45 +218,13 @@ class MockDataEngine:
     # -- digital twin ----------------------------------------------------
     def get_digital_twin_state(self, day: float) -> DigitalTwinState:
         day = phys.clamp(day, 0.0, 30.0)
-        systems: list[DigitalTwinSystemScore] = []
-        for name, cfg in _DIGITAL_TWIN_SYSTEMS.items():
-            baseline = cfg["baseline"]
-            asymptote = cfg["asymptote"]
-            k = cfg["k"]
-            current = baseline + (asymptote - baseline) * (1.0 - np.exp(-k * max(day - 1.0, 0.0)))
-            systems.append(
-                DigitalTwinSystemScore(
-                    system=name,
-                    baseline_score=round(baseline, 1),
-                    current_score=round(float(current), 1),
-                    delta=round(float(current) - baseline, 1),
-                )
-            )
-
-        overall = sum(s.current_score for s in systems) / len(systems)
-
-        if day < 3:
-            milestone = f"Day {day:.0f} — Acute Adaptation Phase"
-        elif day < 8:
-            milestone = f"Day {day:.0f} — Early Adaptation"
-        elif day < 20:
-            milestone = f"Day {day:.0f} — Consolidating Adaptation"
-        else:
-            milestone = f"Day {day:.0f} — Stabilized Adaptation"
-
-        weakest = min(systems, key=lambda s: s.current_score)
-        narrative = (
-            f"By mission day {day:.0f}, the Biological Digital Twin estimates {overall:.0f}% overall "
-            f"physiological adaptation relative to its Day 1 baseline. {weakest.system} is the current "
-            f"focus area at {weakest.current_score:.0f}% (+{weakest.delta:.0f} pts vs. Day 1)."
-        )
-
         return DigitalTwinState(
             mission_day=round(day, 1),
-            milestone_label=milestone,
-            narrative=narrative,
-            systems=systems,
-            overall_adaptation=round(overall, 1),
+            milestone_label=f"Day {day:.0f} — Conceptual architecture checkpoint",
+            narrative=(
+                "Architecture-only reference marker. No trained model, personalized baseline, "
+                "physiological adaptation estimate, or validated prediction is available."
+            ),
         )
 
 

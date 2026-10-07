@@ -4384,8 +4384,15 @@ checkEqual("acceleration magnitude: incomplete row defaults missing axes to 0", 
   checkIncludes("timeline F-03: unvalidated boundary is explicit", timelineSource, "unvalidated");
   checkIncludes("timeline F-03: not-personalized boundary is explicit", timelineSource, "not personalized");
   checkIncludes("timeline F-03: milestones are explicitly conceptual rather than measured", timelineSource, "Conceptual marker — not a measured outcome");
-  checkIncludes("timeline F-03: valid legacy payload path suppresses quantitative fields", timelineSource, "quantitative fields are intentionally suppressed");
-  checkIncludes("timeline F-03: unavailable/error path infers no model state", timelineSource, "Conceptual scenario data unavailable; no model state is inferred.");
+  check(
+    "timeline F-03: the legacy quantitative Digital Twin request path is removed",
+    !timelineSource.includes("getDigitalTwin") && !timelineSource.includes('from "@/lib/api"'),
+  );
+  checkIncludes(
+    "timeline F-03: static conceptual markers infer no model or adaptation state",
+    timelineSource,
+    "Conceptual markers are static architecture references; no model state or physiological adaptation is inferred.",
+  );
 }
 
 // ===========================================================================

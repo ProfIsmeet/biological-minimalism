@@ -3,7 +3,6 @@ import type {
   AIExplanation,
   AvailableSubjectsResponse,
   DataSourceStatus,
-  DigitalTwinState,
   LiveMetricsSnapshot,
   MissionMode,
   OperationalCostCatalogEnvelope,
@@ -64,8 +63,6 @@ export const api = {
   getLiveMetrics: () => request<LiveMetricsSnapshot>("/metrics/live"),
 
   getMetricsHistory: (limit = 100) => request<LiveMetricsSnapshot[]>(`/metrics/history?limit=${limit}`),
-
-  getDigitalTwin: (day: number) => request<DigitalTwinState>(`/digital-twin?day=${day}`),
 
   getSensorHealth: () => request<SensorHealthSnapshot>("/sensor-health"),
 

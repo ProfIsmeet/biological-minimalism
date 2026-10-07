@@ -105,7 +105,10 @@ class Settings(BaseSettings):
     presentation_asset_bearer_token: str | None = Field(default=None, repr=False)
     """Optional server-only token for authenticated private asset bootstrap."""
 
-    explanation_max_concurrency: int = Field(default=1, ge=1, le=8)
+    # The dashboard presents the two independently locked SHAP targets side
+    # by side. Permit that intended pair while retaining a strict bound for
+    # any additional traffic.
+    explanation_max_concurrency: int = Field(default=2, ge=1, le=8)
     """Maximum simultaneous expensive explanation calculations."""
 
     public_request_timeout_seconds: float = Field(default=30.0, gt=0, le=120)

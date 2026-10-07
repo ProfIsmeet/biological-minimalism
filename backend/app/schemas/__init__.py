@@ -8,7 +8,7 @@ from app.schemas.telemetry import (
     SpaceAdaptationSnapshot,
     VitalsSnapshot,
 )
-from app.schemas.digital_twin import DigitalTwinSystemScore, DigitalTwinState
+from app.schemas.digital_twin import DigitalTwinState
 from app.schemas.explanation import AIExplanation, FeatureContribution
 from app.schemas.simulation import SetFailureRequest, SetModeRequest, SimulationStateResponse
 from app.schemas.data_source import (
@@ -89,7 +89,6 @@ __all__ = [
     "SensorReading",
     "SpaceAdaptationSnapshot",
     "VitalsSnapshot",
-    "DigitalTwinSystemScore",
     "DigitalTwinState",
     "AIExplanation",
     "FeatureContribution",

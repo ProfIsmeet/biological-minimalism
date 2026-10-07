@@ -803,24 +803,15 @@ for a trained system, being explicit throughout about which is which.
 
 ### 12.1 What is implemented and running today
 
-`MockDataEngine.get_digital_twin_state(day)`
-(`backend/app/engine/mock_data_engine.py`) models four physiological systems —
-Cardiovascular, Cognitive, Fluid Balance, Thermal Regulation — each as an exponential
-adaptation curve from a Day-1 baseline score toward a system-specific asymptote:
+The current Digital Twin surface is an **architecture-only anatomical reference**.
+It shows the accepted sensing modules and their topology, but has no trained Digital
+Twin checkpoint, personalized baseline, physiological adaptation score, or validated
+prediction. Day 1/5/12/30 entries on Mission Timeline are static conceptual
+architecture-review markers, not measurements or simulated physiological outcomes.
 
-```
-current_score(day) = baseline + (asymptote − baseline) × (1 − e^(−k × (day − 1)))
-```
-
-with per-system baseline, asymptote, and rate constant `k` set as **explicit design
-choices for this demonstration** (documented in the code as `_DIGITAL_TWIN_SYSTEMS`),
-not fitted to real adaptation-curve data. This produces the milestone narrative shown
-at Day 1, 5, 12, and 30 in the dashboard's Digital Twin page (Section 16), and the
-general *shape* of the curve — rapid initial change, decelerating toward a stable
-plateau — is a deliberately chosen illustration of the general physiological-
-adaptation pattern described qualitatively in the spaceflight-adaptation literature
-(Section 2), not a specific curve validated against real longitudinal astronaut or
-analog-study data.
+The legacy demonstration once generated arbitrary percentage adaptation curves. Stage
+10 removed those quantitative fields from the active API contract because suppressing
+them only in the visible page did not make the underlying scientific claim defensible.
 
 ### 12.2 The proposed calibration architecture (design proposal, not implemented)
 
@@ -1074,25 +1065,24 @@ matching this project's own specification exactly:
 |---|---|---|
 | Mission Overview | `/mission-overview` | All primary panels at a glance; mission-mode switcher (Solar Storm Mode demo) |
 | Live Monitoring | `/live-monitoring` | Live waveforms, HRV/cognitive-load trend charts, sensor-health panel, Sensor Failure Simulation control |
-| Digital Twin | `/digital-twin` | Holographic-style adaptation panel, mission-day slider (Digital Twin Evolution demo) |
+| Digital Twin | `/digital-twin` | Architecture-only anatomical reference; untrained, unvalidated, and not personalized |
 | AI Insights | `/ai-insights` | AI Confidence panel, real SHAP explanation panels for both explained targets |
-| Mission Timeline | `/mission-timeline` | Circadian-stability trend, Day 1/5/12/30 adaptation milestones |
+| Mission Timeline | `/mission-timeline` | Session event chronology plus explicitly conceptual Day 1/5/12/30 architecture markers |
 | Settings | `/settings` | Backend connection diagnostics, reduced-motion accessibility toggle, project attribution |
 
 Live state (the most recent telemetry frame, a rolling ~180-frame history buffer for
 trend charts, and WebSocket connection status) is held in a single Zustand store
 (`frontend/src/store/missionStore.ts`), fed continuously by a `useLiveFeed()` hook
 that owns the WebSocket connection (with capped exponential-backoff reconnection) and
-by direct REST calls for the Digital Twin and Explainable AI pages, which are queried
-on demand rather than streamed.
+and by direct REST calls for supported Explainable AI pages, which are queried on
+demand rather than streamed. The Digital Twin route is static and opens no telemetry
+or model-state request.
 
-### 16.3 The "holographic" Digital Twin panel
+### 16.3 The Digital Twin anatomical reference
 
-Rendered with layered SVG, CSS glassmorphism, and Framer Motion — deliberately not
-using a 3D library such as three.js, since one is not part of this project's specified
-technology stack, and the layered-glow/ring visual language achieves a convincing
-"holographic" feel through 2D techniques (radial gradients, concentric animated rings,
-depth via blur and opacity layering) without adding an unrequested dependency.
+Rendered with React Three Fiber/Three.js plus a semantic HTML and static fallback.
+The geometry communicates module placement only; selection glow and camera motion do
+not encode physiology, confidence, severity, adaptation, or personalization.
 
 ---
 
@@ -1109,7 +1099,7 @@ implemented contract, verified live (Section 17.4) while producing this document
 | `GET /health` | Liveness check (service name, version) |
 | `GET /metrics/live` | Latest telemetry snapshot (`LiveMetricsSnapshot`) |
 | `GET /metrics/history?limit=N` | Recent telemetry history, for trend charts |
-| `GET /digital-twin?day=D` | Digital Twin adaptation state at mission day `D` (0–30) |
+| `GET /digital-twin?day=D` | Backward-compatible conceptual architecture checkpoint metadata; contains no physiological score or adaptation percentage |
 | `GET /sensor-health` | Per-sensor status and signal quality |
 | `GET /simulation/state` | Current mission mode and sensor status |
 | `POST /simulation/mode` | Set mission mode — `{ "mode": "earth_orbit" \| "lunar_surface" \| "deep_space" \| "solar_event" }` — **Demo 2** |

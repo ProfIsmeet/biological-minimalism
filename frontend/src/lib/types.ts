@@ -175,21 +175,6 @@ export interface LiveMetricsSnapshot {
   ai_confidence: AIConfidenceSnapshot | null;
 }
 
-export interface DigitalTwinSystemScore {
-  system: string;
-  baseline_score: number;
-  current_score: number;
-  delta: number;
-}
-
-export interface DigitalTwinState {
-  mission_day: number;
-  milestone_label: string;
-  narrative: string;
-  systems: DigitalTwinSystemScore[];
-  overall_adaptation: number;
-}
-
 export interface FeatureContribution {
   feature: string;
   value: number;

@@ -6,6 +6,8 @@ Run with `pytest` from `backend/`. These exercise the real FastAPI app
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -46,7 +48,13 @@ def test_digital_twin() -> None:
         assert response.status_code == 200
         body = response.json()
         assert body["mission_day"] == day or abs(body["mission_day"] - day) < 1
-        assert len(body["systems"]) == 4
+        assert body["scientific_status"] == "ARCHITECTURE_ONLY_UNTRAINED_UNVALIDATED"
+        assert "Conceptual architecture checkpoint" in body["milestone_label"]
+        assert "No trained model" in body["narrative"]
+        assert "systems" not in body
+        assert "overall_adaptation" not in body
+        assert "score" not in response.text.lower()
+        assert "%" not in response.text
 
 
 def test_sensor_health() -> None:
@@ -97,3 +105,17 @@ def test_ai_explanation_fatigue() -> None:
     body = response.json()
     assert body["target"] == "fatigue_risk"
     assert len(body["contributions"]) == 5
+
+
+def test_dashboard_explanation_pair_is_admitted_concurrently() -> None:
+    """The two side-by-side panels must not reject one another with 429."""
+
+    _prime_engine()
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        responses = list(
+            pool.map(
+                lambda target: client.get(f"/ai/explanation?target={target}"),
+                ["ai_confidence", "fatigue_risk"],
+            )
+        )
+    assert [response.status_code for response in responses] == [200, 200]

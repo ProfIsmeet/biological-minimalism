@@ -9,6 +9,7 @@ import { Panel } from "@/components/ui/Panel";
 import { api } from "@/lib/api";
 import type { AIExplanation } from "@/lib/types";
 import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
+import { useMissionStore } from "@/store/missionStore";
 
 const DIRECTION_COLOR = {
   increased_risk: "#ff5c66",
@@ -25,12 +26,16 @@ interface ExplanationPanelProps {
 
 export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 4000 }: ExplanationPanelProps) {
   const isReplay = useDatasetReplayMode();
+  const confirmedSourceType = useMissionStore((state) => state.dataSourceStatus?.source_type);
   const [explanation, setExplanation] = useState<AIExplanation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (isReplay) {
+    // Do not race the authoritative REST source check during hydration. A
+    // replay page previously issued a synthetic-only explanation request in
+    // this brief window, creating a handled-but-noisy 409 in the browser.
+    if (confirmedSourceType === undefined || isReplay) {
       setExplanation(null);
       setError(null);
       return;
@@ -45,17 +50,17 @@ export function ExplanationPanel({ target, title, subtitle, refreshIntervalMs = 
     } finally {
       setLoading(false);
     }
-  }, [isReplay, target]);
+  }, [confirmedSourceType, isReplay, target]);
 
   useEffect(() => {
-    if (isReplay) {
+    if (confirmedSourceType === undefined || isReplay) {
       setExplanation(null);
       return;
     }
     load();
     const id = setInterval(load, refreshIntervalMs);
     return () => clearInterval(id);
-  }, [isReplay, load, refreshIntervalMs]);
+  }, [confirmedSourceType, isReplay, load, refreshIntervalMs]);
 
   const maxAbs = Math.max(1, ...(explanation?.contributions.map((c) => Math.abs(c.shap_value)) ?? [1]));
 

@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import { CalendarClock, Clock } from "lucide-react";
 
 import { RouteHeader } from "@/components/layout/RouteHeader";
 import { Panel } from "@/components/ui/Panel";
-import { api } from "@/lib/api";
 import { toTimelineRow, usesMixedTimeBases, type EventOrigin } from "@/lib/monitoring/timelinePresentation";
 import { useDatasetReplayMode } from "@/lib/useDataSourceMode";
 import { useOperationalEventStore } from "@/store/operationalEventStore";
@@ -17,8 +16,6 @@ const CONCEPTUAL_MARKERS = [
   "Conceptual architecture-review checkpoint",
   "Conceptual evidence-planning checkpoint",
 ];
-
-type TimelinePayloadState = "loading" | "available" | "unavailable" | "not_applicable";
 
 /**
  * Stage 8 §14 — origin styling. Every origin is distinguished by its WORD
@@ -33,7 +30,6 @@ const ORIGIN_STYLE: Record<EventOrigin, string> = {
 };
 
 export function MissionTimelineClient() {
-  const [payloadState, setPayloadState] = useState<TimelinePayloadState>("loading");
   const isReplay = useDatasetReplayMode();
 
   // Stage 8 §14 — the session event chronology is READ-ONLY here. This route
@@ -56,25 +52,6 @@ export function MissionTimelineClient() {
     [events],
   );
   const mixedBases = usesMixedTimeBases(rows);
-
-  useEffect(() => {
-    if (isReplay) {
-      setPayloadState("not_applicable");
-      return;
-    }
-    setPayloadState("loading");
-    let cancelled = false;
-    Promise.all(MILESTONE_DAYS.map((day) => api.getDigitalTwin(day)))
-      .then(() => {
-        if (!cancelled) setPayloadState("available");
-      })
-      .catch(() => {
-        if (!cancelled) setPayloadState("unavailable");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [isReplay]);
 
   return (
     <div className="flex flex-col gap-7">
@@ -181,13 +158,9 @@ export function MissionTimelineClient() {
             ))}
           </div>
           <p role="status" className="mt-4 text-xs leading-relaxed text-ink-muted">
-            {payloadState === "loading"
-              ? "Checking conceptual scenario availability…"
-              : payloadState === "available"
-                ? "Legacy scenario payload received; quantitative fields are intentionally suppressed because they have no defensible user-facing interpretation."
-                : payloadState === "unavailable"
-                  ? "Conceptual scenario data unavailable; no model state is inferred."
-                  : "Recorded replay does not populate Digital Twin state; no model state is inferred."}
+            {isReplay
+              ? "Recorded replay does not populate Digital Twin state; no model state is inferred."
+              : "Conceptual markers are static architecture references; no model state or physiological adaptation is inferred."}
           </p>
         </Panel>
       </section>
