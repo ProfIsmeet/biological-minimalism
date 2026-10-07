@@ -1,0 +1,1783 @@
+{
+  "schema_version": 1,
+  "stage": 10,
+  "run_mode": "local+disconnected+public",
+  "frontend_origin": "http://127.0.0.1:3160",
+  "backend_origin": "http://127.0.0.1:8160",
+  "generated_at": "2026-10-07T07:11:05.647Z",
+  "actual_voiceover_status": "DEFERRED_BY_OWNER_TO_POST_STAGE10",
+  "supplemental_origins": [
+    {
+      "mode": "disconnected",
+      "frontend": "http://127.0.0.1:3160",
+      "backend": "http://127.0.0.1:8160"
+    },
+    {
+      "mode": "public",
+      "frontend": "https://biological-minimalism-iac.vercel.app",
+      "backend": "public_read_only"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "S10-MO-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mo-1440x900.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:37.753Z",
+      "dimensions": "1440x4139",
+      "sha256": "bca4ac00ea8dafb49e73dfe3105194d930ddafe3d4ccfeca59de2a56b07989f7",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 602996,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nMISSION OVERVIEW\nSYNTHETIC DEMO\nCONNECTED\nMission overview — operational sensing narrative\n01 · COMMAND DECK\nLive operational sensing status"
+      }
+    },
+    {
+      "artifact_id": "S10-MO-1366x768",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mo-1366x768.png",
+      "route": "/mission-overview",
+      "viewport": "1366x768",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:40.416Z",
+      "dimensions": "1366x4139",
+      "sha256": "d74bb9aaee450a949c9695144772b3337a3246577b49bab25da194f535b52b64",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 598579,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1366,
+        "scrollWidth": 1366,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nMISSION OVERVIEW\nSYNTHETIC DEMO\nCONNECTED\nMission overview — operational sensing narrative\n01 · COMMAND DECK\nLive operational sensing status"
+      }
+    },
+    {
+      "artifact_id": "S10-MO-1280x720",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mo-1280x720.png",
+      "route": "/mission-overview",
+      "viewport": "1280x720",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:42.284Z",
+      "dimensions": "1280x4527",
+      "sha256": "a49d9e584deecff61cae4f1fc00bab6288921bfdf9d29104456427ee43820b29",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 572718,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1280,
+        "scrollWidth": 1280,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nMISSION OVERVIEW\nSYNTHETIC DEMO\nCONNECTED\nMission overview — operational sensing narrative\n01 · COMMAND DECK\nLive operational sensing status"
+      }
+    },
+    {
+      "artifact_id": "S10-MO-1024x768",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mo-1024x768.png",
+      "route": "/mission-overview",
+      "viewport": "1024x768",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:44.170Z",
+      "dimensions": "1024x5794",
+      "sha256": "a1c600c8b612337b91c05caa96a4ba4f189688345271f997795477b9e7cbc650",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 577042,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nMISSION OVERVIEW\nSYNTHETIC DEMO\nCONNECTED\nMission overview — operational sensing narrative\n01 · COMMAND DECK\nLive operational sensing status"
+      }
+    },
+    {
+      "artifact_id": "S10-MO-768x1024",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mo-768x1024.png",
+      "route": "/mission-overview",
+      "viewport": "768x1024",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:45.940Z",
+      "dimensions": "768x6434",
+      "sha256": "4e8d19576b927e512c512bd72532bf3e595f30fe8aaedbb105b176fb8fbf8bcd",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 576566,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nMISSION OVERVIEW\nSYNTHETIC DEMO\nCONNECTED\nMission overview — operational sensing narrative\n01 · COMMAND DECK\nLive operational sensing status"
+      }
+    },
+    {
+      "artifact_id": "S10-MO-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mo-390x844.png",
+      "route": "/mission-overview",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:47.679Z",
+      "dimensions": "390x7476",
+      "sha256": "76716fc1cc5583b3aa3f6ad270d4f89bb8734171f87fd92e47346c243d96a3de",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 488634,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nCONNECTED\nMission\nSignals\nMore\nMission overview — operational sensing narrative\n01 · COMMAND DECK\nLive operational sensing status\n\nSource identity, per-modality confirmation, and current heart-rate inference — one shared telemetry gate.\n\nSession: Synthetic demo session. Source: SYNTHETIC DEMO. Status: CONNECTED. Simulated fault: None\nSESSION\nSynthetic demo session\nSOURCE\nSYNTHETIC DEMO\nSTATUS\nCONNECTED\nSIMULATED FAULT\nNone\nSESSION TIME\n07:08:46 UTC\nSy"
+      }
+    },
+    {
+      "artifact_id": "S10-LM-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/lm-1440x900.png",
+      "route": "/live-monitoring",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:49.247Z",
+      "dimensions": "1440x2211",
+      "sha256": "ef6d9e8ea9ce56e6e4f67c831b065000f21220cf42adc6bc55fa70e340a337c2",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 375922,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nLIVE SIGNALS\nSYNTHETIC DEMO\nCONNECTED\nLIVE SIGNALS / SOURCE-AWARE MONITOR\nSignal and inference monitor\n\nSource-aware physiological signals a"
+      }
+    },
+    {
+      "artifact_id": "S10-LM-1366x768",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/lm-1366x768.png",
+      "route": "/live-monitoring",
+      "viewport": "1366x768",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:50.635Z",
+      "dimensions": "1366x2248",
+      "sha256": "af9ea8db6aa0fe1602db9a1b31ef4a9b78e687398594cfd6c980e1228fb347a9",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 376134,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1366,
+        "scrollWidth": 1366,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nLIVE SIGNALS\nSYNTHETIC DEMO\nCONNECTED\nLIVE SIGNALS / SOURCE-AWARE MONITOR\nSignal and inference monitor\n\nSource-aware physiological signals a"
+      }
+    },
+    {
+      "artifact_id": "S10-LM-1280x720",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/lm-1280x720.png",
+      "route": "/live-monitoring",
+      "viewport": "1280x720",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:51.995Z",
+      "dimensions": "1280x2276",
+      "sha256": "d5a77e11727cc6db5258c9046fd1431cbf4d63f22091a53a8da63ae62af5ad31",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 374862,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1280,
+        "scrollWidth": 1280,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nLIVE SIGNALS\nSYNTHETIC DEMO\nCONNECTED\nLIVE SIGNALS / SOURCE-AWARE MONITOR\nSignal and inference monitor\n\nSource-aware physiological signals a"
+      }
+    },
+    {
+      "artifact_id": "S10-LM-1024x768",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/lm-1024x768.png",
+      "route": "/live-monitoring",
+      "viewport": "1024x768",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:53.307Z",
+      "dimensions": "1024x2459",
+      "sha256": "662a887f66ee7bef187fea84599ff92f52c80feb7398cc4ee4d7e9e7772519db",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 377438,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nLIVE SIGNALS\nSYNTHETIC DEMO\nCONNECTED\nLIVE SIGNALS / SOURCE-AWARE MONITOR\nSignal and inference monitor\n\nSource-aware physiological signals a"
+      }
+    },
+    {
+      "artifact_id": "S10-LM-768x1024",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/lm-768x1024.png",
+      "route": "/live-monitoring",
+      "viewport": "768x1024",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:54.639Z",
+      "dimensions": "768x3319",
+      "sha256": "63c63bfcd554d1ecb035ffd1485aa8710e4614e99a15cb2cf491d7ece2d2269d",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 370127,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nLIVE SIGNALS\nSYNTHETIC DEMO\nCONNECTED\nLIVE SIGNALS / SOURCE-AWARE MONITOR\nSignal and inference monitor\n\nSource-aware physiological signals a"
+      }
+    },
+    {
+      "artifact_id": "S10-LM-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/lm-390x844.png",
+      "route": "/live-monitoring",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:55.929Z",
+      "dimensions": "390x4242",
+      "sha256": "1d6132b1d33af94e5bd9bd38e11993d47fecf74188f85e42e5294ef4c07760f1",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 308003,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nCONNECTED\nMission\nSignals\nMore\nLIVE SIGNALS / SOURCE-AWARE MONITOR\nSignal and inference monitor\n\nSource-aware physiological signals and fault-aware heart-rate inference for CORE_PLUS_CONTEXT.\n\nRecorded replay and synthetic demo data are not live astronaut monitoring.\n\nSource type: SYNTHETIC DEMO. Connection: CONNECTED. Replay state: No subject selected. Dataset: Not applicable — synthetic demo. Subject: Not applicable — synthetic demo. Simulated fault"
+      }
+    },
+    {
+      "artifact_id": "S10-SB-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/sb-1440x900.png",
+      "route": "/system-brief",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:57.437Z",
+      "dimensions": "1440x3514",
+      "sha256": "14212da0b0aacd17d173ea6c9f129a3ace18673c29d55159dd4caa772b269aaf",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 509079,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nSYSTEM BRIEF\nFINAL ARCHITECTURE\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\nThree body regions. Five sensing modalities. One fault-aware physiologi"
+      }
+    },
+    {
+      "artifact_id": "S10-SB-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/sb-390x844.png",
+      "route": "/system-brief",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:08:58.714Z",
+      "dimensions": "390x5170",
+      "sha256": "472b0c0d1ac9965c264048a0c36df4407e6056339de47d1ec7406df18ace91ff",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 362832,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nFINAL ARCHITECTURE\nMission\nSignals\nMore\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\nThree body regions. Five sensing modalities. One fault-aware physiological layer.\n\nCORE_PLUS_CONTEXT combines wrist PPG + IMU, chest ECG, and frontal EEG + EOG. EOG is the only addition beyond MINIMAL_CORE.\n\n03\nBODY REGIONS\n05\nMODALITIES\n+01\nEOG CONTEXT\nUNAVAILABLE\nCURRENT SOURCE\nOpen live signals\nView experimental evidence\nFinal sensing architecture\n\nFive modalities are inte"
+      }
+    },
+    {
+      "artifact_id": "S10-RX-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/rx-1440x900.png",
+      "route": "/research/experimental",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:00.852Z",
+      "dimensions": "1440x6766",
+      "sha256": "eb9b80a4afdc6dce3806d731f22a9843ec4f728f9e07699fd80674bd7b18f01c",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 1189542,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nEXPERIMENTAL RESEARCH\nRESEARCH EVIDENCE\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\nExperimental sensor studies\n\nCandidate-sensor investigation"
+      }
+    },
+    {
+      "artifact_id": "S10-RX-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/rx-390x844.png",
+      "route": "/research/experimental",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:02.894Z",
+      "dimensions": "390x11146",
+      "sha256": "3677b9e34ebe1d9ab2148a6f57651087e55599a646d2dde505b8e13668171892",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 1088771,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nRESEARCH EVIDENCE\nMission\nSignals\nMore\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\nExperimental sensor studies\n\nCandidate-sensor investigations, sensitivity analyses, and mixed or negative findings that informed—but were not carried into—the final CORE_PLUS_CONTEXT architecture.\n\nRESEARCH EVIDENCE — NOT FINAL SYSTEM\n\nThese sensors and experiments are excluded from the final sensing inventory unless explicitly stated otherwise.\n\nCandidate sensor dispositi"
+      }
+    },
+    {
+      "artifact_id": "S10-DT-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/dt-1440x900.png",
+      "route": "/digital-twin",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:04.842Z",
+      "dimensions": "1440x1381",
+      "sha256": "2d865fffab5820ed3dc6771b265dd973ddde16f1cd317ca69a5db4f1ee4eb864",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 342808,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nDIGITAL TWIN REFERENCE\nCONCEPTUAL REFERENCE\nUNTRAINED · UNVALIDATED\nSYSTEM REFERENCE / STAGE 7\nBiological Digital Twin architecture\n\nInspect"
+      }
+    },
+    {
+      "artifact_id": "S10-DT-768x1024",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/dt-768x1024.png",
+      "route": "/digital-twin",
+      "viewport": "768x1024",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:06.657Z",
+      "dimensions": "768x2256",
+      "sha256": "e3253eb4a1dfda64bd85dab8f2c4f20dc51dfbc5dfeda0094934de5de83d4ba0",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 300843,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 768,
+        "scrollWidth": 768,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nDIGITAL TWIN REFERENCE\nCONCEPTUAL REFERENCE\nUNTRAINED · UNVALIDATED\nSYSTEM REFERENCE / STAGE 7\nBiological Digital Twin architecture\n\nInspect"
+      }
+    },
+    {
+      "artifact_id": "S10-DT-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/dt-390x844.png",
+      "route": "/digital-twin",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:08.412Z",
+      "dimensions": "390x2626",
+      "sha256": "f6a4b623c633e9dcc927d22483a93f96a3778d76f094c4585a3c9215a03b47ad",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 209227,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nCONCEPTUAL REFERENCE\nMission\nSignals\nMore\nSYSTEM REFERENCE / STAGE 7\nBiological Digital Twin architecture\n\nInspect how the accepted wrist, chest, and frontal sensing modules map onto a future physiological-model scaffold. This view explains system topology; it does not display a person-specific twin or live physiology.\n\nARCHITECTURE ONLY · UNTRAINED · UNVALIDATED\nAnatomical architecture viewer\n\nFull-body three-quarter architecture view. Landmarks show"
+      }
+    },
+    {
+      "artifact_id": "S10-AI-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/ai-1440x900.png",
+      "route": "/ai-insights",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:10.118Z",
+      "dimensions": "1440x1431",
+      "sha256": "eaddccc94084f19dfe39f9f861d8b0b7b0e925b8df6c550b2b622b7775dac12f",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 265129,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nAI INSIGHTS\nSYNTHETIC DEMO\nCONNECTED\nMODEL OUTPUT / SOURCE-SCOPED\nAI Insights\n\nWhat AI-derived information this demonstrator can and cannot "
+      }
+    },
+    {
+      "artifact_id": "S10-AI-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/ai-390x844.png",
+      "route": "/ai-insights",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:11.574Z",
+      "dimensions": "390x2612",
+      "sha256": "c15da18e5b05e186d15b107a684493c52e0f04420a2a51d30c565199837a06c0",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 204746,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nCONNECTED\nMission\nSignals\nMore\nMODEL OUTPUT / SOURCE-SCOPED\nAI Insights\n\nWhat AI-derived information this demonstrator can and cannot report for the source that is currently selected. Every value below is labelled with the source it came from.\n\nSynthetic demonstrator. The confidence and fatigue values below are generated by the synthetic data engine to exercise the interface. They are not a model output, not a measurement, and carry no scientific mean"
+      }
+    },
+    {
+      "artifact_id": "S10-MT-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mt-1440x900.png",
+      "route": "/mission-timeline",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:12.761Z",
+      "dimensions": "1440x900",
+      "sha256": "a1148154854175fda8b1bb1095f706b392d7286611a7fbdcebc0ca000dd40eaf",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 186242,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nMISSION TIMELINE\nSYNTHETIC DEMO\nCONNECTED\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\nMission Timeline\n\nChronological record of this interface s"
+      }
+    },
+    {
+      "artifact_id": "S10-MT-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mt-390x844.png",
+      "route": "/mission-timeline",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:13.931Z",
+      "dimensions": "390x1501",
+      "sha256": "90a64d4c446adc085dc9da12b973fcf09e590f10f6fe27f4cafeebef3dea2224",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 133438,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nCONNECTED\nMission\nSignals\nMore\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\nMission Timeline\n\nChronological record of this interface session’s operational events, followed by the conceptual architecture checkpoints. Every event states its origin and the clock its timestamp is measured on.\n\nSession event chronology\nOBSERVED THIS SESSION · NOT PERSISTED\n\nNo operational events recorded in this interface session yet.\n\nEvents are observed while an operational r"
+      }
+    },
+    {
+      "artifact_id": "S10-ST-1440x900",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/st-1440x900.png",
+      "route": "/settings",
+      "viewport": "1440x900",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:15.100Z",
+      "dimensions": "1440x900",
+      "sha256": "be48eaae522e21e280cf31f94df7c541a41462634054c7a387a52e54eda2208e",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 188444,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nMission systems demonstrator\n\nOPERATIONS\n\nMission Overview\nLive Signals\n\nSYSTEM\n\nSystem Brief\n\nRESEARCH & REFERENCE\n\nExperimental Research\nDigital Twin Reference\nAI Insights\nMission Timeline\nSettings\n\nIAC 2026 · Interactive Presentation\n\nMission systems demonstrator — synthetic demo data\n\nBiological Minimalism\n\n/\nSETTINGS\nAPPLICATION PREFERENCES\nAPPLICATION PREFERENCES\nSettings\n\nApplication preferences and a user-safe service reachability check. Opera"
+      }
+    },
+    {
+      "artifact_id": "S10-ST-390x844",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/st-390x844.png",
+      "route": "/settings",
+      "viewport": "390x844",
+      "state": "synthetic_nominal",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:16.313Z",
+      "dimensions": "390x1322",
+      "sha256": "405e5c69c76bd229a14448ebbb043500a1daf7de2548156cfc856ee8a27320ac",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 130967,
+      "runtime": {
+        "overflow": 0,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "h1Count": 1,
+        "smallText": [],
+        "unnamed": 0,
+        "bodyText": "Skip to main content\n\nBiological Minimalism\n\nAPPLICATION PREFERENCES\nMission\nSignals\nMore\nAPPLICATION PREFERENCES\nSettings\n\nApplication preferences and a user-safe service reachability check. Operational replay and fault controls live with the operational routes, in the Demo controls drawer on Mission Overview.\n\nTELEMETRY SERVICE\n\nOperational connection status\n\nCheck whether the operational telemetry service is reachable. The explanatory pages (System Brief, Experimental Research, Digital Twin) "
+      }
+    },
+    {
+      "artifact_id": "S10-MOBILE-DIALOG",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/mobile-more-dialog.png",
+      "route": "/mission-overview",
+      "viewport": "390x844",
+      "state": "mobile_more_dialog_open",
+      "source_identity": "SYNTHETIC_DEMO",
+      "timestamp": "2026-10-07T07:09:18.002Z",
+      "dimensions": "390x7476",
+      "sha256": "f499feb468b4124d2eefb4c1511aa8d7c6e207252d601a7e9bec1553c617195d",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 440075,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-REDUCED-MOTION",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/dt-reduced-motion.png",
+      "route": "/digital-twin",
+      "viewport": "1440x900",
+      "state": "prefers_reduced_motion",
+      "source_identity": "NOT_APPLICABLE",
+      "timestamp": "2026-10-07T07:09:21.223Z",
+      "dimensions": "1440x1435",
+      "sha256": "c90cafd98f9cb5e8e19a0b8af308e52defd97e9409f5543fedf15307c7877d18",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 350537,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-S14-NOMINAL",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/s14-initial-replay.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "recorded_replay_nominal",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:34.391Z",
+      "dimensions": "1440x4154",
+      "sha256": "8b1a98fa457bebed55a6922b85fe83581758c8f435cfa53e5d012d9912194c39",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 623675,
+      "runtime": {
+        "hr_bpm": 72.54077047077465,
+        "window_index": 1,
+        "model_id": "PPGDaliaHRModelB:PPGPlusIMUHRModel"
+      }
+    },
+    {
+      "artifact_id": "S10-S14-FAULT",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/s14-injected-dropout.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "ppg_fault_active",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:36.034Z",
+      "dimensions": "1440x4281",
+      "sha256": "9012955b59c6e9af5bacecd59ef8d3210e6e81dbb54fd45a95ea2dc92e2205ea",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 653323,
+      "runtime": {
+        "inference_status": "input_unavailable",
+        "prediction": null
+      }
+    },
+    {
+      "artifact_id": "S10-S14-WITHHELD",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/s14-output-withheld.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "hr_output_withheld",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:37.535Z",
+      "dimensions": "1440x4281",
+      "sha256": "44a55cb68432bf81ee3e0f8656caa4adf1653e85d41b7d9026a575f3da457445",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 652117,
+      "runtime": {
+        "prediction": null
+      }
+    },
+    {
+      "artifact_id": "S10-S14-REBUILDING",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/s14-warmup.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "rebuilding",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:38.803Z",
+      "dimensions": "1440x4197",
+      "sha256": "74d15109168b45dabafddbd29c740da037723780972779714d74425a984f7f95",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 633089,
+      "runtime": {
+        "inference_status": "warming_up",
+        "prediction": null
+      }
+    },
+    {
+      "artifact_id": "S10-S14-RECOVERY",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/s14-fresh-output.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "fresh_recovered_hr",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:40.318Z",
+      "dimensions": "1440x4256",
+      "sha256": "84ff6ac6084d001857254841a4233b659def0f24b6b8193430e006dfbd7e5ebf",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 639523,
+      "runtime": {
+        "nominal_window_index": 1,
+        "recovered_window_index": 31,
+        "hr_bpm": 69.50071507285509
+      }
+    },
+    {
+      "artifact_id": "S10-JURY-MO",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-mo-1920x1080.png",
+      "route": "/mission-overview",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:42.602Z",
+      "dimensions": "1920x1080",
+      "sha256": "daad2085d0b8def8a2d83913ac8d41b2b3a2d1c29e4c7dc55d4578b05fb413f3",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 250562,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-LM",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-lm-1920x1080.png",
+      "route": "/live-monitoring",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:43.922Z",
+      "dimensions": "1920x1080",
+      "sha256": "a339922d2dade56a90d3cd2088b8dd7a9079d2529b16ab34ab61677949dca890",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 250308,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-SB",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-sb-1920x1080.png",
+      "route": "/system-brief",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "NOT_APPLICABLE",
+      "timestamp": "2026-10-07T07:09:45.079Z",
+      "dimensions": "1920x1080",
+      "sha256": "ae06c3bba74d230a2f7e3eed8950971ac7d4bd5afb4327f697bf1e396791a5dd",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 190058,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-RX",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-rx-1920x1080.png",
+      "route": "/research/experimental",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "NOT_APPLICABLE",
+      "timestamp": "2026-10-07T07:09:46.345Z",
+      "dimensions": "1920x1080",
+      "sha256": "f4216e8ca0a2d12bf7141c75bfc395991c68b1d9ea1fb12396e12eea0d9bde2c",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 298650,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-DT",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-dt-1920x1080.png",
+      "route": "/digital-twin",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "NOT_APPLICABLE",
+      "timestamp": "2026-10-07T07:09:48.254Z",
+      "dimensions": "1920x1080",
+      "sha256": "0c946f1c51e68d256163efaebf712d96b25142dad5bf3683b438e419d71793da",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 309187,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-AI",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-ai-1920x1080.png",
+      "route": "/ai-insights",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:49.509Z",
+      "dimensions": "1920x1080",
+      "sha256": "061921efd1eb9be03cdc5cf4f96e0c15d5445b407d6897b4f2db1df0e20e97f8",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 224767,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-MT",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-mt-1920x1080.png",
+      "route": "/mission-timeline",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:09:50.675Z",
+      "dimensions": "1920x1080",
+      "sha256": "a62f6caae4c7754c2e4f1ab191e900606bfdd88922712bf916064288d82f06b3",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 189454,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-JURY-ST",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/jury-st-1920x1080.png",
+      "route": "/settings",
+      "viewport": "1920x1080",
+      "state": "continuous_jury_walkthrough",
+      "source_identity": "NOT_APPLICABLE",
+      "timestamp": "2026-10-07T07:09:51.805Z",
+      "dimensions": "1920x1080",
+      "sha256": "9da216f4b6fd928f6573a4bf8a40288f358529ee856a0435de0e883352219c53",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 189541,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-DISCONNECTED",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/backend-unavailable.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "backend_unavailable_disconnected",
+      "source_identity": "UNAVAILABLE",
+      "timestamp": "2026-10-07T07:10:49.121Z",
+      "dimensions": "1440x4172",
+      "sha256": "026b6ab222b3244b4fab19cb9943aaabb27a7970d25f10b9df428849bae1aac0",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 604611,
+      "runtime": {}
+    },
+    {
+      "artifact_id": "S10-PUBLIC-SMOKE",
+      "relative_path": "frontend/qa-screenshots/codex-stage10-final-integration-release-freeze/public-mission-overview.png",
+      "route": "/mission-overview",
+      "viewport": "1440x900",
+      "state": "public_connected_read_only",
+      "source_identity": "PPG-DaLiA/S14",
+      "timestamp": "2026-10-07T07:11:05.576Z",
+      "dimensions": "1440x4136",
+      "sha256": "927880a360ad8c14218393cf876e2da7a5b748ac2005cb42c348df5ed83cefa1",
+      "visual_review": "PASS",
+      "canonical_status": "canonical",
+      "finding_id": "none",
+      "byte_size": 625199,
+      "runtime": {
+        "usable_after_ms": 5215
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "/mission-overview 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "S10-MO-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/602996"
+    },
+    {
+      "name": "/mission-overview 1366x768: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1366,\"scrollWidth\":1366,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1366x768: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1366,\"scrollWidth\":1366,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1366x768: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1366x768: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1366,\"scrollWidth\":1366,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "S10-MO-1366x768: durable PNG",
+      "result": "PASS",
+      "detail": "png/598579"
+    },
+    {
+      "name": "/mission-overview 1280x720: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1280,\"scrollWidth\":1280,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1280x720: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1280,\"scrollWidth\":1280,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1280x720: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1280x720: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1280,\"scrollWidth\":1280,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "S10-MO-1280x720: durable PNG",
+      "result": "PASS",
+      "detail": "png/572718"
+    },
+    {
+      "name": "/mission-overview 1024x768: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1024,\"scrollWidth\":1024,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1024x768: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1024,\"scrollWidth\":1024,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 1024x768: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 1024x768: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1024,\"scrollWidth\":1024,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "S10-MO-1024x768: durable PNG",
+      "result": "PASS",
+      "detail": "png/577042"
+    },
+    {
+      "name": "/mission-overview 768x1024: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 768x1024: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "/mission-overview 768x1024: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 768x1024: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION OVERVIEW\\nSYNTHETIC DEMO\\nCONNECTED\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\"}"
+    },
+    {
+      "name": "S10-MO-768x1024: durable PNG",
+      "result": "PASS",
+      "detail": "png/576566"
+    },
+    {
+      "name": "/mission-overview 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\\n\\nSource identity, per-modality confirmation, and current heart-rate inference — one shared telemetry gate.\\n\\nSession: Synthetic demo session. Source: SYNTHETIC DEMO. Status: CONNECTED. Simulated fault: None\\nSESSION\\nSynthetic demo session\\nSOURCE\\nSYNTHETIC DEMO\\nSTATUS\\nCONNECTED\\nSIMULATED FAULT\\nNone\\nSESSION TIME\\n07:08:46 UTC\\nSy\"}"
+    },
+    {
+      "name": "/mission-overview 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\\n\\nSource identity, per-modality confirmation, and current heart-rate inference — one shared telemetry gate.\\n\\nSession: Synthetic demo session. Source: SYNTHETIC DEMO. Status: CONNECTED. Simulated fault: None\\nSESSION\\nSynthetic demo session\\nSOURCE\\nSYNTHETIC DEMO\\nSTATUS\\nCONNECTED\\nSIMULATED FAULT\\nNone\\nSESSION TIME\\n07:08:46 UTC\\nSy\"}"
+    },
+    {
+      "name": "/mission-overview 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-overview 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nMission overview — operational sensing narrative\\n01 · COMMAND DECK\\nLive operational sensing status\\n\\nSource identity, per-modality confirmation, and current heart-rate inference — one shared telemetry gate.\\n\\nSession: Synthetic demo session. Source: SYNTHETIC DEMO. Status: CONNECTED. Simulated fault: None\\nSESSION\\nSynthetic demo session\\nSOURCE\\nSYNTHETIC DEMO\\nSTATUS\\nCONNECTED\\nSIMULATED FAULT\\nNone\\nSESSION TIME\\n07:08:46 UTC\\nSy\"}"
+    },
+    {
+      "name": "S10-MO-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/488634"
+    },
+    {
+      "name": "/live-monitoring 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "S10-LM-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/375922"
+    },
+    {
+      "name": "/live-monitoring 1366x768: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1366,\"scrollWidth\":1366,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1366x768: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1366,\"scrollWidth\":1366,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1366x768: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1366x768: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1366,\"scrollWidth\":1366,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "S10-LM-1366x768: durable PNG",
+      "result": "PASS",
+      "detail": "png/376134"
+    },
+    {
+      "name": "/live-monitoring 1280x720: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1280,\"scrollWidth\":1280,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1280x720: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1280,\"scrollWidth\":1280,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1280x720: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1280x720: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1280,\"scrollWidth\":1280,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "S10-LM-1280x720: durable PNG",
+      "result": "PASS",
+      "detail": "png/374862"
+    },
+    {
+      "name": "/live-monitoring 1024x768: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1024,\"scrollWidth\":1024,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1024x768: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1024,\"scrollWidth\":1024,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 1024x768: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 1024x768: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1024,\"scrollWidth\":1024,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "S10-LM-1024x768: durable PNG",
+      "result": "PASS",
+      "detail": "png/377438"
+    },
+    {
+      "name": "/live-monitoring 768x1024: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 768x1024: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "/live-monitoring 768x1024: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 768x1024: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nLIVE SIGNALS\\nSYNTHETIC DEMO\\nCONNECTED\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals a\"}"
+    },
+    {
+      "name": "S10-LM-768x1024: durable PNG",
+      "result": "PASS",
+      "detail": "png/370127"
+    },
+    {
+      "name": "/live-monitoring 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals and fault-aware heart-rate inference for CORE_PLUS_CONTEXT.\\n\\nRecorded replay and synthetic demo data are not live astronaut monitoring.\\n\\nSource type: SYNTHETIC DEMO. Connection: CONNECTED. Replay state: No subject selected. Dataset: Not applicable — synthetic demo. Subject: Not applicable — synthetic demo. Simulated fault\"}"
+    },
+    {
+      "name": "/live-monitoring 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals and fault-aware heart-rate inference for CORE_PLUS_CONTEXT.\\n\\nRecorded replay and synthetic demo data are not live astronaut monitoring.\\n\\nSource type: SYNTHETIC DEMO. Connection: CONNECTED. Replay state: No subject selected. Dataset: Not applicable — synthetic demo. Subject: Not applicable — synthetic demo. Simulated fault\"}"
+    },
+    {
+      "name": "/live-monitoring 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/live-monitoring 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nLIVE SIGNALS / SOURCE-AWARE MONITOR\\nSignal and inference monitor\\n\\nSource-aware physiological signals and fault-aware heart-rate inference for CORE_PLUS_CONTEXT.\\n\\nRecorded replay and synthetic demo data are not live astronaut monitoring.\\n\\nSource type: SYNTHETIC DEMO. Connection: CONNECTED. Replay state: No subject selected. Dataset: Not applicable — synthetic demo. Subject: Not applicable — synthetic demo. Simulated fault\"}"
+    },
+    {
+      "name": "S10-LM-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/308003"
+    },
+    {
+      "name": "/system-brief 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nSYSTEM BRIEF\\nFINAL ARCHITECTURE\\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\\nThree body regions. Five sensing modalities. One fault-aware physiologi\"}"
+    },
+    {
+      "name": "/system-brief 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nSYSTEM BRIEF\\nFINAL ARCHITECTURE\\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\\nThree body regions. Five sensing modalities. One fault-aware physiologi\"}"
+    },
+    {
+      "name": "/system-brief 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/system-brief 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nSYSTEM BRIEF\\nFINAL ARCHITECTURE\\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\\nThree body regions. Five sensing modalities. One fault-aware physiologi\"}"
+    },
+    {
+      "name": "S10-SB-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/509079"
+    },
+    {
+      "name": "/system-brief 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nFINAL ARCHITECTURE\\nMission\\nSignals\\nMore\\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\\nThree body regions. Five sensing modalities. One fault-aware physiological layer.\\n\\nCORE_PLUS_CONTEXT combines wrist PPG + IMU, chest ECG, and frontal EEG + EOG. EOG is the only addition beyond MINIMAL_CORE.\\n\\n03\\nBODY REGIONS\\n05\\nMODALITIES\\n+01\\nEOG CONTEXT\\nUNAVAILABLE\\nCURRENT SOURCE\\nOpen live signals\\nView experimental evidence\\nFinal sensing architecture\\n\\nFive modalities are inte\"}"
+    },
+    {
+      "name": "/system-brief 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nFINAL ARCHITECTURE\\nMission\\nSignals\\nMore\\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\\nThree body regions. Five sensing modalities. One fault-aware physiological layer.\\n\\nCORE_PLUS_CONTEXT combines wrist PPG + IMU, chest ECG, and frontal EEG + EOG. EOG is the only addition beyond MINIMAL_CORE.\\n\\n03\\nBODY REGIONS\\n05\\nMODALITIES\\n+01\\nEOG CONTEXT\\nUNAVAILABLE\\nCURRENT SOURCE\\nOpen live signals\\nView experimental evidence\\nFinal sensing architecture\\n\\nFive modalities are inte\"}"
+    },
+    {
+      "name": "/system-brief 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/system-brief 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nFINAL ARCHITECTURE\\nMission\\nSignals\\nMore\\nBIOLOGICAL MINIMALISM / FINAL SYSTEM\\nThree body regions. Five sensing modalities. One fault-aware physiological layer.\\n\\nCORE_PLUS_CONTEXT combines wrist PPG + IMU, chest ECG, and frontal EEG + EOG. EOG is the only addition beyond MINIMAL_CORE.\\n\\n03\\nBODY REGIONS\\n05\\nMODALITIES\\n+01\\nEOG CONTEXT\\nUNAVAILABLE\\nCURRENT SOURCE\\nOpen live signals\\nView experimental evidence\\nFinal sensing architecture\\n\\nFive modalities are inte\"}"
+    },
+    {
+      "name": "S10-SB-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/362832"
+    },
+    {
+      "name": "/research/experimental 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nEXPERIMENTAL RESEARCH\\nRESEARCH EVIDENCE\\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\\nExperimental sensor studies\\n\\nCandidate-sensor investigation\"}"
+    },
+    {
+      "name": "/research/experimental 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nEXPERIMENTAL RESEARCH\\nRESEARCH EVIDENCE\\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\\nExperimental sensor studies\\n\\nCandidate-sensor investigation\"}"
+    },
+    {
+      "name": "/research/experimental 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/research/experimental 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nEXPERIMENTAL RESEARCH\\nRESEARCH EVIDENCE\\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\\nExperimental sensor studies\\n\\nCandidate-sensor investigation\"}"
+    },
+    {
+      "name": "S10-RX-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/1189542"
+    },
+    {
+      "name": "/research/experimental 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nRESEARCH EVIDENCE\\nMission\\nSignals\\nMore\\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\\nExperimental sensor studies\\n\\nCandidate-sensor investigations, sensitivity analyses, and mixed or negative findings that informed—but were not carried into—the final CORE_PLUS_CONTEXT architecture.\\n\\nRESEARCH EVIDENCE — NOT FINAL SYSTEM\\n\\nThese sensors and experiments are excluded from the final sensing inventory unless explicitly stated otherwise.\\n\\nCandidate sensor dispositi\"}"
+    },
+    {
+      "name": "/research/experimental 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nRESEARCH EVIDENCE\\nMission\\nSignals\\nMore\\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\\nExperimental sensor studies\\n\\nCandidate-sensor investigations, sensitivity analyses, and mixed or negative findings that informed—but were not carried into—the final CORE_PLUS_CONTEXT architecture.\\n\\nRESEARCH EVIDENCE — NOT FINAL SYSTEM\\n\\nThese sensors and experiments are excluded from the final sensing inventory unless explicitly stated otherwise.\\n\\nCandidate sensor dispositi\"}"
+    },
+    {
+      "name": "/research/experimental 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/research/experimental 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nRESEARCH EVIDENCE\\nMission\\nSignals\\nMore\\nBIOLOGICAL MINIMALISM / RESEARCH ARCHIVE\\nExperimental sensor studies\\n\\nCandidate-sensor investigations, sensitivity analyses, and mixed or negative findings that informed—but were not carried into—the final CORE_PLUS_CONTEXT architecture.\\n\\nRESEARCH EVIDENCE — NOT FINAL SYSTEM\\n\\nThese sensors and experiments are excluded from the final sensing inventory unless explicitly stated otherwise.\\n\\nCandidate sensor dispositi\"}"
+    },
+    {
+      "name": "S10-RX-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/1088771"
+    },
+    {
+      "name": "/digital-twin 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nDIGITAL TWIN REFERENCE\\nCONCEPTUAL REFERENCE\\nUNTRAINED · UNVALIDATED\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect\"}"
+    },
+    {
+      "name": "/digital-twin 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nDIGITAL TWIN REFERENCE\\nCONCEPTUAL REFERENCE\\nUNTRAINED · UNVALIDATED\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect\"}"
+    },
+    {
+      "name": "/digital-twin 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/digital-twin 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nDIGITAL TWIN REFERENCE\\nCONCEPTUAL REFERENCE\\nUNTRAINED · UNVALIDATED\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect\"}"
+    },
+    {
+      "name": "S10-DT-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/342808"
+    },
+    {
+      "name": "/digital-twin 768x1024: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nDIGITAL TWIN REFERENCE\\nCONCEPTUAL REFERENCE\\nUNTRAINED · UNVALIDATED\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect\"}"
+    },
+    {
+      "name": "/digital-twin 768x1024: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nDIGITAL TWIN REFERENCE\\nCONCEPTUAL REFERENCE\\nUNTRAINED · UNVALIDATED\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect\"}"
+    },
+    {
+      "name": "/digital-twin 768x1024: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/digital-twin 768x1024: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":768,\"scrollWidth\":768,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nDIGITAL TWIN REFERENCE\\nCONCEPTUAL REFERENCE\\nUNTRAINED · UNVALIDATED\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect\"}"
+    },
+    {
+      "name": "S10-DT-768x1024: durable PNG",
+      "result": "PASS",
+      "detail": "png/300843"
+    },
+    {
+      "name": "/digital-twin 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONCEPTUAL REFERENCE\\nMission\\nSignals\\nMore\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect how the accepted wrist, chest, and frontal sensing modules map onto a future physiological-model scaffold. This view explains system topology; it does not display a person-specific twin or live physiology.\\n\\nARCHITECTURE ONLY · UNTRAINED · UNVALIDATED\\nAnatomical architecture viewer\\n\\nFull-body three-quarter architecture view. Landmarks show\"}"
+    },
+    {
+      "name": "/digital-twin 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONCEPTUAL REFERENCE\\nMission\\nSignals\\nMore\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect how the accepted wrist, chest, and frontal sensing modules map onto a future physiological-model scaffold. This view explains system topology; it does not display a person-specific twin or live physiology.\\n\\nARCHITECTURE ONLY · UNTRAINED · UNVALIDATED\\nAnatomical architecture viewer\\n\\nFull-body three-quarter architecture view. Landmarks show\"}"
+    },
+    {
+      "name": "/digital-twin 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/digital-twin 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONCEPTUAL REFERENCE\\nMission\\nSignals\\nMore\\nSYSTEM REFERENCE / STAGE 7\\nBiological Digital Twin architecture\\n\\nInspect how the accepted wrist, chest, and frontal sensing modules map onto a future physiological-model scaffold. This view explains system topology; it does not display a person-specific twin or live physiology.\\n\\nARCHITECTURE ONLY · UNTRAINED · UNVALIDATED\\nAnatomical architecture viewer\\n\\nFull-body three-quarter architecture view. Landmarks show\"}"
+    },
+    {
+      "name": "S10-DT-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/209227"
+    },
+    {
+      "name": "/ai-insights 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nAI INSIGHTS\\nSYNTHETIC DEMO\\nCONNECTED\\nMODEL OUTPUT / SOURCE-SCOPED\\nAI Insights\\n\\nWhat AI-derived information this demonstrator can and cannot \"}"
+    },
+    {
+      "name": "/ai-insights 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nAI INSIGHTS\\nSYNTHETIC DEMO\\nCONNECTED\\nMODEL OUTPUT / SOURCE-SCOPED\\nAI Insights\\n\\nWhat AI-derived information this demonstrator can and cannot \"}"
+    },
+    {
+      "name": "/ai-insights 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/ai-insights 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nAI INSIGHTS\\nSYNTHETIC DEMO\\nCONNECTED\\nMODEL OUTPUT / SOURCE-SCOPED\\nAI Insights\\n\\nWhat AI-derived information this demonstrator can and cannot \"}"
+    },
+    {
+      "name": "S10-AI-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/265129"
+    },
+    {
+      "name": "/ai-insights 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nMODEL OUTPUT / SOURCE-SCOPED\\nAI Insights\\n\\nWhat AI-derived information this demonstrator can and cannot report for the source that is currently selected. Every value below is labelled with the source it came from.\\n\\nSynthetic demonstrator. The confidence and fatigue values below are generated by the synthetic data engine to exercise the interface. They are not a model output, not a measurement, and carry no scientific mean\"}"
+    },
+    {
+      "name": "/ai-insights 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nMODEL OUTPUT / SOURCE-SCOPED\\nAI Insights\\n\\nWhat AI-derived information this demonstrator can and cannot report for the source that is currently selected. Every value below is labelled with the source it came from.\\n\\nSynthetic demonstrator. The confidence and fatigue values below are generated by the synthetic data engine to exercise the interface. They are not a model output, not a measurement, and carry no scientific mean\"}"
+    },
+    {
+      "name": "/ai-insights 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/ai-insights 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nMODEL OUTPUT / SOURCE-SCOPED\\nAI Insights\\n\\nWhat AI-derived information this demonstrator can and cannot report for the source that is currently selected. Every value below is labelled with the source it came from.\\n\\nSynthetic demonstrator. The confidence and fatigue values below are generated by the synthetic data engine to exercise the interface. They are not a model output, not a measurement, and carry no scientific mean\"}"
+    },
+    {
+      "name": "S10-AI-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/204746"
+    },
+    {
+      "name": "/mission-timeline 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION TIMELINE\\nSYNTHETIC DEMO\\nCONNECTED\\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\\nMission Timeline\\n\\nChronological record of this interface s\"}"
+    },
+    {
+      "name": "/mission-timeline 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION TIMELINE\\nSYNTHETIC DEMO\\nCONNECTED\\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\\nMission Timeline\\n\\nChronological record of this interface s\"}"
+    },
+    {
+      "name": "/mission-timeline 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-timeline 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nMISSION TIMELINE\\nSYNTHETIC DEMO\\nCONNECTED\\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\\nMission Timeline\\n\\nChronological record of this interface s\"}"
+    },
+    {
+      "name": "S10-MT-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/186242"
+    },
+    {
+      "name": "/mission-timeline 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\\nMission Timeline\\n\\nChronological record of this interface session’s operational events, followed by the conceptual architecture checkpoints. Every event states its origin and the clock its timestamp is measured on.\\n\\nSession event chronology\\nOBSERVED THIS SESSION · NOT PERSISTED\\n\\nNo operational events recorded in this interface session yet.\\n\\nEvents are observed while an operational r\"}"
+    },
+    {
+      "name": "/mission-timeline 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\\nMission Timeline\\n\\nChronological record of this interface session’s operational events, followed by the conceptual architecture checkpoints. Every event states its origin and the clock its timestamp is measured on.\\n\\nSession event chronology\\nOBSERVED THIS SESSION · NOT PERSISTED\\n\\nNo operational events recorded in this interface session yet.\\n\\nEvents are observed while an operational r\"}"
+    },
+    {
+      "name": "/mission-timeline 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/mission-timeline 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nCONNECTED\\nMission\\nSignals\\nMore\\nSESSION RECORD / CONCEPTUAL CHECKPOINTS\\nMission Timeline\\n\\nChronological record of this interface session’s operational events, followed by the conceptual architecture checkpoints. Every event states its origin and the clock its timestamp is measured on.\\n\\nSession event chronology\\nOBSERVED THIS SESSION · NOT PERSISTED\\n\\nNo operational events recorded in this interface session yet.\\n\\nEvents are observed while an operational r\"}"
+    },
+    {
+      "name": "S10-MT-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/133438"
+    },
+    {
+      "name": "/settings 1440x900: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nSETTINGS\\nAPPLICATION PREFERENCES\\nAPPLICATION PREFERENCES\\nSettings\\n\\nApplication preferences and a user-safe service reachability check. Opera\"}"
+    },
+    {
+      "name": "/settings 1440x900: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nSETTINGS\\nAPPLICATION PREFERENCES\\nAPPLICATION PREFERENCES\\nSettings\\n\\nApplication preferences and a user-safe service reachability check. Opera\"}"
+    },
+    {
+      "name": "/settings 1440x900: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/settings 1440x900: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":1440,\"scrollWidth\":1440,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nMission systems demonstrator\\n\\nOPERATIONS\\n\\nMission Overview\\nLive Signals\\n\\nSYSTEM\\n\\nSystem Brief\\n\\nRESEARCH & REFERENCE\\n\\nExperimental Research\\nDigital Twin Reference\\nAI Insights\\nMission Timeline\\nSettings\\n\\nIAC 2026 · Interactive Presentation\\n\\nMission systems demonstrator — synthetic demo data\\n\\nBiological Minimalism\\n\\n/\\nSETTINGS\\nAPPLICATION PREFERENCES\\nAPPLICATION PREFERENCES\\nSettings\\n\\nApplication preferences and a user-safe service reachability check. Opera\"}"
+    },
+    {
+      "name": "S10-ST-1440x900: durable PNG",
+      "result": "PASS",
+      "detail": "png/188444"
+    },
+    {
+      "name": "/settings 390x844: no page overflow",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nAPPLICATION PREFERENCES\\nMission\\nSignals\\nMore\\nAPPLICATION PREFERENCES\\nSettings\\n\\nApplication preferences and a user-safe service reachability check. Operational replay and fault controls live with the operational routes, in the Demo controls drawer on Mission Overview.\\n\\nTELEMETRY SERVICE\\n\\nOperational connection status\\n\\nCheck whether the operational telemetry service is reachable. The explanatory pages (System Brief, Experimental Research, Digital Twin) \"}"
+    },
+    {
+      "name": "/settings 390x844: exactly one h1",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nAPPLICATION PREFERENCES\\nMission\\nSignals\\nMore\\nAPPLICATION PREFERENCES\\nSettings\\n\\nApplication preferences and a user-safe service reachability check. Operational replay and fault controls live with the operational routes, in the Demo controls drawer on Mission Overview.\\n\\nTELEMETRY SERVICE\\n\\nOperational connection status\\n\\nCheck whether the operational telemetry service is reachable. The explanatory pages (System Brief, Experimental Research, Digital Twin) \"}"
+    },
+    {
+      "name": "/settings 390x844: operational text floor",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "/settings 390x844: named buttons",
+      "result": "PASS",
+      "detail": "{\"overflow\":0,\"clientWidth\":390,\"scrollWidth\":390,\"h1Count\":1,\"smallText\":[],\"unnamed\":0,\"bodyText\":\"Skip to main content\\n\\nBiological Minimalism\\n\\nAPPLICATION PREFERENCES\\nMission\\nSignals\\nMore\\nAPPLICATION PREFERENCES\\nSettings\\n\\nApplication preferences and a user-safe service reachability check. Operational replay and fault controls live with the operational routes, in the Demo controls drawer on Mission Overview.\\n\\nTELEMETRY SERVICE\\n\\nOperational connection status\\n\\nCheck whether the operational telemetry service is reachable. The explanatory pages (System Brief, Experimental Research, Digital Twin) \"}"
+    },
+    {
+      "name": "S10-ST-390x844: durable PNG",
+      "result": "PASS",
+      "detail": "png/130967"
+    },
+    {
+      "name": "mobile More dialog opens",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mobile dialog is modal",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mobile dialog owns focus",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mobile background is inert",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S10-MOBILE-DIALOG: durable PNG",
+      "result": "PASS",
+      "detail": "png/440075"
+    },
+    {
+      "name": "mobile dialog Escape closes",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "mobile dialog restores trigger",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "reduced motion media active",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "reduced motion keeps semantic boundary",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S10-REDUCED-MOTION: durable PNG",
+      "result": "PASS",
+      "detail": "png/350537"
+    },
+    {
+      "name": "real S14 is discoverable",
+      "result": "PASS",
+      "detail": "{\"dataset_name\":\"PPG-DaLiA\",\"subjects\":[\"S14\"]}"
+    },
+    {
+      "name": "S14 loads paused at zero",
+      "result": "PASS",
+      "detail": "{\"source_type\":\"dataset_replay\",\"dataset_configured\":true,\"dataset_name\":\"PPG-DaLiA\",\"subject_id\":\"S14\",\"replay_position_seconds\":0,\"duration_seconds\":8958,\"playback_state\":\"paused\",\"playback_speed\":1,\"end_behavior\":\"stop\",\"channels\":[{\"name\":\"wrist_bvp\",\"sample_rate_hz\":64,\"device\":\"Empatica E4 (wrist)\",\"role\":\"physiological\",\"axes\":[\"bvp\"],\"units\":\"device units\"},{\"name\":\"wrist_acc\",\"sample_rate_hz\":32,\"device\":\"Empatica E4 (wrist)\",\"role\":\"context_artifact_reference\",\"axes\":[\"x\",\"y\",\"z\"],\"units\":\"device units\"},{\"name\":\"chest_ecg\",\"sample_rate_hz\":700,\"device\":\"RespiBAN (chest)\",\"role\":\"physiological_ground_truth_reference\",\"axes\":[\"ecg\"],\"units\":\"device units\"},{\"name\":\"wrist_temp\",\"sample_rate_hz\":4,\"device\":\"Empatica E4 (wrist)\",\"role\":\"physiological\",\"axes\":[\"temperature\"],\"units\":\"degrees Celsius\"}],\"fault_injection\":{\"active\":false,\"fault_type\":null,\"target\":null,\"target_channels\":[],\"affected_channels\":[],\"severity\":null,\"seed\":null,\"dropped_samples\":{},\"parameters\":{}},\"public_read_only\":false}"
+    },
+    {
+      "name": "S10-S14-NOMINAL: durable PNG",
+      "result": "PASS",
+      "detail": "png/623675"
+    },
+    {
+      "name": "S10-S14-FAULT: durable PNG",
+      "result": "PASS",
+      "detail": "png/653323"
+    },
+    {
+      "name": "S10-S14-WITHHELD: durable PNG",
+      "result": "PASS",
+      "detail": "png/652117"
+    },
+    {
+      "name": "S10-S14-REBUILDING: durable PNG",
+      "result": "PASS",
+      "detail": "png/633089"
+    },
+    {
+      "name": "recovered HR is fresh",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S10-S14-RECOVERY: durable PNG",
+      "result": "PASS",
+      "detail": "png/639523"
+    },
+    {
+      "name": "S10-JURY-MO: durable PNG",
+      "result": "PASS",
+      "detail": "png/250562"
+    },
+    {
+      "name": "S10-JURY-LM: durable PNG",
+      "result": "PASS",
+      "detail": "png/250308"
+    },
+    {
+      "name": "S10-JURY-SB: durable PNG",
+      "result": "PASS",
+      "detail": "png/190058"
+    },
+    {
+      "name": "S10-JURY-RX: durable PNG",
+      "result": "PASS",
+      "detail": "png/298650"
+    },
+    {
+      "name": "S10-JURY-DT: durable PNG",
+      "result": "PASS",
+      "detail": "png/309187"
+    },
+    {
+      "name": "S10-JURY-AI: durable PNG",
+      "result": "PASS",
+      "detail": "png/224767"
+    },
+    {
+      "name": "S10-JURY-MT: durable PNG",
+      "result": "PASS",
+      "detail": "png/189454"
+    },
+    {
+      "name": "S10-JURY-ST: durable PNG",
+      "result": "PASS",
+      "detail": "png/189541"
+    },
+    {
+      "name": "no browser console/page errors",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "disconnected state is explicit",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S10-DISCONNECTED: durable PNG",
+      "result": "PASS",
+      "detail": "png/604611"
+    },
+    {
+      "name": "disconnected transport failure was observed",
+      "result": "PASS",
+      "detail": "[{\"url\":\"http://127.0.0.1:3160/mission-overview\",\"text\":\"Failed to load resource: net::ERR_CONNECTION_REFUSED\"},{\"url\":\"http://127.0.0.1:3160/mission-overview\",\"text\":\"Failed to load resource: net::ERR_CONNECTION_REFUSED\"},{\"url\":\"http://127.0.0.1:3160/mission-overview\",\"text\":\"WebSocket connection to 'ws://127.0.0.1:8160/ws/live-feed' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED\"},{\"url\":\"http://127.0.0.1:3160/mission-overview\",\"text\":\"WebSocket connection to 'ws://127.0.0.1:8160/ws/live-feed' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED\"}]"
+    },
+    {
+      "name": "no browser console/page errors",
+      "result": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "public page is read-only",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "public page reports S14",
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "S10-PUBLIC-SMOKE: durable PNG",
+      "result": "PASS",
+      "detail": "png/625199"
+    },
+    {
+      "name": "no browser console/page errors",
+      "result": "PASS",
+      "detail": "[]"
+    }
+  ],
+  "route_markers": [
+    {
+      "route": "/mission-overview",
+      "elapsed_ms": 1945,
+      "timestamp": "2026-10-07T07:09:42.271Z"
+    },
+    {
+      "route": "/live-monitoring",
+      "elapsed_ms": 3501,
+      "timestamp": "2026-10-07T07:09:43.827Z"
+    },
+    {
+      "route": "/system-brief",
+      "elapsed_ms": 4661,
+      "timestamp": "2026-10-07T07:09:44.987Z"
+    },
+    {
+      "route": "/research/experimental",
+      "elapsed_ms": 5947,
+      "timestamp": "2026-10-07T07:09:46.273Z"
+    },
+    {
+      "route": "/digital-twin",
+      "elapsed_ms": 7508,
+      "timestamp": "2026-10-07T07:09:47.834Z"
+    },
+    {
+      "route": "/ai-insights",
+      "elapsed_ms": 9083,
+      "timestamp": "2026-10-07T07:09:49.409Z"
+    },
+    {
+      "route": "/mission-timeline",
+      "elapsed_ms": 10250,
+      "timestamp": "2026-10-07T07:09:50.576Z"
+    },
+    {
+      "route": "/settings",
+      "elapsed_ms": 11411,
+      "timestamp": "2026-10-07T07:09:51.737Z"
+    },
+    {
+      "route": "COMPLETE",
+      "elapsed_ms": 11479,
+      "timestamp": "2026-10-07T07:09:51.805Z"
+    }
+  ],
+  "console_errors": [],
+  "expected_transport_errors": [
+    {
+      "url": "http://127.0.0.1:3160/mission-overview",
+      "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "url": "http://127.0.0.1:3160/mission-overview",
+      "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "url": "http://127.0.0.1:3160/mission-overview",
+      "text": "WebSocket connection to 'ws://127.0.0.1:8160/ws/live-feed' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "url": "http://127.0.0.1:3160/mission-overview",
+      "text": "WebSocket connection to 'ws://127.0.0.1:8160/ws/live-feed' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED"
+    }
+  ],
+  "visual_reviewed_at": "2026-10-07T07:19:23.311Z",
+  "visual_review_method": "human_review_of_contact_sheet_and_representative_full_resolution_artifacts"
+}

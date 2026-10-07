@@ -1,0 +1,116 @@
+{
+  "result": "PASS",
+  "duration_seconds": 600,
+  "client_count": 3,
+  "minimum_required_frames_per_client": 450,
+  "clients": [
+    {
+      "client": 0,
+      "frames": 1143,
+      "predictions": 1140,
+      "first_timestamp": 1791357156.887388,
+      "last_timestamp": 1791357756.520504,
+      "last_window_index": 1495
+    },
+    {
+      "client": 1,
+      "frames": 1143,
+      "predictions": 1140,
+      "first_timestamp": 1791357156.887388,
+      "last_timestamp": 1791357756.520504,
+      "last_window_index": 1495
+    },
+    {
+      "client": 2,
+      "frames": 1143,
+      "predictions": 1140,
+      "first_timestamp": 1791357156.887388,
+      "last_timestamp": 1791357756.520504,
+      "last_window_index": 1495
+    }
+  ],
+  "multi_client_window_spread": 0,
+  "rss_samples": [
+    {
+      "elapsed_seconds": 0,
+      "rss_kib": 993360
+    },
+    {
+      "elapsed_seconds": 30,
+      "rss_kib": 44928
+    },
+    {
+      "elapsed_seconds": 60,
+      "rss_kib": 44096
+    },
+    {
+      "elapsed_seconds": 90,
+      "rss_kib": 43824
+    },
+    {
+      "elapsed_seconds": 120,
+      "rss_kib": 44816
+    },
+    {
+      "elapsed_seconds": 150,
+      "rss_kib": 55120
+    },
+    {
+      "elapsed_seconds": 180,
+      "rss_kib": 50944
+    },
+    {
+      "elapsed_seconds": 210,
+      "rss_kib": 43136
+    },
+    {
+      "elapsed_seconds": 240,
+      "rss_kib": 41984
+    },
+    {
+      "elapsed_seconds": 270,
+      "rss_kib": 49808
+    },
+    {
+      "elapsed_seconds": 300,
+      "rss_kib": 44624
+    },
+    {
+      "elapsed_seconds": 330,
+      "rss_kib": 48112
+    },
+    {
+      "elapsed_seconds": 360,
+      "rss_kib": 47616
+    },
+    {
+      "elapsed_seconds": 390,
+      "rss_kib": 50528
+    },
+    {
+      "elapsed_seconds": 420,
+      "rss_kib": 48864
+    },
+    {
+      "elapsed_seconds": 450,
+      "rss_kib": 48560
+    },
+    {
+      "elapsed_seconds": 480,
+      "rss_kib": 47184
+    },
+    {
+      "elapsed_seconds": 510,
+      "rss_kib": 47936
+    },
+    {
+      "elapsed_seconds": 540,
+      "rss_kib": 43776
+    },
+    {
+      "elapsed_seconds": 570,
+      "rss_kib": 42800
+    }
+  ],
+  "rss_growth_kib": -950560
+}
